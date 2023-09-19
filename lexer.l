@@ -54,7 +54,7 @@ false
 <MULTILINE_COMMENT>"*"+[^*/] 
 <MULTILINE_COMMENT>"*"+"/" {BEGIN(INITIAL);}
 
-\/\/[^\n]*\n
+\/\/[^\n]*\n {bufferString[0] = 0; strcat(bufferString, yytext); printf("(%s) - COMMENT\n", buffer);}
 
 \+ {printf("(%s) - OPERATOR\n", yytext);}
 \- {printf("(%s) - OPERATOR\n", yytext);}
