@@ -18,16 +18,16 @@ DIGIT [0-9]
 
 \/\/[^\n]*\n
 
-\+
-\-
-\*
-\/
-=
-\%
-\/=
-\+=
-\*=
-\-=
-\%=
+\+ {printf("(%s) - OPERATOR\n", yytext);}
+\- {printf("(%s) - OPERATOR\n", yytext);}
+\* {printf("(%s) - OPERATOR\n", yytext);}
+\/ {printf("(%s) - OPERATOR\n", yytext);}
+= {printf("(%s) - OPERATOR\n", yytext);}
+\% {printf("(%s) - OPERATOR\n", yytext);}
+\/= {printf("(%s) - OPERATOR\n", yytext);}
+\+= {printf("(%s) - OPERATOR\n", yytext);}
+\*= {printf("(%s) - OPERATOR\n", yytext);}
+\-= {printf("(%s) - OPERATOR\n", yytext);}
+\%= {printf("(%s) - OPERATOR\n", yytext);}
 
 %%
