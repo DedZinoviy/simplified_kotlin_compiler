@@ -7,6 +7,7 @@ DIGIT [0-9]
 
 %{
     #include <stdio.h>
+    #include <string.h>
 }%
 
 %%
