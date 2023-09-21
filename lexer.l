@@ -17,37 +17,37 @@ DIGIT [0-9]
 
 {// Блок ключевых слов.}
 
-as
-as\?
-break
-class
-continue
-do
-else
-for
-fun
-if
-in
-!in
-interface
-is
-\!is
-null
-object
-package
+as {printf("(%s) - KEY_WORD\n", yytext);}
+as\? {printf("(%s) - KEY_WORD\n", yytext);}
+break {printf("(%s) - KEY_WORD\n", yytext);}
+class {printf("(%s) - KEY_WORD\n", yytext);}
+continue {printf("(%s) - KEY_WORD\n", yytext);}
+do 
+else {printf("(%s) - KEY_WORD\n", yytext);}
+for 
+fun 
+if {printf("(%s) - KEY_WORD\n", yytext);}
+in {printf("(%s) - KEY_WORD\n", yytext);}
+!in {printf("(%s) - KEY_WORD\n", yytext);}
+interface {printf("(%s) - KEY_WORD\n", yytext);}
+is {printf("(%s) - KEY_WORD\n", yytext);}
+\!is {printf("(%s) - KEY_WORD\n", yytext);}
+null {printf("(%s) - KEY_WORD\n", yytext);}
+object {printf("(%s) - KEY_WORD\n", yytext);}
+package {printf("(%s) - KEY_WORD\n", yytext);}
 return
-super
-this
-throw
-try
-typealias
-val
-var
-when
+super {printf("(%s) - KEY_WORD\n", yytext);}
+this {printf("(%s) - KEY_WORD\n", yytext);}
+throw {printf("(%s) - KEY_WORD\n", yytext);}
+try {printf("(%s) - KEY_WORD\n", yytext);}
+typealias {printf("(%s) - KEY_WORD\n", yytext);}
+val {printf("(%s) - KEY_WORD\n", yytext);}
+var {printf("(%s) - KEY_WORD\n", yytext);}
+when {printf("(%s) - KEY_WORD\n", yytext);}
 while
 
-true
-false
+true {printf("(%s) - KEY_WORD\n", yytext);}
+false {printf("(%s) - KEY_WORD\n", yytext);}
 
 \/\* {BEGIN(MULTILINE_COMMENT);}
 <MULTILINE_COMMENT>[^*]+
