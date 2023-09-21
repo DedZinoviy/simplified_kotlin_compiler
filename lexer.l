@@ -86,11 +86,11 @@ false {printf("(%s) - KEY_WORD\n", yytext);}
 \. {printf("(%s) - DOT\n", yytext);}
 \, {printf("(%s) - COMMA\n", yytext);}
 
-\+\+
-\-\-
+\+\+ {printf("(%s) - OPERATOR\n", yytext);}
+\-\- {printf("(%s) - OPERATOR\n", yytext);}
 
-===
-\!== 
+=== {printf("(%s) - OPERATOR\n", yytext);}
+\!== {printf("(%s) - OPERATOR\n", yytext);}
 
 \!
 \|\|
