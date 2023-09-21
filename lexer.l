@@ -96,14 +96,14 @@ false {printf("(%s) - KEY_WORD\n", yytext);}
 \|\|
 \&\&
 
-\.\.
-\!\!
-\?\.
+\.\. {printf("(%s) - OPERATOR\n", yytext);}
+\!\! {printf("(%s) - OPERATOR\n", yytext);}
+\?\. {printf("(%s) - OPERATOR\n", yytext);}
 
-\?\:
-\:\:
-\?
-\-\>
-\@
+\?\: {printf("(%s) - OPERATOR\n", yytext);}
+\:\: {printf("(%s) - OPERATOR\n", yytext);}
+\? {printf("(%s) - OPERATOR\n", yytext);}
+\-\> {printf("(%s) - OPERATOR\n", yytext);}
+\@ {printf("(%s) - OPERATOR\n", yytext);}
 
 %%
