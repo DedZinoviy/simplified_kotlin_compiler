@@ -61,12 +61,12 @@ false
 \* {printf("(%s) - OPERATOR\n", yytext);}
 \/ {printf("(%s) - OPERATOR\n", yytext);}
 = {printf("(%s) - OPERATOR\n", yytext);}
->=
-<=
->
-<
-!=
-==
+>= {printf("(%s) - OPERATOR\n", yytext);}
+<= {printf("(%s) - OPERATOR\n", yytext);}
+> {printf("(%s) - OPERATOR\n", yytext);}
+< {printf("(%s) - OPERATOR\n", yytext);}
+!= {printf("(%s) - OPERATOR\n", yytext);}
+== {printf("(%s) - OPERATOR\n", yytext);}
 \% {printf("(%s) - OPERATOR\n", yytext);}
 \/= {printf("(%s) - OPERATOR\n", yytext);}
 \+= {printf("(%s) - OPERATOR\n", yytext);}
