@@ -85,4 +85,7 @@ false {printf("(%s) - KEY_WORD\n", yytext);}
 \.
 \,
 
+\+\+
+\-\-
+
 %%
