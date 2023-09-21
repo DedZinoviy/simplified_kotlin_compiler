@@ -75,16 +75,16 @@ false {printf("(%s) - KEY_WORD\n", yytext);}
 \-= {printf("(%s) - OPERATOR\n", yytext);}
 \%= {printf("(%s) - OPERATOR\n", yytext);}
 
-\{
-\}
-\[
-\]
-\(
-\)
-\:
-\;
-\.
-\,
+\{ {printf("(%s) - BRACKET\n", yytext);}
+\} {printf("(%s) - BRACKET\n", yytext);}
+\[ {printf("(%s) - BRACKET\n", yytext);}
+\] {printf("(%s) - BRACKET\n", yytext);}
+\( {printf("(%s) - BRACKET\n", yytext);}
+\) {printf("(%s) - BRACKET\n", yytext);}
+\: {printf("(%s) - COLON\n", yytext);}
+\; {printf("(%s) - SEMICOLON\n", yytext);}
+\. {printf("(%s) - DOT\n", yytext);}
+\, {printf("(%s) - COMMA\n", yytext);}
 
 \+\+
 \-\-
