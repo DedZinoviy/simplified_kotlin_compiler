@@ -31,37 +31,37 @@ DIGIT [0-9]
     // Блок ключевых слов.
 %}
 
-as {printf("(%s) - KEY_WORD\n", yytext);}
-as\? {printf("(%s) - KEY_WORD\n", yytext);}
-break {printf("(%s) - KEY_WORD\n", yytext);}
-class {printf("(%s) - KEY_WORD\n", yytext);}
-continue {printf("(%s) - KEY_WORD\n", yytext);}
+as {printf("(%s) - AS_KEY_WORD\n", yytext);}
+as\? {printf("(%s) - AS?_KEY_WORD\n", yytext);}
+break {printf("(%s) - BREAK_KEY_WORD\n", yytext);}
+class {printf("(%s) - CLASS_KEY_WORD\n", yytext);}
+continue {printf("(%s) - CONTINUE_KEY_WORD\n", yytext);}
 do 
-else {printf("(%s) - KEY_WORD\n", yytext);}
+else {printf("(%s) - ELSE_KEY_WORD\n", yytext);}
 for 
 fun 
-if {printf("(%s) - KEY_WORD\n", yytext);}
-in {printf("(%s) - KEY_WORD\n", yytext);}
-!in {printf("(%s) - KEY_WORD\n", yytext);}
-interface {printf("(%s) - KEY_WORD\n", yytext);}
-is {printf("(%s) - KEY_WORD\n", yytext);}
-\!is {printf("(%s) - KEY_WORD\n", yytext);}
-null {printf("(%s) - KEY_WORD\n", yytext);}
-object {printf("(%s) - KEY_WORD\n", yytext);}
-package {printf("(%s) - KEY_WORD\n", yytext);}
+if {printf("(%s) - IF_KEY_WORD\n", yytext);}
+in {printf("(%s) - IN_KEY_WORD\n", yytext);}
+!in {printf("(%s) - !IN_KEY_WORD\n", yytext);}
+interface {printf("(%s) - INTERFACE_KEY_WORD\n", yytext);}
+is {printf("(%s) - IS_KEY_WORD\n", yytext);}
+\!is {printf("(%s) - !IS_KEY_WORD\n", yytext);}
+null {printf("(%s) - NULL_KEY_WORD\n", yytext);}
+object {printf("(%s) - OBJECT_KEY_WORD\n", yytext);}
+package {printf("(%s) - PACKAGE_KEY_WORD\n", yytext);}
 return
-super {printf("(%s) - KEY_WORD\n", yytext);}
-this {printf("(%s) - KEY_WORD\n", yytext);}
-throw {printf("(%s) - KEY_WORD\n", yytext);}
-try {printf("(%s) - KEY_WORD\n", yytext);}
-typealias {printf("(%s) - KEY_WORD\n", yytext);}
-val {printf("(%s) - KEY_WORD\n", yytext);}
-var {printf("(%s) - KEY_WORD\n", yytext);}
-when {printf("(%s) - KEY_WORD\n", yytext);}
+super {printf("(%s) - SUPER_KEY_WORD\n", yytext);}
+this {printf("(%s) - THIS_KEY_WORD\n", yytext);}
+throw {printf("(%s) - THROW_KEY_WORD\n", yytext);}
+try {printf("(%s) - TRY_KEY_WORD\n", yytext);}
+typealias {printf("(%s) - TYPEALIAS_KEY_WORD\n", yytext);}
+val {printf("(%s) - VAL_KEY_WORD\n", yytext);}
+var {printf("(%s) - VAR_KEY_WORD\n", yytext);}
+when {printf("(%s) - WHEN_KEY_WORD\n", yytext);}
 while
 
-true {printf("(%s) - KEY_WORD\n", yytext);}
-false {printf("(%s) - KEY_WORD\n", yytext);}
+true {printf("(%s) - TRUE_KEY_WORD\n", yytext);}
+false {printf("(%s) - FALSE_KEY_WORD\n", yytext);}
 
 \/\* {BEGIN(MULTILINE_COMMENT);}
 <MULTILINE_COMMENT>[^*]+
