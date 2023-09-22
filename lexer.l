@@ -55,7 +55,7 @@ false {printf("(%s) - KEY_WORD\n", yytext);}
 <MULTILINE_COMMENT>"*"+[^*/] 
 <MULTILINE_COMMENT>"*"+"/" {BEGIN(INITIAL);}
 
-\/\/[^\n]*\n {bufferString[0] = 0; strcat(bufferString, yytext); printf("(%s) - COMMENT\n", buffer);}
+\/\/[^\n]*\n {bufferString[0] = 0; strcat(bufferString, yytext); printf("(%s) - COMMENT\n", bufferString);}
 
 \+ {printf("(%s) - OPERATOR\n", yytext);}
 \- {printf("(%s) - OPERATOR\n", yytext);}
