@@ -8,15 +8,17 @@ DIGIT [0-9]
 %{
     #include <stdio.h>
     #include <string.h>
-}%
+%}
 
 %%
 
 %{
     char bufferString[4096]; // Массив символов - буфер для строковых выражений.
-}%
+%}
 
-{// Блок ключевых слов.}
+%{
+    // Блок ключевых слов.
+%}
 
 as {printf("(%s) - KEY_WORD\n", yytext);}
 as\? {printf("(%s) - KEY_WORD\n", yytext);}
