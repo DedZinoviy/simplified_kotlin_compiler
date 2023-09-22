@@ -122,6 +122,8 @@ false {printf("(%s) - KEY_WORD\n", yytext);}
 ([1-9](_*[0-9]+)*)|0 {
     bufferString[0] = 0;
     strcat(bufferString, yytext);
+    removeUnderline(bufferString);
+    printf("(%d) - DECIMAL_INTEGER\n", atoi(bufferString));
 }
 
 %%
