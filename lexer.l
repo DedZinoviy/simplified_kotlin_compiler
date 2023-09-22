@@ -23,6 +23,11 @@ DIGIT [0-9]
     \return - 0, если удалено успешно, 1 - если нет.
     */
     int removeCharFromStringByIndex(char * str; int index); 
+
+    /*! Удалить из строки нижние подчеркивания.
+    \param[in] str - исходная строка.
+    */
+    void removeUnderline(char* str);
     // Блок ключевых слов.
 %}
 
@@ -132,4 +137,14 @@ int removeCharFromStringByIndex(char * str; int index)
     str[i] = str[i + 1];
 
     return 0;
+}
+
+void removeUnderline(char* str)
+{
+    char* underline = strchr(str, '_');
+    while (underline != NULL){
+        underline = strchr(str, '_');
+        int position = underline - str;
+        removeCharFromStringByIndex(str, position);
+    }
 }
