@@ -17,6 +17,12 @@ DIGIT [0-9]
 %}
 
 %{
+    /*! Удалить символ из строки по его индексу в ней.
+    \param[in] str - исходная строка.
+    \param[in] index - индекс удаляемого символа.
+    \return - 0, если удалено успешно, 1 - если нет.
+    */
+    int removeCharFromStringByIndex(char * str; int index); 
     // Блок ключевых слов.
 %}
 
@@ -114,3 +120,16 @@ false {printf("(%s) - KEY_WORD\n", yytext);}
 }
 
 %%
+
+int removeCharFromStringByIndex(char * str; int index) 
+{
+    int length = strlen(str); // Вычислить длину строки.
+    if (index >= length || index < 0) // Удалить символ, если индекс выходит за границу строки. 
+    {
+        return 1;
+    }
+    for (int i = index; i < length - 1; i++)
+    str[i] = str[i + 1];
+
+    return 0;
+}
