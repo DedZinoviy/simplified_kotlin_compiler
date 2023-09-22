@@ -91,12 +91,12 @@ false {printf("(%s) - FALSE_KEY_WORD\n", yytext);}
 \-\= {printf("(%s) - MINUS_ASSIGNMENT_OPERATOR\n", yytext);}
 \%\= {printf("(%s) - MOD_ASSIGNMENT_OPERATOR\n", yytext);}
 
-\{ {printf("(%s) - BRACKET\n", yytext);}
-\} {printf("(%s) - BRACKET\n", yytext);}
-\[ {printf("(%s) - BRACKET\n", yytext);}
-\] {printf("(%s) - BRACKET\n", yytext);}
-\( {printf("(%s) - BRACKET\n", yytext);}
-\) {printf("(%s) - BRACKET\n", yytext);}
+\{ {printf("(%s) - LEFT_BRACE\n", yytext);}
+\} {printf("(%s) - RIGHT_BRACE\n", yytext);}
+\[ {printf("(%s) - LEFT_SQUARE_BRACKET\n", yytext);}
+\] {printf("(%s) - RIGHT_SQUARE_BRACKET\n", yytext);}
+\( {printf("(%s) - LEFT_ROUND_BRACKET\n", yytext);}
+\) {printf("(%s) - RIGHT_ROUND_BRACKET\n", yytext);}
 \: {printf("(%s) - COLON\n", yytext);}
 \; {printf("(%s) - SEMICOLON\n", yytext);}
 \. {printf("(%s) - DOT\n", yytext);}
