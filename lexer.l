@@ -2,6 +2,7 @@
 %option never-interactive
 
 %x MULTILINE_COMMENT
+%x STRING
 
 DIGIT [0-9]
 
