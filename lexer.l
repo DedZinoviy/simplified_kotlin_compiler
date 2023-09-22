@@ -72,23 +72,23 @@ false {printf("(%s) - FALSE_KEY_WORD\n", yytext);}
 
 \/\/[^\n]*\n {bufferString[0] = 0; strcat(bufferString, yytext); printf("(%s) - COMMENT\n", bufferString);}
 
-\+ {printf("(%s) - OPERATOR\n", yytext);}
-\- {printf("(%s) - OPERATOR\n", yytext);}
-\* {printf("(%s) - OPERATOR\n", yytext);}
-\/ {printf("(%s) - OPERATOR\n", yytext);}
-= {printf("(%s) - OPERATOR\n", yytext);}
->= {printf("(%s) - OPERATOR\n", yytext);}
-<= {printf("(%s) - OPERATOR\n", yytext);}
-> {printf("(%s) - OPERATOR\n", yytext);}
-< {printf("(%s) - OPERATOR\n", yytext);}
-!= {printf("(%s) - OPERATOR\n", yytext);}
-== {printf("(%s) - OPERATOR\n", yytext);}
-\% {printf("(%s) - OPERATOR\n", yytext);}
-\/= {printf("(%s) - OPERATOR\n", yytext);}
-\+= {printf("(%s) - OPERATOR\n", yytext);}
-\*= {printf("(%s) - OPERATOR\n", yytext);}
-\-= {printf("(%s) - OPERATOR\n", yytext);}
-\%= {printf("(%s) - OPERATOR\n", yytext);}
+\+ {printf("(%s) - PLUS_OPERATOR\n", yytext);}
+\- {printf("(%s) - MINUS_OPERATOR\n", yytext);}
+\* {printf("(%s) - MUL_OPERATOR\n", yytext);}
+\/ {printf("(%s) - DIV_OPERATOR\n", yytext);}
+= {printf("(%s) - ASSIGNMENT_OPERATOR\n", yytext);}
+>= {printf("(%s) - GREATER_EQUAL_OPERATOR\n", yytext);}
+<= {printf("(%s) - LESS_EQUAL_OPERATOR\n", yytext);}
+> {printf("(%s) - GREATER_OPERATOR\n", yytext);}
+< {printf("(%s) - LESS_OPERATOR\n", yytext);}
+!= {printf("(%s) - NOT_EQUAL_OPERATOR\n", yytext);}
+== {printf("(%s) - EQUAL_OPERATOR\n", yytext);}
+\% {printf("(%s) - MOD_OPERATOR\n", yytext);}
+\/= {printf("(%s) - DIV_ASSIGNMENT_OPERATOR\n", yytext);}
+\+= {printf("(%s) - PLUS_ASSIGNMENT_OPERATOR\n", yytext);}
+\*= {printf("(%s) - MUL_ASSIGNMENT_OPERATOR\n", yytext);}
+\-= {printf("(%s) - MINUS_ASSIGNMENT_OPERATOR\n", yytext);}
+\%= {printf("(%s) - MOD_ASSIGNMENT_OPERATOR\n", yytext);}
 
 \{ {printf("(%s) - BRACKET\n", yytext);}
 \} {printf("(%s) - BRACKET\n", yytext);}
@@ -101,25 +101,25 @@ false {printf("(%s) - FALSE_KEY_WORD\n", yytext);}
 \. {printf("(%s) - DOT\n", yytext);}
 \, {printf("(%s) - COMMA\n", yytext);}
 
-\+\+ {printf("(%s) - OPERATOR\n", yytext);}
-\-\- {printf("(%s) - OPERATOR\n", yytext);}
+\+\+ {printf("(%s) - INCREMENT_OPERATOR\n", yytext);}
+\-\- {printf("(%s) - DECREMENT_OPERATOR\n", yytext);}
 
-=== {printf("(%s) - OPERATOR\n", yytext);}
-\!== {printf("(%s) - OPERATOR\n", yytext);}
+=== {printf("(%s) - REF_EQUAL_OPERATOR\n", yytext);}
+\!== {printf("(%s) - REF_NOT_EQUAL_OPERATOR\n", yytext);}
 
 \!
 \|\|
 \&\&
 
-\.\. {printf("(%s) - OPERATOR\n", yytext);}
-\!\! {printf("(%s) - OPERATOR\n", yytext);}
-\?\. {printf("(%s) - OPERATOR\n", yytext);}
+\.\. {printf("(%s) - RANGE_OPERATOR\n", yytext);}
+\!\! {printf("(%s) - NOT_NULL_ASSERTION_OPERATOR\n", yytext);}
+\?\. {printf("(%s) - SAFE_CALL_OPERATOR\n", yytext);}
 
-\?\: {printf("(%s) - OPERATOR\n", yytext);}
-\:\: {printf("(%s) - OPERATOR\n", yytext);}
-\? {printf("(%s) - OPERATOR\n", yytext);}
-\-\> {printf("(%s) - OPERATOR\n", yytext);}
-\@ {printf("(%s) - OPERATOR\n", yytext);}
+\?\: {printf("(%s) - TERNAR_OPERATOR\n", yytext);}
+\:\: {printf("(%s) - UNIT_REFERENCE_OPERATOR\n", yytext);}
+\? {printf("(%s) - ALLOW_NULL_OPERATOR\n", yytext);}
+\-\> {printf("(%s) - LAMBDA_OPERATOR\n", yytext);}
+\@ {printf("(%s) - ANNOTATION_OPERATOR\n", yytext);}
 
 ([1-9](_*[0-9]+)*)|0 {
     bufferString[0] = 0;
