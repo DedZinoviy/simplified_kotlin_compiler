@@ -106,6 +106,9 @@ false {printf("(%s) - KEY_WORD\n", yytext);}
 \-\> {printf("(%s) - OPERATOR\n", yytext);}
 \@ {printf("(%s) - OPERATOR\n", yytext);}
 
-([1-9](_*[0-9]+)*)|0
+([1-9](_*[0-9]+)*)|0 {
+    bufferString[0] = 0;
+    strcat(bufferString, yytext);
+}
 
 %%
