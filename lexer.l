@@ -131,7 +131,18 @@ false {printf("(%s) - FALSE_KEY_WORD\n", yytext);}
 }
 
 \' {bufferString[0] = 0; BEGIN(CHAR);}
+<CHAR>[^\\\']
+<CHAR>\' {printf("%c - CHAR", bufferString[0]); BEGIN(INITIAL);}
 <CHAR><<EOF>> {printf("ERROR: no closing \'"); BEGIN(INITIAL);}
+
+<STRING,CHAR>\\n {strcat(bufferString, "\n");}
+<STRING,CHAR>\\t {strcat(bufferString, "\t");}
+<STRING,CHAR>\\b {strcat(bufferString, "\b");}
+<STRING,CHAR>\\r {strcat(bufferString, "\r");}
+<STRING,CHAR>\\\$ {strcat(bufferString, "$");}
+<STRING,CHAR>\\\" {strcat(bufferString, "\"");}
+<STRING,CHAR>\\\' {strcat(bufferString, "\'");}
+<STRING,CHAR>\\\\ {strcat(bufferString, "\\");}
 
 %%
 
