@@ -145,7 +145,8 @@ false {printf("(%s) - FALSE_KEY_WORD\n", yytext);}
 <STRING><<EOF>> {printf("ERROR: no closing  \""); BEGIN(INITIAL);}
 
 \' {bufferString[0] = 0; BEGIN(CHAR);}
-<CHAR>[^\\\']
+<STRING>[^\\\'\n\r]
+<STRING>[\n\r] {printf("ERROR: no closing  \'"); BEGIN(INITIAL);}
 <CHAR>\' {printf("%c - CHAR", bufferString[0]); BEGIN(INITIAL);}
 <CHAR><<EOF>> {printf("ERROR: no closing \'"); BEGIN(INITIAL);}
 
