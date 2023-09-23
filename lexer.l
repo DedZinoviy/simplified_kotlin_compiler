@@ -132,6 +132,10 @@ false {printf("(%s) - FALSE_KEY_WORD\n", yytext);}
 
 \" {bufferString[0] = 0; BEGIN(STRING);}
 <STRING>[^\\\"\$]+ {strcat(bufferString, yytext);}
+<STRING>\$[A-Za-z_][A-Za-z0-9_]* {
+    printf("(%s) - FIRST_ESCAPED_STRING", bufferString);
+    printf("(+) - PLUS_OPERATOR");
+}
 <STRING>\" {printf("(%s) - ESCAPED STRING", bufferString); BEGIN(INITIAL);}
 <STRING><<EOF>> {printf("ERROR: no closing  \""); BEGIN(INITIAL);}
 
