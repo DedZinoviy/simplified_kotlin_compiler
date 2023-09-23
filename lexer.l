@@ -123,6 +123,8 @@ false {printf("(%s) - FALSE_KEY_WORD\n", yytext);}
 \-\> {printf("(%s) - LAMBDA_OPERATOR\n", yytext);}
 \@ {printf("(%s) - ANNOTATION_OPERATOR\n", yytext);}
 
+[A-Za-z_][A-Za-z0-9_]* {printf("(%s) - IDENTIFIER\n", yytext);}
+
 ([1-9](_*[0-9]+)*)|0 {
     bufferString[0] = 0;
     strcat(bufferString, yytext);
