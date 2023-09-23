@@ -205,7 +205,7 @@ int removeCharFromStringByIndex(char * str, int index)
     {
         return 1;
     }
-    for (int i = index; i < length - 1; i++)
+    for (int i = index; i < length; i++)
     str[i] = str[i + 1];
 
     return 0;
