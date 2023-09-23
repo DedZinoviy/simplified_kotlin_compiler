@@ -126,11 +126,25 @@ false {printf("(%s) - FALSE_KEY_WORD\n", yytext);}
 
 [A-Za-z_][A-Za-z0-9_]* {printf("(%s) - IDENTIFIER\n", yytext);}
 
-([1-9](_*[0-9]+)*)|0 {
-    bufferString[0] = 0;
+[0-9]([_0-9])* { bufferString[0] = 0;
+    BEGIN(DECIMAL_INTEGER);
     strcat(bufferString, yytext);
+    int buffLen = strlen(bufferString);
+    char lastChar = bufferString[buffLen - 1];
+    if (lastChar == '_')
+    {
+        printf("ERROR: illegal using \"_\" in INT.\n");
+        BEGIN(INITIAL);
+    }
+    if (bufferString[0] == '0' && buffLen > 1)
+    {
+        printf("ERROR: illegal using zero in INT.\n");
+        BEGIN(INITIAL);
+    }
     removeUnderline(bufferString);
-    printf("(%d) - DECIMAL_INTEGER\n", atoi(bufferString));
+    int res = atoi(bufferString);
+    printf("(%d) - DECIMAL_INT\n", res);
+    BEGIN(INITIAL);
 }
 
 \" {bufferString[0] = 0; BEGIN(STRING);}
