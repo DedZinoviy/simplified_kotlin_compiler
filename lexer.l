@@ -133,22 +133,22 @@ false {printf("(%s) - FALSE_KEY_WORD\n", yytext);}
 \" {bufferString[0] = 0; BEGIN(STRING);}
 <STRING>[^\\\"\$\n\r]+ {strcat(bufferString, yytext);}
 <STRING>\$[A-Za-z_][A-Za-z0-9_]* {
-    printf("(%s) - ESCAPED_STRING", bufferString);
-    printf("(+) - PLUS_OPERATOR");
-    printf("(%s) - IDENTIFIER", yytext + 1);
-    printf("(+) - PLUS_OPERATOR");
+    printf("(%s) - ESCAPED_STRING\n", bufferString);
+    printf("(+) - PLUS_OPERATOR\n");
+    printf("(%s) - IDENTIFIER\n", yytext + 1);
+    printf("(+) - PLUS_OPERATOR\n");
     bufferString[0] = 0;
 }
 <STRING>\$[^A-Za-z_]* {strcat(bufferString, yytext);}
-<STRING>[\n\r] {printf("ERROR: no closing  \""); BEGIN(INITIAL);}
-<STRING>\" {printf("(%s) - ESCAPED STRING", bufferString); BEGIN(INITIAL);}
-<STRING><<EOF>> {printf("ERROR: no closing  \""); BEGIN(INITIAL);}
+<STRING>[\n\r] {printf("ERROR: no closing \"\n"); BEGIN(INITIAL);}
+<STRING>\" {printf("(%s) - ESCAPED STRING\n", bufferString); BEGIN(INITIAL);}
+<STRING><<EOF>> {printf("ERROR: no closing \"\n"); BEGIN(INITIAL);}
 
 \' {bufferString[0] = 0; BEGIN(CHAR);}
 <STRING>[^\\\'\n\r]
-<STRING>[\n\r] {printf("ERROR: no closing  \'"); BEGIN(INITIAL);}
+<STRING>[\n\r] {printf("ERROR: no closing  \'\n"); BEGIN(INITIAL);}
 <CHAR>\' {printf("%c - CHAR", bufferString[0]); BEGIN(INITIAL);}
-<CHAR><<EOF>> {printf("ERROR: no closing \'"); BEGIN(INITIAL);}
+<CHAR><<EOF>> {printf("ERROR: no closing \'\n"); BEGIN(INITIAL);}
 
 <STRING,CHAR>\\n {strcat(bufferString, "\n");}
 <STRING,CHAR>\\t {strcat(bufferString, "\t");}
