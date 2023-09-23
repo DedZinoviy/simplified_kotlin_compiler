@@ -130,6 +130,9 @@ false {printf("(%s) - FALSE_KEY_WORD\n", yytext);}
     printf("(%d) - DECIMAL_INTEGER\n", atoi(bufferString));
 }
 
+\" {bufferString[0] = 0; BEGIN(STRING);}
+<STRING><<EOF>> {printf("ERROR: no closing  \""); BEGIN(INITIAL);}
+
 \' {bufferString[0] = 0; BEGIN(CHAR);}
 <CHAR>[^\\\']
 <CHAR>\' {printf("%c - CHAR", bufferString[0]); BEGIN(INITIAL);}
