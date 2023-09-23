@@ -71,7 +71,7 @@ false {printf("(%s) - FALSE_KEY_WORD\n", yytext);}
 <MULTILINE_COMMENT>[^*]+ {strcat(bufferString, yytext);}
 <MULTILINE_COMMENT>"*"+[^*/] {strcat(bufferString, yytext);}
 <MULTILINE_COMMENT>"*"+"/" {printf("(%s) - MULTILINE_COMMENT\n"); BEGIN(INITIAL);}
-<MULTILINE_COMMENT><<EOF>> {printf("ERROR: no closing */"); BEGIN(INITIAL);}
+<MULTILINE_COMMENT><<EOF>> {printf("ERROR: no closing */\n"); BEGIN(INITIAL);}
 
 \/\/[^\n]*\n {bufferString[0] = 0; strcat(bufferString, yytext); printf("(%s) - COMMENT\n", bufferString);}
 
