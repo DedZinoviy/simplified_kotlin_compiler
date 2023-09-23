@@ -26,7 +26,7 @@ DIGIT [0-9]
     \param[in] index - индекс удаляемого символа.
     \return - 0, если удалено успешно, 1 - если нет.
     */
-    int removeCharFromStringByIndex(char * str; int index); 
+    int removeCharFromStringByIndex(char * str, int index); 
 
     /*! Удалить из строки нижние подчеркивания.
     \param[in] str - исходная строка.
@@ -178,7 +178,7 @@ false {printf("(%s) - FALSE_KEY_WORD\n", yytext);}
 
 %%
 
-int removeCharFromStringByIndex(char * str; int index) 
+int removeCharFromStringByIndex(char * str, int index) 
 {
     int length = strlen(str); // Вычислить длину строки.
     if (index >= length || index < 0) // Удалить символ, если индекс выходит за границу строки. 
