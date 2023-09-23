@@ -177,6 +177,10 @@ false {printf("(%s) - FALSE_KEY_WORD\n", yytext);}
 <STRING,CHAR>\\\' {strcat(bufferString, "\'");}
 <STRING,CHAR>\\\\ {strcat(bufferString, "\\");}
 
+[ \t] {
+    // Игнорирование лишних пробелов и табуляций. 
+}
+
 %%
 
 int removeCharFromStringByIndex(char * str, int index) 
