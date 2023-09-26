@@ -152,6 +152,8 @@ false {printf("(%s) - FALSE_KEY_WORD\n", yytext);}
 
 0b { }
 
+\"\"\" {}
+
 \" {bufferString[0] = 0; BEGIN(STRING);}
 <STRING>[^\\\"\$\n\r]+ {strcat(bufferString, yytext);}
 <STRING>\$[A-Za-z_][A-Za-z0-9_]* {
