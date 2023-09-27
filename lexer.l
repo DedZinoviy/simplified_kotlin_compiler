@@ -135,16 +135,17 @@ false {printf("(%s) - FALSE_KEY_WORD\n", yytext);}
     if (lastChar == '_')
     {
         printf("ERROR: illegal using \"_\" in INT.\n");
-        BEGIN(INITIAL);
     }
-    if (bufferString[0] == '0' && buffLen > 1)
+    else if (bufferString[0] == '0' && buffLen > 1)
     {
         printf("ERROR: illegal using zero in INT.\n");
-        BEGIN(INITIAL);
     }
-    removeUnderline(bufferString);
-    int res = atoi(bufferString);
-    printf("(%d) - DECIMAL_INT\n", res);
+    else 
+    {
+        removeUnderline(bufferString);
+        int res = atoi(bufferString);
+        printf("(%d) - DECIMAL_INT\n", res);
+    }
     BEGIN(INITIAL);
 }
 
