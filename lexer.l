@@ -170,7 +170,24 @@ false {printf("(%s) - FALSE_KEY_WORD\n", yytext);}
     BEGIN(INITIAL);
 }
 
-0b { }
+0b[_0-1]* { bufferString[0] = 0;
+    strcat(bufferString, yytext);
+    int len = strlen(bufferString);
+    char lastChar = bufferString[buffLen - 1];
+    if (len == 2) {
+        printf("ERROR: missing binary int value.\n");
+    }
+    else if (lastChar == '_' || (buffLen > 2 && bufferString[2] == '_'))
+    {
+        printf("ERROR: illegal using \"_\" in INT.\n");
+    }
+    else
+    {
+        removeUnderline(bufferString);
+        int result = strtol(bufferString + 2, NULL, 2);
+        printf("(%d) - BINARY_INT\n", result);
+    }
+}
 
 \"\"\" {bufferString[0] = 0; BEGIN(MULTILINE_STRING);}
 <MULTILINE_STRING>[^\$]+ {strcat(bufferString, yytext);}
