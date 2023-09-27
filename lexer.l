@@ -41,10 +41,10 @@ as\? {printf("(%s) - AS?_KEY_WORD\n", yytext);}
 break {printf("(%s) - BREAK_KEY_WORD\n", yytext);}
 class {printf("(%s) - CLASS_KEY_WORD\n", yytext);}
 continue {printf("(%s) - CONTINUE_KEY_WORD\n", yytext);}
-do 
+do {printf("(%s) - DO_KEY_WORD\n", yytext);}
 else {printf("(%s) - ELSE_KEY_WORD\n", yytext);}
-for 
-fun 
+for {printf("(%s) - FOR_KEY_WORD\n", yytext);}
+fun {printf("(%s) - FUN_KEY_WORD\n", yytext);}
 if {printf("(%s) - IF_KEY_WORD\n", yytext);}
 in {printf("(%s) - IN_KEY_WORD\n", yytext);}
 !in {printf("(%s) - !IN_KEY_WORD\n", yytext);}
@@ -54,7 +54,7 @@ is {printf("(%s) - IS_KEY_WORD\n", yytext);}
 null {printf("(%s) - NULL_KEY_WORD\n", yytext);}
 object {printf("(%s) - OBJECT_KEY_WORD\n", yytext);}
 package {printf("(%s) - PACKAGE_KEY_WORD\n", yytext);}
-return
+return {printf("(%s) - RETURN_KEY_WORD\n", yytext);}
 super {printf("(%s) - SUPER_KEY_WORD\n", yytext);}
 this {printf("(%s) - THIS_KEY_WORD\n", yytext);}
 throw {printf("(%s) - THROW_KEY_WORD\n", yytext);}
@@ -63,7 +63,7 @@ typealias {printf("(%s) - TYPEALIAS_KEY_WORD\n", yytext);}
 val {printf("(%s) - VAL_KEY_WORD\n", yytext);}
 var {printf("(%s) - VAR_KEY_WORD\n", yytext);}
 when {printf("(%s) - WHEN_KEY_WORD\n", yytext);}
-while
+while {printf("(%s) - WHILE_KEY_WORD\n", yytext);}
 
 true {printf("(%s) - TRUE_KEY_WORD\n", yytext);}
 false {printf("(%s) - FALSE_KEY_WORD\n", yytext);}
@@ -111,9 +111,9 @@ false {printf("(%s) - FALSE_KEY_WORD\n", yytext);}
 \=\=\= {printf("(%s) - REF_EQUAL_OPERATOR\n", yytext);}
 \!\=\= {printf("(%s) - REF_NOT_EQUAL_OPERATOR\n", yytext);}
 
-\!
-\|\|
-\&\&
+\! {printf("(%s) - NOT_OPERATOR\n", yytext);}
+\|\| {printf("(%s) - OR_OPERATOR\n", yytext);} 
+\&\& {printf("(%s) - AND_OPERATOR\n", yytext);}
 
 \.\. {printf("(%s) - RANGE_OPERATOR\n", yytext);}
 \!\! {printf("(%s) - NOT_NULL_ASSERTION_OPERATOR\n", yytext);}
