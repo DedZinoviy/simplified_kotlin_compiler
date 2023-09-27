@@ -163,6 +163,7 @@ false {printf("(%s) - FALSE_KEY_WORD\n", yytext);}
     }
     else
     {
+        removeUnderline(bufferString);
         int result = strtol(bufferString + 2, NULL, 16);
         printf("(%d) - HEX_INT\n", result);
     }
