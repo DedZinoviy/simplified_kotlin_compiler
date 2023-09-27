@@ -150,20 +150,22 @@ false {printf("(%s) - FALSE_KEY_WORD\n", yytext);}
 }
 
 0x[_0-9a-fA-F]* { bufferString[0] = 0;
+    BEGIN(HEX_INT);
     strcat(bufferString, yytext);
     int len = strlen(bufferString);
     char lastChar = bufferString[buffLen - 1];
     if (len == 2) {
         printf("ERROR: missing hex int value.\n");
-        BEGIN(INITIAL);
     }
-    if (lastChar == '_' || (buffLen > 2 && bufferString[2] == '_'))
+    else if (lastChar == '_' || (buffLen > 2 && bufferString[2] == '_'))
     {
         printf("ERROR: illegal using \"_\" in INT.\n");
-        BEGIN(INITIAL);
     }
-    int result = strtol(bufferString + 2, NULL, 16);
-    printf("(%d) - HEX_INT\n", result);
+    else
+    {
+        int result = strtol(bufferString + 2, NULL, 16);
+        printf("(%d) - HEX_INT\n", result);
+    }
     BEGIN(INITIAL);
 }
 
