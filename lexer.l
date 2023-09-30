@@ -190,7 +190,7 @@ false {printf("(%s) - FALSE_KEY_WORD\n", yytext);}
 }
 
 \"\"\" {bufferString[0] = 0; BEGIN(MULTILINE_STRING);}
-<MULTILINE_STRING>[^\$]+ {strcat(bufferString, yytext);}
+<MULTILINE_STRING>[^\$\"]+ {strcat(bufferString, yytext);}
 <MULTILINE_STRING>\$[A-Za-z_][A-Za-z0-9_]* {
     printf("(%s) - MULTILINE_STRING\n", bufferString);
     printf("(+) - PLUS_OPERATOR\n");
@@ -198,6 +198,7 @@ false {printf("(%s) - FALSE_KEY_WORD\n", yytext);}
     printf("(+) - PLUS_OPERATOR\n");
     bufferString[0] = 0;
 }
+<MULTILINE_STRING>\"{1,2} {strcat(bufferString, yytext);}
 <MULTILINE_STRING>\"\"\" {printf("(%s) - MULTILINE STRING\n", bufferString); BEGIN(INITIAL);}
 <MULTILINE_STRING><<EOF>> {printf("ERROR: no closing \"\"\"\n"); BEGIN(INITIAL);}
 
