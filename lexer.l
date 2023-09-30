@@ -47,7 +47,7 @@ for {printf("(%s) - FOR_KEY_WORD\n", yytext);}
 fun {printf("(%s) - FUN_KEY_WORD\n", yytext);}
 if {printf("(%s) - IF_KEY_WORD\n", yytext);}
 in {printf("(%s) - IN_KEY_WORD\n", yytext);}
-!in {printf("(%s) - !IN_KEY_WORD\n", yytext);}
+\!in {printf("(%s) - !IN_KEY_WORD\n", yytext);}
 interface {printf("(%s) - INTERFACE_KEY_WORD\n", yytext);}
 is {printf("(%s) - IS_KEY_WORD\n", yytext);}
 \!is {printf("(%s) - !IS_KEY_WORD\n", yytext);}
