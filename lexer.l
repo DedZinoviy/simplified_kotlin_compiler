@@ -15,8 +15,6 @@ DIGIT [0-9]
     #include <string.h>
 %}
 
-%%
-
 %{
     char bufferString[20480]; // Массив символов - буфер для строковых выражений.
 %}
@@ -35,6 +33,8 @@ DIGIT [0-9]
     void removeUnderline(char* str);
     // Блок ключевых слов.
 %}
+
+%%
 
 as {printf("(%s) - AS_KEY_WORD\n", yytext);}
 as\? {printf("(%s) - AS?_KEY_WORD\n", yytext);}
