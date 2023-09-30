@@ -156,9 +156,9 @@ false {printf("(%s) - FALSE_KEY_WORD\n", yytext);}
 0x[_0-9a-fA-F]* { bufferString[0] = 0;
     BEGIN(HEX_INT);
     strcat(bufferString, yytext);
-    int len = strlen(bufferString);
+    int buffLen = strlen(bufferString);
     char lastChar = bufferString[buffLen - 1];
-    if (len == 2) {
+    if (buffLen == 2) {
         printf("ERROR: missing hex int value.\n");
     }
     else if (lastChar == '_' || (buffLen > 2 && bufferString[2] == '_'))
@@ -176,9 +176,9 @@ false {printf("(%s) - FALSE_KEY_WORD\n", yytext);}
 
 0b[_0-1]* { bufferString[0] = 0;
     strcat(bufferString, yytext);
-    int len = strlen(bufferString);
+    int buffLen = strlen(bufferString);
     char lastChar = bufferString[buffLen - 1];
-    if (len == 2) {
+    if (buffLen == 2) {
         printf("ERROR: missing binary int value.\n");
     }
     else if (lastChar == '_' || (buffLen > 2 && bufferString[2] == '_'))
