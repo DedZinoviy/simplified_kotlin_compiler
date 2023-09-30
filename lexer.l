@@ -1,6 +1,7 @@
 %option noyywrap
 %option never-interactive
 
+%x END_OF_LINE_COMMENT
 %x MULTILINE_COMMENT
 %x STRING
 %x MULTILINE_STRING
