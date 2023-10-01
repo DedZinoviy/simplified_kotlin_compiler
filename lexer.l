@@ -194,6 +194,7 @@ false {printf("(%s) - FALSE_KEY_WORD\n", yytext);}
 }
 
 ({DIGIT}[_0-9]*)*\.({DIGIT}[_0-9]*)+ {
+    bufferString[0] = 0;
     strcat(bufferString, yytext);
     int buffLen = strlen(bufferString);
     char * dot = strchr(bufferString, '.');
