@@ -212,6 +212,10 @@ false {printf("(%s) - FALSE_KEY_WORD\n", yytext);}
     }
 }
 
+({DIGIT}[_0-9]*)*\.({DIGIT}[_0-9]*)+e[\+\-]?{digit}+ {
+    
+}
+
 \"\"\" {bufferString[0] = 0; BEGIN(MULTILINE_STRING);}
 <MULTILINE_STRING>[^\$\"]+ {strcat(bufferString, yytext);}
 <MULTILINE_STRING>\$[A-Za-z_][A-Za-z0-9_]* {
