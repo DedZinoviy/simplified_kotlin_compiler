@@ -214,7 +214,22 @@ false {printf("(%s) - FALSE_KEY_WORD\n", yytext);}
 }
 
 ({DIGIT}[_0-9]*)*\.({DIGIT}[_0-9]*)+e[\+\-]?{digit}+ {
-    
+    bufferString[0] = 0;
+    strcat(bufferString, yytext);
+    char* dot = strchr(bufferString, '.');
+    char* e = strchr(bufferString, 'e');
+    int positionDot = dot - bufferString;
+    int positionE = e - bufferString;
+    if ((positionDot != 0 && bufferString[positionDot - 1] == '_') || (bufferString[positionE - 1] == '_')) 
+    {
+        printf("ERROR: illegal using \"_\" in DOUBLE.\n");
+    }
+    else
+    {
+        removeUnderline(bufferString);
+        double result = atof(bufferString);
+        printf("(%e) - DOUBLE", result);
+    }
 }
 
 \"\"\" {bufferString[0] = 0; BEGIN(MULTILINE_STRING);}
