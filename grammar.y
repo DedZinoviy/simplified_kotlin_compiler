@@ -2,3 +2,7 @@
 %token ID
 
 %token INT_LITERAL CHAR_LITERAL DOUBLE_LITERAL STRING_LITERAL TRUE_LITERAL FALSE_LITERAL
+
+%left '+' '-'
+%left '*' '/' '%'
+%left UMINUS
