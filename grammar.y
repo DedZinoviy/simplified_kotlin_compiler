@@ -6,7 +6,9 @@
 %right '=' PLUS_ASSIGNMENT MINUS_ASSIGNMENT MUL_ASSIGNMENT DIV_ASSIGNMENT MOD_ASSIGNMENT
 %left '+' '-'
 %left '*' '/' '%'
-%left UMINUS
+%left UMINUS UPLUS
+%left POST_INCREMENT POST_DECREMENT
+%right PREF_INCREMENT, PREF_DECREMENT
 
 %% 
 
@@ -18,3 +20,4 @@ ValStmt: VAL ID ':' Type
 
 VarStmt: VAR ID ':' Type
        ;
+       
