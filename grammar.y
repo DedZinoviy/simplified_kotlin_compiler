@@ -9,3 +9,6 @@
 %left UMINUS
 
 %% 
+
+Type: ID
+    ;
