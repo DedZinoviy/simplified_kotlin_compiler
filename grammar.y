@@ -37,6 +37,10 @@ OperatorExpression: SimpleExpression '+' SimpleExpression
                   | SimpleExpression '*' SimpleExpression
                   | SimpleExpression '/' SimpleExpression
                   | SimpleExpression '%' SimpleExpression
+                  | SimpleExpression '<' SimpleExpression
+                  | SimpleExpression '>' SimpleExpression
+                  | SimpleExpression GREATER_EQUAL SimpleExpression
+                  | SimpleExpression LESS_EQUAL SimpleExpression
                   ;
 
 Type: ID
