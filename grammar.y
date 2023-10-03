@@ -19,6 +19,7 @@ ExpressionList: SimpleExpression
               ;
 
 SimpleExpression: Literal
+                | OperatorExpression
                 | ID
                 | '(' SimpleExpression ')'
                 | SimpleExpression '.' ID
