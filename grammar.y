@@ -41,6 +41,8 @@ OperatorExpression: SimpleExpression '+' SimpleExpression
                   | SimpleExpression '>' SimpleExpression
                   | SimpleExpression GREATER_EQUAL SimpleExpression
                   | SimpleExpression LESS_EQUAL SimpleExpression
+                  | SimpleExpression EQUAL SimpleExpression
+                  | SimpleExpression NOT_EQUAL SimpleExpression
                   | SimpleExpression PLUS_ASSIGNMENT SimpleExpression
                   | SimpleExpression MINUS_ASSIGNMENT SimpleExpression
                   | SimpleExpression MUL_ASSIGNMENT SimpleExpression
