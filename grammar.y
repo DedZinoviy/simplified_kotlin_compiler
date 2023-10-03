@@ -14,6 +14,14 @@ $left GREATER LESS GREATER_EQUAL LESS_EQUAL
 
 %% 
 
+Literal: INT_LITERAL
+       | CHAR_LITERAL
+       | DOUBLE_LITERAL
+       | STRING_LITERAL
+       | TRUE_LITERAL
+       | FALSE_LITERAL
+       ;
+
 Type: ID
     ;
 
