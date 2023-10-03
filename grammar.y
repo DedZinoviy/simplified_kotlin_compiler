@@ -32,6 +32,13 @@ Literal: INT_LITERAL
        | FALSE_LITERAL
        ;
 
+OperatorExpression: SimpleExpression '+' SimpleExpression
+                  | SimpleExpression '-' SimpleExpression
+                  | SimpleExpression '*' SimpleExpression
+                  | SimpleExpression '/' SimpleExpression
+                  | SimpleExpression '%' SimpleExpression
+                  ;
+
 Type: ID
     ;
 
