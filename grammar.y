@@ -15,3 +15,6 @@ Type: ID
 
 ValStmt: VAL ID : Type
        ;
+
+VarStmt: VAR ID ':' Type
+       ;
