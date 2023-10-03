@@ -14,6 +14,10 @@ $left GREATER LESS GREATER_EQUAL LESS_EQUAL
 
 %% 
 
+ExpressionList: SimpleExpression
+              | ExpressionList ',' SimpleExpression
+              ;
+
 SimpleExpression: Literal
                 | ID
                 | '(' SimpleExpression ')'
