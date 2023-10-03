@@ -56,6 +56,8 @@ Type: ID
     ;
 
 ValStmt: VAL ID ':' Type
+       | VAL ID '=' SimpleExpression
+       | VAL ID ':' Type '=' SimpleExpression
        ;
 
 VarStmt: VAR ID ':' Type
