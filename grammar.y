@@ -41,6 +41,11 @@ OperatorExpression: SimpleExpression '+' SimpleExpression
                   | SimpleExpression '>' SimpleExpression
                   | SimpleExpression GREATER_EQUAL SimpleExpression
                   | SimpleExpression LESS_EQUAL SimpleExpression
+                  | SimpleExpression PLUS_ASSIGNMENT SimpleExpression
+                  | SimpleExpression MINUS_ASSIGNMENT SimpleExpression
+                  | SimpleExpression MUL_ASSIGNMENT SimpleExpression
+                  | SimpleExpression DIV_ASSIGNMENT SimpleExpression
+                  | SimpleExpression MOD_ASSIGNMENT SimpleExpression
                   ;
 
 Type: ID
