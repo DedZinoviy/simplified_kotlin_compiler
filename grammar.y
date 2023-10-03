@@ -14,6 +14,12 @@ $left GREATER LESS GREATER_EQUAL LESS_EQUAL
 
 %% 
 
+SimpleExpression: Literal
+                | ID
+                | '(' SimpleExpression ')'
+                | SimpleExpression '.' ID
+                ;
+
 Literal: INT_LITERAL
        | CHAR_LITERAL
        | DOUBLE_LITERAL
