@@ -12,3 +12,6 @@
 
 Type: ID
     ;
+
+ValStmt: VAL ID : Type
+       ;
