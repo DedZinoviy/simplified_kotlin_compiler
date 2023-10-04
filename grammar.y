@@ -56,6 +56,10 @@ OperatorExpression: SimpleExpression '+' SimpleExpression
 Type: ID
     ;
 
+BlockExpression: '{' StatementList '}'
+               | '{' '}'
+               ;
+               
 StatementList: Statement
              | StatementList Statement
              ;
