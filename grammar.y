@@ -24,6 +24,7 @@ SimpleExpression: Literal
                 | '(' SimpleExpression ')'
                 | SimpleExpression '.' ID
                 | SimpleExpression '.' ID '(' ExpressionList ')'
+                | ID '(' ExpressionList ')'
                 ;
 
 Literal: INT_LITERAL
