@@ -56,6 +56,10 @@ OperatorExpression: SimpleExpression '+' SimpleExpression
 Type: ID
     ;
 
+StatementList: Statement
+             | StatementList Statement
+             ;
+
 Statement: SimpleExpression
          | VarStmt
          | ValStmt
