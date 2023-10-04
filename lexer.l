@@ -123,7 +123,7 @@ false {printf("(%s) - FALSE_KEY_WORD\n", yytext);}
 \!\! {printf("(%s) - NOT_NULL_ASSERTION_OPERATOR\n", yytext);}
 \?\. {printf("(%s) - SAFE_CALL_OPERATOR\n", yytext);}
 
-\?\: {printf("(%s) - TERNAR_OPERATOR\n", yytext);}
+\?\: {printf("(%s) - ELVIS_OPERATOR\n", yytext);}
 \:\: {printf("(%s) - UNIT_REFERENCE_OPERATOR\n", yytext);}
 \? {printf("(%s) - ALLOW_NULL_OPERATOR\n", yytext);}
 \-\> {printf("(%s) - LAMBDA_OPERATOR\n", yytext);}
