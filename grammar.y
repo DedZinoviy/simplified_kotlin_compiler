@@ -59,7 +59,12 @@ Type: ID
 BlockExpression: '{' StatementList '}'
                | '{' '}'
                ;
-               
+              
+IfStatement: IF '(' SimpleExpression ')' BlockExpression
+           | IF '(' SimpleExpression ')' SimpleExpression
+           | IF '(' SimpleExpression ')' BlockExpression ELSE BlockExpression
+           ;
+
 StatementList: Statement
              | StatementList Statement
              ;
