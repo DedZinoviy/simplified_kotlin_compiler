@@ -154,7 +154,7 @@ false {printf("(%s) - FALSE_KEY_WORD\n", yytext);}
 }
 
 0x[_0-9a-fA-F]* { bufferString[0] = 0;
-    BEGIN(HEX_INT);
+    BEGIN(HEX_INTEGER);
     strcat(bufferString, yytext);
     int buffLen = strlen(bufferString);
     char lastChar = bufferString[buffLen - 1];
