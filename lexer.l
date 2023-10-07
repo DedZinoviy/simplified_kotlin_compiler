@@ -268,18 +268,18 @@ false {printf("(%s) - FALSE_KEY_WORD\n", yytext);}
 }
 <STRING><<EOF>> {printf("ERROR: no closing \" (double-quote) in STRING in line %d.\n", multilineBegin); BEGIN(INITIAL);}
 
-\' {bufferString[0] = 0; clearStringBuffer(&buff); BEGIN(CHAR);}
+\' {bufferString[0] = 0; multilineBegin = line; clearStringBuffer(&buff); BEGIN(CHAR);}
 <CHAR>[^\\\'\n\r] {appendChar(&buff, yytext[0]);}
-<CHAR>[\n\r] {printf("ERROR: no closing  \'\n"); line += 1; BEGIN(INITIAL);}
+<CHAR>[\n\r] {printf("ERROR: no closing  \' (single-quote) in CHAR in line %d.\n", multilineBegin); line += 1; BEGIN(INITIAL);}
 <CHAR>\' {
     int buffLen = buff.length;
     if(buffLen > 1)
     {
-        printf("ERROR: Too many characters in a character literal.\n");
+        printf("ERROR: Too many characters in a character literal in line %d.\n", multilineBegin);
     }
     else if (buffLen <= 0)
     {
-        printf("ERROR: empty character literal.\n");
+        printf("ERROR: empty character literal in line %d.\n", multilineBegin);
     }
     else
     {
@@ -287,7 +287,7 @@ false {printf("(%s) - FALSE_KEY_WORD\n", yytext);}
     }
     BEGIN(INITIAL);
 }
-<CHAR><<EOF>> {printf("ERROR: no closing \'\n"); BEGIN(INITIAL);}
+<CHAR><<EOF>> {printf("ERROR: no closing \' (single-quote) in CHAR in line %d.\n", multilineBegin); BEGIN(INITIAL);}
 
 <STRING,CHAR>\\n {appendChar(&buff, '\n');}
 <STRING,CHAR>\\t {appendChar(&buff, '\t');}
@@ -300,12 +300,12 @@ false {printf("(%s) - FALSE_KEY_WORD\n", yytext);}
 <STRING,CHAR>\\u[0-9A-Fa-f]{0,4} {
     if (strlen(yytext) < 4)
     {
-        printf("Illegal escape: \'\\u\'");
+        printf("ERROR: Illegal escape \'\\u\' in line %d", line);
     }
     int value = strtol(yytext+2,NULL, 16);
     if (value > 127)
     {
-        printf("ERROR: non-supported UNICODE char.");
+        printf("ERROR: non-supported UNICODE character in line %d.", line);
     }
     else
     {
