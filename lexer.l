@@ -160,11 +160,11 @@ false {printf("(%s) - FALSE_KEY_WORD\n", yytext);}
     int buffLen = strlen(bufferString);
     char lastChar = bufferString[buffLen - 1];
     if (buffLen == 2) {
-        printf("ERROR: missing hex int value.\n");
+        printf("ERROR: missing hex int value in line %d.\n", line);
     }
     else if (lastChar == '_' || (buffLen > 2 && bufferString[2] == '_'))
     {
-        printf("ERROR: illegal using \"_\" in INT.\n");
+        printf("ERROR: illegal using of \"_\" in INT in line %d.\n", line);
     }
     else
     {
