@@ -202,7 +202,7 @@ false {printf("(%s) - FALSE_KEY_WORD\n", yytext);}
     int position = dot - bufferString;
     if ((lastChar == '_') || (position != 0 && bufferString[position - 1] == '_')) 
     {
-        printf("ERROR: illegal using \"_\" in DOUBLE.\n");
+        printf("ERROR: illegal using of \"_\" in DOUBLE in line %d.\n", line);
     }
     else
     {
@@ -222,7 +222,7 @@ false {printf("(%s) - FALSE_KEY_WORD\n", yytext);}
     int positionE = e - bufferString;
     if ((positionDot != 0 && bufferString[positionDot - 1] == '_') || (bufferString[positionE - 1] == '_')) 
     {
-        printf("ERROR: illegal using \"_\" in DOUBLE.\n");
+        printf("ERROR: illegal using of \"_\" in DOUBLE in line %d.\n", line);
     }
     else
     {
