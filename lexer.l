@@ -301,14 +301,14 @@ false {printf("(%s) - FALSE_KEY_WORD\n", yytext);}
 <STRING,CHAR>\\u[0-9A-Fa-f]{0,4} {
     if (strlen(yytext) < 4)
     {
-        printf("Illegal escape: \'\u\'");
+        printf("Illegal escape: \'\\u\'");
     }
     int value = strtol(yytext+2,NULL, 16);
     if (value > 127)
     {
-        printf("ERROR: non-supported UNICODE char.")
+        printf("ERROR: non-supported UNICODE char.");
     }
-    else`
+    else
     {
         appendChar(&buff, strtol(yytext+2,NULL, 16));
     }
