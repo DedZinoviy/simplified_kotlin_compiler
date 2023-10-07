@@ -232,7 +232,7 @@ false {printf("(%s) - FALSE_KEY_WORD\n", yytext);}
     }
 }
 
-\"\"\" {bufferString[0] = 0; BEGIN(MULTILINE_STRING);}
+\"\"\" {bufferString[0] = 0; multilineBegin = line; BEGIN(MULTILINE_STRING);}
 <MULTILINE_STRING>[\n\r] {line += 1; strcat(bufferString, yytext);}
 <MULTILINE_STRING>[^\$\"\n\r]+ {strcat(bufferString, yytext);}
 <MULTILINE_STRING>\$[A-Za-z_][A-Za-z0-9_]* {
@@ -244,7 +244,7 @@ false {printf("(%s) - FALSE_KEY_WORD\n", yytext);}
 }
 <MULTILINE_STRING>\"{1,2} {strcat(bufferString, yytext);}
 <MULTILINE_STRING>\"\"\" {printf("(%s) - MULTILINE STRING\n", bufferString); BEGIN(INITIAL);}
-<MULTILINE_STRING><<EOF>> {printf("ERROR: no closing \"\"\"\n"); BEGIN(INITIAL);}
+<MULTILINE_STRING><<EOF>> {printf("ERROR: no closing \"\"\" in line %d.\n", multilineBegin); BEGIN(INITIAL);}
 
 \" {bufferString[0] = 0; clearStringBuffer(&buff); BEGIN(STRING);}
 <STRING>[^\\\"\$\n\r] {appendChar(&buff, yytext[0]);}
