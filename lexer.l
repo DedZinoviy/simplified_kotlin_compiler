@@ -264,7 +264,7 @@ false {printf("(%s) - FALSE_KEY_WORD\n", yytext);}
     bufferString[0] = 0;
 }
 <STRING>\$[^A-Za-z_]* {appendChars(&buff, yytext);}
-<STRING>[\n\r] {printf("ERROR: no closing \"\n"); BEGIN(INITIAL);}
+<STRING>[\n\r] {printf("ERROR: no closing \"\n"); line += 1; BEGIN(INITIAL);}
 <STRING>\" { 
     printf("(");
     printStringBuffer(&buff);
