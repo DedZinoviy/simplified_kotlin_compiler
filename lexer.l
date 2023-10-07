@@ -238,7 +238,8 @@ false {printf("(%s) - FALSE_KEY_WORD\n", yytext);}
 }
 
 \"\"\" {bufferString[0] = 0; BEGIN(MULTILINE_STRING);}
-<MULTILINE_STRING>[^\$\"]+ {strcat(bufferString, yytext);}
+<MULTILINE_STRING>[\n\r] {line += 1; strcat(bufferString, yytext);}
+<MULTILINE_STRING>[^\$\"\n\r]+ {strcat(bufferString, yytext);}
 <MULTILINE_STRING>\$[A-Za-z_][A-Za-z0-9_]* {
     printf("(%s) - MULTILINE_STRING\n", bufferString);
     printf("(+) - PLUS_OPERATOR\n");
