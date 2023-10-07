@@ -255,7 +255,7 @@ false {printf("(%s) - FALSE_KEY_WORD\n", yytext);}
 <STRING>[^\\\"\$\n\r] {appendChar(&buff, yytext[0]);}
 <STRING>\$[A-Za-z_][A-Za-z0-9_]* {
     printf("(");
-    printBufferString(&buff);
+    printStringBuffer(&buff);
     printf(") - ESCAPED_STRING\n");
     printf("(+) - PLUS_OPERATOR\n");
     printf("(%s) - IDENTIFIER\n", yytext + 1);
@@ -267,7 +267,7 @@ false {printf("(%s) - FALSE_KEY_WORD\n", yytext);}
 <STRING>[\n\r] {printf("ERROR: no closing \"\n"); BEGIN(INITIAL);}
 <STRING>\" { 
     printf("(");
-    printBufferString(&buff);
+    printStringBuffer(&buff);
     printf(") - ESCAPED STRING\n"); 
     BEGIN(INITIAL);
 }
