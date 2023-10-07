@@ -269,14 +269,14 @@ false {printf("(%s) - FALSE_KEY_WORD\n", yytext);}
 }
 <STRING><<EOF>> {printf("ERROR: no closing \"\n"); BEGIN(INITIAL);}
 
-\' {bufferString[0] = 0; BEGIN(CHAR);}
-<CHAR>[^\\\'\n\r] {strcat(bufferString, yytext);}
+\' {bufferString[0] = 0; clearStringBuffer(&buff); BEGIN(CHAR);}
+<CHAR>[^\\\'\n\r] {appendChar(&buff, yytext[0]);}
 <CHAR>[\n\r] {printf("ERROR: no closing  \'\n"); BEGIN(INITIAL);}
 <CHAR>\' {
-    int buffLen = strlen(bufferString);
+    int buffLen = buff.length;
     if(buffLen > 1)
     {
-        printf("ERROR: Too many characters in character literal.\n");
+        printf("ERROR: Too many characters in a character literal.\n");
     }
     else if (buffLen <= 0)
     {
@@ -284,7 +284,7 @@ false {printf("(%s) - FALSE_KEY_WORD\n", yytext);}
     }
     else
     {
-        printf("%c - CHAR\n", bufferString[0]);
+        printf("(%c) - CHAR\n", buff.buffer[0]);
     }
     BEGIN(INITIAL);
 }
