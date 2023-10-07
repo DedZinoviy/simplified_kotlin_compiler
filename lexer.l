@@ -36,6 +36,7 @@ DIGIT [0-9]
 
 %{
     char bufferString[20480]; // Массив символов - буфер для строковых выражений.
+    struct stringBuffer buff = {"", 0}; // Дополнительный буффер для строк.
 %}
 
 as {printf("(%s) - AS_KEY_WORD\n", yytext);}
