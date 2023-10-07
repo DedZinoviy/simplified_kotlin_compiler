@@ -322,6 +322,10 @@ false {printf("(%s) - FALSE_KEY_WORD\n", yytext);}
     // Игнорирование лишних пробелов и табуляций. 
 }
 
+[\r\n] {
+    line = line + 1;
+}
+
 %%
 
 int removeCharFromStringByIndex(char * str, int index) 
