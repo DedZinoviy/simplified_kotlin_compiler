@@ -140,11 +140,11 @@ false {printf("(%s) - FALSE_KEY_WORD\n", yytext);}
     char lastChar = bufferString[buffLen - 1];
     if (lastChar == '_')
     {
-        printf("ERROR: illegal using \"_\" in INT.\n");
+        printf("ERROR: illegal using of \"_\" (underline) in INT in line %d.\n", line);
     }
     else if (bufferString[0] == '0' && buffLen > 1)
     {
-        printf("ERROR: illegal using zero in INT.\n");
+        printf("ERROR: illegal using of zero in INT in line %d.\n", line);
     }
     else 
     {
