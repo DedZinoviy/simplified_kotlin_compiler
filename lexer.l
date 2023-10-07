@@ -5,8 +5,6 @@
 %x MULTILINE_COMMENT
 %x STRING
 %x MULTILINE_STRING
-%x HEX_INTEGER
-%x DECIMAL_INTEGER
 %x CHAR
 
 DIGIT [0-9]
@@ -137,7 +135,6 @@ false {printf("(%s) - FALSE_KEY_WORD\n", yytext);}
 [A-Za-z_][A-Za-z0-9_]* {printf("(%s) - IDENTIFIER\n", yytext);}
 
 [0-9]([_0-9])* { bufferString[0] = 0;
-    BEGIN(DECIMAL_INTEGER);
     strcat(bufferString, yytext);
     int buffLen = strlen(bufferString);
     char lastChar = bufferString[buffLen - 1];
@@ -155,11 +152,9 @@ false {printf("(%s) - FALSE_KEY_WORD\n", yytext);}
         int res = atoi(bufferString);
         printf("(%d) - DECIMAL_INT\n", res);
     }
-    BEGIN(INITIAL);
 }
 
 0x[_0-9a-fA-F]* { bufferString[0] = 0;
-    BEGIN(HEX_INTEGER);
     strcat(bufferString, yytext);
     int buffLen = strlen(bufferString);
     char lastChar = bufferString[buffLen - 1];
@@ -176,7 +171,6 @@ false {printf("(%s) - FALSE_KEY_WORD\n", yytext);}
         int result = strtol(bufferString + 2, NULL, 16);
         printf("(%d) - HEX_INT\n", result);
     }
-    BEGIN(INITIAL);
 }
 
 0b[_0-1]* { bufferString[0] = 0;
