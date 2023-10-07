@@ -244,9 +244,9 @@ false {printf("(%s) - FALSE_KEY_WORD\n", yytext);}
 }
 <MULTILINE_STRING>\"{1,2} {strcat(bufferString, yytext);}
 <MULTILINE_STRING>\"\"\" {printf("(%s) - MULTILINE STRING\n", bufferString); BEGIN(INITIAL);}
-<MULTILINE_STRING><<EOF>> {printf("ERROR: no closing \"\"\" in line %d.\n", multilineBegin); BEGIN(INITIAL);}
+<MULTILINE_STRING><<EOF>> {printf("ERROR: no closing \"\"\" (three double-quotes) in MULTILINE STRING in line %d.\n", multilineBegin); BEGIN(INITIAL);}
 
-\" {bufferString[0] = 0; clearStringBuffer(&buff); BEGIN(STRING);}
+\" {bufferString[0] = 0; multilineBegin = line; clearStringBuffer(&buff); BEGIN(STRING);}
 <STRING>[^\\\"\$\n\r] {appendChar(&buff, yytext[0]);}
 <STRING>\$[A-Za-z_][A-Za-z0-9_]* {
     printf("(");
@@ -259,14 +259,14 @@ false {printf("(%s) - FALSE_KEY_WORD\n", yytext);}
     bufferString[0] = 0;
 }
 <STRING>\$[^A-Za-z_]* {appendChars(&buff, yytext);}
-<STRING>[\n\r] {printf("ERROR: no closing \"\n"); line += 1; BEGIN(INITIAL);}
+<STRING>[\n\r] {printf("ERROR: no closing \" (double-quote) in STRING in line %d.\n", multilineBegin); line += 1; BEGIN(INITIAL);}
 <STRING>\" { 
     printf("(");
     printStringBuffer(&buff);
     printf(") - ESCAPED STRING\n"); 
     BEGIN(INITIAL);
 }
-<STRING><<EOF>> {printf("ERROR: no closing \"\n"); BEGIN(INITIAL);}
+<STRING><<EOF>> {printf("ERROR: no closing \" (double-quote) in STRING in line %d.\n", multilineBegin); BEGIN(INITIAL);}
 
 \' {bufferString[0] = 0; clearStringBuffer(&buff); BEGIN(CHAR);}
 <CHAR>[^\\\'\n\r] {appendChar(&buff, yytext[0]);}
