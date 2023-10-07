@@ -82,7 +82,7 @@ false {printf("(%s) - FALSE_KEY_WORD\n", yytext);}
 
 \/\/ {bufferString[0] = 0; BEGIN(END_OF_LINE_COMMENT);}
 <END_OF_LINE_COMMENT>[^\n]* {strcat(bufferString, yytext);}
-<END_OF_LINE_COMMENT>\n {printf("(%s) - END_OF_LINE_COMMENT\n", bufferString); BEGIN(INITIAL);}
+<END_OF_LINE_COMMENT>[\r\n] {printf("(%s) - END_OF_LINE_COMMENT\n", bufferString);  line += 1; BEGIN(INITIAL);}
 <END_OF_LINE_COMMENT><<EOF>> {printf("(%s) - END_OF_LINE_COMMENT\n", bufferString); BEGIN(INITIAL);}
 
 \+ {printf("(%s) - PLUS_OPERATOR\n", yytext);}
