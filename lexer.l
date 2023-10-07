@@ -275,7 +275,7 @@ false {printf("(%s) - FALSE_KEY_WORD\n", yytext);}
 
 \' {bufferString[0] = 0; clearStringBuffer(&buff); BEGIN(CHAR);}
 <CHAR>[^\\\'\n\r] {appendChar(&buff, yytext[0]);}
-<CHAR>[\n\r] {printf("ERROR: no closing  \'\n"); BEGIN(INITIAL);}
+<CHAR>[\n\r] {printf("ERROR: no closing  \'\n"); line += 1; BEGIN(INITIAL);}
 <CHAR>\' {
     int buffLen = buff.length;
     if(buffLen > 1)
