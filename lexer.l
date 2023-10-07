@@ -214,7 +214,7 @@ false {printf("(%s) - FALSE_KEY_WORD\n", yytext);}
         removeUnderline(bufferString);
         int resLen = strlen(bufferString);
         double result = atof(bufferString);
-        printf("(%.*f) - DOUBLE", resLen, result);
+        printf("(%.*f) - DOUBLE\n", resLen, result);
     }
 }
 
@@ -233,7 +233,7 @@ false {printf("(%s) - FALSE_KEY_WORD\n", yytext);}
     {
         removeUnderline(bufferString);
         double result = atof(bufferString);
-        printf("(%e) - DOUBLE", result);
+        printf("(%e) - DOUBLE\n", result);
     }
 }
 
