@@ -290,14 +290,14 @@ false {printf("(%s) - FALSE_KEY_WORD\n", yytext);}
 }
 <CHAR><<EOF>> {printf("ERROR: no closing \'\n"); BEGIN(INITIAL);}
 
-<STRING,CHAR>\\n {strcat(bufferString, "\n");}
-<STRING,CHAR>\\t {strcat(bufferString, "\t");}
-<STRING,CHAR>\\b {strcat(bufferString, "\b");}
-<STRING,CHAR>\\r {strcat(bufferString, "\r");}
-<STRING,CHAR>\\\$ {strcat(bufferString, "$");}
-<STRING,CHAR>\\\" {strcat(bufferString, "\"");}
-<STRING,CHAR>\\\' {strcat(bufferString, "\'");}
-<STRING,CHAR>\\\\ {strcat(bufferString, "\\");}
+<STRING,CHAR>\\n {appendChar(&buff, '\n');}
+<STRING,CHAR>\\t {appendChar(&buff, '\t');}
+<STRING,CHAR>\\b {appendChar(&buff, '\b');}
+<STRING,CHAR>\\r {appendChar(&buff, '\r');}
+<STRING,CHAR>\\\$ {appendChar(&buff, '$');}
+<STRING,CHAR>\\\" {appendChar(&buff, '\"');}
+<STRING,CHAR>\\\' {appendChar(&buff, '\'');}
+<STRING,CHAR>\\\\ {appendChar(&buff, '\\');}
 
 [ \t] {
     // Игнорирование лишних пробелов и табуляций. 
