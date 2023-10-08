@@ -14,6 +14,10 @@
 
 %% 
 
+ExpressionList_e: /* empty */
+                | ExpressionList
+                ;
+
 ExpressionList: SimpleExpression
               | ExpressionList ',' SimpleExpression
               ;
@@ -23,8 +27,8 @@ SimpleExpression: Literal
                 | ID
                 | '(' SimpleExpression ')'
                 | SimpleExpression '.' ID
-                | SimpleExpression '.' ID '(' ExpressionList ')'
-                | ID '(' ExpressionList ')'
+                | SimpleExpression '.' ID '(' ExpressionList_e ')'
+                | ID '(' ExpressionList_e ')'
                 ;
 
 Literal: INT_LITERAL
