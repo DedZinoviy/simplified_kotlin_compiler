@@ -90,3 +90,5 @@ VarStmt: VAR ID ':' Type
        | VAR ID ':' Type '=' SimpleExpression
        ;
        
+ClassDeclaration: CLASS ID
+                ;
