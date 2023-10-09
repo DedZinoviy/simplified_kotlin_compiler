@@ -55,6 +55,8 @@ OperatorExpression: SimpleExpression '+' SimpleExpression
                   | SimpleExpression MUL_ASSIGNMENT SimpleExpression
                   | SimpleExpression DIV_ASSIGNMENT SimpleExpression
                   | SimpleExpression MOD_ASSIGNMENT SimpleExpression
+                  | '-' SimpleExpression %prec UMINUS
+                  | '+' SimpleExpression %prec UPLUS
                   ;
 
 Type: ID
