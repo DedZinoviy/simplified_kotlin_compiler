@@ -99,3 +99,8 @@ Visibility: PRIVATE
           | INTERNAL
           | PUBLIC
           ;
+
+StatementTerminator: ENDL
+                   | ';'
+                   ;
+                   
