@@ -60,9 +60,6 @@ OperatorExpression: SimpleExpression '+' SimpleExpression
                   | '+' SimpleExpression %prec UPLUS
                   ;
 
-Type: ID
-    ;
-
 BlockStatement: '{' StatementList '}'
                | '{' '}'
                ;
@@ -81,14 +78,14 @@ Statement: SimpleExpression
          | ValStmt
          ;
 
-ValStmt: VAL ID ':' Type
+ValStmt: VAL ID ':' ID
        | VAL ID '=' SimpleExpression
-       | VAL ID ':' Type '=' SimpleExpression
+       | VAL ID ':' ID '=' SimpleExpression
        ;
 
-VarStmt: VAR ID ':' Type
+VarStmt: VAR ID ':' ID
        | VAR ID '=' SimpleExpression
-       | VAR ID ':' Type '=' SimpleExpression
+       | VAR ID ':' ID '=' SimpleExpression
        ;
        
 ClassDeclaration: CLASS ID
@@ -103,4 +100,3 @@ Visibility: PRIVATE
 StatementTerminator: ENDL
                    | ';'
                    ;
-                   
