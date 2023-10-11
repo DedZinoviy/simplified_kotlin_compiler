@@ -73,9 +73,10 @@ StatementList: Statement
              | StatementList Statement
              ;
 
-Statement: SimpleExpression
-         | VarStmt
-         | ValStmt
+Statement: StatementTerminator
+         | SimpleExpression StatementTerminator
+         | VarStmt StatementTerminator
+         | ValStmt StatementTerminator
          ;
 
 ValStmt: VAL ID ':' ID
