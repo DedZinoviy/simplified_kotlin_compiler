@@ -93,3 +93,9 @@ VarStmt: VAR ID ':' Type
        
 ClassDeclaration: CLASS ID
                 ;
+
+Visibility: PRIVATE
+          | PROTECTED
+          | INTERNAL
+          | PUBLIC
+          ;
