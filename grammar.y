@@ -63,13 +63,13 @@ OperatorExpression: SimpleExpression '+' SimpleExpression
 Type: ID
     ;
 
-BlockExpression: '{' StatementList '}'
+BlockStatement: '{' StatementList '}'
                | '{' '}'
                ;
               
-IfStatement: IF '(' SimpleExpression ')' BlockExpression
+IfStatement: IF '(' SimpleExpression ')' BlockStatement
            | IF '(' SimpleExpression ')' SimpleExpression
-           | IF '(' SimpleExpression ')' BlockExpression ELSE BlockExpression
+           | IF '(' SimpleExpression ')' BlockStatement ELSE BlockStatement
            ;
 
 StatementList: Statement
