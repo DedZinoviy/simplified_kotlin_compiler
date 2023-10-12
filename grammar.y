@@ -11,7 +11,7 @@
 %left '*' '/' '%'
 %left UMINUS UPLUS
 %right PREF_INCREMENT PREF_DECREMENT
-%left POST_INCREMENT POST_DECREMENT
+%left POST_INCREMENT POST_DECREMENT '.'
 %nonassoc '(' ')'
 
 %% 
