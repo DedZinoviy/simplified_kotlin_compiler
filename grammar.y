@@ -107,6 +107,10 @@ VarStmt: VAR VarDeclaration
 
 VarDeclaration: ID ':' ID
        ;
+
+VarDeclarationList: VarDeclaration
+                  | VarDeclarationList ',' VarDeclaration
+                  ;
        
 ClassDeclaration: CLASS ID
                 ;
