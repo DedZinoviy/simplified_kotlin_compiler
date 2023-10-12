@@ -82,6 +82,7 @@ Statement: StatementTerminator
          | SimpleExpression StatementTerminator
          | VarStmt StatementTerminator
          | ValStmt StatementTerminator
+         | WhileStatement
          ;
 
 ValStmt: VAL ID ':' ID
