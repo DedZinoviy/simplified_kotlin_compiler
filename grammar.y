@@ -95,14 +95,17 @@ Statement: StatementTerminator
          | DoWhileStatement
          ;
 
-ValStmt: VAL ID ':' ID
+ValStmt: VAL VarDeclaration
        | VAL ID '=' SimpleExpression
-       | VAL ID ':' ID '=' SimpleExpression
+       | VAL VarDeclaration '=' SimpleExpression
        ;
 
-VarStmt: VAR ID ':' ID
+VarStmt: VAR VarDeclaration
        | VAR ID '=' SimpleExpression
-       | VAR ID ':' ID '=' SimpleExpression
+       | VAR VarDeclaration '=' SimpleExpression
+       ;
+
+VarDeclaration: ID ':' ID
        ;
        
 ClassDeclaration: CLASS ID
