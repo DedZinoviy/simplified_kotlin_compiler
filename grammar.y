@@ -74,6 +74,10 @@ WhileStatement: WHILE '(' SimpleExpression ')' Statement
               | WHILE '(' SimpleExpression ')' BlockStatement
               ;
 
+DoWhileStatement: DO BlockStatement WHILE '(' SimpleExpression ')'
+                | DO Statement WHILE '(' SimpleExpression ')'
+                ;
+
 StatementList: Statement
              | StatementList Statement
              ;
