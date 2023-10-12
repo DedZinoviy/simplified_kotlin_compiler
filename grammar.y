@@ -10,8 +10,8 @@
 %left '+' '-'
 %left '*' '/' '%'
 %left UMINUS UPLUS
-%left POST_INCREMENT POST_DECREMENT
 %right PREF_INCREMENT PREF_DECREMENT
+%left POST_INCREMENT POST_DECREMENT
 %nonassoc '(' ')'
 
 %% 
