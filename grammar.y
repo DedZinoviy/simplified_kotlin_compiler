@@ -6,6 +6,7 @@
 %right '=' PLUS_ASSIGNMENT MINUS_ASSIGNMENT MUL_ASSIGNMENT DIV_ASSIGNMENT MOD_ASSIGNMENT
 %left EQUAL NOT_EQUAL
 %left '>' '<' GREATER_EQUAL LESS_EQUAL 
+%left IN
 %left RANGE
 %left '+' '-'
 %left '*' '/' '%'
