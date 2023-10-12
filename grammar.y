@@ -60,6 +60,10 @@ OperatorExpression: SimpleExpression '+' SimpleExpression
                   | SimpleExpression MOD_ASSIGNMENT SimpleExpression
                   | '-' SimpleExpression %prec UMINUS
                   | '+' SimpleExpression %prec UPLUS
+                  | PREF_INCREMENT SimpleExpression
+                  | PREF_DECREMENT SimpleExpression
+                  | SimpleExpression POST_DECREMENT
+                  | SimpleExpression POST_INCREMENT
                   ;
 
 BlockStatement: '{' StatementList '}'
