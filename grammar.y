@@ -88,6 +88,7 @@ Statement: StatementTerminator
          | VarStmt StatementTerminator
          | ValStmt StatementTerminator
          | WhileStatement
+         | DoWhileStatement
          ;
 
 ValStmt: VAL ID ':' ID
