@@ -70,6 +70,10 @@ IfStatement: IF '(' SimpleExpression ')' BlockStatement
            | IF '(' SimpleExpression ')' BlockStatement ELSE BlockStatement
            ;
 
+WhileStatement: WHILE '(' SimpleExpression ')' Statement
+              | WHILE '(' SimpleExpression ')' BlockStatement
+              ;
+
 StatementList: Statement
              | StatementList Statement
              ;
