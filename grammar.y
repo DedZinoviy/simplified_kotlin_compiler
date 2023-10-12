@@ -111,6 +111,12 @@ VarDeclaration: ID ':' ID
 VarDeclarationList: VarDeclaration
                   | VarDeclarationList ',' VarDeclaration
                   ;
+
+FunctionDeclaration: FUNC ID '(' ')' BlockStatement
+        | FUNC ID '(' ')' ':' ID BlockStatement
+        | FUNC ID '(' VarDeclarationList ')' BlockStatement
+        | FUNC ID '(' VarDeclarationList ')' ':' ID BlockStatement
+        ;
        
 ClassDeclaration: CLASS ID
                 ;
