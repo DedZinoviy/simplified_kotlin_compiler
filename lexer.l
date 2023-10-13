@@ -37,6 +37,7 @@ DIGIT [0-9]
     struct stringBuffer buff = {"", 0}; // Дополнительный буффер для строк.
     int line = 1;
     int multilineBegin;
+    int braceCounter = 0;
 %}
 
 as {printf("(%s) - AS_KEY_WORD\n", yytext);}
@@ -102,8 +103,8 @@ false {printf("(%s) - FALSE_KEY_WORD\n", yytext);}
 \-\= {printf("(%s) - MINUS_ASSIGNMENT_OPERATOR\n", yytext);}
 \%\= {printf("(%s) - MOD_ASSIGNMENT_OPERATOR\n", yytext);}
 
-\{ {printf("(%s) - LEFT_BRACE\n", yytext);}
-\} {printf("(%s) - RIGHT_BRACE\n", yytext);}
+\{ {printf("(%s) - LEFT_BRACE\n", yytext); braceCounter++;}
+\} {printf("(%s) - RIGHT_BRACE\n", yytext); braceCounter--;}
 \[ {printf("(%s) - LEFT_SQUARE_BRACKET\n", yytext);}
 \] {printf("(%s) - RIGHT_SQUARE_BRACKET\n", yytext);}
 \( {printf("(%s) - LEFT_ROUND_BRACKET\n", yytext);}
