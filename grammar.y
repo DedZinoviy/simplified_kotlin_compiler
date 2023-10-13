@@ -135,3 +135,9 @@ StatementTerminator: ENDL
 KotlinFileElement: FunctionDeclaration
                  | ClassDeclaration
                  ;
+
+KotlinFileVisibilityElement: KotlinFileElement
+                           | PUBLIC KotlinFileElement
+                           | PRIVATE KotlinFileElement
+                           | INTERNAL KotlinFileElement
+                           ;
