@@ -222,8 +222,15 @@ false {printf("(%s) - FALSE_KEY_WORD\n", yytext);}
     strcat(bufferString, yytext);
     char* dot = strchr(bufferString, '.');
     char* e = strchr(bufferString, 'e');
+    char* E = strchr(bufferString, 'E');
     int positionDot = dot - bufferString;
-    int positionE = e - bufferString;
+    int positionE;
+    if (e != NULL) {
+       positionE = e - bufferString;
+    }
+    if (E != NULL) {
+       positionE = E - bufferString;
+    }
     if ((positionDot != 0 && bufferString[positionDot - 1] == '_') || (bufferString[positionE - 1] == '_')) 
     {
         printf("ERROR: illegal using of \"_\" in DOUBLE in line %d.\n", line);
