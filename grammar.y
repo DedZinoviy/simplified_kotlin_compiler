@@ -131,3 +131,7 @@ Visibility: PRIVATE
 StatementTerminator: ENDL
                    | ';'
                    ;
+
+KotlinFileElement: FunctionDeclaration
+                 | ClassDeclaration
+                 ;
