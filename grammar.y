@@ -119,9 +119,13 @@ FunctionDeclaration: FUNC ID '(' ')' BlockStatement
         | FUNC ID '(' VarDeclarationList ')' ':' ID BlockStatement
         ;
 
-ClassMember: Visibility FunctionDeclaration
-           | Visibility ValStmt
-           | Visibility VarStmt
+ClassVisibilityMember: ClassMember
+                     | Visibility ClassMember
+                     ;
+
+ClassMember: FunctionDeclaration
+           | ValStmt
+           | VarStmt
            ;
        
 ClassDeclaration: CLASS ID
