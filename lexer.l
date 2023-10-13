@@ -217,7 +217,7 @@ false {printf("(%s) - FALSE_KEY_WORD\n", yytext);}
     }
 }
 
-({DIGIT}[_0-9]*)*\.({DIGIT}[_0-9]*)+e[\+\-]?{DIGIT}+ {
+({DIGIT}[_0-9]*)*\.({DIGIT}[_0-9]*)+(e|E)[\+\-]?{DIGIT}+ {
     bufferString[0] = 0;
     strcat(bufferString, yytext);
     char* dot = strchr(bufferString, '.');
