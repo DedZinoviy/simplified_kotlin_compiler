@@ -155,23 +155,24 @@ false {printf("(%s) - FALSE_KEY_WORD\n", yytext);}
     printf("ERROR: illegal using of \"_\" (underline) in INT in line %d.\n", line);
 }
 
-0(x|X)[_0-9a-fA-F]* { bufferString[0] = 0;
+0(x|X)[0-9a-fA-F](_*[0-9a-fA-F]+)* { 
+    bufferString[0] = 0;
     strcat(bufferString, yytext);
-    int buffLen = strlen(bufferString);
-    char lastChar = bufferString[buffLen - 1];
-    if (buffLen == 2) {
-        printf("ERROR: missing hex int value in line %d.\n", line);
-    }
-    else if (lastChar == '_' || (buffLen > 2 && bufferString[2] == '_'))
-    {
-        printf("ERROR: illegal using of \"_\" in INT in line %d.\n", line);
-    }
-    else
-    {
-        removeUnderline(bufferString);
-        int result = strtol(bufferString + 2, NULL, 16);
-        printf("(%d) - HEX_INT\n", result);
-    }
+    removeUnderline(bufferString);
+    int result = strtol(bufferString + 2, NULL, 16);
+    printf("(%d) - HEX_INT\n", result);
+}
+
+0(x|X)\_* {
+    printf("ERROR: missing hex int value in line %d.\n", line);
+}
+
+0(x|X)[0-9a-fA-F](_*[0-9a-fA-F]+)*\_+ {
+    printf("ERROR: illegal using of \"_\" in INT in line %d.\n", line);
+}
+
+0(x|X)\_+[0-9a-fA-F](_*[0-9a-fA-F]+)* {
+    printf("ERROR: illegal using of \"_\" in INT in line %d.\n", line);
 }
 
 0(b|B)[_0-1]* { bufferString[0] = 0;
