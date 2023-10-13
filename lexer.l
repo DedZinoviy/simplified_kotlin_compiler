@@ -331,7 +331,7 @@ false {printf("(%s) - FALSE_KEY_WORD\n", yytext);}
     }
     else
     {
-        appendChar(&buff, strtol(yytext+2,NULL, 16));
+        appendChar(&buff, value);
     }
 }
 
