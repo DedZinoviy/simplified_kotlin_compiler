@@ -123,6 +123,10 @@ ClassVisibilityMember: ClassMember
                      | Visibility ClassMember
                      ;
 
+ClassVisibilityMemberList: ClassVisibilityMember
+                         | ClassVisibilityMemberList ClassVisibilityMember
+                         ;
+
 ClassMember: FunctionDeclaration
            | ValStmt
            | VarStmt
