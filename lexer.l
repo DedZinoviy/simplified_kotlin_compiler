@@ -321,6 +321,12 @@ false {printf("(%s) - FALSE_KEY_WORD\n", yytext);}
     line = line + 1;
 }
 
+. {
+    bufferString[0] = 0;
+    strcat(bufferString, yytext);
+    printf("%s - UNRECOGNIZED TOKEN.");
+}
+
 %%
 
 int removeCharFromStringByIndex(char * str, int index) 
