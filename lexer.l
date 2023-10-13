@@ -136,15 +136,10 @@ false {printf("(%s) - FALSE_KEY_WORD\n", yytext);}
 
 [A-Za-z_][A-Za-z0-9_]* {printf("(%s) - IDENTIFIER\n", yytext);}
 
-[0-9]([_0-9])* { bufferString[0] = 0;
+{DIGIT}(\_*{DIGIT})* { bufferString[0] = 0;
     strcat(bufferString, yytext);
     int buffLen = strlen(bufferString);
-    char lastChar = bufferString[buffLen - 1];
-    if (lastChar == '_')
-    {
-        printf("ERROR: illegal using of \"_\" (underline) in INT in line %d.\n", line);
-    }
-    else if (bufferString[0] == '0' && buffLen > 1)
+    if (bufferString[0] == '0' && buffLen > 1)
     {
         printf("ERROR: illegal using of zero in INT in line %d.\n", line);
     }
@@ -154,6 +149,10 @@ false {printf("(%s) - FALSE_KEY_WORD\n", yytext);}
         int res = atoi(bufferString);
         printf("(%d) - DECIMAL_INT\n", res);
     }
+}
+
+{DIGIT}(\_*{DIGIT})*\_+ {
+    printf("ERROR: illegal using of \"_\" (underline) in INT in line %d.\n", line);
 }
 
 0(x|X)[_0-9a-fA-F]* { bufferString[0] = 0;
