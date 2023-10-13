@@ -193,6 +193,10 @@ false {printf("(%s) - FALSE_KEY_WORD\n", yytext);}
     }
 }
 
+0(b|B)[_0-9]* {
+    printf("ERROR: oot of range binary value in line %d.\n", line);
+}
+
 ({DIGIT}[_0-9]*)*\.({DIGIT}[_0-9]*)+ {
     bufferString[0] = 0;
     strcat(bufferString, yytext);
