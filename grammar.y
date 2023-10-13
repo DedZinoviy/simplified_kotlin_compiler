@@ -16,6 +16,9 @@
 %nonassoc '(' ')'
 
 %% 
+KotlinFileVisibilityElementList: KotlinFileVisibilityElement
+                               |  KotlinFileVisibilityElementList KotlinFileVisibilityElement
+                               ;
 
 ExpressionList_e: /* empty */
                 | ExpressionList
