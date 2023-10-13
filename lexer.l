@@ -217,12 +217,22 @@ false {printf("(%s) - FALSE_KEY_WORD\n", yytext);}
     }
 }
 
-({DIGIT}[_0-9]*)*\.({DIGIT}[_0-9]*)+(e|E)[\+\-]?{DIGIT}+ {
+({DIGIT}[_0-9]*)*\.({DIGIT}[_0-9]*)+(e|E)[\+\-]?[_0-9]+ {
     bufferString[0] = 0;
     strcat(bufferString, yytext);
     char* dot = strchr(bufferString, '.');
     char* e = strchr(bufferString, 'e');
     char* E = strchr(bufferString, 'E');
+    int positionSign;
+    char* plus = strchr(bufferString, '+');
+    char* minus = strchr(bufferString, '-');
+    if (plus != NULL) {
+        positionSign = plus;
+    }
+    if (minus != NULL)
+    {
+        positionSign = minus;
+    }
     int positionDot = dot - bufferString;
     int positionE;
     if (e != NULL) {
@@ -231,7 +241,8 @@ false {printf("(%s) - FALSE_KEY_WORD\n", yytext);}
     if (E != NULL) {
        positionE = E - bufferString;
     }
-    if ((positionDot != 0 && bufferString[positionDot - 1] == '_') || (bufferString[positionE - 1] == '_')) 
+    if ((positionDot != 0 && bufferString[positionDot - 1] == '_') || (bufferString[positionE - 1] == '_')
+    || (bufferString[positionE + 1] == '_') || bufferString[positionSign + 1] == '_') 
     {
         printf("ERROR: illegal using of \"_\" in DOUBLE in line %d.\n", line);
     }
