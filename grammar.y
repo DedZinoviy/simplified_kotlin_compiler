@@ -133,6 +133,8 @@ ClassMember: FunctionDeclaration
            ;
        
 ClassDeclaration: CLASS ID
+                | CLASS ID '{' '}'
+                | CLASS ID '{' ClassVisibilityMemberList '}'
                 ;
 
 Visibility: PRIVATE
