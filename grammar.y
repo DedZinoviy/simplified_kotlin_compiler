@@ -58,6 +58,7 @@ OperatorExpression: SimpleExpression '+' SimpleExpression
                   | SimpleExpression MUL_ASSIGNMENT SimpleExpression
                   | SimpleExpression DIV_ASSIGNMENT SimpleExpression
                   | SimpleExpression MOD_ASSIGNMENT SimpleExpression
+                  | SimpleExpression RANGE SimpleExpression
                   | '-' SimpleExpression %prec UMINUS
                   | '+' SimpleExpression %prec UPLUS
                   | PREF_INCREMENT SimpleExpression
