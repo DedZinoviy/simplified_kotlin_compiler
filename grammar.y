@@ -130,9 +130,9 @@ ClassVisibilityMemberList: ClassVisibilityMember
                          | ClassVisibilityMemberList ClassVisibilityMember
                          ;
 
-ClassMember: FunctionDeclaration
-           | ValStmt
-           | VarStmt
+ClassMember: FunctionDeclaration StatementTerminator
+           | ValStmt StatementTerminator
+           | VarStmt StatementTerminator
            ;
        
 ClassDeclaration: CLASS ID
