@@ -198,61 +198,33 @@ false {printf("(%s) - FALSE_KEY_WORD\n", yytext);}
     printf("ERROR: oot of range binary value in line %d.\n", line);
 }
 
-({DIGIT}[_0-9]*)*\.({DIGIT}[_0-9]*)+ {
+({DIGIT}(\_*{DIGIT})*)?\.{DIGIT}(\_*{DIGIT})*((e|E)(\+|\-)?{DIGIT}(\_*{DIGIT})*)? {
     bufferString[0] = 0;
     strcat(bufferString, yytext);
-    int buffLen = strlen(bufferString);
-    char * dot = strchr(bufferString, '.');
-    char lastChar = bufferString[buffLen - 1];
-    int position = dot - bufferString;
-    if ((lastChar == '_') || (position != 0 && bufferString[position - 1] == '_')) 
-    {
-        printf("ERROR: illegal using of \"_\" in DOUBLE in line %d.\n", line);
-    }
-    else
-    {
-        removeUnderline(bufferString);
-        int resLen = strlen(bufferString);
-        double result = atof(bufferString);
-        printf("(%.*f) - DOUBLE\n", resLen, result);
-    }
+    removeUnderline(bufferString);
+    int resLen = strlen(bufferString);
+    double result = atof(bufferString);
+    printf("(%.*f) - DOUBLE\n", resLen, result);
 }
 
-({DIGIT}[_0-9]*)*\.({DIGIT}[_0-9]*)+(e|E)[\+\-]?[_0-9]+ {
-    bufferString[0] = 0;
-    strcat(bufferString, yytext);
-    char* dot = strchr(bufferString, '.');
-    char* e = strchr(bufferString, 'e');
-    char* E = strchr(bufferString, 'E');
-    int positionSign;
-    char* plus = strchr(bufferString, '+');
-    char* minus = strchr(bufferString, '-');
-    if (plus != NULL) {
-        positionSign = plus;
-    }
-    if (minus != NULL)
-    {
-        positionSign = minus;
-    }
-    int positionDot = dot - bufferString;
-    int positionE;
-    if (e != NULL) {
-       positionE = e - bufferString;
-    }
-    if (E != NULL) {
-       positionE = E - bufferString;
-    }
-    if ((positionDot != 0 && bufferString[positionDot - 1] == '_') || (bufferString[positionE - 1] == '_')
-    || (bufferString[positionE + 1] == '_') || bufferString[positionSign + 1] == '_') 
-    {
-        printf("ERROR: illegal using of \"_\" in DOUBLE in line %d.\n", line);
-    }
-    else
-    {
-        removeUnderline(bufferString);
-        double result = atof(bufferString);
-        printf("(%e) - DOUBLE\n", result);
-    }
+({DIGIT}(\_*{DIGIT})*\_+)\.{DIGIT}(\_*{DIGIT})*((e|E)(\+|\-)?{DIGIT}(\_*{DIGIT})*)? {
+    printf("ERROR: illegal usage of \"_\" in DOUBLE in line %d.\n", line);
+}
+
+({DIGIT}(\_*{DIGIT})*)?\.{DIGIT}(\_*{DIGIT})*\_+((e|E)(\+|\-)?{DIGIT}(\_*{DIGIT})*)? {
+    printf("ERROR: illegal usage of \"_\" in DOUBLE in line %d.\n", line);
+}
+
+({DIGIT}(\_*{DIGIT})*)?\.{DIGIT}(\_*{DIGIT})*((e|E)(\+|\-)?\_+{DIGIT}(\_*{DIGIT})*) {
+    printf("ERROR: illegal usage of \"_\" in DOUBLE in line %d.\n", line);
+}
+
+({DIGIT}(\_*{DIGIT})*)?\.{DIGIT}(\_*{DIGIT})*((e|E)(\+|\-)?{DIGIT}(\_*{DIGIT})*\_+) {
+    printf("ERROR: illegal usage of \"_\" in DOUBLE in line %d.\n", line);
+}
+
+({DIGIT}(\_*{DIGIT})*)?\.{DIGIT}(\_*{DIGIT})*((e|E)(\+|\-)?)(\_)* {
+    printf("ERROR: the value is out of range in DOUBLE in line %d.\n", line);
 }
 
 \"\"\" {bufferString[0] = 0; multilineBegin = line; BEGIN(MULTILINE_STRING);}
