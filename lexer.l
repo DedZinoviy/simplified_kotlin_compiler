@@ -152,7 +152,7 @@ false {printf("(%s) - FALSE_KEY_WORD\n", yytext);}
 }
 
 {DIGIT}(\_*{DIGIT})*\_+ {
-    printf("ERROR: illegal using of \"_\" (underline) in INT in line %d.\n", line);
+    printf("ERROR: illegal underscore in INT in line %d.\n", line);
 }
 
 0(x|X)[0-9a-fA-F](_*[0-9a-fA-F]+)* { 
@@ -168,11 +168,11 @@ false {printf("(%s) - FALSE_KEY_WORD\n", yytext);}
 }
 
 0(x|X)[0-9a-fA-F](_*[0-9a-fA-F]+)*\_+ {
-    printf("ERROR: illegal using of \"_\" in INT in line %d.\n", line);
+    printf("ERROR: illegal underscore in INT in line %d.\n", line);
 }
 
 0(x|X)\_+[0-9a-fA-F](_*[0-9a-fA-F]+)* {
-    printf("ERROR: illegal using of \"_\" in INT in line %d.\n", line);
+    printf("ERROR: illegal underscore in INT in line %d.\n", line);
 }
 
 0(b|B)[0-1](_*[0-1]+)* {
@@ -188,11 +188,11 @@ false {printf("(%s) - FALSE_KEY_WORD\n", yytext);}
 }
 
 0(b|B)[0-1](_*[0-1]+)*\_+ {
-    printf("ERROR: illegal using of \"_\" in INT in line %d.\n", line);
+    printf("ERROR: illegal underscore in INT in line %d.\n", line);
 }
 
 0(b|B)\_+[0-1](_*[0-1]+)* {
-    printf("ERROR: illegal using of \"_\" in INT in line %d.\n", line);
+    printf("ERROR: illegal underscore in INT in line %d.\n", line);
 }
 
 0(b|B)[_0-9]* {
@@ -209,19 +209,19 @@ false {printf("(%s) - FALSE_KEY_WORD\n", yytext);}
 }
 
 ({DIGIT}(\_*{DIGIT})*\_+)\.{DIGIT}(\_*{DIGIT})*((e|E)(\+|\-)?{DIGIT}(\_*{DIGIT})*)? {
-    printf("ERROR: illegal usage of \"_\" in DOUBLE in line %d.\n", line);
+    printf("ERROR: illegal underscore in DOUBLE in line %d.\n", line);
 }
 
 ({DIGIT}(\_*{DIGIT})*)?\.{DIGIT}(\_*{DIGIT})*\_+((e|E)(\+|\-)?{DIGIT}(\_*{DIGIT})*)? {
-    printf("ERROR: illegal usage of \"_\" in DOUBLE in line %d.\n", line);
+    printf("ERROR: illegal underscore in DOUBLE in line %d.\n", line);
 }
 
 ({DIGIT}(\_*{DIGIT})*)?\.{DIGIT}(\_*{DIGIT})*((e|E)(\+|\-)?\_+{DIGIT}(\_*{DIGIT})*) {
-    printf("ERROR: illegal usage of \"_\" in DOUBLE in line %d.\n", line);
+    printf("ERROR: illegal underscore in DOUBLE in line %d.\n", line);
 }
 
 ({DIGIT}(\_*{DIGIT})*)?\.{DIGIT}(\_*{DIGIT})*((e|E)(\+|\-)?{DIGIT}(\_*{DIGIT})*\_+) {
-    printf("ERROR: illegal usage of \"_\" in DOUBLE in line %d.\n", line);
+    printf("ERROR: illegal underscore in DOUBLE in line %d.\n", line);
 }
 
 ({DIGIT}(\_*{DIGIT})*)?\.{DIGIT}(\_*{DIGIT})*((e|E)(\+|\-)?)(\_)* {
