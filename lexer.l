@@ -40,7 +40,6 @@ DIGIT [0-9]
     struct stringBuffer buff = {"", 0}; // Дополнительный буффер для строк.
     int line = 1;
     int multilineBegin;
-    int braceCounter = 0;
 %}
 
 as {printf("(%s) - AS_KEY_WORD\n", yytext);}
