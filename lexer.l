@@ -272,9 +272,9 @@ false {printf("(%s) - FALSE_KEY_WORD\n", yytext);}
 }
 <MULTILINE_STRING>\$[A-Za-z_][A-Za-z0-9_]* {
     printf("(%s) - MULTILINE_STRING\n", bufferString);
-    printf("(+) - PLUS_OPERATOR\n");
+    printf("($) - BEGIN_INTERPOLATION\n");
     printf("(%s) - IDENTIFIER\n", yytext + 1);
-    printf("(+) - PLUS_OPERATOR\n");
+    printf("() - END_INTERPOLATION\n");
     bufferString[0] = 0;
 }
 <MULTILINE_STRING>\"{1,2} {strcat(bufferString, yytext);}
