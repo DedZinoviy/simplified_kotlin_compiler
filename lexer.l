@@ -175,23 +175,24 @@ false {printf("(%s) - FALSE_KEY_WORD\n", yytext);}
     printf("ERROR: illegal using of \"_\" in INT in line %d.\n", line);
 }
 
-0(b|B)[_0-1]* { bufferString[0] = 0;
+0(b|B)[0-1](_*[0-1]+)* {
+    bufferString[0] = 0;
     strcat(bufferString, yytext);
-    int buffLen = strlen(bufferString);
-    char lastChar = bufferString[buffLen - 1];
-    if (buffLen == 2) {
-        printf("ERROR: missing binary int value in line %d.\n", line);
-    }
-    else if (lastChar == '_' || (buffLen > 2 && bufferString[2] == '_'))
-    {
-        printf("ERROR: illegal using of \"_\" in INT in line %d.\n", line);
-    }
-    else
-    {
-        removeUnderline(bufferString);
-        int result = strtol(bufferString + 2, NULL, 2);
-        printf("(%d) - BINARY_INT\n", result);
-    }
+    removeUnderline(bufferString);
+    int result = strtol(bufferString + 2, NULL, 2);
+    printf("(%d) - BINARY_INT\n", result);
+}
+
+0(b|B)\_* {
+    printf("ERROR: missing binary int value in line %d.\n", line);
+}
+
+0(b|B)[0-1](_*[0-1]+)*\_+ {
+    printf("ERROR: illegal using of \"_\" in INT in line %d.\n", line);
+}
+
+0(b|B)\_+[0-1](_*[0-1]+)* {
+    printf("ERROR: illegal using of \"_\" in INT in line %d.\n", line);
 }
 
 0(b|B)[_0-9]* {
