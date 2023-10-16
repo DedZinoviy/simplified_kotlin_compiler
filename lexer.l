@@ -1,6 +1,9 @@
 %option noyywrap
 %option never-interactive
+%option stack
 
+%s INTERPOLATION
+%s INBRACE
 %x END_OF_LINE_COMMENT
 %x MULTILINE_COMMENT
 %x STRING
@@ -103,8 +106,8 @@ false {printf("(%s) - FALSE_KEY_WORD\n", yytext);}
 \-\= {printf("(%s) - MINUS_ASSIGNMENT_OPERATOR\n", yytext);}
 \%\= {printf("(%s) - MOD_ASSIGNMENT_OPERATOR\n", yytext);}
 
-\{ {printf("(%s) - LEFT_BRACE\n", yytext); braceCounter++;}
-\} {printf("(%s) - RIGHT_BRACE\n", yytext); braceCounter--;}
+<INITIAL>\{ {printf("(%s) - LEFT_BRACE\n", yytext);}
+<INITIAL>\} {printf("(%s) - RIGHT_BRACE\n", yytext);}
 \[ {printf("(%s) - LEFT_SQUARE_BRACKET\n", yytext);}
 \] {printf("(%s) - RIGHT_SQUARE_BRACKET\n", yytext);}
 \( {printf("(%s) - LEFT_ROUND_BRACKET\n", yytext);}
@@ -133,6 +136,32 @@ false {printf("(%s) - FALSE_KEY_WORD\n", yytext);}
 \? {printf("(%s) - ALLOW_NULL_OPERATOR\n", yytext);}
 \-\> {printf("(%s) - LAMBDA_OPERATOR\n", yytext);}
 \@ {printf("(%s) - ANNOTATION_OPERATOR\n", yytext);}
+
+<INTERPOLATION>"{" {
+    printf("(%s) - LEFT_BRACE\n", yytext);
+    yy_push_state(INBRACE);
+}
+
+<INBRACE>"}" {
+    printf("(%s) - RIGHT_BRACE\n", yytext);
+    yy_pop_state();
+}
+
+<INTERPOLATION>"}" {
+    printf("(%s) - END_INTERPOLATION\n", yytext);
+    bufferString[0] = 0;
+    yy_pop_state();
+}
+
+<INBRACE><<EOF>> {
+    printf("ERROR: expecting \"{\"");
+    BEGIN(INITIAL);
+}
+
+<INTERPOLATION><<EOF>> {
+    printf("ERROR: expecting \"{\"");
+    BEGIN(INITIAL);
+}
 
 [A-Za-z_][A-Za-z0-9_]* {printf("(%s) - IDENTIFIER\n", yytext);}
 
@@ -228,9 +257,20 @@ false {printf("(%s) - FALSE_KEY_WORD\n", yytext);}
     printf("ERROR: the value is out of range in DOUBLE in line %d.\n", line);
 }
 
-\"\"\" {bufferString[0] = 0; multilineBegin = line; BEGIN(MULTILINE_STRING);}
+\"\"\" {
+    bufferString[0] = 0;
+    multilineBegin = line;
+    printf("(%s) - MULTILINE_STRING_BEGIN\n", yytext);
+    yy_push_state(MULTILINE_STRING); 
+}
 <MULTILINE_STRING>[\n\r] {line += 1; strcat(bufferString, yytext);}
 <MULTILINE_STRING>[^\$\"\n\r]+ {strcat(bufferString, yytext);}
+<MULTILINE_STRING>\$\{ {
+    printf("(%s) - MULTILINE_STRING\n", bufferString);
+    printf("(%s) - BEGIN_INTERPOLATION\n", yytext);
+    bufferString[0] = 0;
+    yy_push_state(INTERPOLATION);
+}
 <MULTILINE_STRING>\$[A-Za-z_][A-Za-z0-9_]* {
     printf("(%s) - MULTILINE_STRING\n", bufferString);
     printf("(+) - PLUS_OPERATOR\n");
@@ -239,7 +279,10 @@ false {printf("(%s) - FALSE_KEY_WORD\n", yytext);}
     bufferString[0] = 0;
 }
 <MULTILINE_STRING>\"{1,2} {strcat(bufferString, yytext);}
-<MULTILINE_STRING>\"\"\" {printf("(%s) - MULTILINE STRING\n", bufferString); BEGIN(INITIAL);}
+<MULTILINE_STRING>\"\"\" {printf("(%s) - MULTILINE STRING\n", bufferString); 
+    printf("(%s) - MULTILINE STRING END\n", yytext);
+    yy_pop_state();
+}
 <MULTILINE_STRING><<EOF>> {printf("ERROR: no closing \"\"\" (three double-quotes) in MULTILINE STRING in line %d.\n", multilineBegin); BEGIN(INITIAL);}
 
 \" {bufferString[0] = 0; multilineBegin = line; clearStringBuffer(&buff); BEGIN(STRING);}
