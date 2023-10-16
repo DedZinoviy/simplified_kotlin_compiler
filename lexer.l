@@ -149,6 +149,7 @@ false {printf("(%s) - FALSE_KEY_WORD\n", yytext);}
 <INTERPOLATION>"}" {
     printf("(%s) - END_INTERPOLATION\n", yytext);
     bufferString[0] = 0;
+    clearStringBuffer(&buff);
     yy_pop_state();
 }
 
@@ -284,8 +285,22 @@ false {printf("(%s) - FALSE_KEY_WORD\n", yytext);}
 }
 <MULTILINE_STRING><<EOF>> {printf("ERROR: no closing \"\"\" (three double-quotes) in MULTILINE STRING in line %d.\n", multilineBegin); BEGIN(INITIAL);}
 
-\" {bufferString[0] = 0; multilineBegin = line; clearStringBuffer(&buff); BEGIN(STRING);}
+\" {
+    bufferString[0] = 0;
+    multilineBegin = line;
+    clearStringBuffer(&buff);
+    printf("(%s) - ESCAPED_STRING_BEGIN\n", yytext);
+    yy_push_state(STRING);
+}
 <STRING>[^\\\"\$\n\r] {appendChar(&buff, yytext[0]);}
+<STRING>\$\{ {
+    printf("(");
+    printStringBuffer(&buff);
+    printf(") - ESCAPED_STRING\n");
+    printf("(%s) - BEGIN_INTERPOLATION\n", yytext);
+    clearStringBuffer(&buff);
+    yy_push_state(INTERPOLATION);
+}
 <STRING>\$[A-Za-z_][A-Za-z0-9_]* {
     printf("(");
     printStringBuffer(&buff);
@@ -297,12 +312,13 @@ false {printf("(%s) - FALSE_KEY_WORD\n", yytext);}
     bufferString[0] = 0;
 }
 <STRING>\$[^A-Za-z_]* {appendChars(&buff, yytext);}
-<STRING>[\n\r] {printf("ERROR: no closing \" (double-quote) in STRING in line %d.\n", multilineBegin); line += 1; BEGIN(INITIAL);}
+<STRING>[\n\r] {printf("ERROR: no closing \" (double-quote) in STRING in line %d.\n", multilineBegin); line += 1; yy_pop_state();}
 <STRING>\" { 
     printf("(");
     printStringBuffer(&buff);
     printf(") - ESCAPED STRING\n"); 
-    BEGIN(INITIAL);
+    printf("(%s) - ESCAPED_STRING_END\n", yytext);
+    yy_pop_state();
 }
 <STRING><<EOF>> {printf("ERROR: no closing \" (double-quote) in STRING in line %d.\n", multilineBegin); BEGIN(INITIAL);}
 
