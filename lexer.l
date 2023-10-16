@@ -74,17 +74,17 @@ while {printf("(%s) - WHILE_KEY_WORD\n", yytext);}
 true {printf("(%s) - TRUE_KEY_WORD\n", yytext);}
 false {printf("(%s) - FALSE_KEY_WORD\n", yytext);}
 
-\/\* {bufferString[0] = 0; multilineBegin = line; BEGIN(MULTILINE_COMMENT);}
+\/\* {bufferString[0] = 0; multilineBegin = line; yy_push_state(MULTILINE_COMMENT);}
 <MULTILINE_COMMENT>[^*\n]+ {strcat(bufferString, yytext);}
 <MULTILINE_COMMENT>[^*\n]*\n {line += 1; strcat(bufferString, yytext);}
 <MULTILINE_COMMENT>"*"+\n {line += 1; strcat(bufferString, yytext);}
 <MULTILINE_COMMENT>"*"+[^*/] {strcat(bufferString, yytext);}
-<MULTILINE_COMMENT>"*"+"/" {printf("(%s) - MULTILINE_COMMENT\n", bufferString); BEGIN(INITIAL);}
+<MULTILINE_COMMENT>"*"+"/" {printf("(%s) - MULTILINE_COMMENT\n", bufferString); yy_pop_state();}
 <MULTILINE_COMMENT><<EOF>> {printf("ERROR: no closing */ in line %d.\n", multilineBegin); BEGIN(INITIAL);}
 
-\/\/ {bufferString[0] = 0; BEGIN(END_OF_LINE_COMMENT);}
+\/\/ {bufferString[0] = 0; yy_push_state(END_OF_LINE_COMMENT);}
 <END_OF_LINE_COMMENT>[^\n]* {strcat(bufferString, yytext);}
-<END_OF_LINE_COMMENT>[\r\n] {printf("(%s) - END_OF_LINE_COMMENT\n", bufferString);  line += 1; BEGIN(INITIAL);}
+<END_OF_LINE_COMMENT>[\r\n] {printf("(%s) - END_OF_LINE_COMMENT\n", bufferString);  line += 1; yy_pop_state();}
 <END_OF_LINE_COMMENT><<EOF>> {printf("(%s) - END_OF_LINE_COMMENT\n", bufferString); BEGIN(INITIAL);}
 
 \+ {printf("(%s) - PLUS_OPERATOR\n", yytext);}
