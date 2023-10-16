@@ -306,7 +306,7 @@ false {printf("(%s) - FALSE_KEY_WORD\n", yytext);}
 }
 <STRING><<EOF>> {printf("ERROR: no closing \" (double-quote) in STRING in line %d.\n", multilineBegin); BEGIN(INITIAL);}
 
-\' {bufferString[0] = 0; multilineBegin = line; clearStringBuffer(&buff); BEGIN(CHAR);}
+\' {bufferString[0] = 0; multilineBegin = line; clearStringBuffer(&buff); yy_push_state(CHAR);}
 <CHAR>[^\\\'\n\r] {appendChar(&buff, yytext[0]);}
 <CHAR>[\n\r] {printf("ERROR: no closing  \' (single-quote) in CHAR in line %d.\n", multilineBegin); line += 1; BEGIN(INITIAL);}
 <CHAR>\' {
@@ -323,7 +323,7 @@ false {printf("(%s) - FALSE_KEY_WORD\n", yytext);}
     {
         printf("(%c) - CHAR\n", buff.buffer[0]);
     }
-    BEGIN(INITIAL);
+    yy_pop_state();
 }
 <CHAR><<EOF>> {printf("ERROR: no closing \' (single-quote) in CHAR in line %d.\n", multilineBegin); BEGIN(INITIAL);}
 
