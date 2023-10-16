@@ -305,9 +305,9 @@ false {printf("(%s) - FALSE_KEY_WORD\n", yytext);}
     printf("(");
     printStringBuffer(&buff);
     printf(") - ESCAPED_STRING\n");
-    printf("(+) - PLUS_OPERATOR\n");
+    printf("($) - BEGIN_INTERPOLATION\n");
     printf("(%s) - IDENTIFIER\n", yytext + 1);
-    printf("(+) - PLUS_OPERATOR\n");
+    printf("() - END_INTERPOLATION\n");
     clearStringBuffer(&buff);
     bufferString[0] = 0;
 }
