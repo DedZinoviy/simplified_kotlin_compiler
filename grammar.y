@@ -99,14 +99,14 @@ Statement: StatementTerminator
          | DoWhileStatement
          ;
 
-ValStmt: VAL VarDeclaration
-       | VAL ID '=' SimpleExpression
-       | VAL VarDeclaration '=' SimpleExpression
+ValStmt: VAL EndlOpt VarDeclaration
+       | VAL EndlOpt ID EndlOpt '=' EndlOpt SimpleExpression
+       | VAL EndlOpt VarDeclaration EndlOpt '=' EndlOpt SimpleExpression
        ;
 
-VarStmt: VAR VarDeclaration
-       | VAR ID '=' SimpleExpression
-       | VAR VarDeclaration '=' SimpleExpression
+VarStmt: VAR EndlOpt VarDeclaration
+       | VAR EndlOpt ID EndlOpt '=' EndlOpt SimpleExpression
+       | VAR EndlOpt VarDeclaration EndlOpt '=' EndlOpt SimpleExpression
        ;
 
 VarDeclaration: ID EndlOpt ':' EndlOpt ID
