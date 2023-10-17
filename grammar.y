@@ -78,8 +78,8 @@ IfStatement: IF '(' SimpleExpression ')' BlockStatement
            | IF '(' SimpleExpression ')' BlockStatement ELSE BlockStatement
            ;
 
-WhileStatement: WHILE '(' SimpleExpression ')' Statement
-              | WHILE '(' SimpleExpression ')' BlockStatement
+WhileStatement: WHILE EndlOpt '(' EndlOpt SimpleExpression EndlOpt ')' EndlOpt Statement
+              | WHILE EndlOpt '(' EndlOpt SimpleExpression EndlOpt ')' EndlOpt BlockStatement
               ;
 
 DoWhileStatement: DO BlockStatement WHILE '(' SimpleExpression ')'
