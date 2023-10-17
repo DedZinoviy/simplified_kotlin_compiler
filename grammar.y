@@ -116,10 +116,10 @@ VarDeclarationList: VarDeclaration
                   | VarDeclarationList ',' VarDeclaration
                   ;
 
-FunctionDeclaration: FUNC ID '(' ')' BlockStatement
-        | FUNC ID '(' ')' ':' ID BlockStatement
-        | FUNC ID '(' VarDeclarationList ')' BlockStatement
-        | FUNC ID '(' VarDeclarationList ')' ':' ID BlockStatement
+FunctionDeclaration: FUNC EndlOpt ID EndlOpt '(' EndlOpt ')' EndlOpt BlockStatement
+        | FUNC EndlOpt ID EndlOpt '(' EndlOpt ')' EndlOpt ':' EndlOpt ID EndlOpt BlockStatement
+        | FUNC EndlOpt ID EndlOpt '(' EndlOpt  VarDeclarationList  EndlOpt ')' EndlOpt BlockStatement
+        | FUNC EndlOpt ID EndlOpt '(' EndlOpt VarDeclarationList  EndlOpt ')' EndlOpt ':' EndlOpt ID EndlOpt BlockStatement
         ;
 
 ClassVisibilityMember: ClassMember
