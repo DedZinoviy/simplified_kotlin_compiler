@@ -20,9 +20,6 @@ KotlinFileVisibilityElementList: KotlinFileVisibilityElement
                                |  KotlinFileVisibilityElementList KotlinFileVisibilityElement
                                ;
 
-ExpressionList_e: /* empty */
-                | ExpressionList
-                ;
 
 ExpressionList: SimpleExpression
               | ExpressionList ',' SimpleExpression
@@ -33,8 +30,10 @@ SimpleExpression: Literal
                 | ID
                 | '(' SimpleExpression ')'
                 | SimpleExpression '.' ID
-                | SimpleExpression '.' ID '(' ExpressionList_e ')'
-                | ID '(' ExpressionList_e ')'
+                | SimpleExpression '.' ID '(' ExpressionList ')'
+                | SimpleExpression '.' ID '(' ')'
+                | ID '(' ExpressionList ')'
+                | ID '(' ')'
                 ;
 
 Literal: INT_LITERAL
@@ -160,10 +159,10 @@ KotlinFileVisibilityElement: KotlinFileElement
                            | INTERNAL KotlinFileElement
                            ;
 
-EndlList: ENDL
-        | EndlList ENDL
-        ;
-
 EndlOpt: /* empty */
        | EndlList
        ;
+
+EndlList: ENDL
+        | EndlList ENDL
+        ;
