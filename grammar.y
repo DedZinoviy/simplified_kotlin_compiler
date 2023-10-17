@@ -159,3 +159,11 @@ KotlinFileVisibilityElement: KotlinFileElement
                            | PRIVATE KotlinFileElement
                            | INTERNAL KotlinFileElement
                            ;
+
+EndlList: ENDL
+        | EndlList ENDL
+        ;
+
+EndlOpt: /* empty */
+       | EndlList
+       ;
