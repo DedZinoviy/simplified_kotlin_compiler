@@ -109,8 +109,8 @@ VarStmt: VAR VarDeclaration
        | VAR VarDeclaration '=' SimpleExpression
        ;
 
-VarDeclaration: ID ':' ID
-       ;
+VarDeclaration: ID EndlOpt ':' EndlOpt ID
+              ;
 
 VarDeclarationList: VarDeclaration
                   | VarDeclarationList ',' VarDeclaration
