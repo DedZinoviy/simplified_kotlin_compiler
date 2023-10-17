@@ -113,7 +113,7 @@ VarDeclaration: ID EndlOpt ':' EndlOpt ID
               ;
 
 VarDeclarationList: VarDeclaration
-                  | VarDeclarationList ',' VarDeclaration
+                  | VarDeclarationList EndlOpt ',' EndlOpt VarDeclaration
                   ;
 
 FunctionDeclaration: FUNC EndlOpt ID EndlOpt '(' EndlOpt ')' EndlOpt BlockStatement
