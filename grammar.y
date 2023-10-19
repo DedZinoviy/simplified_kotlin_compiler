@@ -82,8 +82,8 @@ WhileStatement: WHILE EndlOpt '(' EndlOpt SimpleExpression EndlOpt ')' EndlOpt S
               | WHILE EndlOpt '(' EndlOpt SimpleExpression EndlOpt ')' EndlOpt BlockStatement
               ;
 
-DoWhileStatement: DO BlockStatement WHILE '(' SimpleExpression ')'
-                | DO Statement WHILE '(' SimpleExpression ')'
+DoWhileStatement: DO EndlOpt BlockStatement EndlOpt WHILE EndlOpt '(' EndlOpt SimpleExpression EndlOpt ')'
+                | DO EndlOpt Statement EndlOpt WHILE EndlOpt '(' EndlOpt SimpleExpression EndlOpt ')'
                 ;
 
 StatementList: Statement
