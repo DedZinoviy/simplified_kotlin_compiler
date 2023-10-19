@@ -292,8 +292,7 @@ false {printf("(%s) - FALSE_KEY_WORD\n", yytext);}
     printf("(%s) - ESCAPED_STRING_BEGIN\n", yytext);
     yy_push_state(STRING);
 }
-<STRING>[^\\\"\$\n\r] {appendChar(&buff, yytext[0]);}
-<STRING>\$\{ {
+<STRING>(\$\{) {
     printf("(");
     printStringBuffer(&buff);
     printf(") - ESCAPED_STRING\n");
@@ -301,6 +300,7 @@ false {printf("(%s) - FALSE_KEY_WORD\n", yytext);}
     clearStringBuffer(&buff);
     yy_push_state(INTERPOLATION);
 }
+<STRING>[^\\\"\$\n\r] {appendChar(&buff, yytext[0]);}
 <STRING>\$[A-Za-z_][A-Za-z0-9_]* {
     printf("(");
     printStringBuffer(&buff);
@@ -311,7 +311,7 @@ false {printf("(%s) - FALSE_KEY_WORD\n", yytext);}
     clearStringBuffer(&buff);
     bufferString[0] = 0;
 }
-<STRING>\$[^A-Za-z_]* {appendChars(&buff, yytext);}
+<STRING>\$[^A-Za-z_\{]* {appendChars(&buff, yytext);}
 <STRING>[\n\r] {printf("ERROR: no closing \" (double-quote) in STRING in line %d.\n", multilineBegin); line += 1; yy_pop_state();}
 <STRING>\" { 
     printf("(");
