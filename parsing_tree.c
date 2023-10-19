@@ -7,3 +7,8 @@ struct DoWhileStatement
 {
 
 }
+
+struct WhileStatement
+{
+    
+}
