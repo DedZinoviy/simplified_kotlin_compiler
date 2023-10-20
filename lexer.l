@@ -146,6 +146,11 @@ false {printf("(%s) - FALSE_KEY_WORD\n", yytext);}
     yy_pop_state();
 }
 
+<INBRACE>"{" {
+    printf("(%s) - LEFT_BRACE\n", yytext);
+    yy_push_state(INBRACE);
+}
+
 <INTERPOLATION>"}" {
     printf("(%s) - END_INTERPOLATION\n", yytext);
     bufferString[0] = 0;
@@ -228,7 +233,7 @@ false {printf("(%s) - FALSE_KEY_WORD\n", yytext);}
     printf("ERROR: oot of range binary value in line %d.\n", line);
 }
 
-({DIGIT}(\_*{DIGIT})*)?\.{DIGIT}(\_*{DIGIT})*((e|E)(\+|\-)?{DIGIT}(\_*{DIGIT})*)? {
+(({DIGIT}(\_*{DIGIT})*)?\.)?{DIGIT}(\_*{DIGIT})*((e|E)(\+|\-)?{DIGIT}(\_*{DIGIT})*)? {
     bufferString[0] = 0;
     strcat(bufferString, yytext);
     removeUnderline(bufferString);
@@ -279,7 +284,7 @@ false {printf("(%s) - FALSE_KEY_WORD\n", yytext);}
     bufferString[0] = 0;
 }
 <MULTILINE_STRING>\"{1,2} {strcat(bufferString, yytext);}
-<MULTILINE_STRING>\"\"\" {printf("(%s) - MULTILINE STRING\n", bufferString); 
+<MULTILINE_STRING>\"{3,} {printf("(%s) - MULTILINE STRING\n", bufferString); 
     printf("(%s) - MULTILINE_STRING_END\n", yytext);
     yy_pop_state();
 }
@@ -311,7 +316,7 @@ false {printf("(%s) - FALSE_KEY_WORD\n", yytext);}
     clearStringBuffer(&buff);
     bufferString[0] = 0;
 }
-<STRING>\$[^A-Za-z_\{]* {appendChars(&buff, yytext);}
+<STRING>\$[^A-Za-z_\{\"]* {appendChars(&buff, yytext);}
 <STRING>[\n\r] {printf("ERROR: no closing \" (double-quote) in STRING in line %d.\n", multilineBegin); line += 1; yy_pop_state();}
 <STRING>\" { 
     printf("(");
