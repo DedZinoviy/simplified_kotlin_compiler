@@ -284,7 +284,12 @@ false {printf("(%s) - FALSE_KEY_WORD\n", yytext);}
     bufferString[0] = 0;
 }
 <MULTILINE_STRING>\"{1,2} {strcat(bufferString, yytext);}
-<MULTILINE_STRING>\"{3,} {printf("(%s) - MULTILINE STRING\n", bufferString); 
+<MULTILINE_STRING>\"{3,} {
+    for (int i = 0; i < yyleng - 3; i++)
+    {
+        strcat(bufferString, "\"");        
+    }
+    printf("(%s) - MULTILINE STRING\n", bufferString); 
     printf("(%s) - MULTILINE_STRING_END\n", yytext);
     yy_pop_state();
 }
