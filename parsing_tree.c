@@ -1,14 +1,14 @@
-struct Expression
+struct ExpressionNode
 {
     int id;
 };
 
-struct DoWhileStatement
+struct DoWhileStatementNode
 {
     int id;
 };
 
-struct WhileStatement
+struct WhileStatementNode
 {
     int id;
 };
