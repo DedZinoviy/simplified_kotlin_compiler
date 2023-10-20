@@ -1,5 +1,7 @@
 #include <stdlib.h>
 
+/*------------------------------------ Expression -------------------------------------*/
+
 enum ExpressionType
 {
     PLUS,
