@@ -1,3 +1,12 @@
+enum ExpressionType
+{
+    PLUS,
+    MINUS,
+    DIV,
+    MUL,
+    MOD
+};
+
 struct ExpressionNode
 {
     int id;
