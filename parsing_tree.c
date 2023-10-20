@@ -10,6 +10,11 @@ enum ExpressionType
 struct ExpressionNode
 {
     int id;
+    int intValue;
+    double doubleValue;
+    enum ExpressionType type;
+    struct ExpressionNode * left;
+    struct ExpressionNode * right;
 };
 
 struct DoWhileStatementNode
