@@ -15,7 +15,12 @@
 %left POST_INCREMENT POST_DECREMENT '.'
 %nonassoc '(' ')'
 
+%start KotlinFile
+
 %% 
+KotlinFile: KotlinFileVisibilityElementList
+          ;
+
 KotlinFileVisibilityElementList: KotlinFileVisibilityElement
                                |  KotlinFileVisibilityElementList KotlinFileVisibilityElement
                                ;
