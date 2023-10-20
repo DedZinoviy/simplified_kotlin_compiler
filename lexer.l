@@ -388,7 +388,7 @@ false {printf("(%s) - FALSE_KEY_WORD\n", yytext);}
 . {
     bufferString[0] = 0;
     strcat(bufferString, yytext);
-    printf("%s - UNRECOGNIZED TOKEN.");
+    printf("%s - UNRECOGNIZED TOKEN.", bufferString);
 }
 
 %%
