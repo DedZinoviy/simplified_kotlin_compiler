@@ -290,7 +290,7 @@ false {printf("(%s) - FALSE_KEY_WORD\n", yytext);}
         strcat(bufferString, "\"");        
     }
     printf("(%s) - MULTILINE STRING\n", bufferString); 
-    printf("(%s) - MULTILINE_STRING_END\n", yytext);
+    printf("(\"\"\") - MULTILINE_STRING_END\n", yytext);
     yy_pop_state();
 }
 <MULTILINE_STRING><<EOF>> {printf("ERROR: no closing \"\"\" (three double-quotes) in MULTILINE STRING in line %d.\n", multilineBegin); BEGIN(INITIAL);}
