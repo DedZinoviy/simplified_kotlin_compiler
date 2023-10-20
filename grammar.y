@@ -74,8 +74,8 @@ OperatorExpression: SimpleExpression '+' SimpleExpression
                   | SimpleExpression POST_INCREMENT
                   ;
 
-BlockStatement: '{' StatementList '}'
-               | '{' '}'
+BlockStatement: '{' EndlOpt StatementList EndlOpt '}'
+               | '{' EndlOpt '}'
                ;
               
 IfStatement: IF '(' SimpleExpression ')' BlockStatement
@@ -92,10 +92,10 @@ DoWhileStatement: DO EndlOpt BlockStatement EndlOpt WHILE EndlOpt '(' EndlOpt Si
                 ;
 
 StatementList: Statement
-             | StatementList Statement
+             | StatementList EndlOpt Statement
              ;
 
-Statement: StatementTerminator
+Statement: ';'
          | SimpleExpression StatementTerminator
          | VarStmt StatementTerminator
          | ValStmt StatementTerminator
