@@ -4,6 +4,8 @@
 
 enum ExpressionType
 {
+    INT_LIT,
+    DOUBLE_LIT,
     PLUS,
     MINUS,
     DIV,
@@ -34,6 +36,10 @@ struct ExpressionNode
 struct ExpressionNode* createIntLiteralExpressionNode(int value)
 {
     struct ExpressionNode* node = (struct ExpressionNode*)malloc(sizeof(struct ExpressionNode));
+    node->type = INT_LIT;
+    node->intValue = value;
+    node->left = NULL;
+    node->right = NULL;
     return node;
 }
 
@@ -44,6 +50,10 @@ struct ExpressionNode* createIntLiteralExpressionNode(int value)
 struct ExpressionNode* createDoubleLiteralExpressionNode(double value)
 {
     struct ExpressionNode* node = (struct ExpressionNode*)malloc(sizeof(struct ExpressionNode));
+    node->type = DOUBLE_LIT;
+    node->doubleValue = value;
+    node->left = NULL;
+    node->right = NULL;
     return node;
 }
 
