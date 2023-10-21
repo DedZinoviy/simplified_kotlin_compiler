@@ -49,13 +49,13 @@ Literal: INT_LITERAL
        | FALSE_LITERAL
        ;
 
-OperatorExpression: SimpleExpression '+' SimpleExpression
-                  | SimpleExpression '-' SimpleExpression
-                  | SimpleExpression '*' SimpleExpression
-                  | SimpleExpression '/' SimpleExpression
-                  | SimpleExpression '%' SimpleExpression
-                  | SimpleExpression '<' SimpleExpression
-                  | SimpleExpression '>' SimpleExpression
+OperatorExpression: SimpleExpression '+' EndlOpt SimpleExpression
+                  | SimpleExpression '-' EndlOpt SimpleExpression
+                  | SimpleExpression '*' EndlOpt SimpleExpression
+                  | SimpleExpression '/' EndlOpt SimpleExpression
+                  | SimpleExpression '%' EndlOpt SimpleExpression
+                  | SimpleExpression '<' EndlOpt SimpleExpression
+                  | SimpleExpression '>' EndlOpt SimpleExpression
                   | SimpleExpression GREATER_EQUAL SimpleExpression
                   | SimpleExpression LESS_EQUAL SimpleExpression
                   | SimpleExpression EQUAL SimpleExpression
