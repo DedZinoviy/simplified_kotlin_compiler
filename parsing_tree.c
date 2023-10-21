@@ -71,6 +71,26 @@ struct ExpressionNode * createModExpressionNode(struct ExpressionNode * leftOper
     return NULL;
 }
 
+/*! Создать узел оператора сравнения "больше" (>).
+\param[in] leftOperand указатель на левый операнд - экземаляр ExpressionNode.
+\param[in] rightOperand указатель на правый операнд - экземаляр ExpressionNode.
+\return указатель на созданный экземпляр узла оператора сравнения "больше".
+*/
+struct ExpressionNode* createGreatExpressionNode(struct ExpressionNode* leftOperand, struct ExpressionNode* rightOperand)
+{
+    return NULL;
+}
+
+/*! Создать узел оператора сравнения "меньше" (<).
+\param[in] leftOperand указатель на левый операнд - экземаляр ExpressionNode.
+\param[in] rightOperand указатель на правый операнд - экземаляр ExpressionNode.
+\return указатель на созданный экземпляр узла оператора сравнения "меньше".
+*/
+struct ExpressionNode* createLessExpressionNode(struct ExpressionNode* leftOperand, struct ExpressionNode* rightOperand)
+{
+    return NULL;
+}
+
 struct DoWhileStatementNode
 {
     int id;
