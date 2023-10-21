@@ -55,6 +55,9 @@ struct ExpressionNode* createDoubleLiteralExpressionNode(double value)
 struct ExpressionNode * createPlusExpressionNode(struct ExpressionNode * leftOperand, struct ExpressionNode * rightOperand)
 {
     struct ExpressionNode* node = (struct ExpressionNode*)malloc(sizeof(struct ExpressionNode));
+    node->type = PLUS;
+    node->left = leftOperand;
+    node->right = rightOperand;
     return node;
 }
 
@@ -66,6 +69,9 @@ struct ExpressionNode * createPlusExpressionNode(struct ExpressionNode * leftOpe
 struct ExpressionNode * createMinusExpressionNode(struct ExpressionNode * leftOperand, struct ExpressionNode * rightOperand)
 {
     struct ExpressionNode* node = (struct ExpressionNode*)malloc(sizeof(struct ExpressionNode));
+    node->type = MINUS;
+    node->left = leftOperand;
+    node->right = rightOperand;
     return node;
 }
 
@@ -77,6 +83,9 @@ struct ExpressionNode * createMinusExpressionNode(struct ExpressionNode * leftOp
 struct ExpressionNode * createMulExpressionNode(struct ExpressionNode * leftOperand, struct ExpressionNode * rightOperand)
 {
     struct ExpressionNode* node = (struct ExpressionNode*)malloc(sizeof(struct ExpressionNode));
+    node->type = MUL;
+    node->left = leftOperand;
+    node->right = rightOperand;
     return node;
 }
 
@@ -88,6 +97,9 @@ struct ExpressionNode * createMulExpressionNode(struct ExpressionNode * leftOper
 struct ExpressionNode * createDivExpressionNode(struct ExpressionNode * leftOperand, struct ExpressionNode * rightOperand)
 {
     struct ExpressionNode* node = (struct ExpressionNode*)malloc(sizeof(struct ExpressionNode));
+    node->type = DIV;
+    node->left = leftOperand;
+    node->right = rightOperand;
     return node;
 }
 
@@ -99,6 +111,9 @@ struct ExpressionNode * createDivExpressionNode(struct ExpressionNode * leftOper
 struct ExpressionNode * createModExpressionNode(struct ExpressionNode * leftOperand, struct ExpressionNode * rightOperand)
 {
     struct ExpressionNode* node = (struct ExpressionNode*)malloc(sizeof(struct ExpressionNode));
+    node->type = MOD;
+    node->left = leftOperand;
+    node->right = rightOperand;
     return node;
 }
 
@@ -110,6 +125,9 @@ struct ExpressionNode * createModExpressionNode(struct ExpressionNode * leftOper
 struct ExpressionNode* createGreatExpressionNode(struct ExpressionNode* leftOperand, struct ExpressionNode* rightOperand)
 {
     struct ExpressionNode* node = (struct ExpressionNode*)malloc(sizeof(struct ExpressionNode));
+    node->type = GREAT;
+    node->left = leftOperand;
+    node->right = rightOperand;
     return node;
 }
 
@@ -121,6 +139,9 @@ struct ExpressionNode* createGreatExpressionNode(struct ExpressionNode* leftOper
 struct ExpressionNode* createLessExpressionNode(struct ExpressionNode* leftOperand, struct ExpressionNode* rightOperand)
 {
     struct ExpressionNode* node = (struct ExpressionNode*)malloc(sizeof(struct ExpressionNode));
+    node->type = LESS;
+    node->left = leftOperand;
+    node->right = rightOperand;
     return node;
 }
 
@@ -132,6 +153,9 @@ struct ExpressionNode* createLessExpressionNode(struct ExpressionNode* leftOpera
 struct ExpressionNode* createGreatEqualExpressionNode(struct ExpressionNode* leftOperand, struct ExpressionNode* rightOperand)
 {
     struct ExpressionNode* node = (struct ExpressionNode*)malloc(sizeof(struct ExpressionNode));
+    node->type = GREAT_EQUAL;
+    node->left = leftOperand;
+    node->right = rightOperand;
     return node;
 }
 
@@ -143,6 +167,9 @@ struct ExpressionNode* createGreatEqualExpressionNode(struct ExpressionNode* lef
 struct ExpressionNode* createLessEqualExpressionNode(struct ExpressionNode* leftOperand, struct ExpressionNode* rightOperand)
 {
     struct ExpressionNode* node = (struct ExpressionNode*)malloc(sizeof(struct ExpressionNode));
+    node->type = LESS_EQUAL;
+    node->left = leftOperand;
+    node->right = rightOperand;
     return node;
 }
 
@@ -154,6 +181,9 @@ struct ExpressionNode* createLessEqualExpressionNode(struct ExpressionNode* left
 struct ExpressionNode* createEqualExpressionNode(struct ExpressionNode* leftOperand, struct ExpressionNode* rightOperand)
 {
     struct ExpressionNode* node = (struct ExpressionNode*)malloc(sizeof(struct ExpressionNode));
+    node->type = EQUAL;
+    node->left = leftOperand;
+    node->right = rightOperand;
     return node;
 }
 
@@ -165,6 +195,9 @@ struct ExpressionNode* createEqualExpressionNode(struct ExpressionNode* leftOper
 struct ExpressionNode* createNotEqualExpressionNode(struct ExpressionNode* leftOperand, struct ExpressionNode* rightOperand)
 {
     struct ExpressionNode* node = (struct ExpressionNode*)malloc(sizeof(struct ExpressionNode));
+    node->type = NOT_EQUAL;
+    node->left = leftOperand;
+    node->right = rightOperand;
     return node;
 }
 
