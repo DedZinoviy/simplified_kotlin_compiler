@@ -33,7 +33,8 @@ struct ExpressionNode
 */
 struct ExpressionNode* createIntLiteralExpressionNode(int value)
 {
-    return NULL;
+    struct ExpressionNode* node = (struct ExpressionNode*)malloc(sizeof(struct ExpressionNode));
+    return node;
 }
 
 /*! Создать узел Expression на основе литеральной констаты числа с плавающей точкой двойной точности.
@@ -42,7 +43,8 @@ struct ExpressionNode* createIntLiteralExpressionNode(int value)
 */
 struct ExpressionNode* createDoubleLiteralExpressionNode(double value)
 {
-    return NULL;
+    struct ExpressionNode* node = (struct ExpressionNode*)malloc(sizeof(struct ExpressionNode));
+    return node;
 }
 
 /*! Создать узел оператора сложения (+).
@@ -52,7 +54,8 @@ struct ExpressionNode* createDoubleLiteralExpressionNode(double value)
 */
 struct ExpressionNode * createPlusExpressionNode(struct ExpressionNode * leftOperand, struct ExpressionNode * rightOperand)
 {
-    return NULL;
+    struct ExpressionNode* node = (struct ExpressionNode*)malloc(sizeof(struct ExpressionNode));
+    return node;
 }
 
 /*! Создать узел оператора вычитания (-).
@@ -62,7 +65,8 @@ struct ExpressionNode * createPlusExpressionNode(struct ExpressionNode * leftOpe
 */
 struct ExpressionNode * createMinusExpressionNode(struct ExpressionNode * leftOperand, struct ExpressionNode * rightOperand)
 {
-    return NULL;
+    struct ExpressionNode* node = (struct ExpressionNode*)malloc(sizeof(struct ExpressionNode));
+    return node;
 }
 
 /*! Создать узел оператора умножения (*).
@@ -72,7 +76,8 @@ struct ExpressionNode * createMinusExpressionNode(struct ExpressionNode * leftOp
 */
 struct ExpressionNode * createMulExpressionNode(struct ExpressionNode * leftOperand, struct ExpressionNode * rightOperand)
 {
-    return NULL;
+    struct ExpressionNode* node = (struct ExpressionNode*)malloc(sizeof(struct ExpressionNode));
+    return node;
 }
 
 /*! Создать узел оператора деления (/).
@@ -82,7 +87,8 @@ struct ExpressionNode * createMulExpressionNode(struct ExpressionNode * leftOper
 */
 struct ExpressionNode * createDivExpressionNode(struct ExpressionNode * leftOperand, struct ExpressionNode * rightOperand)
 {
-    return NULL;
+    struct ExpressionNode* node = (struct ExpressionNode*)malloc(sizeof(struct ExpressionNode));
+    return node;
 }
 
 /*! Создать узел оператора получния остатка от деления (%).
@@ -92,7 +98,8 @@ struct ExpressionNode * createDivExpressionNode(struct ExpressionNode * leftOper
 */
 struct ExpressionNode * createModExpressionNode(struct ExpressionNode * leftOperand, struct ExpressionNode * rightOperand)
 {
-    return NULL;
+    struct ExpressionNode* node = (struct ExpressionNode*)malloc(sizeof(struct ExpressionNode));
+    return node;
 }
 
 /*! Создать узел оператора сравнения "больше" (>).
@@ -102,7 +109,8 @@ struct ExpressionNode * createModExpressionNode(struct ExpressionNode * leftOper
 */
 struct ExpressionNode* createGreatExpressionNode(struct ExpressionNode* leftOperand, struct ExpressionNode* rightOperand)
 {
-    return NULL;
+    struct ExpressionNode* node = (struct ExpressionNode*)malloc(sizeof(struct ExpressionNode));
+    return node;
 }
 
 /*! Создать узел оператора сравнения "меньше" (<).
@@ -112,7 +120,8 @@ struct ExpressionNode* createGreatExpressionNode(struct ExpressionNode* leftOper
 */
 struct ExpressionNode* createLessExpressionNode(struct ExpressionNode* leftOperand, struct ExpressionNode* rightOperand)
 {
-    return NULL;
+    struct ExpressionNode* node = (struct ExpressionNode*)malloc(sizeof(struct ExpressionNode));
+    return node;
 }
 
 /*! Создать узел оператора сравнения "больше или равно" (>=).
@@ -122,7 +131,8 @@ struct ExpressionNode* createLessExpressionNode(struct ExpressionNode* leftOpera
 */
 struct ExpressionNode* createGreatEqualExpressionNode(struct ExpressionNode* leftOperand, struct ExpressionNode* rightOperand)
 {
-    return NULL;
+    struct ExpressionNode* node = (struct ExpressionNode*)malloc(sizeof(struct ExpressionNode));
+    return node;
 }
 
 /*! Создать узел оператора сравнения "меньше или равно" (<=).
@@ -132,7 +142,8 @@ struct ExpressionNode* createGreatEqualExpressionNode(struct ExpressionNode* lef
 */
 struct ExpressionNode* createLessEqualExpressionNode(struct ExpressionNode* leftOperand, struct ExpressionNode* rightOperand)
 {
-    return NULL;
+    struct ExpressionNode* node = (struct ExpressionNode*)malloc(sizeof(struct ExpressionNode));
+    return node;
 }
 
 /*! Создать узел оператора сравнения "равно" (==).
@@ -142,7 +153,8 @@ struct ExpressionNode* createLessEqualExpressionNode(struct ExpressionNode* left
 */
 struct ExpressionNode* createEqualExpressionNode(struct ExpressionNode* leftOperand, struct ExpressionNode* rightOperand)
 {
-    return NULL;
+    struct ExpressionNode* node = (struct ExpressionNode*)malloc(sizeof(struct ExpressionNode));
+    return node;
 }
 
 /*! Создать узел оператора сравнения "не равно" (!=).
@@ -152,7 +164,8 @@ struct ExpressionNode* createEqualExpressionNode(struct ExpressionNode* leftOper
 */
 struct ExpressionNode* createNotEqualExpressionNode(struct ExpressionNode* leftOperand, struct ExpressionNode* rightOperand)
 {
-    return NULL;
+    struct ExpressionNode* node = (struct ExpressionNode*)malloc(sizeof(struct ExpressionNode));
+    return node;
 }
 
 struct DoWhileStatementNode
