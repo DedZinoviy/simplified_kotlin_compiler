@@ -111,6 +111,26 @@ struct ExpressionNode* createLessEqualExpressionNode(struct ExpressionNode* left
     return NULL;
 }
 
+/*! Создать узел оператора сравнения "равно" (==).
+\param[in] leftOperand указатель на левый операнд - экземаляр ExpressionNode.
+\param[in] rightOperand указатель на правый операнд - экземаляр ExpressionNode.
+\return указатель на созданный экземпляр узла оператора сравнения "равно".
+*/
+struct ExpressionNode* createEqualExpressionNode(struct ExpressionNode* leftOperand, struct ExpressionNode* rightOperand)
+{
+    return NULL;
+}
+
+/*! Создать узел оператора сравнения "не равно" (!=).
+\param[in] leftOperand указатель на левый операнд - экземаляр ExpressionNode.
+\param[in] rightOperand указатель на правый операнд - экземаляр ExpressionNode.
+\return указатель на созданный экземпляр узла оператора сравнения "не равно".
+*/
+struct ExpressionNode* createNotEqualExpressionNode(struct ExpressionNode* leftOperand, struct ExpressionNode* rightOperand)
+{
+    return NULL;
+}
+
 struct DoWhileStatementNode
 {
     int id;
