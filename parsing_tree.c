@@ -27,6 +27,24 @@ struct ExpressionNode
     struct ExpressionNode * right;
 };
 
+/*! Создать узел Expression на основе целочисленной литеральной констаты.
+\param[in] value значение целочисленной литеральной константы.
+\return указатель на созданный экземпляр узла целочисленной литеральной константы.
+*/
+struct ExpressionNode* createIntLiteralExpressionNode(int value)
+{
+    return NULL;
+}
+
+/*! Создать узел Expression на основе литеральной констаты числа с плавающей точкой двойной точности.
+\param[in] value значение литеральной константы числа с плавающей точкой двойной точности.
+\return указатель на созданный экземпляр узла литеральной константы числа с плавающей точкой двойной точности.
+*/
+struct ExpressionNode* createDoubleLiteralExpressionNode(double value)
+{
+    return NULL;
+}
+
 /*! Создать узел оператора сложения (+).
 \param[in] leftOperand указатель на левый операнд - экземаляр ExpressionNode.
 \param[in] rightOperand указатель на правый операнд - экземаляр ExpressionNode.
