@@ -8,7 +8,13 @@ enum ExpressionType
     MINUS,
     DIV,
     MUL,
-    MOD
+    MOD,
+    LESS,
+    GREAT,
+    LESS_EQUAL,
+    GREAT_EQUAL,
+    EQUAL,
+    NOT_EQUAL
 };
 
 struct ExpressionNode
