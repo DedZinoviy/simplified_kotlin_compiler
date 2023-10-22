@@ -4,6 +4,7 @@
 
 enum ExpressionType
 {
+    BOOLEAN_LIT,
     INT_LIT,
     DOUBLE_LIT,
     PLUS,
@@ -23,6 +24,7 @@ struct ExpressionNode
 {
     int id;
     int intValue;
+    int boolValue;
     double doubleValue;
     enum ExpressionType type;
     struct ExpressionNode * left;
@@ -52,6 +54,32 @@ struct ExpressionNode* createDoubleLiteralExpressionNode(double value)
     struct ExpressionNode* node = (struct ExpressionNode*)malloc(sizeof(struct ExpressionNode));
     node->type = DOUBLE_LIT;
     node->doubleValue = value;
+    node->left = NULL;
+    node->right = NULL;
+    return node;
+}
+
+/*! Создать узел Expression на основе логической литеральной констаты true.
+\return указатель на созданный экземпляр узла логической литеральной константы true.
+*/
+struct ExpressionNode* createTrueLiteralExpressionNode()
+{
+    struct ExpressionNode* node = (struct ExpressionNode*)malloc(sizeof(struct ExpressionNode));
+    node->type = BOOLEAN_LIT;
+    node->boolValue = 1;
+    node->left = NULL;
+    node->right = NULL;
+    return node;
+}
+
+/*! Создать узел Expression на основе логической литеральной констаты false.
+\return указатель на созданный экземпляр узла логической литеральной константы false.
+*/
+struct ExpressionNode* createFalseLiteralExpressionNode()
+{
+    struct ExpressionNode* node = (struct ExpressionNode*)malloc(sizeof(struct ExpressionNode));
+    node->type = BOOLEAN_LIT;
+    node->boolValue = 0;
     node->left = NULL;
     node->right = NULL;
     return node;
