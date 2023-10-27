@@ -45,20 +45,20 @@ SimpleExpression: Literal
                 | SimpleExpression '%' EndlOpt SimpleExpression
                 | SimpleExpression '<' EndlOpt SimpleExpression
                 | SimpleExpression '>' EndlOpt SimpleExpression
-                | SimpleExpression GREATER_EQUAL SimpleExpression
-                | SimpleExpression LESS_EQUAL SimpleExpression
-                | SimpleExpression EQUAL SimpleExpression
-                | SimpleExpression NOT_EQUAL SimpleExpression
-                | SimpleExpression PLUS_ASSIGNMENT SimpleExpression
-                | SimpleExpression MINUS_ASSIGNMENT SimpleExpression
-                | SimpleExpression MUL_ASSIGNMENT SimpleExpression
-                | SimpleExpression DIV_ASSIGNMENT SimpleExpression
-                | SimpleExpression MOD_ASSIGNMENT SimpleExpression
-                | SimpleExpression RANGE SimpleExpression
-                | '-' SimpleExpression %prec UMINUS
-                | '+' SimpleExpression %prec UPLUS
-                | PREF_INCREMENT SimpleExpression
-                | PREF_DECREMENT SimpleExpression
+                | SimpleExpression GREATER_EQUAL EndlOpt SimpleExpression
+                | SimpleExpression LESS_EQUAL EndlOpt SimpleExpression
+                | SimpleExpression EQUAL EndlOpt SimpleExpression
+                | SimpleExpression NOT_EQUAL EndlOpt SimpleExpression
+                | SimpleExpression PLUS_ASSIGNMENT EndlOpt SimpleExpression
+                | SimpleExpression MINUS_ASSIGNMENT EndlOpt SimpleExpression
+                | SimpleExpression MUL_ASSIGNMENT EndlOpt SimpleExpression
+                | SimpleExpression DIV_ASSIGNMENT EndlOpt SimpleExpression
+                | SimpleExpression MOD_ASSIGNMENT EndlOpt SimpleExpression
+                | SimpleExpression RANGE EndlOpt SimpleExpression
+                | '-' EndlOpt SimpleExpression %prec UMINUS
+                | '+' EndlOpt SimpleExpression %prec UPLUS
+                | PREF_INCREMENT EndlOpt SimpleExpression
+                | PREF_DECREMENT EndlOpt SimpleExpression
                 | SimpleExpression POST_DECREMENT
                 | SimpleExpression POST_INCREMENT
                 ;
