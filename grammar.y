@@ -30,7 +30,12 @@ ExpressionList: SimpleExpression
               | ExpressionList ',' SimpleExpression
               ;
 
-SimpleExpression: Literal
+SimpleExpression: INT_LITERAL
+                | CHAR_LITERAL
+                | DOUBLE_LITERAL
+                | STRING_LITERAL
+                | TRUE_LITERAL
+                | FALSE_LITERAL
                 | ID
                 | '(' SimpleExpression ')'
                 | SimpleExpression '.' ID
@@ -63,14 +68,6 @@ SimpleExpression: Literal
                 | SimpleExpression POST_DECREMENT
                 | SimpleExpression POST_INCREMENT
                 ;
-
-Literal: INT_LITERAL
-       | CHAR_LITERAL
-       | DOUBLE_LITERAL
-       | STRING_LITERAL
-       | TRUE_LITERAL
-       | FALSE_LITERAL
-       ;
 
 BlockStatement: '{' EndlOpt StatementList EndlOpt '}'
                | '{' EndlOpt '}'
