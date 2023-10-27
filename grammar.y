@@ -31,7 +31,6 @@ ExpressionList: SimpleExpression
               ;
 
 SimpleExpression: Literal
-                | OperatorExpression
                 | ID
                 | '(' SimpleExpression ')'
                 | SimpleExpression '.' ID
@@ -39,6 +38,29 @@ SimpleExpression: Literal
                 | SimpleExpression '.' ID '(' ')'
                 | ID '(' ExpressionList ')'
                 | ID '(' ')'
+                | SimpleExpression '+' EndlOpt SimpleExpression
+                | SimpleExpression '-' EndlOpt SimpleExpression
+                | SimpleExpression EndlOpt '*' EndlOpt SimpleExpression
+                | SimpleExpression EndlOpt '/' EndlOpt SimpleExpression
+                | SimpleExpression EndlOpt '%' EndlOpt SimpleExpression
+                | SimpleExpression EndlOpt '<' EndlOpt SimpleExpression
+                | SimpleExpression EndlOpt '>' EndlOpt SimpleExpression
+                | SimpleExpression GREATER_EQUAL SimpleExpression
+                | SimpleExpression LESS_EQUAL SimpleExpression
+                | SimpleExpression EQUAL SimpleExpression
+                | SimpleExpression NOT_EQUAL SimpleExpression
+                | SimpleExpression PLUS_ASSIGNMENT SimpleExpression
+                | SimpleExpression MINUS_ASSIGNMENT SimpleExpression
+                | SimpleExpression MUL_ASSIGNMENT SimpleExpression
+                | SimpleExpression DIV_ASSIGNMENT SimpleExpression
+                | SimpleExpression MOD_ASSIGNMENT SimpleExpression
+                | SimpleExpression RANGE SimpleExpression
+                | '-' SimpleExpression %prec UMINUS
+                | '+' SimpleExpression %prec UPLUS
+                | PREF_INCREMENT SimpleExpression
+                | PREF_DECREMENT SimpleExpression
+                | SimpleExpression POST_DECREMENT
+                | SimpleExpression POST_INCREMENT
                 ;
 
 Literal: INT_LITERAL
@@ -48,31 +70,6 @@ Literal: INT_LITERAL
        | TRUE_LITERAL
        | FALSE_LITERAL
        ;
-
-OperatorExpression: SimpleExpression '+' EndlOpt SimpleExpression
-                  | SimpleExpression '-' EndlOpt SimpleExpression
-                  | SimpleExpression EndlOpt '*' EndlOpt SimpleExpression
-                  | SimpleExpression EndlOpt '/' EndlOpt SimpleExpression
-                  | SimpleExpression EndlOpt '%' EndlOpt SimpleExpression
-                  | SimpleExpression EndlOpt '<' EndlOpt SimpleExpression
-                  | SimpleExpression EndlOpt '>' EndlOpt SimpleExpression
-                  | SimpleExpression GREATER_EQUAL SimpleExpression
-                  | SimpleExpression LESS_EQUAL SimpleExpression
-                  | SimpleExpression EQUAL SimpleExpression
-                  | SimpleExpression NOT_EQUAL SimpleExpression
-                  | SimpleExpression PLUS_ASSIGNMENT SimpleExpression
-                  | SimpleExpression MINUS_ASSIGNMENT SimpleExpression
-                  | SimpleExpression MUL_ASSIGNMENT SimpleExpression
-                  | SimpleExpression DIV_ASSIGNMENT SimpleExpression
-                  | SimpleExpression MOD_ASSIGNMENT SimpleExpression
-                  | SimpleExpression RANGE SimpleExpression
-                  | '-' SimpleExpression %prec UMINUS
-                  | '+' SimpleExpression %prec UPLUS
-                  | PREF_INCREMENT SimpleExpression
-                  | PREF_DECREMENT SimpleExpression
-                  | SimpleExpression POST_DECREMENT
-                  | SimpleExpression POST_INCREMENT
-                  ;
 
 BlockStatement: '{' EndlOpt StatementList EndlOpt '}'
                | '{' EndlOpt '}'
