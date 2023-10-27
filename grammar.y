@@ -91,11 +91,15 @@ StatementList: Statement
              ;
 
 Statement: ';'
-         | SimpleExpression StatementTerminator
-         | VarStmt StatementTerminator
-         | ValStmt StatementTerminator
+         | SimpleExpression ENDL
+         | SimpleExpression ';'
+         | VarStmt ';'
+         | VarStmt ENDL
+         | ValStmt ';'
+         | ValStmt ENDL
          | WhileStatement
-         | DoWhileStatement
+         | DoWhileStatement ENDL
+         | DoWhileStatement ';'
          ;
 
 ValStmt: VAL EndlOpt VarDeclaration
