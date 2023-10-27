@@ -40,11 +40,11 @@ SimpleExpression: Literal
                 | ID '(' ')'
                 | SimpleExpression '+' EndlOpt SimpleExpression
                 | SimpleExpression '-' EndlOpt SimpleExpression
-                | SimpleExpression EndlOpt '*' EndlOpt SimpleExpression
-                | SimpleExpression EndlOpt '/' EndlOpt SimpleExpression
-                | SimpleExpression EndlOpt '%' EndlOpt SimpleExpression
-                | SimpleExpression EndlOpt '<' EndlOpt SimpleExpression
-                | SimpleExpression EndlOpt '>' EndlOpt SimpleExpression
+                | SimpleExpression '*' EndlOpt SimpleExpression
+                | SimpleExpression '/' EndlOpt SimpleExpression
+                | SimpleExpression '%' EndlOpt SimpleExpression
+                | SimpleExpression '<' EndlOpt SimpleExpression
+                | SimpleExpression '>' EndlOpt SimpleExpression
                 | SimpleExpression GREATER_EQUAL SimpleExpression
                 | SimpleExpression LESS_EQUAL SimpleExpression
                 | SimpleExpression EQUAL SimpleExpression
