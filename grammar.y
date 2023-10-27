@@ -49,6 +49,7 @@ SimpleExpression: Literal
                 | SimpleExpression LESS_EQUAL EndlOpt SimpleExpression
                 | SimpleExpression EQUAL EndlOpt SimpleExpression
                 | SimpleExpression NOT_EQUAL EndlOpt SimpleExpression
+                | SimpleExpression '=' EndlOpt SimpleExpression
                 | SimpleExpression PLUS_ASSIGNMENT EndlOpt SimpleExpression
                 | SimpleExpression MINUS_ASSIGNMENT EndlOpt SimpleExpression
                 | SimpleExpression MUL_ASSIGNMENT EndlOpt SimpleExpression
