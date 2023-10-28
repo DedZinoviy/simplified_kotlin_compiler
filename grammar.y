@@ -38,9 +38,9 @@ SimpleExpression: INT_LITERAL
                 | FALSE_LITERAL
                 | ID
                 | '(' SimpleExpression ')'
-                | SimpleExpression '.' ID
-                | SimpleExpression '.' ID '(' ExpressionList ')'
-                | SimpleExpression '.' ID '(' ')'
+                | SimpleExpression '.' EndlOpt ID
+                | SimpleExpression '.' EndlOpt ID '(' ExpressionList ')'
+                | SimpleExpression '.' EndlOpt ID '(' ')'
                 | ID '(' ExpressionList ')'
                 | ID '(' ')'
                 | SimpleExpression '+' EndlOpt SimpleExpression
