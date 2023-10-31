@@ -63,4 +63,14 @@ struct StatementNode
     struct ExpressionNode * expr;
     struct WhileStatementNode * whl;
     struct DoWhileStatementNode * dwhl;
+    struct StatementNode * next;
+};
+
+/*------------------------------------ StatementList -------------------------------------*/
+
+struct StatementListNode
+{
+    int id;
+    struct StatementNode * first;
+    struct StatementNode * last;
 };
