@@ -268,3 +268,46 @@ struct ExpressionListNode * addExpressionToExpressionList(struct ExpressionListN
     list->last = expression;
     return list;
 }
+
+
+
+/*------------------------------------ Statement -------------------------------------*/
+
+/*! Создать узел StatementNode на основе узла ExpressionNode.
+\param[in] expression указатель на экземпляр ExpressionNode, на основе которого создается StatementNode.
+\return указатель на созданный экземпляр StatementNode.
+*/
+struct StatementNode * createStatementFromExpression(struct ExpressionNode * expression)
+{
+    struct StatementNode * stmt = (struct StatementNode*)malloc(sizeof(struct StatementNode));
+    stmt->expr = expression;
+    stmt->whl = NULL;
+    stmt->dwhl = NULL;
+    return stmt;
+}
+
+/*! Создать узел StatementNode на основе узла WhileStatementNode.
+\param[in] whileStmt указатель на экземпляр WhileStatementNode, на основе которого создается StatementNode.
+\return указатель на созданный экземпляр StatementNode.
+*/
+struct StatementNode * createStatementFromWhile(struct WhileStatementNode * whileStmt)
+{
+    struct StatementNode * stmt = (struct StatementNode*)malloc(sizeof(struct StatementNode));
+    stmt->expr = NULL;
+    stmt->whl = whileStmt;
+    stmt->dwhl = NULL;
+    return stmt;
+}
+
+/*! Создать узел StatementNode на основе узла DoWhileStatementNode.
+\param[in] whileStmt указатель на экземпляр DoWhileStatementNode, на основе которого создается StatementNode.
+\return указатель на созданный экземпляр StatementNode.
+*/
+struct StatementNode * createStatementFromWhile(struct WhileStatementNode * whileStmt)
+{
+    struct StatementNode * stmt = (struct StatementNode*)malloc(sizeof(struct StatementNode));
+    stmt->expr = NULL;
+    stmt->whl = whileStmt;
+    stmt->dwhl = NULL;
+    return stmt;
+}
