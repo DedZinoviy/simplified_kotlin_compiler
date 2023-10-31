@@ -240,3 +240,31 @@ struct ExpressionNode* createNotEqualExpressionNode(struct ExpressionNode* leftO
     node->next = NULL;
     return node;
 }
+
+
+
+/*------------------------------------ ExpressionList -------------------------------------*/
+
+/*! Создать узел списка Expression.
+\param[in] firstChild указатель на первый элемент списка; для пустого списка - NULL.
+\return указатель на созданный экземпляр узла списка Expression.
+*/
+struct ExpressionListNode * createExpressionListNode(struct ExpressionNode * firstChild)
+{
+    struct ExpressionListNode * node = (struct ExpressionListNode*)malloc(sizeof(struct ExpressionListNode));
+    node->first = firstChild;
+    node->last = firstChild;
+    return node;
+}
+
+/*! Добавить ExpressionNode к списку Expression.
+\param[in,out] list список, к которому добавляется новый узел.
+\param[in] expression добавляемый узел Expression.
+\return измененный список Expression (тот же самый, что и параметр list). 
+*/
+struct ExpressionListNode * addExpressionToExpressionList(struct ExpressionListNode * list, struct ExpressionNode * expression)
+{
+    list->last->next = expression;
+    list->last = expression;
+    return list;
+}
