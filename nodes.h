@@ -54,3 +54,13 @@ struct WhileStatementNode
 {
     int id;
 };
+
+/*------------------------------------ Statement -------------------------------------*/
+
+struct StatementNode
+{
+    int id;
+    struct ExpressionNode * expr;
+    struct WhileStatementNode * whl;
+    struct DoWhileStatementNode * dwhl;
+};
