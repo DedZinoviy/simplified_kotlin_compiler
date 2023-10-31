@@ -32,6 +32,15 @@ struct ExpressionNode
     struct ExpressionNode * next;
 };
 
+/*------------------------------------ ExpressionList -------------------------------------*/
+
+struct ExpressionListNode
+{
+    int id;
+    struct ExpressionNode * first;
+    struct ExpressionNode * last;
+};
+
 /*------------------------------------ DoWhile -------------------------------------*/
 
 struct DoWhileStatementNode
