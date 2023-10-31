@@ -1,37 +1,7 @@
 #include <stdlib.h>
+#include "nodes.h"
 
 /*------------------------------------ Expression -------------------------------------*/
-
-enum ExpressionType
-{
-    IDENTIFIER,
-    BOOLEAN_LIT,
-    INT_LIT,
-    DOUBLE_LIT,
-    PLUS,
-    MINUS,
-    DIV,
-    MUL,
-    MOD,
-    LESS,
-    GREAT,
-    LESS_EQUAL,
-    GREAT_EQUAL,
-    EQUAL,
-    NOT_EQUAL
-};
-
-struct ExpressionNode
-{
-    int id;
-    int intValue;
-    int boolValue;
-    double doubleValue;
-    char* identifierString;
-    enum ExpressionType type;
-    struct ExpressionNode * left;
-    struct ExpressionNode * right;
-};
 
 /*! Создать узел идентификатора.
 \param[in] idStr указатель на строку, представляющую идентификатор.
@@ -254,13 +224,3 @@ struct ExpressionNode* createNotEqualExpressionNode(struct ExpressionNode* leftO
     node->right = rightOperand;
     return node;
 }
-
-struct DoWhileStatementNode
-{
-    int id;
-};
-
-struct WhileStatementNode
-{
-    int id;
-};
