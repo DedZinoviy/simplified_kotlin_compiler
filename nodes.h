@@ -29,6 +29,7 @@ struct ExpressionNode
     enum ExpressionType type;
     struct ExpressionNode * left;
     struct ExpressionNode * right;
+    struct ExpressionNode * next;
 };
 
 /*------------------------------------ DoWhile -------------------------------------*/

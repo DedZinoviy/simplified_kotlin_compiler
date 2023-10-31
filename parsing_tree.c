@@ -14,6 +14,7 @@ struct ExpressionNode* createIDExpression(char* idStr)
     node->identifierString = idStr;
     node->left = NULL;
     node->right = NULL;
+    node->next = NULL;
     return node;
 }
 
@@ -28,6 +29,7 @@ struct ExpressionNode* createIntLiteralExpressionNode(int value)
     node->intValue = value;
     node->left = NULL;
     node->right = NULL;
+    node->next = NULL;
     return node;
 }
 
@@ -42,6 +44,7 @@ struct ExpressionNode* createDoubleLiteralExpressionNode(double value)
     node->doubleValue = value;
     node->left = NULL;
     node->right = NULL;
+    node->next = NULL;
     return node;
 }
 
@@ -55,6 +58,7 @@ struct ExpressionNode* createTrueLiteralExpressionNode()
     node->boolValue = 1;
     node->left = NULL;
     node->right = NULL;
+    node->next = NULL;
     return node;
 }
 
@@ -68,6 +72,7 @@ struct ExpressionNode* createFalseLiteralExpressionNode()
     node->boolValue = 0;
     node->left = NULL;
     node->right = NULL;
+    node->next = NULL;
     return node;
 }
 
@@ -82,6 +87,7 @@ struct ExpressionNode * createPlusExpressionNode(struct ExpressionNode * leftOpe
     node->type = PLUS;
     node->left = leftOperand;
     node->right = rightOperand;
+    node->next = NULL;
     return node;
 }
 
@@ -96,6 +102,7 @@ struct ExpressionNode * createMinusExpressionNode(struct ExpressionNode * leftOp
     node->type = MINUS;
     node->left = leftOperand;
     node->right = rightOperand;
+    node->next = NULL;
     return node;
 }
 
@@ -110,6 +117,7 @@ struct ExpressionNode * createMulExpressionNode(struct ExpressionNode * leftOper
     node->type = MUL;
     node->left = leftOperand;
     node->right = rightOperand;
+    node->next = NULL;
     return node;
 }
 
@@ -124,6 +132,7 @@ struct ExpressionNode * createDivExpressionNode(struct ExpressionNode * leftOper
     node->type = DIV;
     node->left = leftOperand;
     node->right = rightOperand;
+    node->next = NULL;
     return node;
 }
 
@@ -138,6 +147,7 @@ struct ExpressionNode * createModExpressionNode(struct ExpressionNode * leftOper
     node->type = MOD;
     node->left = leftOperand;
     node->right = rightOperand;
+    node->next = NULL;
     return node;
 }
 
@@ -152,6 +162,7 @@ struct ExpressionNode* createGreatExpressionNode(struct ExpressionNode* leftOper
     node->type = GREAT;
     node->left = leftOperand;
     node->right = rightOperand;
+    node->next = NULL;
     return node;
 }
 
@@ -166,6 +177,7 @@ struct ExpressionNode* createLessExpressionNode(struct ExpressionNode* leftOpera
     node->type = LESS;
     node->left = leftOperand;
     node->right = rightOperand;
+    node->next = NULL;
     return node;
 }
 
@@ -180,6 +192,7 @@ struct ExpressionNode* createGreatEqualExpressionNode(struct ExpressionNode* lef
     node->type = GREAT_EQUAL;
     node->left = leftOperand;
     node->right = rightOperand;
+    node->next = NULL;
     return node;
 }
 
@@ -194,6 +207,7 @@ struct ExpressionNode* createLessEqualExpressionNode(struct ExpressionNode* left
     node->type = LESS_EQUAL;
     node->left = leftOperand;
     node->right = rightOperand;
+    node->next = NULL;
     return node;
 }
 
@@ -208,6 +222,7 @@ struct ExpressionNode* createEqualExpressionNode(struct ExpressionNode* leftOper
     node->type = EQUAL;
     node->left = leftOperand;
     node->right = rightOperand;
+    node->next = NULL;
     return node;
 }
 
@@ -222,5 +237,6 @@ struct ExpressionNode* createNotEqualExpressionNode(struct ExpressionNode* leftO
     node->type = NOT_EQUAL;
     node->left = leftOperand;
     node->right = rightOperand;
+    node->next = NULL;
     return node;
 }
