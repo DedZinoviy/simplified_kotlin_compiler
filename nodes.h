@@ -46,6 +46,9 @@ struct ExpressionListNode
 struct DoWhileStatementNode
 {
     int id;
+    struct ExpressionNode * condition;
+    struct StatementNode * statement;
+    struct StatementListNode * list;
 };
 
 /*------------------------------------ While -------------------------------------*/
@@ -53,6 +56,9 @@ struct DoWhileStatementNode
 struct WhileStatementNode
 {
     int id;
+    struct ExpressionNode * condition;
+    struct StatementNode * statement;
+    struct StatementListNode * list;
 };
 
 /*------------------------------------ Statement -------------------------------------*/
