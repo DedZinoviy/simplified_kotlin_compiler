@@ -1,6 +1,8 @@
 #include <stdlib.h>
 #include "nodes.h"
 
+int ID = 0;
+
 /*------------------------------------ Expression -------------------------------------*/
 
 /*! Создать узел идентификатора.
@@ -15,6 +17,7 @@ struct ExpressionNode* createIDExpression(char* idStr)
     node->left = NULL;
     node->right = NULL;
     node->next = NULL;
+    node->id = ID++;
     return node;
 }
 
@@ -30,6 +33,7 @@ struct ExpressionNode* createIntLiteralExpressionNode(int value)
     node->left = NULL;
     node->right = NULL;
     node->next = NULL;
+    node->id = ID++;
     return node;
 }
 
@@ -45,6 +49,7 @@ struct ExpressionNode* createDoubleLiteralExpressionNode(double value)
     node->left = NULL;
     node->right = NULL;
     node->next = NULL;
+    node->id = ID++;
     return node;
 }
 
@@ -59,6 +64,7 @@ struct ExpressionNode* createTrueLiteralExpressionNode()
     node->left = NULL;
     node->right = NULL;
     node->next = NULL;
+    node->id = ID++;
     return node;
 }
 
@@ -73,6 +79,7 @@ struct ExpressionNode* createFalseLiteralExpressionNode()
     node->left = NULL;
     node->right = NULL;
     node->next = NULL;
+    node->id = ID++;
     return node;
 }
 
@@ -88,6 +95,7 @@ struct ExpressionNode * createPlusExpressionNode(struct ExpressionNode * leftOpe
     node->left = leftOperand;
     node->right = rightOperand;
     node->next = NULL;
+    node->id = ID++;
     return node;
 }
 
@@ -103,6 +111,7 @@ struct ExpressionNode * createMinusExpressionNode(struct ExpressionNode * leftOp
     node->left = leftOperand;
     node->right = rightOperand;
     node->next = NULL;
+    node->id = ID++;
     return node;
 }
 
@@ -118,6 +127,7 @@ struct ExpressionNode * createMulExpressionNode(struct ExpressionNode * leftOper
     node->left = leftOperand;
     node->right = rightOperand;
     node->next = NULL;
+    node->id = ID++;
     return node;
 }
 
@@ -133,6 +143,7 @@ struct ExpressionNode * createDivExpressionNode(struct ExpressionNode * leftOper
     node->left = leftOperand;
     node->right = rightOperand;
     node->next = NULL;
+    node->id = ID++;
     return node;
 }
 
@@ -148,6 +159,7 @@ struct ExpressionNode * createModExpressionNode(struct ExpressionNode * leftOper
     node->left = leftOperand;
     node->right = rightOperand;
     node->next = NULL;
+    node->id = ID++;
     return node;
 }
 
@@ -163,6 +175,7 @@ struct ExpressionNode* createGreatExpressionNode(struct ExpressionNode* leftOper
     node->left = leftOperand;
     node->right = rightOperand;
     node->next = NULL;
+    node->id = ID++;
     return node;
 }
 
@@ -178,6 +191,7 @@ struct ExpressionNode* createLessExpressionNode(struct ExpressionNode* leftOpera
     node->left = leftOperand;
     node->right = rightOperand;
     node->next = NULL;
+    node->id = ID++;
     return node;
 }
 
@@ -193,6 +207,7 @@ struct ExpressionNode* createGreatEqualExpressionNode(struct ExpressionNode* lef
     node->left = leftOperand;
     node->right = rightOperand;
     node->next = NULL;
+    node->id = ID++;
     return node;
 }
 
@@ -208,6 +223,7 @@ struct ExpressionNode* createLessEqualExpressionNode(struct ExpressionNode* left
     node->left = leftOperand;
     node->right = rightOperand;
     node->next = NULL;
+    node->id = ID++;
     return node;
 }
 
@@ -223,6 +239,7 @@ struct ExpressionNode* createEqualExpressionNode(struct ExpressionNode* leftOper
     node->left = leftOperand;
     node->right = rightOperand;
     node->next = NULL;
+    node->id = ID++;
     return node;
 }
 
@@ -238,6 +255,7 @@ struct ExpressionNode* createNotEqualExpressionNode(struct ExpressionNode* leftO
     node->left = leftOperand;
     node->right = rightOperand;
     node->next = NULL;
+    node->id = ID++;
     return node;
 }
 
@@ -254,6 +272,7 @@ struct ExpressionListNode * createExpressionListNode(struct ExpressionNode * fir
     struct ExpressionListNode * node = (struct ExpressionListNode*)malloc(sizeof(struct ExpressionListNode));
     node->first = firstChild;
     node->last = firstChild;
+    node->id = ID++;
     return node;
 }
 
@@ -284,6 +303,7 @@ struct StatementNode * createStatementFromExpression(struct ExpressionNode * exp
     stmt->whl = NULL;
     stmt->dwhl = NULL;
     stmt->next = NULL;
+    stmt->id = ID++;
     return stmt;
 }
 
@@ -298,6 +318,7 @@ struct StatementNode * createStatementFromWhile(struct WhileStatementNode * whil
     stmt->whl = whileStmt;
     stmt->dwhl = NULL;
     stmt->next = NULL;
+    stmt->id = ID++;
     return stmt;
 }
 
@@ -312,6 +333,7 @@ struct StatementNode * createStatementFromWhile(struct WhileStatementNode * whil
     stmt->whl = whileStmt;
     stmt->dwhl = NULL;
     stmt->next = NULL;
+    stmt->id = ID++;
     return stmt;
 }
 
@@ -328,6 +350,7 @@ struct StatementListNode * createStatementListNode(struct StatementNode * firstC
     struct StatementListNode * node = (struct StatementListNode*)malloc(sizeof(struct StatementListNode));
     node->first = firstChild;
     node->last = firstChild;
+    node->id = ID++;
     return node;
 }
 
