@@ -37,3 +37,15 @@ char * generateDotFromStatementList(struct StatementistNode * stmtList)
 {
     return NULL;
 }
+
+/*! Динамичски склеить две строки и вернуть ссылку на новую строку.
+\param[in] firstStr первая строка для склейки.
+\param[in] secStr вторая строка для склейки.
+\return Новая склеенная строка.
+*/
+char * concat(char * firstStr, char * secStr)
+{
+    char * result = malloc((strlen(firstStr)  + strlen(secStr) + 1) * sizeof(char));
+    strcpy(result, firstStr);
+    strcat(result, secStr);
+}
