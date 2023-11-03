@@ -293,51 +293,55 @@ struct ExpressionListNode * addExpressionToExpressionList(struct ExpressionListN
 /*------------------------------------ Statement -------------------------------------*/
 
 /*! Создать узел StatementNode на основе узла ExpressionNode.
-\param[in] expression указатель на экземпляр ExpressionNode, на основе которого создается StatementNode.
+\param[in] expr указатель на экземпляр ExpressionNode, на основе которого создается StatementNode.
 \return указатель на созданный экземпляр StatementNode.
 */
-struct StatementNode * createStatementFromExpression(struct ExpressionNode * expression)
+struct StatementNode * createStatementFromExpression(struct ExpressionNode * expr)
 {
     struct StatementNode * stmt = (struct StatementNode*)malloc(sizeof(struct StatementNode));
-    stmt->expr = expression;
-    stmt->whl = NULL;
-    stmt->dwhl = NULL;
-    stmt->next = NULL;
+    stmt->type = EXPRESSION;
+    stmt->expression = expr;
+    stmt->complexBody = NULL;
+    stmt->condition = NULL;
+    stmt->singleBody = NULL;
+    stmt->complexBody = NULL;
     stmt->id = ID++;
     return stmt;
 }
 
-/*! Создать узел StatementNode на основе узла WhileStatementNode.
-\param[in] whileStmt указатель на экземпляр WhileStatementNode, на основе которого создается StatementNode.
-\return указатель на созданный экземпляр StatementNode.
+/*! Создать узел StatementNode для цикла while с одним Statement в качесвте тела.
+\param[in] cond Условие выполнения цикла - указатель на узел  Expression.
+\param[in] stmt Тело цикла, состоящее из одного узла Statement.
+\return Созданный узел Statement.
 */
-struct StatementNode * createStatementFromWhile(struct WhileStatementNode * whileStmt)
+struct StatementNode * createStatementFromWhileWithSingleBody(struct ExpressionNode * cond, struct StatementNode * stmt)
 {
-    struct StatementNode * stmt = (struct StatementNode*)malloc(sizeof(struct StatementNode));
-    stmt->expr = NULL;
-    stmt->whl = whileStmt;
-    stmt->dwhl = NULL;
-    stmt->next = NULL;
-    stmt->id = ID++;
-    return stmt;
+    struct StatementNode * statement = (struct StatementNode*)malloc(sizeof(struct StatementNode));
+    statement->type = WHILE;
+    statement->condition = cond;
+    statement->singleBody = stmt;
+    statement->complexBody = NULL;
+    statement->expression = NULL;
+    statement->id = ID++;
+    return statement;
 }
 
-/*! Создать узел StatementNode на основе узла DoWhileStatementNode.
-\param[in] whileStmt указатель на экземпляр DoWhileStatementNode, на основе которого создается StatementNode.
-\return указатель на созданный экземпляр StatementNode.
+/*! Создать узел StatementNode для цикла while со списком Statement (BlockStatement) в качестве тела.
+\param[in] cond Условие выполнения цикла - указатель на узел  Expression.
+\param[in] stmtList Тело цикла, состоящее из узла StatementList.
+\return Созданный узел Statement.
 */
-struct StatementNode * createStatementFromWhile(struct WhileStatementNode * whileStmt)
+struct StatementNode * createStatementFromWhileWithComplexBody(struct ExpressionNode * cond, struct StatementListNode * stmtList)
 {
-    struct StatementNode * stmt = (struct StatementNode*)malloc(sizeof(struct StatementNode));
-    stmt->expr = NULL;
-    stmt->whl = whileStmt;
-    stmt->dwhl = NULL;
-    stmt->next = NULL;
-    stmt->id = ID++;
-    return stmt;
+    struct StatementNode * statement = (struct StatementNode*)malloc(sizeof(struct StatementNode));
+    statement->type = WHILE;
+    statement->condition = cond;
+    statement->singleBody = NULL;
+    statement->complexBody = stmtList;
+    statement->expression = NULL;
+    statement->id = ID++;
+    return statement;
 }
-
-
 
 /*------------------------------------ StatementList -------------------------------------*/
 
