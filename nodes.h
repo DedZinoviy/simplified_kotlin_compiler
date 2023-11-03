@@ -41,34 +41,25 @@ struct ExpressionListNode
     struct ExpressionNode * last;
 };
 
-/*------------------------------------ DoWhile -------------------------------------*/
-
-struct DoWhileStatementNode
-{
-    int id;
-    struct ExpressionNode * condition;
-    struct StatementNode * statement;
-    struct StatementListNode * list;
-};
-
-/*------------------------------------ While -------------------------------------*/
-
-struct WhileStatementNode
-{
-    int id;
-    struct ExpressionNode * condition;
-    struct StatementNode * statement;
-    struct StatementListNode * list;
-};
-
 /*------------------------------------ Statement -------------------------------------*/
+
+enum StatementType
+{
+    EXPRESSION,
+    WHILE,
+    DOWHILE
+};
+
+struct StatementListNode;
 
 struct StatementNode
 {
     int id;
-    struct ExpressionNode * expr;
-    struct WhileStatementNode * whl;
-    struct DoWhileStatementNode * dwhl;
+    enum StatementType type;
+    struct ExpressionNode * expression;
+    struct ExpressionNode * condition;
+    struct StatementNode * singleBody;
+    struct StatementListNode * complexBody;
     struct StatementNode * next;
 };
 
