@@ -12,7 +12,7 @@
 %left '*' '/' '%'
 %left UMINUS UPLUS
 %right PREF_INCREMENT PREF_DECREMENT
-%left POST_INCREMENT POST_DECREMENT '.'
+%left POST_INCREMENT POST_DECREMENT '.' ENDL
 %nonassoc '(' ')'
 
 %start KotlinFile
@@ -41,6 +41,9 @@ SimpleExpression: INT_LITERAL
                 | SimpleExpression '.' EndlOpt ID
                 | SimpleExpression '.' EndlOpt ID '(' ExpressionList ')'
                 | SimpleExpression '.' EndlOpt ID '(' ')'
+                | SimpleExpression EndlList '.' EndlOpt ID
+                | SimpleExpression EndlList '.' EndlOpt ID '(' ExpressionList ')'
+                | SimpleExpression EndlList '.' EndlOpt ID '(' ')'
                 | ID '(' ExpressionList ')'
                 | ID '(' ')'
                 | SimpleExpression '+' EndlOpt SimpleExpression
