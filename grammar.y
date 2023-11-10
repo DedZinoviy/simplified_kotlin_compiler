@@ -1,8 +1,9 @@
-%token IF ELSE VAL VAR CLASS PUBLIC PROTECTED PRIVATE INTERNAL ENDL WHILE DO FUNC
+%token IF ELSE VAL VAR CLASS PUBLIC PROTECTED PRIVATE INTERNAL ENDL WHILE DO FUNC FOR SUPER THIS
 %token ID
 
 %token INT_LITERAL CHAR_LITERAL DOUBLE_LITERAL STRING_LITERAL TRUE_LITERAL FALSE_LITERAL
 
+%nonassoc ENDL
 %right '=' PLUS_ASSIGNMENT MINUS_ASSIGNMENT MUL_ASSIGNMENT DIV_ASSIGNMENT MOD_ASSIGNMENT
 %left EQUAL NOT_EQUAL
 %left '>' '<' GREATER_EQUAL LESS_EQUAL 
@@ -25,7 +26,6 @@ KotlinFileVisibilityElementList: KotlinFileVisibilityElement
                                |  KotlinFileVisibilityElementList KotlinFileVisibilityElement
                                ;
 
-
 ExpressionList: SimpleExpression
               | ExpressionList ',' SimpleExpression
               ;
@@ -37,6 +37,8 @@ SimpleExpression: INT_LITERAL
                 | TRUE_LITERAL
                 | FALSE_LITERAL
                 | ID
+                | SUPER
+                | THIS
                 | '(' SimpleExpression ')'
                 | SimpleExpression '.' EndlOpt ID
                 | SimpleExpression '.' EndlOpt ID '(' ExpressionList ')'
@@ -72,7 +74,7 @@ SimpleExpression: INT_LITERAL
                 | SimpleExpression POST_INCREMENT
                 ;
 
-BlockStatement: '{' EndlOpt StatementList EndlOpt '}'
+BlockStatement: '{' EndlOpt StatementList '}'
                | '{' EndlOpt '}'
                ;
               
@@ -86,24 +88,27 @@ WhileStatement: WHILE EndlOpt '(' EndlOpt SimpleExpression EndlOpt ')' EndlOpt S
               ;
 
 DoWhileStatement: DO EndlOpt BlockStatement EndlOpt WHILE EndlOpt '(' EndlOpt SimpleExpression EndlOpt ')'
-                | DO EndlOpt Statement EndlOpt WHILE EndlOpt '(' EndlOpt SimpleExpression EndlOpt ')'
+                | DO EndlOpt Statement WHILE EndlOpt '(' EndlOpt SimpleExpression EndlOpt ')'
                 ;
 
+ForStatement: FOR '(' VarDeclarationList IN SimpleExpression')' EndlOpt BlockStatement
+            | FOR '(' VarDeclarationList IN SimpleExpression')' EndlOpt Statement
+            ;
+
 StatementList: Statement
-             | StatementList EndlOpt Statement
+             | StatementList Statement
              ;
 
 Statement: ';'
-         | SimpleExpression ENDL
+         | SimpleExpression EndlList
          | SimpleExpression ';'
          | VarStmt ';'
-         | VarStmt ENDL
          | ValStmt ';'
-         | ValStmt ENDL
          | WhileStatement
-         | DoWhileStatement ENDL
+         | DoWhileStatement EndlList
          | DoWhileStatement ';'
-         ;
+         | ForStatement
+         ;         
 
 ValStmt: VAL EndlOpt VarDeclaration
        | VAL EndlOpt ID EndlOpt '=' EndlOpt SimpleExpression
@@ -137,13 +142,15 @@ ClassVisibilityMemberList: ClassVisibilityMember
                          ;
 
 ClassMember: FunctionDeclaration StatementTerminator
-           | ValStmt StatementTerminator
-           | VarStmt StatementTerminator
+           | ValStmt
+           | VarStmt
            ;
        
 ClassDeclaration: CLASS ID
-                | CLASS ID '{' '}'
-                | CLASS ID '{' ClassVisibilityMemberList '}'
+                | CLASS ID '{' EndlOpt '}'
+                | CLASS ID '{' EndlOpt ClassVisibilityMemberList '}'
+                | CLASS ID '(' VarDeclarationList ')' '{' EndlOpt '}'
+                | CLASS ID '(' VarDeclarationList ')' '{' EndlOpt ClassVisibilityMemberList '}'
                 ;
 
 Visibility: PRIVATE
@@ -156,8 +163,10 @@ StatementTerminator: ENDL
                    | ';'
                    ;
 
-KotlinFileElement: FunctionDeclaration
-                 | ClassDeclaration
+KotlinFileElement: FunctionDeclaration EndlList
+                 | ClassDeclaration EndlList
+                 | FunctionDeclaration ';'
+                 | ClassDeclaration ';'
                  ;
 
 KotlinFileVisibilityElement: KotlinFileElement
