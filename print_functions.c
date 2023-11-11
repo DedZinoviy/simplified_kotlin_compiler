@@ -36,6 +36,30 @@ char * generateDotFromExpression(struct ExpressionNode * node)
         res = concat(res, "[label=\"%\"];\n");
         res = concat(res, generateStrForBinOperation(node));
         break;
+    case LESS:
+        res = concat(res, "[label=\"<\"];\n");
+        res = concat(res, generateStrForBinOperation(node));
+        break;
+    case GREAT:
+        res = concat(res, "[label=\">\"];\n");
+        res = concat(res, generateStrForBinOperation(node));
+        break;
+    case EQUAL:
+        res = concat(res, "[label=\"==\"];\n");
+        res = concat(res, generateStrForBinOperation(node));
+        break;
+    case GREAT_EQUAL:
+        res = concat(res, "[label=\">=\"];\n");
+        res = concat(res, generateStrForBinOperation(node));
+        break;
+    case LESS_EQUAL:
+        res = concat(res, "[label=\"<=\"];\n");
+        res = concat(res, generateStrForBinOperation(node));
+        break;
+    case NOT_EQUAL:
+        res = concat(res, "[label=\"!=\"];\n");
+        res = concat(res, generateStrForBinOperation(node));
+        break;
     default:
         break;
     }
