@@ -250,15 +250,15 @@ false {printf("(%s) - FALSE_KEY_WORD\n", yytext);}
     printf("ERROR: illegal underscore in DOUBLE in line %d.\n", line);
 }
 
-({DIGIT}(\_*{DIGIT})*)?\.{DIGIT}(\_*{DIGIT})*((e|E)(\+|\-)?\_+{DIGIT}(\_*{DIGIT})*) {
+(({DIGIT}(\_*{DIGIT})*)?\.)?{DIGIT}(\_*{DIGIT})*((e|E)(\+|\-)?\_+{DIGIT}(\_*{DIGIT})*) {
     printf("ERROR: illegal underscore in DOUBLE in line %d.\n", line);
 }
 
-({DIGIT}(\_*{DIGIT})*)?\.{DIGIT}(\_*{DIGIT})*((e|E)(\+|\-)?{DIGIT}(\_*{DIGIT})*\_+) {
+(({DIGIT}(\_*{DIGIT})*)?\.)?{DIGIT}(\_*{DIGIT})*((e|E)(\+|\-)?{DIGIT}(\_*{DIGIT})*\_+) {
     printf("ERROR: illegal underscore in DOUBLE in line %d.\n", line);
 }
 
-({DIGIT}(\_*{DIGIT})*)?\.{DIGIT}(\_*{DIGIT})*((e|E)(\+|\-)?)(\_)* {
+(({DIGIT}(\_*{DIGIT})*)?\.)?{DIGIT}(\_*{DIGIT})*((e|E)(\+|\-)?)(\_)* {
     printf("ERROR: the value is out of range in DOUBLE in line %d.\n", line);
 }
 
