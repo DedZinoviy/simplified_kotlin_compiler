@@ -55,10 +55,15 @@ if {printf("(%s) - IF_KEY_WORD\n", yytext);}
 in {printf("(%s) - IN_KEY_WORD\n", yytext);}
 \!in {printf("(%s) - !IN_KEY_WORD\n", yytext);}
 interface {printf("(%s) - INTERFACE_KEY_WORD\n", yytext);}
+internal {printf("(%s) - INTERNAL_KEY_WORD\n", yytext);}
 is {printf("(%s) - IS_KEY_WORD\n", yytext);}
 \!is {printf("(%s) - !IS_KEY_WORD\n", yytext);}
 null {printf("(%s) - NULL_KEY_WORD\n", yytext);}
 object {printf("(%s) - OBJECT_KEY_WORD\n", yytext);}
+open {printf("(%s) - OPEN_KEY_WORD\n", yytext);}
+private {printf("(%s) - PRIVATE_KEY_WORD\n", yytext);}
+protected {printf("(%s) - PROTECTED_KEY_WORD\n", yytext);}
+public {printf("(%s) - PUBLIC_KEY_WORD\n", yytext);}
 package {printf("(%s) - PACKAGE_KEY_WORD\n", yytext);}
 return {printf("(%s) - RETURN_KEY_WORD\n", yytext);}
 super {printf("(%s) - SUPER_KEY_WORD\n", yytext);}
