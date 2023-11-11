@@ -15,6 +15,34 @@ char * generateDotFromExpression(struct ExpressionNode * node)
     switch (node->type)
     {
     case IDENTIFIER:
+        res = concat(res, "[label=\"");
+        res = concat(res, node->identifierString);
+        res = concat(res, "\"];\n");
+        break;
+    case INT_LIT:
+        res = concat(res, "[label=\"");
+        res = concat(res, itoa(node->intValue));
+        res = concat(res, "\"];\n");
+        break;
+    case BOOLEAN_LIT:
+        res = concat(res, "[label=\"");
+        if (node->boolValue == 0) 
+        {
+            res = concat(res, "true");
+        }
+        else
+        {
+            res = concat(res, "false");
+        }
+        res = concat(res, "\"];\n");
+        break;
+    case DOUBLE_LIT:
+        res = concat(res, "[label=\"");
+        double d = node->doubleValue;
+        char dstr[20];
+        sprintf(dstr, "%f", d);
+        res = concat(res, dstr);
+        res = concat(res, "\"];\n");
         break;
     case PLUS:
         res = concat(res, "[label=\"+\"];\n");
