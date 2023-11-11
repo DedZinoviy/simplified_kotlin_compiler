@@ -1,13 +1,45 @@
 #include <stdlib.h>
 #include "nodes.h"
 
+char* generateStrForBinOperation(struct ExpressionNode* node);
+char* concat(char* firstStr, char* secStr);
+
 /*! Сгегнерировать строку в DOT-формате для дальнейшей визуализации для узла Expression.
 \param[in] node Визуализироваемый узел.
 \return Строка кода на языке DOT из узла Expression.
 */
 char * generateDotFromExpression(struct ExpressionNode * node)
 {
-    return NULL;
+    char base[] = "";
+    char* res = concat(base, itoa(node->id));
+    switch (node->type)
+    {
+    case IDENTIFIER:
+        break;
+    case PLUS:
+        res = concat(res, "[label=\"+\"];\n");
+        res = concat(res, generateStrForBinOperation(node));
+        break;
+    case MINUS:
+        res = concat(res, "[label=\"-\"];\n");
+        res = concat(res, generateStrForBinOperation(node));
+        break;
+    case MUL:
+        res = concat(res, "[label=\"*\"];\n");
+        res = concat(res, generateStrForBinOperation(node));
+        break;
+    case DIV:
+        res = concat(res, "[label=\"/\"];\n");
+        res = concat(res, generateStrForBinOperation(node));
+        break;
+    case MOD:
+        res = concat(res, "[label=\"%\"];\n");
+        res = concat(res, generateStrForBinOperation(node));
+        break;
+    default:
+        break;
+    }
+    return res;
 }
 
 /*! Сгегнерировать строку в DOT-формате для дальнейшей визуализации для узла ExpressionList.
@@ -48,4 +80,24 @@ char * concat(char * firstStr, char * secStr)
     char * result = malloc((strlen(firstStr)  + strlen(secStr) + 1) * sizeof(char));
     strcpy(result, firstStr);
     strcat(result, secStr);
+}
+
+/*! Сгенерировать DOT-строку для дочерних узллов Expression бинарной операции.
+* \param[in] node узел, для дочерних узлов которого формируется DOT-строка.
+* \return DOT-строка с дочерними узлами.
+*/
+char* generateStrForBinOperation(struct ExpressionNode* node)
+{
+    char res[] = "";
+    res = concat(res, generateDotFromExpression(node->left));
+    res = concat(res, generateDotFromExpression(node->right));
+    res = concat(res, itoa(node->id));
+    res = concat(res, " -> ");
+    res = concat(res, itoa(node->left->id));
+    res = concat(res, "[label=\"left\"];\n");
+    res = concat(res, itoa(node->id));
+    res = concat(res, " -> ");
+    res = concat(res, itoa(node->right->id));
+    res = concat(res, "[label=\"right\"];\n");
+    return res;
 }
