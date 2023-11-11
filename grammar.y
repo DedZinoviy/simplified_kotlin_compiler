@@ -13,7 +13,7 @@
 %left '*' '/' '%'
 %left UMINUS UPLUS
 %right PREF_INCREMENT PREF_DECREMENT
-%left POST_INCREMENT POST_DECREMENT '.' ENDL
+%left POST_INCREMENT POST_DECREMENT '.'
 %nonassoc '(' ')'
 
 %start KotlinFile
@@ -84,14 +84,18 @@ IfStatement: IF '(' SimpleExpression ')' BlockStatement
            ;
 
 WhileStatement: WHILE EndlOpt '(' EndlOpt SimpleExpression EndlOpt ')' EndlOpt Statement
-              | WHILE EndlOpt '(' EndlOpt SimpleExpression EndlOpt ')' EndlOpt BlockStatement
+              | WHILE EndlOpt '(' EndlOpt SimpleExpression EndlOpt ')' EndlOpt BlockStatement EndlList
+              | WHILE EndlOpt '(' EndlOpt SimpleExpression EndlOpt ')' EndlOpt BlockStatement ';' EndlOpt
               ;
 
-DoWhileStatement: DO EndlOpt BlockStatement EndlOpt WHILE EndlOpt '(' EndlOpt SimpleExpression EndlOpt ')'
-                | DO EndlOpt Statement WHILE EndlOpt '(' EndlOpt SimpleExpression EndlOpt ')'
+DoWhileStatement: DO EndlOpt BlockStatement EndlOpt WHILE EndlOpt '(' EndlOpt SimpleExpression EndlOpt ')' EndlList
+                | DO EndlOpt Statement WHILE EndlOpt '(' EndlOpt SimpleExpression EndlOpt ')' EndlList
+                | DO EndlOpt BlockStatement EndlOpt WHILE EndlOpt '(' EndlOpt SimpleExpression EndlOpt ')' ';' EndlOpt
+                | DO EndlOpt Statement WHILE EndlOpt '(' EndlOpt SimpleExpression EndlOpt ')' ';' EndlOpt
                 ;
 
-ForStatement: FOR '(' VarDeclarationList IN SimpleExpression')' EndlOpt BlockStatement
+ForStatement: FOR '(' VarDeclarationList IN SimpleExpression')' EndlOpt BlockStatement EndlList
+            | FOR '(' VarDeclarationList IN SimpleExpression')' EndlOpt BlockStatement ';' EndlOpt
             | FOR '(' VarDeclarationList IN SimpleExpression')' EndlOpt Statement
             ;
 
@@ -99,26 +103,46 @@ StatementList: Statement
              | StatementList Statement
              ;
 
-Statement: ';'
+Statement: ';' EndlOpt
          | SimpleExpression EndlList
-         | SimpleExpression ';'
-         | VarStmt ';'
-         | ValStmt ';'
+         | SimpleExpression ';' EndlOpt
+         | VarStmt
+         | ValStmt
+         | MultiDeclararion
          | WhileStatement
-         | DoWhileStatement EndlList
-         | DoWhileStatement ';'
+         | DoWhileStatement
          | ForStatement
          ;         
 
-ValStmt: VAL EndlOpt VarDeclaration
-       | VAL EndlOpt ID EndlOpt '=' EndlOpt SimpleExpression
-       | VAL EndlOpt VarDeclaration EndlOpt '=' EndlOpt SimpleExpression
+ValStmt: VAL EndlOpt VarDeclaration EndlList
+       | VAL EndlOpt VarDeclaration ';' EndlOpt
+       | VAL EndlOpt ID EndlOpt '=' EndlOpt SimpleExpression EndlList
+       | VAL EndlOpt ID EndlOpt '=' EndlOpt SimpleExpression ';' EndlOpt
+       | VAL EndlOpt VarDeclaration EndlOpt '=' EndlOpt SimpleExpression EndlList
+       | VAL EndlOpt VarDeclaration EndlOpt '=' EndlOpt SimpleExpression ';' EndlOpt
        ;
 
-VarStmt: VAR EndlOpt VarDeclaration
-       | VAR EndlOpt ID EndlOpt '=' EndlOpt SimpleExpression
-       | VAR EndlOpt VarDeclaration EndlOpt '=' EndlOpt SimpleExpression
-       ;
+VarStmt: VAR EndlOpt VarDeclaration EndlList
+       | VAR EndlOpt VarDeclaration ';' EndlOpt
+       | VAR EndlOpt ID EndlOpt '=' EndlOpt SimpleExpression EndlList
+       | VAR EndlOpt ID EndlOpt '=' EndlOpt SimpleExpression ';' EndlOpt
+       | VAR EndlOpt VarDeclaration EndlOpt '=' EndlOpt SimpleExpression EndlList
+       | VAR EndlOpt VarDeclaration EndlOpt '=' EndlOpt SimpleExpression ';' EndlOpt
+       ; 
+
+IdList: ID
+      | IdList ',' ID
+      ;
+
+MultiDeclararion: VAL EndlOpt '('VarDeclaration')' EndlOpt '=' EndlOpt SimpleExpression EndlList
+                | VAL EndlOpt '('IdList')' EndlOpt '=' EndlOpt SimpleExpression EndlList
+                | VAR EndlOpt '('VarDeclaration')' EndlOpt '=' EndlOpt SimpleExpression EndlList
+                | VAR EndlOpt '('IdList')' EndlOpt '=' EndlOpt SimpleExpression EndlList
+                | VAL EndlOpt '('VarDeclaration')' EndlOpt '=' EndlOpt SimpleExpression ';' EndlOpt
+                | VAL EndlOpt '('IdList')' EndlOpt '=' EndlOpt SimpleExpression ';' EndlOpt
+                | VAR EndlOpt '('VarDeclaration')' EndlOpt '=' EndlOpt SimpleExpression ';' EndlOpt 
+                | VAR EndlOpt '('IdList')' EndlOpt '=' EndlOpt SimpleExpression ';' EndlOpt
+                ;
 
 VarDeclaration: ID EndlOpt ':' EndlOpt ID
               ;
@@ -135,15 +159,17 @@ FunctionDeclaration: FUNC EndlOpt ID EndlOpt '(' EndlOpt ')' EndlOpt BlockStatem
 
 ClassVisibilityMember: ClassMember
                      | Visibility ClassMember
+                     | ';'
                      ;
 
 ClassVisibilityMemberList: ClassVisibilityMember
                          | ClassVisibilityMemberList ClassVisibilityMember
                          ;
 
-ClassMember: FunctionDeclaration StatementTerminator
+ClassMember: FunctionDeclaration
            | ValStmt
            | VarStmt
+           | MultiDeclararion
            ;
        
 ClassDeclaration: CLASS ID
@@ -165,8 +191,8 @@ StatementTerminator: ENDL
 
 KotlinFileElement: FunctionDeclaration EndlList
                  | ClassDeclaration EndlList
-                 | FunctionDeclaration ';'
-                 | ClassDeclaration ';'
+                 | FunctionDeclaration ';' EndlOpt
+                 | ClassDeclaration ';' EndlOpt
                  ;
 
 KotlinFileVisibilityElement: KotlinFileElement
