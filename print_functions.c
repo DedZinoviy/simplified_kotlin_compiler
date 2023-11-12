@@ -91,6 +91,14 @@ char * generateDotFromExpression(struct ExpressionNode * node)
     default:
         break;
     }
+    if(node->next != NULL)
+    {
+        res = concat(res, generateDotFromExpression(node->next));
+        res = concat(res, itoa(node->id));
+        res = concat(res, " -> ");
+        res = concat(res, itoa(node->next->id));
+        res = concat(res, "[label=\"next\"];\n");
+    }
     return res;
 }
 
@@ -100,7 +108,18 @@ char * generateDotFromExpression(struct ExpressionNode * node)
 */
 char * generateDotFromExpressionList(struct ExpressionListNode * listNode)
 {
-    return NULL;
+    char base[] = "";
+    char* res = concat(base, itoa(listNode->id));
+    char* res = concat(res, "[label=\"ExprList\"];\n");
+    if (listNode->first != NULL)
+    {
+        res = concat(res, generateDotFromExpression(listNode->first));
+        res = concat(res, itoa(listNode->id));
+        res = concat(res, " -> ");
+        res = concat(res, itoa(listNode->first->id));
+        res = concat(res, "[label=\"first\"];\n");
+    }
+    return res;
 }
 
 
