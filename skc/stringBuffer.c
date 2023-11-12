@@ -1,13 +1,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
-
-/*! Структура для буффера строки, позволяющая хранить строки с \0. */
-struct stringBuffer
-{
-    char buffer[10240]; // Массив символов буффера.
-    int length; // Длина буффера.
-};
+#include "stringBuffer.h"
 
 /*! Добавить символ в конец строкового буфера.
 \param[in,out] buffer - обновляемый экземпляр строкового буффера.

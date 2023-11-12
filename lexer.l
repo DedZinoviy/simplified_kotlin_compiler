@@ -15,7 +15,7 @@ DIGIT [0-9]
 %{
     #include <stdio.h>
     #include <string.h>
-    #include "stringBuffer.c"
+    #include "stringBuffer.h"
 %}
 
 %{
@@ -419,4 +419,18 @@ void removeUnderline(char* str)
         int position = underline - str;
         removeCharFromStringByIndex(str, position);
     }
+}
+
+int main(int argc, char* argv[])
+{
+	if (argc < 2)
+	{
+		printf("The path to the input file is missing.\n");
+		return -1;
+	}
+
+	yyin = fopen(argv[1], "r");
+	yylex();
+
+	return 0;
 }
