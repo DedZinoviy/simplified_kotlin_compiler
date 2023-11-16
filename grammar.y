@@ -200,16 +200,6 @@ OpenClosedClassDeclaration: ClassDeclaration
                           | OPEN EndlOpt ClassDeclaration
                           ;
 
-Visibility: PRIVATE
-          | PROTECTED
-          | INTERNAL
-          | PUBLIC
-          ;
-
-StatementTerminator: ENDL
-                   | ';'
-                   ;
-
 KotlinFileElement: FunctionDeclaration EndlList
                  | OpenClosedClassDeclaration EndlList
                  | FunctionDeclaration ';' EndlOpt
