@@ -133,7 +133,7 @@ char * generateDotFromStatement(struct StatementNode * stmt)
     char* res = concat(base, itoa(stmt->id));
     switch (stmt->type) {
     case EXPRESSION:
-        res = concat(res, "[label=\"stmt\"];\n);
+        res = concat(res, "[label=\"stmt\"];\n");
         res = concat(res, generateDotFromExpression(stmt->expression));
         res = concat(res, itoa(stmt->id));
         res = concat(res, " -> ");
@@ -175,8 +175,8 @@ char * concat(char * firstStr, char * secStr)
 */
 char* generateStrForBinOperation(struct ExpressionNode* node)
 {
-    char res[] = "";
-    res = concat(res, generateDotFromExpression(node->left));
+    char base[] = "";
+    char * res = concat(base, generateDotFromExpression(node->left));
     res = concat(res, generateDotFromExpression(node->right));
     res = concat(res, itoa(node->id));
     res = concat(res, " -> ");
