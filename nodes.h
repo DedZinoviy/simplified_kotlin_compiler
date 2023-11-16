@@ -47,7 +47,9 @@ enum StatementType
 {
     EXPRESSION,
     WHILE,
-    DOWHILE
+    DOWHILE,
+    FOR,
+    EMPTY
 };
 
 struct StatementListNode;

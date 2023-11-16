@@ -343,6 +343,22 @@ struct StatementNode * createStatementFromWhileWithComplexBody(struct Expression
     return statement;
 }
 
+/*! Создать пустой узел Statement.
+\return указатель на пустой узел Statement.
+*/
+struct StatementNode * createEmptyStatement()
+{
+    struct StatementNode * node = (struct StatementNode*)malloc(sizeof(struct StatementNode));
+    node->id = ID++;
+    node->type = EMPTY;
+    node->expression = NULL;
+    node->condition = NULL;
+    node->complexBody = NULL;
+    node->singleBody = NULL;
+    node->next= NULL;
+    return node;
+}
+
 /*------------------------------------ StatementList -------------------------------------*/
 
 /*! Создать узел списка Statement.
