@@ -306,6 +306,7 @@ struct StatementNode * createStatementFromExpression(struct ExpressionNode * exp
     stmt->singleBody = NULL;
     stmt->complexBody = NULL;
     stmt->id = ID++;
+    stmt->next = NULL;
     return stmt;
 }
 
@@ -323,6 +324,7 @@ struct StatementNode * createStatementFromWhileWithSingleBody(struct ExpressionN
     statement->complexBody = NULL;
     statement->expression = NULL;
     statement->id = ID++;
+    statement->next = NULL;
     return statement;
 }
 
@@ -340,6 +342,7 @@ struct StatementNode * createStatementFromWhileWithComplexBody(struct Expression
     statement->complexBody = stmtList;
     statement->expression = NULL;
     statement->id = ID++;
+    statement->next = NULL;
     return statement;
 }
 
