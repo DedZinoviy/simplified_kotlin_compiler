@@ -129,7 +129,23 @@ char * generateDotFromExpressionList(struct ExpressionListNode * listNode)
 */
 char * generateDotFromStatement(struct StatementNode * stmt)
 {
-    return NULL;
+    char base[] = "";
+    char* res = concat(base, itoa(stmt->id));
+    switch (stmt->type) {
+    case EXPRESSION:
+        res = concat(res, "[label=\"stmt\"];\n);
+        res = concat(res, generateDotFromExpression(stmt->expression));
+        res = concat(res, itoa(stmt->id));
+        res = concat(res, " -> ");
+        res = concat(res, itoa(stmt->expression->id));
+        res = concat(res, "\n");
+        break;
+    case DOWHILE:
+        break;
+    case WHILE:
+        break;
+    }
+    return res;
 }
 
 /*! Сгегнерировать строку в DOT-формате для дальнейшей визуализации для узла StatementList.
