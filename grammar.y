@@ -1,4 +1,4 @@
-%token IF ELSE VAL VAR CLASS PUBLIC PROTECTED PRIVATE INTERNAL ENDL WHILE DO FUNC FOR SUPER THIS
+%token IF ELSE VAL VAR CLASS PUBLIC PROTECTED PRIVATE INTERNAL ENDL WHILE DO FUNC FOR SUPER THIS OVERRIDE OPEN
 %token ID
 
 %token INT_LITERAL CHAR_LITERAL DOUBLE_LITERAL STRING_LITERAL TRUE_LITERAL FALSE_LITERAL
@@ -23,7 +23,7 @@ KotlinFile: KotlinFileVisibilityElementList
           ;
 
 KotlinFileVisibilityElementList: KotlinFileVisibilityElement
-                               |  KotlinFileVisibilityElementList KotlinFileVisibilityElement
+                               | KotlinFileVisibilityElementList KotlinFileVisibilityElement
                                ;
 
 ExpressionList: SimpleExpression
@@ -157,13 +157,25 @@ FunctionDeclaration: FUNC EndlOpt ID EndlOpt '(' EndlOpt ')' EndlOpt BlockStatem
                    | FUNC EndlOpt ID EndlOpt '(' EndlOpt VarDeclarationList  EndlOpt ')' EndlOpt ':' EndlOpt ID EndlOpt BlockStatement
                    ;
 
-ClassVisibilityMember: ClassMember
-                     | Visibility ClassMember
+ClassModifierMember: ClassMember
+                     | MemberModifierList ClassMember
                      | ';'
                      ;
 
-ClassVisibilityMemberList: ClassVisibilityMember
-                         | ClassVisibilityMemberList ClassVisibilityMember
+MemberModifier: PUBLIC
+              | PRIVATE
+              | PROTECTED
+              | INTERNAL
+              | OPEN
+              | OVERRIDE
+              ;
+
+MemberModifierList: MemberModifier
+                  | MemberModifierList EndlOpt MemberModifier
+                  ;
+
+ClassModifierMemberList: ClassModifierMember
+                         | ClassModifierMemberList ClassModifierMember
                          ;
 
 ClassMember: FunctionDeclaration
@@ -174,10 +186,19 @@ ClassMember: FunctionDeclaration
        
 ClassDeclaration: CLASS ID
                 | CLASS ID '{' EndlOpt '}'
-                | CLASS ID '{' EndlOpt ClassVisibilityMemberList '}'
+                | CLASS ID '{' EndlOpt ClassModifierMemberList '}'
                 | CLASS ID '(' VarDeclarationList ')' '{' EndlOpt '}'
-                | CLASS ID '(' VarDeclarationList ')' '{' EndlOpt ClassVisibilityMemberList '}'
+                | CLASS ID '(' VarDeclarationList ')' '{' EndlOpt ClassModifierMemberList '}'
+                | CLASS ID ':' ID
+                | CLASS ID ':' ID '{' EndlOpt '}'
+                | CLASS ID ':' ID '{' EndlOpt ClassModifierMemberList '}'
+                | CLASS ID ':' ID '(' VarDeclarationList ')' '{' EndlOpt '}'
+                | CLASS ID ':' ID '(' VarDeclarationList ')' '{' EndlOpt ClassModifierMemberList '}'
                 ;
+
+OpenClosedClassDeclaration: ClassDeclaration
+                          | OPEN EndlOpt ClassDeclaration
+                          ;
 
 Visibility: PRIVATE
           | PROTECTED
@@ -190,15 +211,16 @@ StatementTerminator: ENDL
                    ;
 
 KotlinFileElement: FunctionDeclaration EndlList
-                 | ClassDeclaration EndlList
+                 | OpenClosedClassDeclaration EndlList
                  | FunctionDeclaration ';' EndlOpt
-                 | ClassDeclaration ';' EndlOpt
+                 | OpenClosedClassDeclaration ';' EndlOpt
                  ;
 
 KotlinFileVisibilityElement: KotlinFileElement
                            | PUBLIC KotlinFileElement
                            | PRIVATE KotlinFileElement
                            | INTERNAL KotlinFileElement
+                           | ';'
                            ;
 
 EndlOpt: /* empty */
