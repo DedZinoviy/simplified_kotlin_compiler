@@ -153,8 +153,19 @@ char * generateDotFromStatement(struct StatementNode * stmt)
 \return Строка кода на языке DOT из узла StatementList.
 */
 char * generateDotFromStatementList(struct StatementistNode * stmtList)
-{
-    return NULL;
+{  
+    char base[] = "";
+    char* res = concat(base, itoa(stmtList->id));
+    char* res = concat(res, "[label=\"StmtList\"];\n");
+    if (stmtList->first != NULL)
+    {
+        res = concat(res, generateDotFromStatement(stmtList->first));
+        res = concat(res, itoa(stmtList->id));
+        res = concat(res, " -> ");
+        res = concat(res, itoa(stmtList->first->id));
+        res = concat(res, "[label=\"first\"];\n");
+    }
+    return res;
 }
 
 /*! Динамичски склеить две строки и вернуть ссылку на новую строку.
