@@ -5,8 +5,8 @@ char* generateStrForBinOperation(struct ExpressionNode* node);
 char* concat(char* firstStr, char* secStr);
 
 /*! Сгегнерировать строку в DOT-формате для дальнейшей визуализации для узла Expression.
-\param[in] node Визуализироваемый узел.
-\return Строка кода на языке DOT из узла Expression.
+* \param[in] node Визуализироваемый узел.
+* \return Строка кода на языке DOT из узла Expression.
 */
 char * generateDotFromExpression(struct ExpressionNode * node)
 {
@@ -104,8 +104,8 @@ char * generateDotFromExpression(struct ExpressionNode * node)
 }
 
 /*! Сгегнерировать строку в DOT-формате для дальнейшей визуализации для узла ExpressionList.
-\param[in] listNode Визуализироваемый узел.
-\return Строка кода на языке DOT из узла ExpressionList.
+* \param[in] listNode Визуализироваемый узел.
+* \return Строка кода на языке DOT из узла ExpressionList.
 */
 char * generateDotFromExpressionList(struct ExpressionListNode * listNode)
 {
@@ -126,8 +126,8 @@ char * generateDotFromExpressionList(struct ExpressionListNode * listNode)
 
 
 /*! Сгегнерировать строку в DOT-формате для дальнейшей визуализации для узла Statement.
-\param[in] stmt Визуализироваемый узел.
-\return Строка кода на языке DOT из узла Statement.
+* \param[in] stmt Визуализироваемый узел.
+* \return Строка кода на языке DOT из узла Statement.
 */
 char * generateDotFromStatement(struct StatementNode * stmt)
 {
@@ -196,8 +196,8 @@ char * generateDotFromStatement(struct StatementNode * stmt)
 }
 
 /*! Сгегнерировать строку в DOT-формате для дальнейшей визуализации для узла StatementList.
-\param[in] stmtList Визуализироваемый узел.
-\return Строка кода на языке DOT из узла StatementList.
+* \param[in] stmtList Визуализироваемый узел.
+* \return Строка кода на языке DOT из узла StatementList.
 */
 char * generateDotFromStatementList(struct StatementListNode * stmtList)
 {  
@@ -217,9 +217,9 @@ char * generateDotFromStatementList(struct StatementListNode * stmtList)
 }
 
 /*! Динамичски склеить две строки и вернуть ссылку на новую строку.
-\param[in] firstStr первая строка для склейки.
-\param[in] secStr вторая строка для склейки.
-\return Новая склеенная строка.
+* \param[in] firstStr первая строка для склейки.
+* \param[in] secStr вторая строка для склейки.
+* \return Новая склеенная строка.
 */
 char * concat(char * firstStr, char * secStr)
 {
