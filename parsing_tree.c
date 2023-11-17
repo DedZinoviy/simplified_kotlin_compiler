@@ -259,6 +259,24 @@ struct ExpressionNode* createNotEqualExpressionNode(struct ExpressionNode* leftO
     return node;
 }
 
+/*! Создать узел вызова функции.
+* \param[in] idStr строка-идентификатор (имя) функции.
+* \param[in] list список параметров-аргументов функции; NULL, если список пустой.
+* \return указатель на созданный узел Expression.
+*/
+struct ExpressionNode* createFunctionCallExpressionNode(char * idStr, struct ExpressionListNode * list)
+{
+    struct ExpressionNode * node = (struct ExpressionNode*)malloc(sizeof(struct ExpressionNode));
+    node->id = ID++;
+    node->type = FUNC_CALL;
+    node->identifierString = idStr;
+    node->params = list;
+    node->left = NULL;
+    node->right = NULL;
+    node->next = NULL;
+    return node;
+}
+
 
 
 /*------------------------------------ ExpressionList -------------------------------------*/
