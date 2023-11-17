@@ -141,11 +141,55 @@ char * generateDotFromStatement(struct StatementNode * stmt)
         res = concat(res, itoa(stmt->id, strId, 10));
         res = concat(res, " -> ");
         res = concat(res, itoa(stmt->expression->id, strId, 10));
-        res = concat(res, "\n");
+        res = concat(res, "[label=\"expr\"];\n");
         break;
     case DOWHILE:
+        res = concat(res, "[label=\"DO_WHILE\"];\n");
+        res = concat(res, generateDotFromExpression(stmt->condition));
+        res = concat(res, itoa(stmt->id, strId, 10));
+        res = concat(res, " -> ");
+        res = concat(res, itoa(stmt->condition->id, strId, 10));
+        res = concat(res, "[label = \"condition\"];\n");
+        if (stmt->complexBody != NULL) 
+        {
+            res = concat(res, generateDotFromStatementList(stmt->complexBody));
+            res = concat(res, itoa(stmt->id, strId, 10));
+            res = concat(res, " -> ");
+            res = concat(res, itoa(stmt->complexBody->id, strId, 10));
+            res = concat(res, "[label = \"control_body\"];\n");
+        }
+        else if (stmt->singleBody != NULL)
+        {
+            res = concat(res, generateDotFromStatement(stmt->singleBody));
+            res = concat(res, itoa(stmt->id, strId, 10));
+            res = concat(res, " -> ");
+            res = concat(res, itoa(stmt->singleBody->id, strId, 10));
+            res = concat(res, "[label = \"control_body\"];\n");
+        }
         break;
     case WHILE:
+        res = concat(res, "[label=\"WHILE\"];\n");
+        res = concat(res, generateDotFromExpression(stmt->condition));
+        res = concat(res, itoa(stmt->id, strId, 10));
+        res = concat(res, " -> ");
+        res = concat(res, itoa(stmt->condition->id, strId, 10));
+        res = concat(res, "[label = \"condition\"];\n");
+        if (stmt->complexBody != NULL) 
+        {
+            res = concat(res, generateDotFromStatementList(stmt->complexBody));
+            res = concat(res, itoa(stmt->id, strId, 10));
+            res = concat(res, " -> ");
+            res = concat(res, itoa(stmt->complexBody->id, strId, 10));
+            res = concat(res, "[label = \"control_body\"];\n");
+        }
+        else if (stmt->singleBody != NULL)
+        {
+            res = concat(res, generateDotFromStatement(stmt->singleBody));
+            res = concat(res, itoa(stmt->id, strId, 10));
+            res = concat(res, " -> ");
+            res = concat(res, itoa(stmt->singleBody->id, strId, 10));
+            res = concat(res, "[label = \"control_body\"];\n");
+        }
         break;
     }
     return res;
