@@ -30,6 +30,7 @@ struct ExpressionNode
     int boolValue;
     double doubleValue;
     char* identifierString;
+    char* memberIdentifier;
     enum ExpressionType type;
     struct ExpressionNode * left;
     struct ExpressionNode * right;
