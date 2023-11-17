@@ -417,6 +417,48 @@ struct StatementNode * createEmptyStatement()
     return node;
 }
 
+/*! Создать узел Val Statement без явного указания типа.
+* \param[in] valId идентификатор переменной.
+* \param[in] expr выражение, результат которого присваивается Val; может быть NULL, если ничего не присаивается.
+* \return созданный узел ValStmt.
+*/
+struct StatementNode * createValStatement(char * valId, struct ExpressionNode * expr)
+{
+    struct StatementNode * node = (struct StatementNode*)malloc(sizeof(struct StatementNode));
+    node->id = ID++;
+    node->type = VAL;
+    node->complexBody = NULL;
+    node->condition = NULL;
+    node->next = NULL;
+    node->singleBody = NULL;
+    node->expression = expr;
+    node->varValId = valId;
+    return node;
+}
+
+/*! Создать узел Val Statement с явным указаением типа.
+* \param[in] valId идентификатор переменной.
+* \param[in] type тип переменной.
+* \param[in] expr выражение, результат которого присваивается Val; может быть NULL, если ничего не присаивается.
+* \return созданный узел ValStmt.
+*/
+struct StatementNode * createValStatementWithType(char * valId, char * type ,struct ExpressionNode * expr)
+{
+    struct StatementNode * node = (struct StatementNode*)malloc(sizeof(struct StatementNode));
+    node->id = ID++;
+    node->type = VAL;
+    node->complexBody = NULL;
+    node->condition = NULL;
+    node->next = NULL;
+    node->singleBody = NULL;
+    node->expression = expr;
+    node->varValId = valId;
+    node->varValType = type;
+    return node;
+}
+
+
+
 /*------------------------------------ StatementList -------------------------------------*/
 
 /*! Создать узел списка Statement.
