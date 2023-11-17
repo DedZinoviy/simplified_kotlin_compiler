@@ -277,6 +277,43 @@ struct ExpressionNode* createFunctionCallExpressionNode(char * idStr, struct Exp
     return node;
 }
 
+/*! Создать узел доступа к полю-члену класса.
+* \param[in] object объект, на котором вызывается операция доступа к члену.
+* \param[in] membId идентификатор поля-члена класса.
+* \return указатель на созданный узел доступа к члену класса.
+*/
+struct ExpressionNode* createFieldAccessExpressionNode(struct ExpressionNode * object, char * membId)
+{
+    struct ExpressionNode * node = (struct ExpressionNode*)malloc(sizeof(struct ExpressionNode));
+    node->id = ID++;
+    node->type = FIELD_ACCESS;
+    node->identifierString = membId;
+    node->left = object;
+    node->next = NULL;
+    node->params = NULL;
+    node->right = NULL;
+    return node;
+}
+
+/*! Создать узел доступа к методу-члену класса.
+* \param[in] object объект, на котором вызывается операция доступа к члену.
+* \param[in] membId идентификатор метода-члена класса.
+* \param[in] paramList список параметров метода-члена класса.
+* \return указатель на созданный узел доступа к члену класса.
+*/
+struct ExpressionNode* createMethodAccessExpressionNode(struct ExpressionNode * object, char * membId, struct ExpressionListNode * paramList)
+{
+    struct ExpressionNode * node = (struct ExpressionNode*)malloc(sizeof(struct ExpressionNode));
+    node->id = ID++;
+    node->type = FIELD_ACCESS;
+    node->identifierString = membId;
+    node->left = object;
+    node->next = NULL;
+    node->params = paramList;
+    node->right = NULL;
+    return node;
+}
+
 
 
 /*------------------------------------ ExpressionList -------------------------------------*/
