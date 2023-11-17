@@ -11,7 +11,8 @@ char* concat(char* firstStr, char* secStr);
 char * generateDotFromExpression(struct ExpressionNode * node)
 {
     char base[] = "";
-    char* res = concat(base, itoa(node->id));
+    char idStr[10];
+    char* res = concat(base, itoa(node->id, idStr, 10));
     switch (node->type)
     {
     case IDENTIFIER:
@@ -21,7 +22,7 @@ char * generateDotFromExpression(struct ExpressionNode * node)
         break;
     case INT_LIT:
         res = concat(res, "[label=\"");
-        res = concat(res, itoa(node->intValue));
+        res = concat(res, itoa(node->intValue, idStr, 10));
         res = concat(res, "\"];\n");
         break;
     case BOOLEAN_LIT:
@@ -94,9 +95,9 @@ char * generateDotFromExpression(struct ExpressionNode * node)
     if(node->next != NULL)
     {
         res = concat(res, generateDotFromExpression(node->next));
-        res = concat(res, itoa(node->id));
+        res = concat(res, itoa(node->id, idStr, 10));
         res = concat(res, " -> ");
-        res = concat(res, itoa(node->next->id));
+        res = concat(res, itoa(node->next->id, idStr, 10));
         res = concat(res, "[label=\"next\"];\n");
     }
     return res;
@@ -109,14 +110,15 @@ char * generateDotFromExpression(struct ExpressionNode * node)
 char * generateDotFromExpressionList(struct ExpressionListNode * listNode)
 {
     char base[] = "";
-    char* res = concat(base, itoa(listNode->id));
+    char strId[10];
+    char* res = concat(base, itoa(listNode->id, strId, 10));
     char* res = concat(res, "[label=\"ExprList\"];\n");
     if (listNode->first != NULL)
     {
         res = concat(res, generateDotFromExpression(listNode->first));
-        res = concat(res, itoa(listNode->id));
+        res = concat(res, itoa(listNode->id, strId, 10));
         res = concat(res, " -> ");
-        res = concat(res, itoa(listNode->first->id));
+        res = concat(res, itoa(listNode->first->id, strId, 10));
         res = concat(res, "[label=\"first\"];\n");
     }
     return res;
@@ -130,14 +132,15 @@ char * generateDotFromExpressionList(struct ExpressionListNode * listNode)
 char * generateDotFromStatement(struct StatementNode * stmt)
 {
     char base[] = "";
-    char* res = concat(base, itoa(stmt->id));
+    char strId[10];
+    char* res = concat(base, itoa(stmt->id, strId, 10));
     switch (stmt->type) {
     case EXPRESSION:
         res = concat(res, "[label=\"stmt\"];\n");
         res = concat(res, generateDotFromExpression(stmt->expression));
-        res = concat(res, itoa(stmt->id));
+        res = concat(res, itoa(stmt->id, strId, 10));
         res = concat(res, " -> ");
-        res = concat(res, itoa(stmt->expression->id));
+        res = concat(res, itoa(stmt->expression->id, strId, 10));
         res = concat(res, "\n");
         break;
     case DOWHILE:
@@ -152,17 +155,18 @@ char * generateDotFromStatement(struct StatementNode * stmt)
 \param[in] stmtList Визуализироваемый узел.
 \return Строка кода на языке DOT из узла StatementList.
 */
-char * generateDotFromStatementList(struct StatementistNode * stmtList)
+char * generateDotFromStatementList(struct StatementListNode * stmtList)
 {  
     char base[] = "";
-    char* res = concat(base, itoa(stmtList->id));
+    char strId[10];
+    char* res = concat(base, itoa(stmtList->id, strId, 10));
     char* res = concat(res, "[label=\"StmtList\"];\n");
     if (stmtList->first != NULL)
     {
         res = concat(res, generateDotFromStatement(stmtList->first));
-        res = concat(res, itoa(stmtList->id));
+        res = concat(res, itoa(stmtList->id, strId, 10));
         res = concat(res, " -> ");
-        res = concat(res, itoa(stmtList->first->id));
+        res = concat(res, itoa(stmtList->first->id, strId, 10));
         res = concat(res, "[label=\"first\"];\n");
     }
     return res;
@@ -187,15 +191,16 @@ char * concat(char * firstStr, char * secStr)
 char* generateStrForBinOperation(struct ExpressionNode* node)
 {
     char base[] = "";
+    char strId[10];
     char * res = concat(base, generateDotFromExpression(node->left));
     res = concat(res, generateDotFromExpression(node->right));
-    res = concat(res, itoa(node->id));
+    res = concat(res, itoa(node->id, strId, 10));
     res = concat(res, " -> ");
-    res = concat(res, itoa(node->left->id));
+    res = concat(res, itoa(node->left->id, strId, 10));
     res = concat(res, "[label=\"left\"];\n");
-    res = concat(res, itoa(node->id));
+    res = concat(res, itoa(node->id, strId, 10));
     res = concat(res, " -> ");
-    res = concat(res, itoa(node->right->id));
+    res = concat(res, itoa(node->right->id, strId, 10));
     res = concat(res, "[label=\"right\"];\n");
     return res;
 }
