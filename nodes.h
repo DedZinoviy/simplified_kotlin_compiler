@@ -16,7 +16,11 @@ enum ExpressionType
     LESS_EQUAL,
     GREAT_EQUAL,
     EQUAL,
-    NOT_EQUAL
+    NOT_EQUAL,
+    FUNC_CALL,
+    BRACKETS,
+    FIELD_ACCESS,
+    METHOD_ACCESS
 };
 
 struct ExpressionNode
@@ -30,6 +34,7 @@ struct ExpressionNode
     struct ExpressionNode * left;
     struct ExpressionNode * right;
     struct ExpressionNode * next;
+    struct ExpressionListNode * params;  
 };
 
 /*------------------------------------ ExpressionList -------------------------------------*/
