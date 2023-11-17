@@ -6,8 +6,8 @@ int ID = 0;
 /*------------------------------------ Expression -------------------------------------*/
 
 /*! Создать узел идентификатора.
-\param[in] idStr указатель на строку, представляющую идентификатор.
-\return указатель на созданный экземпляр узла идентификатора.
+* \param[in] idStr указатель на строку, представляющую идентификатор.
+* \return указатель на созданный экземпляр узла идентификатора.
 */
 struct ExpressionNode* createIDExpression(char* idStr) 
 {
@@ -22,8 +22,8 @@ struct ExpressionNode* createIDExpression(char* idStr)
 }
 
 /*! Создать узел Expression на основе целочисленной литеральной констаты.
-\param[in] value значение целочисленной литеральной константы.
-\return указатель на созданный экземпляр узла целочисленной литеральной константы.
+* \param[in] value значение целочисленной литеральной константы.
+* \return указатель на созданный экземпляр узла целочисленной литеральной константы.
 */
 struct ExpressionNode* createIntLiteralExpressionNode(int value)
 {
@@ -38,8 +38,8 @@ struct ExpressionNode* createIntLiteralExpressionNode(int value)
 }
 
 /*! Создать узел Expression на основе литеральной констаты числа с плавающей точкой двойной точности.
-\param[in] value значение литеральной константы числа с плавающей точкой двойной точности.
-\return указатель на созданный экземпляр узла литеральной константы числа с плавающей точкой двойной точности.
+* \param[in] value значение литеральной константы числа с плавающей точкой двойной точности.
+* \return указатель на созданный экземпляр узла литеральной константы числа с плавающей точкой двойной точности.
 */
 struct ExpressionNode* createDoubleLiteralExpressionNode(double value)
 {
@@ -54,7 +54,7 @@ struct ExpressionNode* createDoubleLiteralExpressionNode(double value)
 }
 
 /*! Создать узел Expression на основе логической литеральной констаты true.
-\return указатель на созданный экземпляр узла логической литеральной константы true.
+* \return указатель на созданный экземпляр узла логической литеральной константы true.
 */
 struct ExpressionNode* createTrueLiteralExpressionNode()
 {
@@ -69,7 +69,7 @@ struct ExpressionNode* createTrueLiteralExpressionNode()
 }
 
 /*! Создать узел Expression на основе логической литеральной констаты false.
-\return указатель на созданный экземпляр узла логической литеральной константы false.
+* \return указатель на созданный экземпляр узла логической литеральной константы false.
 */
 struct ExpressionNode* createFalseLiteralExpressionNode()
 {
@@ -84,9 +84,9 @@ struct ExpressionNode* createFalseLiteralExpressionNode()
 }
 
 /*! Создать узел оператора сложения (+).
-\param[in] leftOperand указатель на левый операнд - экземаляр ExpressionNode.
-\param[in] rightOperand указатель на правый операнд - экземаляр ExpressionNode.
-\return указатель на созданный экземпляр узла сложения.
+* \param[in] leftOperand указатель на левый операнд - экземаляр ExpressionNode.
+* \param[in] rightOperand указатель на правый операнд - экземаляр ExpressionNode.
+* \return указатель на созданный экземпляр узла сложения.
 */
 struct ExpressionNode * createPlusExpressionNode(struct ExpressionNode * leftOperand, struct ExpressionNode * rightOperand)
 {
@@ -100,9 +100,9 @@ struct ExpressionNode * createPlusExpressionNode(struct ExpressionNode * leftOpe
 }
 
 /*! Создать узел оператора вычитания (-).
-\param[in] leftOperand указатель на левый операнд - экземаляр ExpressionNode.
-\param[in] rightOperand указатель на правый операнд - экземаляр ExpressionNode.
-\return указатель на созданный экземпляр узла вычитания.
+* \param[in] leftOperand указатель на левый операнд - экземаляр ExpressionNode.
+* \param[in] rightOperand указатель на правый операнд - экземаляр ExpressionNode.
+* \return указатель на созданный экземпляр узла вычитания.
 */
 struct ExpressionNode * createMinusExpressionNode(struct ExpressionNode * leftOperand, struct ExpressionNode * rightOperand)
 {
@@ -116,9 +116,9 @@ struct ExpressionNode * createMinusExpressionNode(struct ExpressionNode * leftOp
 }
 
 /*! Создать узел оператора умножения (*).
-\param[in] leftOperand указатель на левый операнд - экземаляр ExpressionNode.
-\param[in] rightOperand указатель на правый операнд - экземаляр ExpressionNode.
-\return указатель на созданный экземпляр узла умножения.
+* \param[in] leftOperand указатель на левый операнд - экземаляр ExpressionNode.
+* \param[in] rightOperand указатель на правый операнд - экземаляр ExpressionNode.
+* \return указатель на созданный экземпляр узла умножения.
 */
 struct ExpressionNode * createMulExpressionNode(struct ExpressionNode * leftOperand, struct ExpressionNode * rightOperand)
 {
@@ -132,9 +132,9 @@ struct ExpressionNode * createMulExpressionNode(struct ExpressionNode * leftOper
 }
 
 /*! Создать узел оператора деления (/).
-\param[in] leftOperand указатель на левый операнд - экземаляр ExpressionNode.
-\param[in] rightOperand указатель на правый операнд - экземаляр ExpressionNode.
-\return указатель на созданный экземпляр узла деления.
+* \param[in] leftOperand указатель на левый операнд - экземаляр ExpressionNode.
+* \param[in] rightOperand указатель на правый операнд - экземаляр ExpressionNode.
+* \return указатель на созданный экземпляр узла деления.
 */
 struct ExpressionNode * createDivExpressionNode(struct ExpressionNode * leftOperand, struct ExpressionNode * rightOperand)
 {
@@ -148,9 +148,9 @@ struct ExpressionNode * createDivExpressionNode(struct ExpressionNode * leftOper
 }
 
 /*! Создать узел оператора получния остатка от деления (%).
-\param[in] leftOperand указатель на левый операнд - экземаляр ExpressionNode.
-\param[in] rightOperand указатель на правый операнд - экземаляр ExpressionNode.
-\return указатель на созданный экземпляр узла остатка от деления.
+* \param[in] leftOperand указатель на левый операнд - экземаляр ExpressionNode.
+* \param[in] rightOperand указатель на правый операнд - экземаляр ExpressionNode.
+* \return указатель на созданный экземпляр узла остатка от деления.
 */
 struct ExpressionNode * createModExpressionNode(struct ExpressionNode * leftOperand, struct ExpressionNode * rightOperand)
 {
@@ -164,9 +164,9 @@ struct ExpressionNode * createModExpressionNode(struct ExpressionNode * leftOper
 }
 
 /*! Создать узел оператора сравнения "больше" (>).
-\param[in] leftOperand указатель на левый операнд - экземаляр ExpressionNode.
-\param[in] rightOperand указатель на правый операнд - экземаляр ExpressionNode.
-\return указатель на созданный экземпляр узла оператора сравнения "больше".
+* \param[in] leftOperand указатель на левый операнд - экземаляр ExpressionNode.
+* \param[in] rightOperand указатель на правый операнд - экземаляр ExpressionNode.
+* \return указатель на созданный экземпляр узла оператора сравнения "больше".
 */
 struct ExpressionNode* createGreatExpressionNode(struct ExpressionNode* leftOperand, struct ExpressionNode* rightOperand)
 {
@@ -180,9 +180,9 @@ struct ExpressionNode* createGreatExpressionNode(struct ExpressionNode* leftOper
 }
 
 /*! Создать узел оператора сравнения "меньше" (<).
-\param[in] leftOperand указатель на левый операнд - экземаляр ExpressionNode.
-\param[in] rightOperand указатель на правый операнд - экземаляр ExpressionNode.
-\return указатель на созданный экземпляр узла оператора сравнения "меньше".
+* \param[in] leftOperand указатель на левый операнд - экземаляр ExpressionNode.
+* \param[in] rightOperand указатель на правый операнд - экземаляр ExpressionNode.
+* \return указатель на созданный экземпляр узла оператора сравнения "меньше".
 */
 struct ExpressionNode* createLessExpressionNode(struct ExpressionNode* leftOperand, struct ExpressionNode* rightOperand)
 {
@@ -196,9 +196,9 @@ struct ExpressionNode* createLessExpressionNode(struct ExpressionNode* leftOpera
 }
 
 /*! Создать узел оператора сравнения "больше или равно" (>=).
-\param[in] leftOperand указатель на левый операнд - экземаляр ExpressionNode.
-\param[in] rightOperand указатель на правый операнд - экземаляр ExpressionNode.
-\return указатель на созданный экземпляр узла оператора сравнения "больше или равно".
+* \param[in] leftOperand указатель на левый операнд - экземаляр ExpressionNode.
+* \param[in] rightOperand указатель на правый операнд - экземаляр ExpressionNode.
+* \return указатель на созданный экземпляр узла оператора сравнения "больше или равно".
 */
 struct ExpressionNode* createGreatEqualExpressionNode(struct ExpressionNode* leftOperand, struct ExpressionNode* rightOperand)
 {
@@ -212,9 +212,9 @@ struct ExpressionNode* createGreatEqualExpressionNode(struct ExpressionNode* lef
 }
 
 /*! Создать узел оператора сравнения "меньше или равно" (<=).
-\param[in] leftOperand указатель на левый операнд - экземаляр ExpressionNode.
-\param[in] rightOperand указатель на правый операнд - экземаляр ExpressionNode.
-\return указатель на созданный экземпляр узла оператора сравнения "меньше или равно".
+* \param[in] leftOperand указатель на левый операнд - экземаляр ExpressionNode.
+* \param[in] rightOperand указатель на правый операнд - экземаляр ExpressionNode.
+* \return указатель на созданный экземпляр узла оператора сравнения "меньше или равно".
 */
 struct ExpressionNode* createLessEqualExpressionNode(struct ExpressionNode* leftOperand, struct ExpressionNode* rightOperand)
 {
@@ -228,9 +228,9 @@ struct ExpressionNode* createLessEqualExpressionNode(struct ExpressionNode* left
 }
 
 /*! Создать узел оператора сравнения "равно" (==).
-\param[in] leftOperand указатель на левый операнд - экземаляр ExpressionNode.
-\param[in] rightOperand указатель на правый операнд - экземаляр ExpressionNode.
-\return указатель на созданный экземпляр узла оператора сравнения "равно".
+* \param[in] leftOperand указатель на левый операнд - экземаляр ExpressionNode.
+* \param[in] rightOperand указатель на правый операнд - экземаляр ExpressionNode.
+* \return указатель на созданный экземпляр узла оператора сравнения "равно".
 */
 struct ExpressionNode* createEqualExpressionNode(struct ExpressionNode* leftOperand, struct ExpressionNode* rightOperand)
 {
@@ -244,9 +244,9 @@ struct ExpressionNode* createEqualExpressionNode(struct ExpressionNode* leftOper
 }
 
 /*! Создать узел оператора сравнения "не равно" (!=).
-\param[in] leftOperand указатель на левый операнд - экземаляр ExpressionNode.
-\param[in] rightOperand указатель на правый операнд - экземаляр ExpressionNode.
-\return указатель на созданный экземпляр узла оператора сравнения "не равно".
+* \param[in] leftOperand указатель на левый операнд - экземаляр ExpressionNode.
+* \param[in] rightOperand указатель на правый операнд - экземаляр ExpressionNode.
+* \return указатель на созданный экземпляр узла оператора сравнения "не равно".
 */
 struct ExpressionNode* createNotEqualExpressionNode(struct ExpressionNode* leftOperand, struct ExpressionNode* rightOperand)
 {
@@ -264,8 +264,8 @@ struct ExpressionNode* createNotEqualExpressionNode(struct ExpressionNode* leftO
 /*------------------------------------ ExpressionList -------------------------------------*/
 
 /*! Создать узел списка Expression.
-\param[in] firstChild указатель на первый элемент списка; для пустого списка - NULL.
-\return указатель на созданный экземпляр узла списка Expression.
+* \param[in] firstChild указатель на первый элемент списка; для пустого списка - NULL.
+* \return указатель на созданный экземпляр узла списка Expression.
 */
 struct ExpressionListNode * createExpressionListNode(struct ExpressionNode * firstChild)
 {
@@ -277,9 +277,9 @@ struct ExpressionListNode * createExpressionListNode(struct ExpressionNode * fir
 }
 
 /*! Добавить ExpressionNode к списку Expression.
-\param[in,out] list список, к которому добавляется новый узел.
-\param[in] expression добавляемый узел Expression.
-\return измененный список Expression (тот же самый, что и параметр list). 
+* \param[in,out] list список, к которому добавляется новый узел.
+* \param[in] expression добавляемый узел Expression.
+* \return измененный список Expression (тот же самый, что и параметр list). 
 */
 struct ExpressionListNode * addExpressionToExpressionList(struct ExpressionListNode * list, struct ExpressionNode * expression)
 {
@@ -293,8 +293,8 @@ struct ExpressionListNode * addExpressionToExpressionList(struct ExpressionListN
 /*------------------------------------ Statement -------------------------------------*/
 
 /*! Создать узел StatementNode на основе узла ExpressionNode.
-\param[in] expr указатель на экземпляр ExpressionNode, на основе которого создается StatementNode.
-\return указатель на созданный экземпляр StatementNode.
+* \param[in] expr указатель на экземпляр ExpressionNode, на основе которого создается StatementNode.
+* \return указатель на созданный экземпляр StatementNode.
 */
 struct StatementNode * createStatementFromExpression(struct ExpressionNode * expr)
 {
@@ -311,9 +311,9 @@ struct StatementNode * createStatementFromExpression(struct ExpressionNode * exp
 }
 
 /*! Создать узел StatementNode для цикла while с одним Statement в качесвте тела.
-\param[in] cond Условие выполнения цикла - указатель на узел  Expression.
-\param[in] stmt Тело цикла, состоящее из одного узла Statement.
-\return Созданный узел Statement.
+* \param[in] cond Условие выполнения цикла - указатель на узел  Expression.
+* \param[in] stmt Тело цикла, состоящее из одного узла Statement.
+* \return Созданный узел Statement.
 */
 struct StatementNode * createStatementFromWhileWithSingleBody(struct ExpressionNode * cond, struct StatementNode * stmt)
 {
@@ -329,9 +329,9 @@ struct StatementNode * createStatementFromWhileWithSingleBody(struct ExpressionN
 }
 
 /*! Создать узел StatementNode для цикла while со списком Statement (BlockStatement) в качестве тела.
-\param[in] cond Условие выполнения цикла - указатель на узел  Expression.
-\param[in] stmtList Тело цикла, состоящее из узла StatementList.
-\return Созданный узел Statement.
+* \param[in] cond Условие выполнения цикла - указатель на узел  Expression.
+* \param[in] stmtList Тело цикла, состоящее из узла StatementList.
+* \return Созданный узел Statement.
 */
 struct StatementNode * createStatementFromWhileWithComplexBody(struct ExpressionNode * cond, struct StatementListNode * stmtList)
 {
@@ -347,7 +347,7 @@ struct StatementNode * createStatementFromWhileWithComplexBody(struct Expression
 }
 
 /*! Создать пустой узел Statement.
-\return указатель на пустой узел Statement.
+* \return указатель на пустой узел Statement.
 */
 struct StatementNode * createEmptyStatement()
 {
@@ -365,8 +365,8 @@ struct StatementNode * createEmptyStatement()
 /*------------------------------------ StatementList -------------------------------------*/
 
 /*! Создать узел списка Statement.
-\param[in] firstChild указатель на первый элемент списка; для пустого списка - NULL.
-\return указатель на созданный экземпляр узла списка Statement.
+* \param[in] firstChild указатель на первый элемент списка; для пустого списка - NULL.
+* \return указатель на созданный экземпляр узла списка Statement.
 */
 struct StatementListNode * createStatementListNode(struct StatementNode * firstChild)
 {
@@ -378,9 +378,9 @@ struct StatementListNode * createStatementListNode(struct StatementNode * firstC
 }
 
 /*! Добавить StatementNode к списку Statement.
-\param[in,out] list список, к которому добавляется новый узел.
-\param[in] statement добавляемый узел Statement.
-\return измененный список Statement (тот же самый, что и параметр list). 
+* \param[in,out] list список, к которому добавляется новый узел.
+* \param[in] statement добавляемый узел Statement.
+* \return измененный список Statement (тот же самый, что и параметр list). 
 */
 struct StatementListNode * addStatementToStatementList(struct StatementListNode * list, struct StatementNode * statement)
 {
