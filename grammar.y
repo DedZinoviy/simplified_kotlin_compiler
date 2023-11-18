@@ -4,6 +4,14 @@
        extern int yylex(void);
 %}
 
+%union {
+       int intLit;
+       char charLit;
+       double doubleLit;
+       struct stringBuffer * stringLit;
+       char * ident;
+}
+
 %token IF ELSE VAL VAR CLASS PUBLIC PROTECTED PRIVATE INTERNAL ENDL WHILE DO FUNC FOR SUPER THIS OVERRIDE OPEN
 %token ID
 
