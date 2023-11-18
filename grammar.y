@@ -69,17 +69,17 @@ SimpleExpression: INT_LITERAL {$$ = createIntLiteralExpressionNode($1);}
                 | SimpleExpression EndlList '.' EndlOpt ID '(' ')'
                 | ID '(' ExpressionList ')'
                 | ID '(' ')'
-                | SimpleExpression '+' EndlOpt SimpleExpression
-                | SimpleExpression '-' EndlOpt SimpleExpression
-                | SimpleExpression '*' EndlOpt SimpleExpression
-                | SimpleExpression '/' EndlOpt SimpleExpression
-                | SimpleExpression '%' EndlOpt SimpleExpression
-                | SimpleExpression '<' EndlOpt SimpleExpression
-                | SimpleExpression '>' EndlOpt SimpleExpression
-                | SimpleExpression GREATER_EQUAL EndlOpt SimpleExpression
-                | SimpleExpression LESS_EQUAL EndlOpt SimpleExpression
-                | SimpleExpression EQUAL EndlOpt SimpleExpression
-                | SimpleExpression NOT_EQUAL EndlOpt SimpleExpression
+                | SimpleExpression '+' EndlOpt SimpleExpression {$$ = createPlusExpressionNode($1, $4);}
+                | SimpleExpression '-' EndlOpt SimpleExpression {$$ = createMinusExpressionNode($1, $4);}
+                | SimpleExpression '*' EndlOpt SimpleExpression {$$ = createMulExpressionNode($1, $4);}
+                | SimpleExpression '/' EndlOpt SimpleExpression {$$ = createDivExpressionNode($1, $4);}
+                | SimpleExpression '%' EndlOpt SimpleExpression {$$ = createModExpressionNode($1, $4);}
+                | SimpleExpression '<' EndlOpt SimpleExpression {$$ = createLessExpressionNode($1, $4);}
+                | SimpleExpression '>' EndlOpt SimpleExpression {$$ = createGreatExpressionNode($1, $4);}
+                | SimpleExpression GREATER_EQUAL EndlOpt SimpleExpression {$$ = createGreatEqualExpressionNode($1, $4);}
+                | SimpleExpression LESS_EQUAL EndlOpt SimpleExpression {$$ = createLessEqualExpressionNode($1, $4);}
+                | SimpleExpression EQUAL EndlOpt SimpleExpression {$$ = createEqualExpressionNode($1, $4);}
+                | SimpleExpression NOT_EQUAL EndlOpt SimpleExpression {$$ = createNotEqualExpressionNode($1, $4);}
                 | SimpleExpression '=' EndlOpt SimpleExpression
                 | SimpleExpression PLUS_ASSIGNMENT EndlOpt SimpleExpression
                 | SimpleExpression MINUS_ASSIGNMENT EndlOpt SimpleExpression
