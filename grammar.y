@@ -11,6 +11,7 @@
        struct stringBuffer * stringLit;
        char * ident;
        struct ExpressionNode * expression;
+       struct ExpressionListNode * exprList;
 }
 
 %token IF ELSE VAL VAR CLASS PUBLIC PROTECTED PRIVATE INTERNAL ENDL WHILE DO FUNC FOR SUPER THIS OVERRIDE OPEN
@@ -38,6 +39,7 @@
 %start KotlinFile
 
 %type <expression>SimpleExpression
+%type <exprList>ExpressionList
 
 %% 
 KotlinFile: KotlinFileVisibilityElementList
@@ -47,8 +49,8 @@ KotlinFileVisibilityElementList: KotlinFileVisibilityElement
                                | KotlinFileVisibilityElementList KotlinFileVisibilityElement
                                ;
 
-ExpressionList: SimpleExpression
-              | ExpressionList ',' SimpleExpression
+ExpressionList: SimpleExpression {$$ = createExpressionListNode($1);}
+              | ExpressionList ',' SimpleExpression {$$ = addExpressionToExpressionList($1, $3);}
               ;
 
 SimpleExpression: INT_LITERAL {$$ = createIntLiteralExpressionNode($1);}
