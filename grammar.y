@@ -10,12 +10,17 @@
        double doubleLit;
        struct stringBuffer * stringLit;
        char * ident;
+       struct ExpressionNode * expression;
 }
 
 %token IF ELSE VAL VAR CLASS PUBLIC PROTECTED PRIVATE INTERNAL ENDL WHILE DO FUNC FOR SUPER THIS OVERRIDE OPEN
 %token ID
 
-%token INT_LITERAL CHAR_LITERAL DOUBLE_LITERAL STRING_LITERAL TRUE_LITERAL FALSE_LITERAL
+%token <intLit>INT_LITERAL 
+%token <charLit>CHAR_LITERAL 
+%token <doubleLit>DOUBLE_LITERAL 
+%token <stringLit>STRING_LITERAL 
+%token TRUE_LITERAL FALSE_LITERAL
 
 %nonassoc ENDL
 %right '=' PLUS_ASSIGNMENT MINUS_ASSIGNMENT MUL_ASSIGNMENT DIV_ASSIGNMENT MOD_ASSIGNMENT
@@ -32,6 +37,8 @@
 
 %start KotlinFile
 
+%type <expression>SimpleExpression
+
 %% 
 KotlinFile: KotlinFileVisibilityElementList
           ;
@@ -44,12 +51,12 @@ ExpressionList: SimpleExpression
               | ExpressionList ',' SimpleExpression
               ;
 
-SimpleExpression: INT_LITERAL
-                | CHAR_LITERAL
-                | DOUBLE_LITERAL
-                | STRING_LITERAL
-                | TRUE_LITERAL
-                | FALSE_LITERAL
+SimpleExpression: INT_LITERAL {$$ = createIntLiteralExpressionNode($1);}
+                | CHAR_LITERAL {$$ = createCharLiteralExpressionNode($1);}
+                | DOUBLE_LITERAL {$$ = createDoubleLiteralExpressionNode($1);}
+                | STRING_LITERAL {$$ = createStringLiteralExpressionNode($1);}
+                | TRUE_LITERAL {$$ = createTrueLiteralExpressionNode();}
+                | FALSE_LITERAL {$$ = createFalseLiteralExpressionNode();}
                 | ID
                 | SUPER
                 | THIS
