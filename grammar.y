@@ -12,6 +12,8 @@
        char * ident;
        struct ExpressionNode * expression;
        struct ExpressionListNode * exprList;
+       struct StatementNode * statement;
+       struct StatementListNode * stmtList;
 }
 
 %token IF ELSE VAL VAR CLASS PUBLIC PROTECTED PRIVATE INTERNAL ENDL WHILE DO FUNC FOR SUPER THIS OVERRIDE OPEN
@@ -40,6 +42,8 @@
 
 %type <expression>SimpleExpression
 %type <exprList>ExpressionList
+%type <statement>Statement WhileStatement DoWhileStatement ForStatement
+%type <stmtList>StatementList
 
 %% 
 KotlinFile: KotlinFileVisibilityElementList
@@ -126,9 +130,9 @@ StatementList: Statement
              | StatementList Statement
              ;
 
-Statement: ';' EndlOpt
-         | SimpleExpression EndlList
-         | SimpleExpression ';' EndlOpt
+Statement: ';' EndlOpt {$$ = createEmptyStatement();}
+         | SimpleExpression EndlList {$$ = createStatementFromExpression($1);}
+         | SimpleExpression ';' EndlOpt {$$ = createStatementFromExpression($1);}
          | VarStmt
          | ValStmt
          | MultiDeclararion
