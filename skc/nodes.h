@@ -9,6 +9,8 @@ enum ExpressionType
     BOOLEAN_LIT,
     INT_LIT,
     DOUBLE_LIT,
+    CHAR_LIT,
+    STRING_LIT,
     PLUS,
     MINUS,
     DIV,
@@ -40,6 +42,12 @@ struct ExpressionNode
 
     /// Значение числа с плавающей точкой двойной точности (только для контант типа DOUBLE).
     double doubleValue;
+
+    /// Значение строкового литерала - строковый буффер (только для строковых литералов).
+    struct stringBuffer * stringValue;
+
+    /// Значение символьного литерала (только для символьных литералов).
+    char charValue;
 
     /// Строка идентификатора (только для функций, методов и переменных).
     char* identifierString;

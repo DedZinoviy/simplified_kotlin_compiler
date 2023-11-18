@@ -83,6 +83,38 @@ struct ExpressionNode* createFalseLiteralExpressionNode()
     return node;
 }
 
+/*! Создать узел Expression на основе литеральной символьной констаты.
+* \param[in] value значение литеральной символьной константы.
+* \return указатель на созданный экземпляр узла литеральной символьной константы.
+*/
+struct ExpressionNode* createCharLiteralExpressionNode(char value)
+{
+    struct ExpressionNode * node = (struct ExpressionNode*)malloc(sizeof(struct ExpressionNode));
+    node->id = ID++;
+    node->type = CHAR_LIT;
+    node->charValue = value;
+    node->left = NULL;
+    node->right = NULL;
+    node->next = NULL;
+    return node;
+}
+
+/*! Создать узел Expression на основе литеральной строковой констаты.
+* \param[in] value значение литеральной строковой константы.
+* \return указатель на созданный экземпляр узла литеральной строковой константы.
+*/
+struct ExpressionNode* createStringLiteralExpressionNode(struct stringBuffer * value)
+{
+    struct ExpressionNode * node = (struct ExpressionNode*)malloc(sizeof(struct ExpressionNode));
+    node->id = ID++;
+    node->type = STRING_LIT;
+    node->stringValue = value;
+    node->left = NULL;
+    node->right = NULL;
+    node->next = NULL;
+    return node;
+}
+
 /*! Создать узел оператора сложения (+).
 * \param[in] leftOperand указатель на левый операнд - экземаляр ExpressionNode.
 * \param[in] rightOperand указатель на правый операнд - экземаляр ExpressionNode.
