@@ -63,12 +63,12 @@ SimpleExpression: INT_LITERAL {$$ = createIntLiteralExpressionNode($1);}
                 | SUPER
                 | THIS
                 | '(' SimpleExpression ')'
-                | SimpleExpression '.' EndlOpt ID
-                | SimpleExpression '.' EndlOpt ID '(' ExpressionList ')'
-                | SimpleExpression '.' EndlOpt ID '(' ')'
-                | SimpleExpression EndlList '.' EndlOpt ID
-                | SimpleExpression EndlList '.' EndlOpt ID '(' ExpressionList ')'
-                | SimpleExpression EndlList '.' EndlOpt ID '(' ')'
+                | SimpleExpression '.' EndlOpt ID {$$ = createFieldAccessExpressionNode($1, $4);}
+                | SimpleExpression '.' EndlOpt ID '(' ExpressionList ')' {$$ = createMethodAccessExpressionNode($1, $4, $6);}
+                | SimpleExpression '.' EndlOpt ID '(' ')' {$$ = createMethodAccessExpressionNode($1, $4, NULL);}
+                | SimpleExpression EndlList '.' EndlOpt ID {$$ = createFieldAccessExpressionNode($1, $5);}
+                | SimpleExpression EndlList '.' EndlOpt ID '(' ExpressionList ')' {$$ = createMethodAccessExpressionNode($1, $5, $7);}
+                | SimpleExpression EndlList '.' EndlOpt ID '(' ')' {$$ = createMethodAccessExpressionNode($1, $5, NULL);}
                 | ID '(' ExpressionList ')'
                 | ID '(' ')'
                 | SimpleExpression '+' EndlOpt SimpleExpression {$$ = createPlusExpressionNode($1, $4);}
