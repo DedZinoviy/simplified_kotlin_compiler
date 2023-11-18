@@ -30,7 +30,6 @@ struct ExpressionNode
     int boolValue;
     double doubleValue;
     char* identifierString;
-    char* memberIdentifier;
     enum ExpressionType type;
     struct ExpressionNode * left;
     struct ExpressionNode * right;
@@ -55,7 +54,9 @@ enum StatementType
     WHILE,
     DOWHILE,
     FOR,
-    EMPTY
+    EMPTY,
+    VAR,
+    VAL
 };
 
 struct StatementListNode;
@@ -64,6 +65,8 @@ struct StatementNode
 {
     int id;
     enum StatementType type;
+    char * varValId;
+    char * varValType;
     struct ExpressionNode * expression;
     struct ExpressionNode * condition;
     struct StatementNode * singleBody;
