@@ -44,3 +44,25 @@ void clearStringBuffer(struct stringBuffer* buffer)
     buffer->buffer[0] = 0;
     buffer->length = 0;
 }
+
+/*! Получить строку в стиле Си (массив Char), окончанием которой будет является терминальный 0. Промежуточные терминальные 0 будут заменены на пробелы.
+* \param[in] buffer Строковый буффер, который требуется перевести в Си-строку.
+* \return Массив char - строка в Си-стиле.
+*/
+char * getSafeCString(struct stringBuffer* buffer)
+{
+    char * res = (char*)malloc((buffer->length + 1) * sizeof(char)); // Выделить память под создаваемую строку.
+    for(int i = 0; i < buffer->length; i++) // Для каждого символа строкового буффера...
+    {
+        if (buffer->buffer[i] != 0) // Если символ не является терминальным нулем, добавить символ в результат.
+        {
+            res[i] = buffer->buffer[i];
+        }
+        else // Иначе заменить его на пробел.
+        {
+            res[i] = 32;
+        }
+    }
+    res[buffer->length] = 0; // Завершить строку терминальным нулем.
+    return res;
+}
