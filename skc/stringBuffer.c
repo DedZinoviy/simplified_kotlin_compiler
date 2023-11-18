@@ -4,8 +4,8 @@
 #include "stringBuffer.h"
 
 /*! Добавить символ в конец строкового буфера.
-\param[in,out] buffer - обновляемый экземпляр строкового буффера.
-\param[in] character - символ для добавления
+* \param[in,out] buffer обновляемый экземпляр строкового буффера.
+* \param[in] character символ для добавления.
 */
 void appendChar(struct stringBuffer* buffer, char character)
 {
@@ -14,8 +14,8 @@ void appendChar(struct stringBuffer* buffer, char character)
 }
 
 /*! Добавить строку в конец строкового буффера.
-\param[in,out] buffer - обновляемый экземпляр строкового буффера.
-\param[in] string - символ для добавления
+* \param[in,out] buffer обновляемый экземпляр строкового буффера.
+* \param[in] string Си-строка - массив символов для добавления.
 */
 void appendChars(struct stringBuffer* buffer, char* string)
 {
@@ -26,7 +26,7 @@ void appendChars(struct stringBuffer* buffer, char* string)
 }
 
 /*! Распечатать строковый буффер.
-\param[in,out] buffer - распечатываемый буффер.
+* \param[in,out] buffer распечатываемый буффер.
 */
 void printStringBuffer(struct stringBuffer* buffer)
 {
@@ -37,7 +37,7 @@ void printStringBuffer(struct stringBuffer* buffer)
 }
 
 /*! Очистить строковый буффер.
-\param[in,out] buffer - очищаемый буффер.
+* \param[in,out] buffer очищаемый буффер.
 */
 void clearStringBuffer(struct stringBuffer* buffer)
 {
