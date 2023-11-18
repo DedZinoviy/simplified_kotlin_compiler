@@ -1,3 +1,9 @@
+%{
+       #include "parsing_tree.h"
+       void yyerror(char const * s);
+       extern int yylex(void);
+%}
+
 %token IF ELSE VAL VAR CLASS PUBLIC PROTECTED PRIVATE INTERNAL ENDL WHILE DO FUNC FOR SUPER THIS OVERRIDE OPEN
 %token ID
 
@@ -220,3 +226,10 @@ EndlOpt: /* empty */
 EndlList: ENDL
         | EndlList ENDL
         ;
+
+%%
+
+void yyerror(char const * s)
+{
+       printf("%s", s);
+}
