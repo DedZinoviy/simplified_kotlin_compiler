@@ -1,8 +1,5 @@
 #include <stdlib.h>
-#include "nodes.h"
-
-char* generateStrForBinOperation(struct ExpressionNode* node);
-char* concat(char* firstStr, char* secStr);
+#include "print_functions.h"
 
 /*! Сгегнерировать строку в DOT-формате для дальнейшей визуализации для узла Expression.
 * \param[in] node Визуализироваемый узел.
@@ -127,7 +124,6 @@ char * generateDotFromExpressionList(struct ExpressionListNode * listNode)
     }
     return res;
 }
-
 
 /*! Сгегнерировать строку в DOT-формате для дальнейшей визуализации для узла Statement.
 * \param[in] stmt Визуализироваемый узел.
