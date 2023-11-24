@@ -89,6 +89,10 @@ char * generateDotFromExpression(struct ExpressionNode * node)
         res = concat(res, "[label=\"!=\"];\n");
         res = concat(res, generateStrForBinOperation(node));
         break;
+    case RANGE:
+        res = concat(res, "[label=\"!=\"];\n");
+        res = concat(res, generateStrForBinOperation(node));
+        break;
     default:
         break;
     }
