@@ -14,6 +14,7 @@
        struct ExpressionListNode * exprList;
        struct StatementNode * statement;
        struct StatementListNode * stmtList;
+       struct VarDeclarationNode * varDecl;
 }
 
 %token IF ELSE VAL VAR CLASS PUBLIC PROTECTED PRIVATE INTERNAL ENDL WHILE DO FUNC FOR SUPER THIS OVERRIDE OPEN
@@ -46,6 +47,7 @@
 %type <exprList>ExpressionList
 %type <statement>Statement WhileStatement DoWhileStatement ForStatement ValStmt VarStmt MultiDeclararion
 %type <stmtList>StatementList BlockStatement
+%type <varDecl>VarDeclaration
 
 %% 
 KotlinFile: KotlinFileVisibilityElementList
@@ -177,7 +179,7 @@ MultiDeclararion: VAL EndlOpt '('VarDeclIdList')' EndlOpt '=' EndlOpt SimpleExpr
                 | VAR EndlOpt '('VarDeclIdList')' EndlOpt '=' EndlOpt SimpleExpression ';' EndlOpt
                 ;
 
-VarDeclaration: ID EndlOpt ':' EndlOpt ID
+VarDeclaration: ID EndlOpt ':' EndlOpt ID {$$ = createVarDeclarationNode($1, $5);}
               ;
 
 VarDeclarationList: VarDeclaration
