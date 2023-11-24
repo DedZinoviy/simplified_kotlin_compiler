@@ -329,6 +329,14 @@ struct StatementNode * createValStatement(char * valId, struct ExpressionNode * 
 */
 struct StatementNode * createValStatementWithType(char * valId, char * type ,struct ExpressionNode * expr);
 
+/*! Создать узел Val Statement с явным указаением типа через VarDeclaration.
+* \param[in] decl узел объявления переменной.
+* \param[in] expr выражение, результат которого присваивается Val; может быть NULL, если ничего не присаивается.
+* \return созданный узел ValStmt.
+*/
+struct StatementNode * createValStatementFromVarDeclaration(struct VarDeclarationNode * decl, struct ExpressionNode * expr);
+
+
 
 /*------------------------------------ StatementList -------------------------------------*/
 

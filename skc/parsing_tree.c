@@ -814,6 +814,26 @@ struct StatementNode * createValStatementWithType(char * valId, char * type ,str
     return node;
 }
 
+/*! Создать узел Val Statement с явным указаением типа через VarDeclaration.
+* \param[in] decl узел объявления переменной.
+* \param[in] expr выражение, результат которого присваивается Val; может быть NULL, если ничего не присаивается.
+* \return созданный узел ValStmt.
+*/
+struct StatementNode * createValStatementFromVarDeclaration(struct VarDeclarationNode * decl, struct ExpressionNode * expr)
+{
+    struct StatementNode * node = (struct StatementNode*)malloc(sizeof(struct StatementNode));
+    node->id = ID++;
+    node->type = VAL;
+    node->next = NULL;
+    node->varValId = decl->identifier;
+    node->varValType = decl->type;
+    node->expression = expr;
+    node->condition = NULL;
+    node->complexBody = NULL;
+    node->singleBody = NULL;
+    return node;
+}
+
 
 
 /*------------------------------------ StatementList -------------------------------------*/
