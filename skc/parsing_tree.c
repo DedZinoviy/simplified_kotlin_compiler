@@ -842,3 +842,22 @@ struct StatementListNode * addStatementToStatementList(struct StatementListNode 
     list->last = statement;
     return list;
 }
+
+
+
+/*------------------------------------ VarDeclaration -------------------------------------*/
+
+/*! Создать узел VarDeclaration на основе идентификатора и его типа.
+* \param[in] ident строка - наименование идентификатора.
+* \param[in] typ строка - тип идентификатора.
+* \return указатель на узел VarDeclaration.
+*/
+struct VarDeclaration * createVarDeclaration(char * ident, char * typ)
+{
+    struct VarDeclaration * node = (struct VarDeclaration*)malloc(sizeof(struct VarDeclaration));
+    node->id = ID++;
+    node->identifier = ident;
+    node->type = typ;
+    node->next = NULL;
+    return node;
+}

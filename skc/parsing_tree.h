@@ -344,3 +344,14 @@ struct StatementListNode * createStatementListNode(struct StatementNode * firstC
 * \return измененный список Statement (тот же самый, что и параметр list). 
 */
 struct StatementListNode * addStatementToStatementList(struct StatementListNode * list, struct StatementNode * statement);
+
+
+
+/*------------------------------------ VarDeclaration -------------------------------------*/
+
+/*! Создать узел VarDeclaration на основе идентификатора и его типа.
+* \param[in] ident строка - наименование идентификатора.
+* \param[in] typ строка - тип идентификатора.
+* \return указатель на узел VarDeclaration.
+*/
+struct VarDeclaration * createVarDeclaration(char * ident, char * typ);

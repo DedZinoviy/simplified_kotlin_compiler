@@ -173,7 +173,6 @@ struct VarDeclaration
     int id;
     char * identifier;
     char * type;
-    char * identifier;
     struct VarDeclaration * next;
 };
 
