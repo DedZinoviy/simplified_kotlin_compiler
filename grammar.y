@@ -44,7 +44,7 @@
 
 %type <expression>SimpleExpression
 %type <exprList>ExpressionList
-%type <statement>Statement WhileStatement DoWhileStatement ForStatement ValStmt VarStmt
+%type <statement>Statement WhileStatement DoWhileStatement ForStatement ValStmt VarStmt MultiDeclararion
 %type <stmtList>StatementList BlockStatement
 
 %% 
@@ -141,12 +141,12 @@ StatementList: Statement {$$ = createStatementListNode($1);}
 Statement: ';' EndlOpt {$$ = createEmptyStatement();}
          | SimpleExpression EndlList {$$ = createStatementFromExpression($1);}
          | SimpleExpression ';' EndlOpt {$$ = createStatementFromExpression($1);}
-         | VarStmt {$$ = $1}
-         | ValStmt {$$ = $1}
-         | MultiDeclararion
-         | WhileStatement
-         | DoWhileStatement
-         | ForStatement
+         | VarStmt {$$ = $1;}
+         | ValStmt {$$ = $1;}
+         | MultiDeclararion {$$ = $1;}
+         | WhileStatement {$$ = $1;}
+         | DoWhileStatement {$$ = $1;}
+         | ForStatement {$$ = $1;}
          ;         
 
 ValStmt: VAL EndlOpt VarDeclaration EndlList
