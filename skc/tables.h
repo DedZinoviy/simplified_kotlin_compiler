@@ -7,5 +7,16 @@ enum Constant
     MethodRef,
     NameAndType,
     Integer,
-    Double
+    Double,
+    FieldRef
+};
+
+struct TableItem
+{
+    int id;
+    enum Constant cnst;
+    struct TableItem *  next;
+    char * string;
+    int firstRef;
+    int secRef; 
 };
