@@ -25,7 +25,15 @@ enum ExpressionType
     FUNC_CALL,
     BRACKETS,
     FIELD_ACCESS,
-    METHOD_ACCESS
+    METHOD_ACCESS,
+    ASSIGNMENT,
+    PLUS_ASSIGNMENT,
+    MINUS_ASSIGNMENT,
+    MUL_ASSIGNMENT,
+    DIV_ASSIGNMENT,
+    MOD_ASSIGNMENT,
+    THIS,
+    SUPER
 };
 
 /*! \brief Структура узла Expression. */

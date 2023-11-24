@@ -346,6 +346,171 @@ struct ExpressionNode* createMethodAccessExpressionNode(struct ExpressionNode * 
     return node;
 }
 
+/*! Создать узел оператора присваивания.
+* \param[in] leftOperand указатель на левый операнд присваивания.
+* \param[in] rightOperand указатель на правый операнд присваивания.
+* \return указатель на созданный узел оператора присваивания.
+*/
+struct ExpressionNode * createAssignmentExpressionNode(struct ExpressionNode * leftOperand, struct ExpressionNode * rightOperand)
+{
+    struct ExpressionNode * node = (struct ExpressionNode*)malloc(sizeof(struct ExpressionNode));
+    node->id = ID++;
+    node->type = ASSIGNMENT;
+    node->left = leftOperand;
+    node->next = NULL;
+    node->params = NULL;
+    node->right = rightOperand;
+    return node;
+}
+
+/*! Создать узел оператора присваивания со сложением.
+* \param[in] leftOperand указатель на левый операнд присваивания.
+* \param[in] rightOperand указатель на правый операнд присваивания.
+* \return указатель на созданный узел оператора присваивания со сложением.
+*/
+struct ExpressionNode * createPlusAssignmentExpressioNode(struct ExpressionNode * leftOperand, struct ExpressionNode * rightOperand)
+{
+    struct ExpressionNode * node = (struct ExpressionNode*)malloc(sizeof(struct ExpressionNode));
+    node->id = ID++;
+    node->type = PLUS_ASSIGNMENT;
+    node->left = leftOperand;
+    node->next = NULL;
+    node->params = NULL;
+    node->right = rightOperand;
+    return node;
+}
+
+/*! Создать узел оператора присваивания с вычитанием.
+* \param[in] leftOperand указатель на левый операнд присваивания.
+* \param[in] rightOperand указатель на правый операнд присваивания.
+* \return указатель на созданный узел оператора присваивания с вычитанием.
+*/
+struct ExpressionNode * createMinusAssignmentExpressionNode(struct ExpressionNode * leftOperand, struct ExpressionNode * rightOperand)
+{
+    struct ExpressionNode * node = (struct ExpressionNode*)malloc(sizeof(struct ExpressionNode));
+    node->id = ID++;
+    node->type = MINUS_ASSIGNMENT;
+    node->left = leftOperand;
+    node->next = NULL;
+    node->params = NULL;
+    node->right = rightOperand;
+    return node;
+}
+
+/*! Создать узел оператора присваивания с умножением.
+* \param[in] leftOperand указатель на левый операнд присваивания.
+* \param[in] rightOperand указатель на правый операнд присваивания.
+* \return указатель на созданный узел оператора присваивания с умножением.
+*/
+struct ExpressionNode * createMulAssignmentExpressionNode(struct ExpressionNode * leftOperand, struct ExpressionNode * rightOperand)
+{
+    struct ExpressionNode * node = (struct ExpressionNode*)malloc(sizeof(struct ExpressionNode));
+    node->id = ID++;
+    node->type = MUL_ASSIGNMENT;
+    node->left = leftOperand;
+    node->next = NULL;
+    node->params = NULL;
+    node->right = rightOperand;
+    return node;
+}
+
+/*! Создать узел оператора присваивания с делением.
+* \param[in] leftOperand указатель на левый операнд присваивания.
+* \param[in] rightOperand указатель на правый операнд присваивания.
+* \return указатель на созданный узел оператора присваивания с делением.
+*/
+struct ExpressionNode * createDivAssignmentExpressionNode(struct ExpressionNode * leftOperand, struct ExpressionNode * rightOperand)
+{
+    struct ExpressionNode * node = (struct ExpressionNode*)malloc(sizeof(struct ExpressionNode));
+    node->id = ID++;
+    node->type = DIV_ASSIGNMENT;
+    node->left = leftOperand;
+    node->next = NULL;
+    node->params = NULL;
+    node->right = rightOperand;
+    return node;
+}
+
+/*! Создать узел оператора присваивания со взятием остатка.
+* \param[in] leftOperand указатель на левый операнд присваивания.
+* \param[in] rightOperand указатель на правый операнд присваивания.
+* \return указатель на созданный узел оператора присваивания со взятием остатка.
+*/
+struct ExpressionNode * createModAssignmentExpressionNode(struct ExpressionNode * leftOperand, struct ExpressionNode * rightOperand)
+{
+    struct ExpressionNode * node = (struct ExpressionNode*)malloc(sizeof(struct ExpressionNode));
+    node->id = ID++;
+    node->type = MOD_ASSIGNMENT;
+    node->left = leftOperand;
+    node->next = NULL;
+    node->params = NULL;
+    node->right = rightOperand;
+    return node;
+}
+
+/*! Создать узел оператора круглых скобок.
+* \param[in] innerExpression внутреннее выражение в круглых скобках.
+* \return ссылка на узел оператора круглых скобок.
+*/
+struct ExpressionNode * createBracketExpressionNode(struct ExpressionNode * innerExpression)
+{
+    struct ExpressionNode * node = (struct ExpressionNode*)malloc(sizeof(struct ExpressionNode));
+    node->id = ID++;
+    node->type = BRACKETS;
+    node->left = innerExpression;
+    node->next = NULL;
+    node->params = NULL;
+    node->right = NULL;
+    return node;
+}
+
+/*! Создать узел выражения идентификатора.
+* \param[in] ident строка идентификатора.
+* \return указатель на узел Expression ID.
+*/
+struct ExpressionNode * createIDExpressionNode(char * ident)
+{
+    struct ExpressionNode * node = (struct ExpressionNode*)malloc(sizeof(struct ExpressionNode));
+    node->id = ID++;
+    node->type = IDENTIFIER;
+    node->identifierString = ident;
+    node->left = NULL;
+    node->next = NULL;
+    node->params = NULL;
+    node->right = NULL;
+    return node;
+}
+
+/*! Создать узел указателя на рассматриваемый объект This.
+* \return указатель на узел рассматриваемого объекта This.
+*/
+struct ExpressionNode * createThisExpressionNode()
+{
+    struct ExpressionNode * node = (struct ExpressionNode*)malloc(sizeof(struct ExpressionNode));
+    node->id = ID++;
+    node->type = THIS;
+    node->left = NULL;
+    node->next = NULL;
+    node->params = NULL;
+    node->right = NULL;
+    return node;
+}
+
+/*! Создать узел указателя на объект родительского класса Super.
+* \return указатель на узел объекта родительского класса Super.
+*/
+struct ExpressionNode * createSuperExpressionNode()
+{
+    struct ExpressionNode * node = (struct ExpressionNode*)malloc(sizeof(struct ExpressionNode));
+    node->id = ID++;
+    node->type = SUPER;
+    node->left = NULL;
+    node->next = NULL;
+    node->params = NULL;
+    node->right = NULL;
+    return node;
+}
+
 
 
 /*------------------------------------ ExpressionList -------------------------------------*/

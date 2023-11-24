@@ -141,6 +141,70 @@ struct ExpressionNode* createFieldAccessExpressionNode(struct ExpressionNode * o
 */
 struct ExpressionNode* createMethodAccessExpressionNode(struct ExpressionNode * object, char * membId, struct ExpressionListNode * paramList);
 
+/*! Создать узел оператора присваивания.
+* \param[in] leftOperand указатель на левый операнд присваивания.
+* \param[in] rightOperand указатель на правый операнд присваивания.
+* \return указатель на созданный узел оператора присваивания.
+*/
+struct ExpressionNode * createAssignmentExpressionNode(struct ExpressionNode * leftOperand, struct ExpressionNode * rightOperand);
+
+/*! Создать узел оператора присваивания со сложением.
+* \param[in] leftOperand указатель на левый операнд присваивания.
+* \param[in] rightOperand указатель на правый операнд присваивания.
+* \return указатель на созданный узел оператора присваивания со сложением.
+*/
+struct ExpressionNode * createPlusAssignmentExpressioNode(struct ExpressionNode * leftOperand, struct ExpressionNode * rightOperand);
+
+/*! Создать узел оператора присваивания с вычитанием.
+* \param[in] leftOperand указатель на левый операнд присваивания.
+* \param[in] rightOperand указатель на правый операнд присваивания.
+* \return указатель на созданный узел оператора присваивания с вычитанием.
+*/
+struct ExpressionNode * createMinusAssignmentExpressionNode(struct ExpressionNode * leftOperand, struct ExpressionNode * rightOperand);
+
+/*! Создать узел оператора присваивания с умножением.
+* \param[in] leftOperand указатель на левый операнд присваивания.
+* \param[in] rightOperand указатель на правый операнд присваивания.
+* \return указатель на созданный узел оператора присваивания с умножением.
+*/
+struct ExpressionNode * createMulAssignmentExpressionNode(struct ExpressionNode * leftOperand, struct ExpressionNode * rightOperand);
+
+/*! Создать узел оператора присваивания с делением.
+* \param[in] leftOperand указатель на левый операнд присваивания.
+* \param[in] rightOperand указатель на правый операнд присваивания.
+* \return указатель на созданный узел оператора присваивания с делением.
+*/
+struct ExpressionNode * createDivAssignmentExpressionNode(struct ExpressionNode * leftOperand, struct ExpressionNode * rightOperand);
+
+/*! Создать узел оператора присваивания со взятием остатка.
+* \param[in] leftOperand указатель на левый операнд присваивания.
+* \param[in] rightOperand указатель на правый операнд присваивания.
+* \return указатель на созданный узел оператора присваивания со взятием остатка.
+*/
+struct ExpressionNode * createModAssignmentExpressionNode(struct ExpressionNode * leftOperand, struct ExpressionNode * rightOperand);
+
+/*! Создать узел оператора круглых скобок.
+* \param[in] innerExpression внутреннее выражение в круглых скобках.
+* \return ссылка на узел оператора круглых скобок.
+*/
+struct ExpressionNode * createBracketExpressionNode(struct ExpressionNode * innerExpression);
+
+/*! Создать узел выражения идентификатора.
+* \param[in] ident строка идентификатора.
+* \return указатель на узел Expression ID.
+*/
+struct ExpressionNode * createIDExpressionNode(char * ident);
+
+/*! Создать узел указателя на рассматриваемый объект This.
+* \return указатель на узел рассматриваемого объекта This.
+*/
+struct ExpressionNode * createThisExpressionNode();
+
+/*! Создать узел указателя на объект родительского класса Super.
+* \return указатель на узел объекта родительского класса Super.
+*/
+struct ExpressionNode * createSuperExpressionNode();
+
 
 
 /*------------------------------------ ExpressionList -------------------------------------*/
