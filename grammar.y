@@ -115,9 +115,9 @@ IfStatement: IF '(' SimpleExpression ')' BlockStatement
            | IF '(' SimpleExpression ')' BlockStatement ELSE BlockStatement
            ;
 
-WhileStatement: WHILE EndlOpt '(' EndlOpt SimpleExpression EndlOpt ')' EndlOpt Statement
-              | WHILE EndlOpt '(' EndlOpt SimpleExpression EndlOpt ')' EndlOpt BlockStatement EndlList
-              | WHILE EndlOpt '(' EndlOpt SimpleExpression EndlOpt ')' EndlOpt BlockStatement ';' EndlOpt
+WhileStatement: WHILE EndlOpt '(' EndlOpt SimpleExpression EndlOpt ')' EndlOpt Statement {$$ = createStatementFromWhileWithSingleBody($5, $9);}
+              | WHILE EndlOpt '(' EndlOpt SimpleExpression EndlOpt ')' EndlOpt BlockStatement EndlList {$$ = createStatementFromWhileWithComplexBody($5, $9);}
+              | WHILE EndlOpt '(' EndlOpt SimpleExpression EndlOpt ')' EndlOpt BlockStatement ';' EndlOpt {$$ = createStatementFromWhileWithComplexBody($5, $9);}
               ;
 
 DoWhileStatement: DO EndlOpt BlockStatement EndlOpt WHILE EndlOpt '(' EndlOpt SimpleExpression EndlOpt ')' EndlList
