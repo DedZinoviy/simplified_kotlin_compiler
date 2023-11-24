@@ -45,7 +45,7 @@
 %type <expression>SimpleExpression
 %type <exprList>ExpressionList
 %type <statement>Statement WhileStatement DoWhileStatement ForStatement ValStmt VarStmt
-%type <stmtList>StatementList
+%type <stmtList>StatementList BlockStatement
 
 %% 
 KotlinFile: KotlinFileVisibilityElementList
@@ -106,8 +106,8 @@ SimpleExpression: INT_LITERAL {$$ = createIntLiteralExpressionNode($1);}
                 | SimpleExpression POST_INCREMENT {$$ = createPostIncrementExpressionNode($1);}
                 ;
 
-BlockStatement: '{' EndlOpt StatementList '}'
-               | '{' EndlOpt '}'
+BlockStatement: '{' EndlOpt StatementList '}' {$$ = $3;}
+               | '{' EndlOpt '}' {$$ = createStatementListNode(NULL);}
                ;
               
 IfStatement: IF '(' SimpleExpression ')' BlockStatement
@@ -134,8 +134,8 @@ ForStatement: FOR '(' ID IN SimpleExpression')' EndlOpt BlockStatement EndlList
             | FOR '(' '(' VarDeclIdList ')' IN SimpleExpression')' EndlOpt Statement
             ;
 
-StatementList: Statement
-             | StatementList Statement
+StatementList: Statement {$$ = createStatementListNode($1);}
+             | StatementList Statement {$$ = addStatementToStatementList($1, $2);}
              ;
 
 Statement: ';' EndlOpt {$$ = createEmptyStatement();}
