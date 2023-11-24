@@ -336,6 +336,28 @@ struct StatementNode * createValStatementWithType(char * valId, char * type ,str
 */
 struct StatementNode * createValStatementFromVarDeclaration(struct VarDeclarationNode * decl, struct ExpressionNode * expr);
 
+/*! Создать узел Var Statement без явного указания типа.
+* \param[in] varId идентификатор переменной.
+* \param[in] expr выражение, результат которого присваивается Var; может быть NULL, если ничего не присаивается.
+* \return созданный узел VarStmt.
+*/
+struct StatementNode * createVarStatement(char * varId, struct ExpressionNode * expr);
+
+/*! Создать узел Var Statement с явным указаением типа.
+* \param[in] varId идентификатор переменной.
+* \param[in] type тип переменной.
+* \param[in] expr выражение, результат которого присваивается Var; может быть NULL, если ничего не присаивается.
+* \return созданный узел VarStmt.
+*/
+struct StatementNode * createVarStatementWithType(char * varId, char * type ,struct ExpressionNode * expr);
+
+/*! Создать узел Var Statement с явным указаением типа через VarDeclaration.
+* \param[in] decl узел объявления переменной.
+* \param[in] expr выражение, результат которого присваивается Var; может быть NULL, если ничего не присаивается.
+* \return созданный узел VarStmt.
+*/
+struct StatementNode * createVarStatementFromVarDeclaration(struct VarDeclarationNode * decl, struct ExpressionNode * expr);
+
 
 
 /*------------------------------------ StatementList -------------------------------------*/

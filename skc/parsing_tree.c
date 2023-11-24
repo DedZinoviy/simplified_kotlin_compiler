@@ -834,6 +834,66 @@ struct StatementNode * createValStatementFromVarDeclaration(struct VarDeclaratio
     return node;
 }
 
+/*! Создать узел Var Statement без явного указания типа.
+* \param[in] varId идентификатор переменной.
+* \param[in] expr выражение, результат которого присваивается Var; может быть NULL, если ничего не присаивается.
+* \return созданный узел VarStmt.
+*/
+struct StatementNode * createVarStatement(char * varId, struct ExpressionNode * expr)
+{
+    struct StatementNode * node = (struct StatementNode*)malloc(sizeof(struct StatementNode));
+    node->id = ID++;
+    node->type = VAR;
+    node->complexBody = NULL;
+    node->condition = NULL;
+    node->next = NULL;
+    node->singleBody = NULL;
+    node->expression = expr;
+    node->varValId = varId;
+    return node;
+}
+
+/*! Создать узел Var Statement с явным указаением типа.
+* \param[in] varId идентификатор переменной.
+* \param[in] type тип переменной.
+* \param[in] expr выражение, результат которого присваивается Var; может быть NULL, если ничего не присаивается.
+* \return созданный узел VarStmt.
+*/
+struct StatementNode * createVarStatementWithType(char * varId, char * type ,struct ExpressionNode * expr)
+{
+    struct StatementNode * node = (struct StatementNode*)malloc(sizeof(struct StatementNode));
+    node->id = ID++;
+    node->type = VAR;
+    node->complexBody = NULL;
+    node->condition = NULL;
+    node->next = NULL;
+    node->singleBody = NULL;
+    node->expression = expr;
+    node->varValId = varId;
+    node->varValType = type;
+    return node;
+}
+
+/*! Создать узел Var Statement с явным указаением типа через VarDeclaration.
+* \param[in] decl узел объявления переменной.
+* \param[in] expr выражение, результат которого присваивается Var; может быть NULL, если ничего не присаивается.
+* \return созданный узел VarStmt.
+*/
+struct StatementNode * createVarStatementFromVarDeclaration(struct VarDeclarationNode * decl, struct ExpressionNode * expr)
+{
+    struct StatementNode * node = (struct StatementNode*)malloc(sizeof(struct StatementNode));
+    node->id = ID++;
+    node->type = VAR;
+    node->next = NULL;
+    node->varValId = decl->identifier;
+    node->varValType = decl->type;
+    node->expression = expr;
+    node->condition = NULL;
+    node->complexBody = NULL;
+    node->singleBody = NULL;
+    return node;
+}
+
 
 
 /*------------------------------------ StatementList -------------------------------------*/
