@@ -87,8 +87,56 @@ char * generateDotFromExpression(struct ExpressionNode * node)
         res = concat(res, generateStrForBinOperation(node));
         break;
     case RANGE:
-        res = concat(res, "[label=\"!=\"];\n");
+        res = concat(res, "[label=\"..\"];\n");
         res = concat(res, generateStrForBinOperation(node));
+        break;
+    case UNARY_PLUS:
+        res = concat(res, "[label=\"U_+\"];\n");
+        res = concat(res, generateDotFromExpression(node->right));
+        res = concat(res, itoa(node->id, idStr, 10));
+        res = concat(res, " -> ");
+        res = concat(res, itoa(node->right->id, idStr, 10));
+        res = concat(res, ";\n");
+        break;
+    case UNARY_MINUS:
+        res = concat(res, "[label=\"U_-\"];\n");
+        res = concat(res, generateDotFromExpression(node->right));
+        res = concat(res, itoa(node->id, idStr, 10));
+        res = concat(res, " -> ");
+        res = concat(res, itoa(node->right->id, idStr, 10));
+        res = concat(res, ";\n");
+        break;
+    case PREF_INCREMENT:
+        res = concat(res, "[label=\"PREF_++\"];\n");
+        res = concat(res, generateDotFromExpression(node->right));
+        res = concat(res, itoa(node->id, idStr, 10));
+        res = concat(res, " -> ");
+        res = concat(res, itoa(node->right->id, idStr, 10));
+        res = concat(res, ";\n");
+        break;
+    case PREF_DECREMENT:
+        res = concat(res, "[label=\"PREF_--\"];\n");
+        res = concat(res, generateDotFromExpression(node->right));
+        res = concat(res, itoa(node->id, idStr, 10));
+        res = concat(res, " -> ");
+        res = concat(res, itoa(node->right->id, idStr, 10));
+        res = concat(res, ";\n");
+        break;
+    case POST_INCREMENT:
+        res = concat(res, "[label=\"POST_++\"];\n");
+        res = concat(res, generateDotFromExpression(node->right));
+        res = concat(res, itoa(node->id, idStr, 10));
+        res = concat(res, " -> ");
+        res = concat(res, itoa(node->right->id, idStr, 10));
+        res = concat(res, ";\n");
+        break;
+    case POST_DECREMENT:
+        res = concat(res, "[label=\"POST_--\"];\n");
+        res = concat(res, generateDotFromExpression(node->right));
+        res = concat(res, itoa(node->id, idStr, 10));
+        res = concat(res, " -> ");
+        res = concat(res, itoa(node->right->id, idStr, 10));
+        res = concat(res, ";\n");
         break;
     default:
         break;
