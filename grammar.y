@@ -159,12 +159,12 @@ ValStmt: VAL EndlOpt VarDeclaration EndlList {$$ = createValStatementFromVarDecl
        | VAL EndlOpt VarDeclaration EndlOpt '=' EndlOpt SimpleExpression ';' EndlOpt {$$ = createValStatementFromVarDeclaration($3, $7);}
        ;
 
-VarStmt: VAR EndlOpt VarDeclaration EndlList
-       | VAR EndlOpt VarDeclaration ';' EndlOpt
-       | VAR EndlOpt ID EndlOpt '=' EndlOpt SimpleExpression EndlList
-       | VAR EndlOpt ID EndlOpt '=' EndlOpt SimpleExpression ';' EndlOpt
-       | VAR EndlOpt VarDeclaration EndlOpt '=' EndlOpt SimpleExpression EndlList
-       | VAR EndlOpt VarDeclaration EndlOpt '=' EndlOpt SimpleExpression ';' EndlOpt
+VarStmt: VAR EndlOpt VarDeclaration EndlList {$$ = createVarStatementFromVarDeclaration($3, NULL);}
+       | VAR EndlOpt VarDeclaration ';' EndlOpt {$$ = createVarStatementFromVarDeclaration($3, NULL);}
+       | VAR EndlOpt ID EndlOpt '=' EndlOpt SimpleExpression EndlList {$$ = createVarStatement($3, $7);}
+       | VAR EndlOpt ID EndlOpt '=' EndlOpt SimpleExpression ';' EndlOpt {$$ = createVarStatement($3, $7);}
+       | VAR EndlOpt VarDeclaration EndlOpt '=' EndlOpt SimpleExpression EndlList {$$ = createVarStatementFromVarDeclaration($3, $7);}
+       | VAR EndlOpt VarDeclaration EndlOpt '=' EndlOpt SimpleExpression ';' EndlOpt {$$ = createVarStatementFromVarDeclaration($3, $7);}
        ; 
 
 VarDeclIdList: ID
