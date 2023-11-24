@@ -17,7 +17,7 @@
 }
 
 %token IF ELSE VAL VAR CLASS PUBLIC PROTECTED PRIVATE INTERNAL ENDL WHILE DO FUNC FOR SUPER THIS OVERRIDE OPEN
-%token ID
+%token <ident>ID
 
 %token <intLit>INT_LITERAL 
 %token <charLit>CHAR_LITERAL 
@@ -63,10 +63,10 @@ SimpleExpression: INT_LITERAL {$$ = createIntLiteralExpressionNode($1);}
                 | STRING_LITERAL {$$ = createStringLiteralExpressionNode($1);}
                 | TRUE_LITERAL {$$ = createTrueLiteralExpressionNode();}
                 | FALSE_LITERAL {$$ = createFalseLiteralExpressionNode();}
-                | ID
-                | SUPER
-                | THIS
-                | '(' SimpleExpression ')'
+                | ID {$$ = createIDExpressionNode($1);}
+                | SUPER {$$ = createSuperExpressionNode();}
+                | THIS {$$ = createThisExpressionNode();}
+                | '(' SimpleExpression ')' {$$ = createBracketExpressionNode($2);}
                 | SimpleExpression '.' EndlOpt ID {$$ = createFieldAccessExpressionNode($1, $4);}
                 | SimpleExpression '.' EndlOpt ID '(' ExpressionList ')' {$$ = createMethodAccessExpressionNode($1, $4, $6);}
                 | SimpleExpression '.' EndlOpt ID '(' ')' {$$ = createMethodAccessExpressionNode($1, $4, NULL);}
@@ -86,12 +86,12 @@ SimpleExpression: INT_LITERAL {$$ = createIntLiteralExpressionNode($1);}
                 | SimpleExpression LESS_EQUAL EndlOpt SimpleExpression {$$ = createLessEqualExpressionNode($1, $4);}
                 | SimpleExpression EQUAL EndlOpt SimpleExpression {$$ = createEqualExpressionNode($1, $4);}
                 | SimpleExpression NOT_EQUAL EndlOpt SimpleExpression {$$ = createNotEqualExpressionNode($1, $4);}
-                | SimpleExpression '=' EndlOpt SimpleExpression
-                | SimpleExpression PLUS_ASSIGNMENT EndlOpt SimpleExpression
-                | SimpleExpression MINUS_ASSIGNMENT EndlOpt SimpleExpression
-                | SimpleExpression MUL_ASSIGNMENT EndlOpt SimpleExpression
-                | SimpleExpression DIV_ASSIGNMENT EndlOpt SimpleExpression
-                | SimpleExpression MOD_ASSIGNMENT EndlOpt SimpleExpression
+                | SimpleExpression '=' EndlOpt SimpleExpression {$$ = createAssignmentExpressionNode($1, $4);}
+                | SimpleExpression PLUS_ASSIGNMENT EndlOpt SimpleExpression {$$ = createPlusAssignmentExpressionNode($1, $4);}
+                | SimpleExpression MINUS_ASSIGNMENT EndlOpt SimpleExpression {$$ = createMinusAssignmentExpressionNode($1, $4);}
+                | SimpleExpression MUL_ASSIGNMENT EndlOpt SimpleExpression {$$ = createMulAssignmentExpressionNode($1, $4);}
+                | SimpleExpression DIV_ASSIGNMENT EndlOpt SimpleExpression {$$ = createDivAssignmentExpressionNode($1, $4);}
+                | SimpleExpression MOD_ASSIGNMENT EndlOpt SimpleExpression {$$ = createModAssignmentExpressionNode($1, $4);}
                 | SimpleExpression RANGE EndlOpt SimpleExpression
                 | '-' EndlOpt SimpleExpression %prec UMINUS
                 | '+' EndlOpt SimpleExpression %prec UPLUS
