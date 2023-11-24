@@ -852,9 +852,9 @@ struct StatementListNode * addStatementToStatementList(struct StatementListNode 
 * \param[in] typ строка - тип идентификатора.
 * \return указатель на узел VarDeclaration.
 */
-struct VarDeclaration * createVarDeclaration(char * ident, char * typ)
+struct VarDeclarationNode * createVarDeclarationNode(char * ident, char * typ)
 {
-    struct VarDeclaration * node = (struct VarDeclaration*)malloc(sizeof(struct VarDeclaration));
+    struct VarDeclarationNode * node = (struct VarDeclarationNode*)malloc(sizeof(struct VarDeclarationNode));
     node->id = ID++;
     node->identifier = ident;
     node->type = typ;

@@ -354,4 +354,4 @@ struct StatementListNode * addStatementToStatementList(struct StatementListNode 
 * \param[in] typ строка - тип идентификатора.
 * \return указатель на узел VarDeclaration.
 */
-struct VarDeclaration * createVarDeclaration(char * ident, char * typ);
+struct VarDeclarationNode * createVarDeclarationNode(char * ident, char * typ);

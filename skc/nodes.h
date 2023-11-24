@@ -168,18 +168,18 @@ struct StatementListNode
 };
 
 /*------------------------------------ VarDeclaration -------------------------------------*/
-struct VarDeclaration
+struct VarDeclarationNode
 {
     int id;
     char * identifier;
     char * type;
-    struct VarDeclaration * next;
+    struct VarDeclarationNode * next;
 };
 
 /*------------------------------------ VarDeclarationList -------------------------------------*/
-struct VarDeclarationList
+struct VarDeclarationListNode
 {
     int id;
-    struct VarDeclaration * first;
-    struct VarDeclaration * last;
+    struct VarDeclarationNode * first;
+    struct VarDeclarationNode * last;
 };
