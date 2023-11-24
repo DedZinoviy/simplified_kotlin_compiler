@@ -941,3 +941,32 @@ struct VarDeclarationNode * createVarDeclarationNode(char * ident, char * typ)
     node->next = NULL;
     return node;
 }
+
+
+
+/*------------------------------------ VarDeclarationList -------------------------------------*/
+
+/*! Создать узел списка VarDeclaration на основе узла VarDeclaration.
+* \param[in] firstNode указатель на первый узел списка.
+* \return указатель на узел списка VarDeclarationList.
+*/
+struct VarDeclarationListNode * createVarDeclarationListNode(struct VarDeclarationNode * firstNode)
+{
+    struct VarDeclarationListNode * node = (struct VarDeclarationListNode*)malloc(sizeof(struct VarDeclarationListNode));
+    node->first = firstNode;
+    node->last = firstNode;
+    node->id = ID++;
+    return node;
+}
+
+/*! Добавить VarDeclarationNode к списку VarDeclaration.
+* \param[in,out] list список, к которому добавляется новый узел.
+* \param[in] varDecl добавляемый узел VarDeclaration.
+* \return измененный список VarDeclaration (тот же самый, что и параметр list). 
+*/
+struct VarDeclarationListNode * addVarDeclToVarDeclarationListNode(struct VarDeclarationListNode * list, struct VarDeclarationNode * varDecl)
+{
+    list->last->next = varDecl;
+    list->last = varDecl;
+    return list;
+}
