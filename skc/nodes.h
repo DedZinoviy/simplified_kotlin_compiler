@@ -166,3 +166,21 @@ struct StatementListNode
     /// Указатель на последний элемент списка Statement.
     struct StatementNode * last;
 };
+
+/*------------------------------------ VarDeclaration -------------------------------------*/
+struct VarDeclaration
+{
+    int id;
+    char * identifier;
+    char * type;
+    char * identifier;
+    struct VarDeclaration * next;
+};
+
+/*------------------------------------ VarDeclarationList -------------------------------------*/
+struct VarDeclarationList
+{
+    int id;
+    struct VarDeclaration * first;
+    struct VarDeclaration * last;
+};
