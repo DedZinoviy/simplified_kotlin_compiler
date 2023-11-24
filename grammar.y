@@ -42,7 +42,7 @@
 
 %type <expression>SimpleExpression
 %type <exprList>ExpressionList
-%type <statement>Statement WhileStatement DoWhileStatement ForStatement
+%type <statement>Statement WhileStatement DoWhileStatement ForStatement ValStmt VarStmt
 %type <stmtList>StatementList
 
 %% 
@@ -133,8 +133,8 @@ StatementList: Statement
 Statement: ';' EndlOpt {$$ = createEmptyStatement();}
          | SimpleExpression EndlList {$$ = createStatementFromExpression($1);}
          | SimpleExpression ';' EndlOpt {$$ = createStatementFromExpression($1);}
-         | VarStmt
-         | ValStmt
+         | VarStmt {$$ = $1}
+         | ValStmt {$$ = $1}
          | MultiDeclararion
          | WhileStatement
          | DoWhileStatement
@@ -143,8 +143,8 @@ Statement: ';' EndlOpt {$$ = createEmptyStatement();}
 
 ValStmt: VAL EndlOpt VarDeclaration EndlList
        | VAL EndlOpt VarDeclaration ';' EndlOpt
-       | VAL EndlOpt ID EndlOpt '=' EndlOpt SimpleExpression EndlList
-       | VAL EndlOpt ID EndlOpt '=' EndlOpt SimpleExpression ';' EndlOpt
+       | VAL EndlOpt ID EndlOpt '=' EndlOpt SimpleExpression EndlList {$$ = createValStatement($3, $7);}
+       | VAL EndlOpt ID EndlOpt '=' EndlOpt SimpleExpression ';' EndlOpt {$$ = createValStatement($3, $7);}
        | VAL EndlOpt VarDeclaration EndlOpt '=' EndlOpt SimpleExpression EndlList
        | VAL EndlOpt VarDeclaration EndlOpt '=' EndlOpt SimpleExpression ';' EndlOpt
        ;
