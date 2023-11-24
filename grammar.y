@@ -92,13 +92,13 @@ SimpleExpression: INT_LITERAL {$$ = createIntLiteralExpressionNode($1);}
                 | SimpleExpression MUL_ASSIGNMENT EndlOpt SimpleExpression {$$ = createMulAssignmentExpressionNode($1, $4);}
                 | SimpleExpression DIV_ASSIGNMENT EndlOpt SimpleExpression {$$ = createDivAssignmentExpressionNode($1, $4);}
                 | SimpleExpression MOD_ASSIGNMENT EndlOpt SimpleExpression {$$ = createModAssignmentExpressionNode($1, $4);}
-                | SimpleExpression RANGE EndlOpt SimpleExpression
-                | '-' EndlOpt SimpleExpression %prec UMINUS
-                | '+' EndlOpt SimpleExpression %prec UPLUS
-                | PREF_INCREMENT EndlOpt SimpleExpression
-                | PREF_DECREMENT EndlOpt SimpleExpression
-                | SimpleExpression POST_DECREMENT
-                | SimpleExpression POST_INCREMENT
+                | SimpleExpression RANGE EndlOpt SimpleExpression {$$ = createRangeExpressionNode($1, $4);}
+                | '-' EndlOpt SimpleExpression %prec UMINUS {$$ = createUnaryMinusExpressionNode($3);}
+                | '+' EndlOpt SimpleExpression %prec UPLUS {$$ = createUnaryPlusExpressionNode($3);}
+                | PREF_INCREMENT EndlOpt SimpleExpression {$$ = createPrefIncrementExpressionNode($3);}
+                | PREF_DECREMENT EndlOpt SimpleExpression {$$ = createPrefDecrementExpressionNode($3);}
+                | SimpleExpression POST_DECREMENT {$$ = createPostDecrementExpressionNode($1);}
+                | SimpleExpression POST_INCREMENT {$$ = createPostIncrementExpressionNode($1);}
                 ;
 
 BlockStatement: '{' EndlOpt StatementList '}'
