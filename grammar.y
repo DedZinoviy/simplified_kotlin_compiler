@@ -126,9 +126,12 @@ DoWhileStatement: DO EndlOpt BlockStatement EndlOpt WHILE EndlOpt '(' EndlOpt Si
                 | DO EndlOpt Statement WHILE EndlOpt '(' EndlOpt SimpleExpression EndlOpt ')' ';' EndlOpt
                 ;
 
-ForStatement: FOR '(' VarDeclarationList IN SimpleExpression')' EndlOpt BlockStatement EndlList
-            | FOR '(' VarDeclarationList IN SimpleExpression')' EndlOpt BlockStatement ';' EndlOpt
-            | FOR '(' VarDeclarationList IN SimpleExpression')' EndlOpt Statement
+ForStatement: FOR '(' ID IN SimpleExpression')' EndlOpt BlockStatement EndlList
+            | FOR '(' ID IN SimpleExpression')' EndlOpt BlockStatement ';' EndlOpt
+            | FOR '(' ID IN SimpleExpression')' EndlOpt Statement
+            | FOR '(' '(' VarDeclIdList ')' IN SimpleExpression')' EndlOpt BlockStatement EndlList
+            | FOR '(' '(' VarDeclIdList ')' IN SimpleExpression')' EndlOpt BlockStatement ';' EndlOpt
+            | FOR '(' '(' VarDeclIdList ')' IN SimpleExpression')' EndlOpt Statement
             ;
 
 StatementList: Statement
@@ -162,18 +165,16 @@ VarStmt: VAR EndlOpt VarDeclaration EndlList
        | VAR EndlOpt VarDeclaration EndlOpt '=' EndlOpt SimpleExpression ';' EndlOpt
        ; 
 
-IdList: ID
-      | IdList ',' ID
-      ;
+VarDeclIdList: ID
+             | VarDeclaration
+             | VarDeclIdList ',' ID
+             | VarDeclIdList ',' VarDeclaration
+             ;
 
-MultiDeclararion: VAL EndlOpt '('VarDeclaration')' EndlOpt '=' EndlOpt SimpleExpression EndlList
-                | VAL EndlOpt '('IdList')' EndlOpt '=' EndlOpt SimpleExpression EndlList
-                | VAR EndlOpt '('VarDeclaration')' EndlOpt '=' EndlOpt SimpleExpression EndlList
-                | VAR EndlOpt '('IdList')' EndlOpt '=' EndlOpt SimpleExpression EndlList
-                | VAL EndlOpt '('VarDeclaration')' EndlOpt '=' EndlOpt SimpleExpression ';' EndlOpt
-                | VAL EndlOpt '('IdList')' EndlOpt '=' EndlOpt SimpleExpression ';' EndlOpt
-                | VAR EndlOpt '('VarDeclaration')' EndlOpt '=' EndlOpt SimpleExpression ';' EndlOpt 
-                | VAR EndlOpt '('IdList')' EndlOpt '=' EndlOpt SimpleExpression ';' EndlOpt
+MultiDeclararion: VAL EndlOpt '('VarDeclIdList')' EndlOpt '=' EndlOpt SimpleExpression EndlList
+                | VAR EndlOpt '('VarDeclIdList')' EndlOpt '=' EndlOpt SimpleExpression EndlList
+                | VAL EndlOpt '('VarDeclIdList')' EndlOpt '=' EndlOpt SimpleExpression ';' EndlOpt 
+                | VAR EndlOpt '('VarDeclIdList')' EndlOpt '=' EndlOpt SimpleExpression ';' EndlOpt
                 ;
 
 VarDeclaration: ID EndlOpt ':' EndlOpt ID
