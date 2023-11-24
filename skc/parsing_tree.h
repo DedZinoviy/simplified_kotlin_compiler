@@ -205,6 +205,49 @@ struct ExpressionNode * createThisExpressionNode();
 */
 struct ExpressionNode * createSuperExpressionNode();
 
+/*! Создать узел оператора создания диапазона.
+* \param[in] leftOperand указатель на левый операнд.
+* \param[in] rightOperand указатель на правый операнд.
+* \return указатель на созданный узел оператора создания диапазона.
+*/
+struct ExpressionNode * createRangeExpressionNode(struct ExpressionNode * leftOperand, struct ExpressionNode * rightOperand);
+
+/*! Создать узел оператора префиксного инкремента.
+* \param[in] value указатель на инкрементируемый Expression.
+* \return указатель на узел оператора префиксного инкремента.
+*/
+struct ExpressionNode * createPrefIncrementExpressionNode(struct ExpressionNode * value);
+
+/*! Создать узел оператора префиксного декремента.
+* \param[in] value указатель на декрементируемый Expression.
+* \return указатель на узел оператора префиксного декремента.
+*/
+struct ExpressionNode * createPrefDecrementExpressionNode(struct ExpressionNode * value);
+
+/*! Создать узел оператора постфиксного инкремента.
+* \param[in] value указатель на инкрементируемый Expression.
+* \return указатель на узел оператора постфиксного инкремента.
+*/
+struct ExpressionNode * createPostIncrementExpressionNode(struct ExpressionNode * value);
+
+/*! Создать узел оператора постфиксного декремента.
+* \param[in] value указатель на инкрементируемый Expression.
+* \return указатель на узел оператора постфиксного декремента.
+*/
+struct ExpressionNode * createPostDecrementExpressionNode(struct ExpressionNode * value);
+
+/*! Создать узел оператора унарного плюса.
+* \param[in] value указатель на опреанд.
+* \return указатель на узел оператора унарного плюса.
+*/
+struct ExpressionNode * createUnaryPlusExpressionNode(struct ExpressionNode * value);
+
+/*! Создать узел оператора унарного минуса.
+* \param[in] value указатель на операнд.
+* \return указатель на узел оператора унарного минуса.
+*/
+struct ExpressionNode * createUnaryMinusExpressionNode(struct ExpressionNode * value);
+
 
 
 /*------------------------------------ ExpressionList -------------------------------------*/

@@ -511,6 +511,119 @@ struct ExpressionNode * createSuperExpressionNode()
     return node;
 }
 
+/*! Создать узел оператора создания диапазона.
+* \param[in] leftOperand указатель на левый операнд.
+* \param[in] rightOperand указатель на правый операнд.
+* \return указатель на созданный узел оператора создания диапазона.
+*/
+struct ExpressionNode * createRangeExpressionNode(struct ExpressionNode * leftOperand, struct ExpressionNode * rightOperand)
+{
+    struct ExpressionNode * node = (struct ExpressionNode*)malloc(sizeof(struct ExpressionNode));
+    node->id = ID++;
+    node->type = RANGE;
+    node->left = leftOperand;
+    node->next = NULL;
+    node->params = NULL;
+    node->right = rightOperand;
+    return node;
+}
+
+/*! Создать узел оператора префиксного инкремента.
+* \param[in] value указатель на инкрементируемый Expression.
+* \return указатель на узел оператора префиксного инкремента.
+*/
+struct ExpressionNode * createPrefIncrementExpressionNode(struct ExpressionNode * value)
+{
+    struct ExpressionNode * node = (struct ExpressionNode*)malloc(sizeof(struct ExpressionNode));
+    node->id = ID++;
+    node->type = PREF_INCREMENT;
+    node->left = NULL;
+    node->next = NULL;
+    node->params = NULL;
+    node->right = value;
+    return node;
+}
+
+/*! Создать узел оператора префиксного декремента.
+* \param[in] value указатель на декрементируемый Expression.
+* \return указатель на узел оператора префиксного декремента.
+*/
+struct ExpressionNode * createPrefDecrementExpressionNode(struct ExpressionNode * value)
+{
+    struct ExpressionNode * node = (struct ExpressionNode*)malloc(sizeof(struct ExpressionNode));
+    node->id = ID++;
+    node->type = PREF_DECREMENT;
+    node->left = NULL;
+    node->next = NULL;
+    node->params = NULL;
+    node->right = value;
+    return node;
+}
+
+/*! Создать узел оператора постфиксного инкремента.
+* \param[in] value указатель на инкрементируемый Expression.
+* \return указатель на узел оператора постфиксного инкремента.
+*/
+struct ExpressionNode * createPostIncrementExpressionNode(struct ExpressionNode * value)
+{
+    struct ExpressionNode * node = (struct ExpressionNode*)malloc(sizeof(struct ExpressionNode));
+    node->id = ID++;
+    node->type = POST_INCREMENT;
+    node->left = value;
+    node->next = NULL;
+    node->params = NULL;
+    node->right = NULL;
+    return node;
+}
+
+/*! Создать узел оператора постфиксного декремента.
+* \param[in] value указатель на инкрементируемый Expression.
+* \return указатель на узел оператора постфиксного декремента.
+*/
+struct ExpressionNode * createPostDecrementExpressionNode(struct ExpressionNode * value)
+{
+    struct ExpressionNode * node = (struct ExpressionNode*)malloc(sizeof(struct ExpressionNode));
+    node->id = ID++;
+    node->type = POST_DECREMENT;
+    node->left = value;
+    node->next = NULL;
+    node->params = NULL;
+    node->right = NULL;
+    return node;
+}
+
+/*! Создать узел оператора унарного плюса.
+* \param[in] value указатель на опреанд.
+* \return указатель на узел оператора унарного плюса.
+*/
+struct ExpressionNode * createUnaryPlusExpressionNode(struct ExpressionNode * value)
+{
+    struct ExpressionNode * node = (struct ExpressionNode*)malloc(sizeof(struct ExpressionNode));
+    node->id = ID++;
+    node->type = UNARY_PLUS;
+    node->left = NULL;
+    node->next = NULL;
+    node->params = NULL;
+    node->right = value;
+    return node;
+}
+
+/*! Создать узел оператора унарного минуса.
+* \param[in] value указатель на операнд.
+* \return указатель на узел оператора унарного минуса.
+*/
+struct ExpressionNode * createUnaryMinusExpressionNode(struct ExpressionNode * value)
+{
+    struct ExpressionNode * node = (struct ExpressionNode*)malloc(sizeof(struct ExpressionNode));
+    node->id = ID++;
+    node->type = UNARY_MINUS;
+    node->left = NULL;
+    node->next = NULL;
+    node->params = NULL;
+    node->right = value;
+    return node;
+}
+
 
 
 /*------------------------------------ ExpressionList -------------------------------------*/

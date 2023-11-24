@@ -33,7 +33,14 @@ enum ExpressionType
     DIV_ASSIGNMENT,
     MOD_ASSIGNMENT,
     THIS,
-    SUPER
+    SUPER,
+    RANGE,
+    PREF_INCREMENT,
+    PREF_DECREMENT,
+    POST_INCREMENT,
+    POST_DECREMENT,
+    UNARY_PLUS,
+    UNARY_MINUS
 };
 
 /*! \brief Структура узла Expression. */
