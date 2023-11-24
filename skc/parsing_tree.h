@@ -49,6 +49,20 @@ struct ExpressionNode* createStringLiteralExpressionNode(struct stringBuffer * v
 */
 struct ExpressionNode * createPlusExpressionNode(struct ExpressionNode * leftOperand, struct ExpressionNode * rightOperand);
 
+/*! Создать узел оператора дизъюнкции (||).
+* \param[in] leftOperand указатель на левый операнд - экземаляр ExpressionNode.
+* \param[in] rightOperand указатель на правый операнд - экземаляр ExpressionNode.
+* \return указатель на созданный экземпляр узла дизъюнкции.
+*/
+struct ExpressionNode * createDisjExpressionNode(struct ExpressionNode * leftOperand, struct ExpressionNode * rightOperand);
+
+/*! Создать узел оператора конъюнкции (&&).
+* \param[in] leftOperand указатель на левый операнд - экземаляр ExpressionNode.
+* \param[in] rightOperand указатель на правый операнд - экземаляр ExpressionNode.
+* \return указатель на созданный экземпляр узла конъюнкции.
+*/
+struct ExpressionNode * createConjExpressionNode(struct ExpressionNode * leftOperand, struct ExpressionNode * rightOperand);
+
 /*! Создать узел оператора вычитания (-).
 * \param[in] leftOperand указатель на левый операнд - экземаляр ExpressionNode.
 * \param[in] rightOperand указатель на правый операнд - экземаляр ExpressionNode.
@@ -247,6 +261,12 @@ struct ExpressionNode * createUnaryPlusExpressionNode(struct ExpressionNode * va
 * \return указатель на узел оператора унарного минуса.
 */
 struct ExpressionNode * createUnaryMinusExpressionNode(struct ExpressionNode * value);
+
+/*! Создать узел оператора логического отрицания.
+* \param[in] value указатель на операнд.
+* \return указатель на узел оператора логического отрицания.
+*/
+struct ExpressionNode * createNotExpressionNode(struct ExpressionNode * value);
 
 
 

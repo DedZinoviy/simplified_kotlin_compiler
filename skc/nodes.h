@@ -40,7 +40,10 @@ enum ExpressionType
     POST_INCREMENT,
     POST_DECREMENT,
     UNARY_PLUS,
-    UNARY_MINUS
+    UNARY_MINUS,
+    NOT,
+    DISJUNCTION,
+    CONJUNCTION
 };
 
 /*! \brief Структура узла Expression. */

@@ -26,6 +26,8 @@
 %token TRUE_LITERAL FALSE_LITERAL
 
 %nonassoc ENDL
+%left DISJ
+%left CONJ
 %right '=' PLUS_ASSIGNMENT MINUS_ASSIGNMENT MUL_ASSIGNMENT DIV_ASSIGNMENT MOD_ASSIGNMENT
 %left EQUAL NOT_EQUAL
 %left '>' '<' GREATER_EQUAL LESS_EQUAL 
@@ -34,7 +36,7 @@
 %left '+' '-'
 %left '*' '/' '%'
 %left UMINUS UPLUS
-%right PREF_INCREMENT PREF_DECREMENT
+%right PREF_INCREMENT PREF_DECREMENT '!'
 %left POST_INCREMENT POST_DECREMENT '.'
 %nonassoc '(' ')'
 
@@ -75,6 +77,8 @@ SimpleExpression: INT_LITERAL {$$ = createIntLiteralExpressionNode($1);}
                 | SimpleExpression EndlList '.' EndlOpt ID '(' ')' {$$ = createMethodAccessExpressionNode($1, $5, NULL);}
                 | ID '(' ExpressionList ')' { $$ = createFunctionCallExpressionNode($1, $3);}
                 | ID '(' ')' { $$ = createFunctionCallExpressionNode($1, NULL);}
+                | SimpleExpression DISJ EndlOpt SimpleExpression {$$ = createDisjExpressionNode($1, $4);}
+                | SimpleExpression CONJ EndlOpt SimpleExpression {$$ = createConjExpressionNode($1, $4);}
                 | SimpleExpression '+' EndlOpt SimpleExpression {$$ = createPlusExpressionNode($1, $4);}
                 | SimpleExpression '-' EndlOpt SimpleExpression {$$ = createMinusExpressionNode($1, $4);}
                 | SimpleExpression '*' EndlOpt SimpleExpression {$$ = createMulExpressionNode($1, $4);}
@@ -97,6 +101,7 @@ SimpleExpression: INT_LITERAL {$$ = createIntLiteralExpressionNode($1);}
                 | '+' EndlOpt SimpleExpression %prec UPLUS {$$ = createUnaryPlusExpressionNode($3);}
                 | PREF_INCREMENT EndlOpt SimpleExpression {$$ = createPrefIncrementExpressionNode($3);}
                 | PREF_DECREMENT EndlOpt SimpleExpression {$$ = createPrefDecrementExpressionNode($3);}
+                | '!' EndlOpt SimpleExpression {$$ = createNotExpressionNoode($3);}
                 | SimpleExpression POST_DECREMENT {$$ = createPostDecrementExpressionNode($1);}
                 | SimpleExpression POST_INCREMENT {$$ = createPostIncrementExpressionNode($1);}
                 ;

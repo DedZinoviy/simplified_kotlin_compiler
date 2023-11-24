@@ -115,6 +115,38 @@ struct ExpressionNode* createStringLiteralExpressionNode(struct stringBuffer * v
     return node;
 }
 
+/*! Создать узел оператора дизъюнкции (||).
+* \param[in] leftOperand указатель на левый операнд - экземаляр ExpressionNode.
+* \param[in] rightOperand указатель на правый операнд - экземаляр ExpressionNode.
+* \return указатель на созданный экземпляр узла дизъюнкции.
+*/
+struct ExpressionNode * createDisjExpressionNode(struct ExpressionNode * leftOperand, struct ExpressionNode * rightOperand)
+{
+    struct ExpressionNode* node = (struct ExpressionNode*)malloc(sizeof(struct ExpressionNode));
+    node->type = DISJUNCTION;
+    node->left = leftOperand;
+    node->right = rightOperand;
+    node->next = NULL;
+    node->id = ID++;
+    return node;
+}
+
+/*! Создать узел оператора конъюнкции (&&).
+* \param[in] leftOperand указатель на левый операнд - экземаляр ExpressionNode.
+* \param[in] rightOperand указатель на правый операнд - экземаляр ExpressionNode.
+* \return указатель на созданный экземпляр узла конъюнкции.
+*/
+struct ExpressionNode * createConjExpressionNode(struct ExpressionNode * leftOperand, struct ExpressionNode * rightOperand)
+{
+    struct ExpressionNode* node = (struct ExpressionNode*)malloc(sizeof(struct ExpressionNode));
+    node->type = CONJUNCTION;
+    node->left = leftOperand;
+    node->right = rightOperand;
+    node->next = NULL;
+    node->id = ID++;
+    return node;
+}
+
 /*! Создать узел оператора сложения (+).
 * \param[in] leftOperand указатель на левый операнд - экземаляр ExpressionNode.
 * \param[in] rightOperand указатель на правый операнд - экземаляр ExpressionNode.
@@ -624,6 +656,21 @@ struct ExpressionNode * createUnaryMinusExpressionNode(struct ExpressionNode * v
     return node;
 }
 
+/*! Создать узел оператора логического отрицания.
+* \param[in] value указатель на операнд.
+* \return указатель на узел оператора логического отрицания.
+*/
+struct ExpressionNode * createNotExpressionNode(struct ExpressionNode * value)
+{
+    struct ExpressionNode * node = (struct ExpressionNode*)malloc(sizeof(struct ExpressionNode));
+    node->id = ID++;
+    node->type = NOT;
+    node->left = NULL;
+    node->next = NULL;
+    node->params = NULL;
+    node->right = value;
+    return node;
+}
 
 
 /*------------------------------------ ExpressionList -------------------------------------*/
