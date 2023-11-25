@@ -119,8 +119,14 @@ false {
     printf("(%s) - ASSIGNMENT_OPERATOR\n", yytext);
     return '=';
 }
-\>\= {printf("(%s) - GREATER_EQUAL_OPERATOR\n", yytext);}
-\<\= {printf("(%s) - LESS_EQUAL_OPERATOR\n", yytext);}
+\>\= {
+    printf("(%s) - GREATER_EQUAL_OPERATOR\n", yytext);
+    return GREATER_EQUAL;
+}
+\<\= {
+    printf("(%s) - LESS_EQUAL_OPERATOR\n", yytext);
+    return LESS_EQUAL;
+}
 \> {
     printf("(%s) - GREATER_OPERATOR\n", yytext);
     return '>';
@@ -211,11 +217,23 @@ false {
 \=\=\= {printf("(%s) - REF_EQUAL_OPERATOR\n", yytext);}
 \!\=\= {printf("(%s) - REF_NOT_EQUAL_OPERATOR\n", yytext);}
 
-\! {printf("(%s) - NOT_OPERATOR\n", yytext);}
-\|\| {printf("(%s) - OR_OPERATOR\n", yytext);} 
-\&\& {printf("(%s) - AND_OPERATOR\n", yytext);}
+\! {
+    printf("(%s) - NOT_OPERATOR\n", yytext);
+    return '!';
+}
+\|\| {
+    printf("(%s) - OR_OPERATOR\n", yytext);
+    return DISJ;
+} 
+\&\& {
+    printf("(%s) - AND_OPERATOR\n", yytext);
+    return CONJ;
+}
 
-\.\. {printf("(%s) - RANGE_OPERATOR\n", yytext);}
+\.\. {
+    printf("(%s) - RANGE_OPERATOR\n", yytext);
+    return RANGE;
+}
 \!\! {printf("(%s) - NOT_NULL_ASSERTION_OPERATOR\n", yytext);}
 \?\. {printf("(%s) - SAFE_CALL_OPERATOR\n", yytext);}
 
