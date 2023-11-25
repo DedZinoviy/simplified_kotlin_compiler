@@ -4,6 +4,7 @@
 
 %s INTERPOLATION
 %s INBRACE
+%s INBRACKET
 %x END_OF_LINE_COMMENT
 %x MULTILINE_COMMENT
 %x STRING
@@ -114,8 +115,14 @@ false {printf("(%s) - FALSE_KEY_WORD\n", yytext);}
 <INITIAL>\} {printf("(%s) - RIGHT_BRACE\n", yytext);}
 \[ {printf("(%s) - LEFT_SQUARE_BRACKET\n", yytext);}
 \] {printf("(%s) - RIGHT_SQUARE_BRACKET\n", yytext);}
-\( {printf("(%s) - LEFT_ROUND_BRACKET\n", yytext);}
-\) {printf("(%s) - RIGHT_ROUND_BRACKET\n", yytext);}
+\( {
+    printf("(%s) - LEFT_ROUND_BRACKET\n", yytext);
+    yy_push_state(INBRACKET);
+}
+\) {
+    printf("(%s) - RIGHT_ROUND_BRACKET\n", yytext);
+    yy_pop_state();
+}
 \: {printf("(%s) - COLON\n", yytext);}
 \; {printf("(%s) - SEMICOLON\n", yytext);}
 \. {printf("(%s) - DOT\n", yytext);}
@@ -384,6 +391,10 @@ false {printf("(%s) - FALSE_KEY_WORD\n", yytext);}
 
 [ \t] {
     // Игнорирование лишних пробелов и табуляций. 
+}
+
+<INBRACKET>[\r\n] {
+    line = line + 1;
 }
 
 [\r\n] {
