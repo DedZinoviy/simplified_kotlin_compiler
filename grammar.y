@@ -27,6 +27,7 @@
 %token <stringLit>STRING_LITERAL 
 %token TRUE_LITERAL FALSE_LITERAL
 
+%nonassoc INCREMENT DECREMENT
 %nonassoc ENDL
 %right '=' PLUS_ASSIGNMENT MINUS_ASSIGNMENT MUL_ASSIGNMENT DIV_ASSIGNMENT MOD_ASSIGNMENT
 %left DISJ
@@ -103,11 +104,11 @@ SimpleExpression: INT_LITERAL {$$ = createIntLiteralExpressionNode($1);}
                 | SimpleExpression RANGE EndlOpt SimpleExpression {$$ = createRangeExpressionNode($1, $4);}
                 | '-' EndlOpt SimpleExpression %prec UMINUS {$$ = createUnaryMinusExpressionNode($3);}
                 | '+' EndlOpt SimpleExpression %prec UPLUS {$$ = createUnaryPlusExpressionNode($3);}
-                | PREF_INCREMENT EndlOpt SimpleExpression {$$ = createPrefIncrementExpressionNode($3);}
-                | PREF_DECREMENT EndlOpt SimpleExpression {$$ = createPrefDecrementExpressionNode($3);}
+                | INCREMENT EndlOpt SimpleExpression %prec PREF_INCREMENT {$$ = createPrefIncrementExpressionNode($3);}
+                | DECREMENT EndlOpt SimpleExpression %prec PREF_DECREMENT {$$ = createPrefDecrementExpressionNode($3);}
                 | '!' EndlOpt SimpleExpression {$$ = createNotExpressionNoode($3);}
-                | SimpleExpression POST_DECREMENT {$$ = createPostDecrementExpressionNode($1);}
-                | SimpleExpression POST_INCREMENT {$$ = createPostIncrementExpressionNode($1);}
+                | SimpleExpression DECREMENT %prec POST_DECREMENT {$$ = createPostDecrementExpressionNode($1);}
+                | SimpleExpression INCREMENT %prec POST_INCREMENT {$$ = createPostIncrementExpressionNode($1);}
                 ;
 
 BlockStatement: '{' EndlOpt StatementList '}' {$$ = $3;}
