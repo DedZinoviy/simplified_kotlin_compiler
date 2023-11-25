@@ -758,6 +758,42 @@ struct StatementNode * createStatementFromWhileWithComplexBody(struct Expression
     return statement;
 }
 
+/*! Создать узел StatementNode для цикла do..while с одним Statement в качесвте тела.
+* \param[in] cond Условие выполнения цикла - указатель на узел  Expression.
+* \param[in] stmt Тело цикла, состоящее из одного узла Statement.
+* \return Созданный узел Statement.
+*/
+struct StatementNode * createStatementFromDoWhileWithSingleBody(struct ExpressionNode * cond, struct StatementNode * stmt)
+{
+    struct StatementNode * statement = (struct StatementNode*)malloc(sizeof(struct StatementNode));
+    statement->type = DOWHILE;
+    statement->condition = cond;
+    statement->singleBody = stmt;
+    statement->complexBody = NULL;
+    statement->expression = NULL;
+    statement->id = ID++;
+    statement->next = NULL;
+    return statement;
+}
+
+/*! Создать узел StatementNode для цикла do..while со списком Statement (BlockStatement) в качестве тела.
+* \param[in] cond Условие выполнения цикла - указатель на узел  Expression.
+* \param[in] stmtList Тело цикла, состоящее из узла StatementList.
+* \return Созданный узел Statement.
+*/
+struct StatementNode * createStatementFromDoWhileWithComplexBody(struct ExpressionNode * cond, struct StatementListNode * stmtList)
+{
+    struct StatementNode * statement = (struct StatementNode*)malloc(sizeof(struct StatementNode));
+    statement->type = DOWHILE;
+    statement->condition = cond;
+    statement->singleBody = NULL;
+    statement->complexBody = stmtList;
+    statement->expression = NULL;
+    statement->id = ID++;
+    statement->next = NULL;
+    return statement;
+}
+
 /*! Создать пустой узел Statement.
 * \return указатель на пустой узел Statement.
 */

@@ -309,6 +309,20 @@ struct StatementNode * createStatementFromWhileWithSingleBody(struct ExpressionN
 */
 struct StatementNode * createStatementFromWhileWithComplexBody(struct ExpressionNode * cond, struct StatementListNode * stmtList);
 
+/*! Создать узел StatementNode для цикла do..while с одним Statement в качесвте тела.
+* \param[in] cond Условие выполнения цикла - указатель на узел  Expression.
+* \param[in] stmt Тело цикла, состоящее из одного узла Statement.
+* \return Созданный узел Statement.
+*/
+struct StatementNode * createStatementFromDoWhileWithSingleBody(struct ExpressionNode * cond, struct StatementNode * stmt);
+
+/*! Создать узел StatementNode для цикла do..while со списком Statement (BlockStatement) в качестве тела.
+* \param[in] cond Условие выполнения цикла - указатель на узел  Expression.
+* \param[in] stmtList Тело цикла, состоящее из узла StatementList.
+* \return Созданный узел Statement.
+*/
+struct StatementNode * createStatementFromDoWhileWithComplexBody(struct ExpressionNode * cond, struct StatementListNode * stmtList);
+
 /*! Создать пустой узел Statement.
 * \return указатель на пустой узел Statement.
 */
