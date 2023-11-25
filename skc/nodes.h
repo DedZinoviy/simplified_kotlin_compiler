@@ -120,6 +120,7 @@ enum StatementType
 };
 
 struct StatementListNode;
+struct VarDeclarationListNode;
 
 /*! \brief Структура узла Statement. */
 struct StatementNode
@@ -150,6 +151,9 @@ struct StatementNode
 
     /// Указатель на следующий Statement в списке StatementList (использовать при работе со списком Statement).
     struct StatementNode * next;
+
+    /// Указатель на список переменных.
+    struct VarDeclarationListNode  * varDeclList;
 };
 
 /*------------------------------------ StatementList -------------------------------------*/

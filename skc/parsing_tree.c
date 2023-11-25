@@ -719,6 +719,7 @@ struct StatementNode * createStatementFromExpression(struct ExpressionNode * exp
     stmt->complexBody = NULL;
     stmt->id = ID++;
     stmt->next = NULL;
+    stmt->varDeclList = NULL;
     return stmt;
 }
 
@@ -737,6 +738,7 @@ struct StatementNode * createStatementFromWhileWithSingleBody(struct ExpressionN
     statement->expression = NULL;
     statement->id = ID++;
     statement->next = NULL;
+    stmt->varDeclList = NULL;
     return statement;
 }
 
@@ -755,6 +757,7 @@ struct StatementNode * createStatementFromWhileWithComplexBody(struct Expression
     statement->expression = NULL;
     statement->id = ID++;
     statement->next = NULL;
+    statement->varDeclList = NULL;
     return statement;
 }
 
@@ -773,6 +776,7 @@ struct StatementNode * createStatementFromDoWhileWithSingleBody(struct Expressio
     statement->expression = NULL;
     statement->id = ID++;
     statement->next = NULL;
+    stmt->varDeclList = NULL;
     return statement;
 }
 
@@ -791,6 +795,7 @@ struct StatementNode * createStatementFromDoWhileWithComplexBody(struct Expressi
     statement->expression = NULL;
     statement->id = ID++;
     statement->next = NULL;
+    statement->varDeclList = NULL;
     return statement;
 }
 
@@ -807,6 +812,7 @@ struct StatementNode * createEmptyStatement()
     node->complexBody = NULL;
     node->singleBody = NULL;
     node->next= NULL;
+    node->varDeclList = NULL;
     return node;
 }
 
@@ -826,6 +832,7 @@ struct StatementNode * createValStatement(char * valId, struct ExpressionNode * 
     node->singleBody = NULL;
     node->expression = expr;
     node->varValId = valId;
+    node->varDeclList = NULL;
     return node;
 }
 
@@ -847,6 +854,7 @@ struct StatementNode * createValStatementWithType(char * valId, char * type ,str
     node->expression = expr;
     node->varValId = valId;
     node->varValType = type;
+    node->varDeclList = NULL;
     return node;
 }
 
@@ -867,6 +875,7 @@ struct StatementNode * createValStatementFromVarDeclaration(struct VarDeclaratio
     node->condition = NULL;
     node->complexBody = NULL;
     node->singleBody = NULL;
+    node->varDeclList = NULL;
     return node;
 }
 
@@ -886,6 +895,7 @@ struct StatementNode * createVarStatement(char * varId, struct ExpressionNode * 
     node->singleBody = NULL;
     node->expression = expr;
     node->varValId = varId;
+    node->varDeclList = NULL;
     return node;
 }
 
@@ -907,6 +917,7 @@ struct StatementNode * createVarStatementWithType(char * varId, char * type ,str
     node->expression = expr;
     node->varValId = varId;
     node->varValType = type;
+    node->varDeclList = NULL;
     return node;
 }
 
@@ -927,6 +938,7 @@ struct StatementNode * createVarStatementFromVarDeclaration(struct VarDeclaratio
     node->condition = NULL;
     node->complexBody = NULL;
     node->singleBody = NULL;
+    node->varDeclList = NULL;
     return node;
 }
 
