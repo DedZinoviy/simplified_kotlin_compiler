@@ -77,8 +77,14 @@ var {printf("(%s) - VAR_KEY_WORD\n", yytext);}
 when {printf("(%s) - WHEN_KEY_WORD\n", yytext);}
 while {printf("(%s) - WHILE_KEY_WORD\n", yytext);}
 
-true {printf("(%s) - TRUE_KEY_WORD\n", yytext);}
-false {printf("(%s) - FALSE_KEY_WORD\n", yytext);}
+true {
+    printf("(%s) - TRUE_KEY_WORD\n", yytext);
+    return TRUE_LITERAL;
+}
+false {
+    printf("(%s) - FALSE_KEY_WORD\n", yytext);
+    return FALSE_LITERAL;
+}
 
 \/\* {bufferString[0] = 0; multilineBegin = line; yy_push_state(MULTILINE_COMMENT);}
 <MULTILINE_COMMENT>[^*\n]+ {strcat(bufferString, yytext);}
@@ -123,17 +129,38 @@ false {printf("(%s) - FALSE_KEY_WORD\n", yytext);}
     printf("(%s) - LESS_OPERATOR\n", yytext);
     return '<';
 }
-\!\= {printf("(%s) - NOT_EQUAL_OPERATOR\n", yytext);}
-\=\= {printf("(%s) - EQUAL_OPERATOR\n", yytext);}
+\!\= {
+    printf("(%s) - NOT_EQUAL_OPERATOR\n", yytext);
+    return NOT_EQUAL;
+}
+\=\= {
+    printf("(%s) - EQUAL_OPERATOR\n", yytext);
+    return EQUAL;
+}
 \% {
     printf("(%s) - MOD_OPERATOR\n", yytext);
     return '%';
 }
-\/\= {printf("(%s) - DIV_ASSIGNMENT_OPERATOR\n", yytext);}
-\+\= {printf("(%s) - PLUS_ASSIGNMENT_OPERATOR\n", yytext);}
-\*\= {printf("(%s) - MUL_ASSIGNMENT_OPERATOR\n", yytext);}
-\-\= {printf("(%s) - MINUS_ASSIGNMENT_OPERATOR\n", yytext);}
-\%\= {printf("(%s) - MOD_ASSIGNMENT_OPERATOR\n", yytext);}
+\/\= {
+    printf("(%s) - DIV_ASSIGNMENT_OPERATOR\n", yytext);
+    return DIV_ASSIGNMENT;
+}
+\+\= {
+    printf("(%s) - PLUS_ASSIGNMENT_OPERATOR\n", yytext);
+    return PLUS_ASSIGNMENT;
+}
+\*\= {
+    printf("(%s) - MUL_ASSIGNMENT_OPERATOR\n", yytext);
+    return MUL_ASSIGNMENT;
+}
+\-\= {
+    printf("(%s) - MINUS_ASSIGNMENT_OPERATOR\n", yytext);
+    return MINUS_ASSIGNMENT;
+}
+\%\= {
+    printf("(%s) - MOD_ASSIGNMENT_OPERATOR\n", yytext);
+    return MOD_ASSIGNMENT;
+}
 
 <INITIAL>\{ {
     printf("(%s) - LEFT_BRACE\n", yytext);
@@ -172,8 +199,14 @@ false {printf("(%s) - FALSE_KEY_WORD\n", yytext);}
     return ',';
 }
 
-\+\+ {printf("(%s) - INCREMENT_OPERATOR\n", yytext);}
-\-\- {printf("(%s) - DECREMENT_OPERATOR\n", yytext);}
+\+\+ {
+    printf("(%s) - INCREMENT_OPERATOR\n", yytext);
+    return INCREMENT;
+}
+\-\- {
+    printf("(%s) - DECREMENT_OPERATOR\n", yytext);
+    return DECREMENT;
+}
 
 \=\=\= {printf("(%s) - REF_EQUAL_OPERATOR\n", yytext);}
 \!\=\= {printf("(%s) - REF_NOT_EQUAL_OPERATOR\n", yytext);}
