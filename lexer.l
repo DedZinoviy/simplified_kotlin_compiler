@@ -93,40 +93,84 @@ false {printf("(%s) - FALSE_KEY_WORD\n", yytext);}
 <END_OF_LINE_COMMENT>[\r\n] {printf("(%s) - END_OF_LINE_COMMENT\n", bufferString);  line += 1; yy_pop_state();}
 <END_OF_LINE_COMMENT><<EOF>> {printf("(%s) - END_OF_LINE_COMMENT\n", bufferString); BEGIN(INITIAL);}
 
-\+ {printf("(%s) - PLUS_OPERATOR\n", yytext);}
-\- {printf("(%s) - MINUS_OPERATOR\n", yytext);}
-\* {printf("(%s) - MUL_OPERATOR\n", yytext);}
-\/ {printf("(%s) - DIV_OPERATOR\n", yytext);}
-\= {printf("(%s) - ASSIGNMENT_OPERATOR\n", yytext);}
+\+ {
+    printf("(%s) - PLUS_OPERATOR\n", yytext);
+    return '+';
+}
+\- {
+    printf("(%s) - MINUS_OPERATOR\n", yytext);
+    return '-';
+}
+\* {
+    printf("(%s) - MUL_OPERATOR\n", yytext);
+    return '*';
+}
+\/ {
+    printf("(%s) - DIV_OPERATOR\n", yytext);
+    return '/';
+}
+\= {
+    printf("(%s) - ASSIGNMENT_OPERATOR\n", yytext);
+    return '=';
+}
 \>\= {printf("(%s) - GREATER_EQUAL_OPERATOR\n", yytext);}
 \<\= {printf("(%s) - LESS_EQUAL_OPERATOR\n", yytext);}
-\> {printf("(%s) - GREATER_OPERATOR\n", yytext);}
-\< {printf("(%s) - LESS_OPERATOR\n", yytext);}
+\> {
+    printf("(%s) - GREATER_OPERATOR\n", yytext);
+    return '>';
+}
+\< {
+    printf("(%s) - LESS_OPERATOR\n", yytext);
+    return '<';
+}
 \!\= {printf("(%s) - NOT_EQUAL_OPERATOR\n", yytext);}
 \=\= {printf("(%s) - EQUAL_OPERATOR\n", yytext);}
-\% {printf("(%s) - MOD_OPERATOR\n", yytext);}
+\% {
+    printf("(%s) - MOD_OPERATOR\n", yytext);
+    return '%';
+}
 \/\= {printf("(%s) - DIV_ASSIGNMENT_OPERATOR\n", yytext);}
 \+\= {printf("(%s) - PLUS_ASSIGNMENT_OPERATOR\n", yytext);}
 \*\= {printf("(%s) - MUL_ASSIGNMENT_OPERATOR\n", yytext);}
 \-\= {printf("(%s) - MINUS_ASSIGNMENT_OPERATOR\n", yytext);}
 \%\= {printf("(%s) - MOD_ASSIGNMENT_OPERATOR\n", yytext);}
 
-<INITIAL>\{ {printf("(%s) - LEFT_BRACE\n", yytext);}
-<INITIAL>\} {printf("(%s) - RIGHT_BRACE\n", yytext);}
+<INITIAL>\{ {
+    printf("(%s) - LEFT_BRACE\n", yytext);
+    return '{';
+}
+<INITIAL>\} {
+    printf("(%s) - RIGHT_BRACE\n", yytext);
+    return '}';
+}
 \[ {printf("(%s) - LEFT_SQUARE_BRACKET\n", yytext);}
 \] {printf("(%s) - RIGHT_SQUARE_BRACKET\n", yytext);}
 \( {
     printf("(%s) - LEFT_ROUND_BRACKET\n", yytext);
     yy_push_state(INBRACKET);
+    return '(';
 }
 \) {
     printf("(%s) - RIGHT_ROUND_BRACKET\n", yytext);
     yy_pop_state();
+    return ')';
 }
-\: {printf("(%s) - COLON\n", yytext);}
-\; {printf("(%s) - SEMICOLON\n", yytext);}
-\. {printf("(%s) - DOT\n", yytext);}
-\, {printf("(%s) - COMMA\n", yytext);}
+\: {
+    printf("(%s) - COLON\n", yytext);
+    return ':';
+}
+\; {
+    printf("(%s) - SEMICOLON\n", yytext);
+    return ';';
+}
+\. {
+    printf("(%s) - DOT\n", yytext);
+    return '.';
+}
+\, {
+    printf("(%s) - COMMA\n", yytext);
+    return ',';
+}
 
 \+\+ {printf("(%s) - INCREMENT_OPERATOR\n", yytext);}
 \-\- {printf("(%s) - DECREMENT_OPERATOR\n", yytext);}
