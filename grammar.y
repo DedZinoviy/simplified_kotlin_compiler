@@ -15,6 +15,7 @@
        struct StatementNode * statement;
        struct StatementListNode * stmtList;
        struct VarDeclarationNode * varDecl;
+       struct VarDeclarationListNode * varDeclList;
 }
 
 %token IF ELSE VAL VAR CLASS PUBLIC PROTECTED PRIVATE INTERNAL ENDL WHILE DO FUNC FOR SUPER THIS OVERRIDE OPEN
@@ -48,6 +49,7 @@
 %type <statement>Statement WhileStatement DoWhileStatement ForStatement ValStmt VarStmt MultiDeclararion
 %type <stmtList>StatementList BlockStatement
 %type <varDecl>VarDeclaration
+%type <varDeclList>VarDeclarationList VarDeclIdList
 
 %% 
 KotlinFile: KotlinFileVisibilityElementList
@@ -167,10 +169,10 @@ VarStmt: VAR EndlOpt VarDeclaration EndlList {$$ = createVarStatementFromVarDecl
        | VAR EndlOpt VarDeclaration EndlOpt '=' EndlOpt SimpleExpression ';' EndlOpt {$$ = createVarStatementFromVarDeclaration($3, $7);}
        ; 
 
-VarDeclIdList: ID
-             | VarDeclaration
-             | VarDeclIdList ',' ID
-             | VarDeclIdList ',' VarDeclaration
+VarDeclIdList: ID {$$ = createVarDeclarationListNode(createVarDeclarationNode($1, NULL));}
+             | VarDeclaration {$$ = createVarDeclarationListNode($1);}
+             | VarDeclIdList ',' ID {$$ = addVarDeclToVarDeclarationListNode($1, createVarDeclarationNode($1, $3));}
+             | VarDeclIdList ',' VarDeclaration {$$ = addVarDeclToVarDeclarationListNode($1, $3);}
              ;
 
 MultiDeclararion: VAL EndlOpt '('VarDeclIdList')' EndlOpt '=' EndlOpt SimpleExpression EndlList
@@ -182,8 +184,8 @@ MultiDeclararion: VAL EndlOpt '('VarDeclIdList')' EndlOpt '=' EndlOpt SimpleExpr
 VarDeclaration: ID EndlOpt ':' EndlOpt ID {$$ = createVarDeclarationNode($1, $5);}
               ;
 
-VarDeclarationList: VarDeclaration
-                  | VarDeclarationList EndlOpt ',' EndlOpt VarDeclaration
+VarDeclarationList: VarDeclaration {$$ = createVarDeclarationListNode($1);}
+                  | VarDeclarationList EndlOpt ',' EndlOpt VarDeclaration {$$ = addVarDeclToVarDeclarationListNode($1, $5);}
                   ;
 
 FunctionDeclaration: FUNC EndlOpt ID EndlOpt '(' EndlOpt ')' EndlOpt BlockStatement
