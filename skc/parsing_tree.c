@@ -942,6 +942,50 @@ struct StatementNode * createVarStatementFromVarDeclaration(struct VarDeclaratio
     return node;
 }
 
+/*! Создать узел Statement на основе цикла FOR с простым телом.
+* \param[in] list указатель на список переменных, работу по которым производит цикл FOR.
+* \param[in] cond указатель на узел условия работы цикла FOR.
+* \param[in] stmt Тело цикла, состоящее из одного узла Statement.
+* \return указатель на созданный узел Statement цикла FOR.
+*/
+struct StatementNode * createForStatementWithSingleBody(struct VarDeclarationListNode * list, struct ExpressionNode * cond, struct StatementNode * stmt)
+{
+    struct StatementNode * node = (struct StatementNode*)malloc(sizeof(struct StatementNode));
+    node->id = ID++;
+    node->type = FOR;
+    node->next = NULL;
+    node->varValId = NULL;
+    node->varValType = NULL;
+    node->expression = NULL;
+    node->condition = cond;
+    node->singleBody = stmt;
+    node->complexBody = NULL;
+    node->varDeclList = list;
+    return node;
+}
+
+/*! Создать узел Statement на основе цикла FOR с простым телом.
+* \param[in] varDeclList указатель на список переменных, работу по которым производит цикл FOR.
+* \param[in] cond указатель на узел условия работы цикла FOR.
+* \param[in] stmtList Тело цикла, состоящее из узла StatementList.
+* \return указатель на созданный узел Statement цикла FOR.
+*/
+struct StatementNode * createForStatementWithComplexBody(struct VarDeclarationListNode * varDeclList, struct ExpressionNode * cond, struct StatementListNode * stmtList)
+{
+    struct StatementNode * node = (struct StatementNode*)malloc(sizeof(struct StatementNode));
+    node->id = ID++;
+    node->type = FOR;
+    node->next = NULL;
+    node->varValId = NULL;
+    node->varValType = NULL;
+    node->expression = NULL;
+    node->condition = cond;
+    node->singleBody = NULL;
+    node->complexBody = stmtList;
+    node->varDeclList = varDeclList;
+    return node;
+}
+
 
 
 /*------------------------------------ StatementList -------------------------------------*/

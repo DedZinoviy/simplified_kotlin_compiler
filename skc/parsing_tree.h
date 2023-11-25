@@ -372,6 +372,22 @@ struct StatementNode * createVarStatementWithType(char * varId, char * type ,str
 */
 struct StatementNode * createVarStatementFromVarDeclaration(struct VarDeclarationNode * decl, struct ExpressionNode * expr);
 
+/*! Создать узел Statement на основе цикла FOR с простым телом.
+* \param[in] list указатель на список переменных, работу по которым производит цикл FOR.
+* \param[in] cond указатель на узел условия работы цикла FOR.
+* \param[in] stmt Тело цикла, состоящее из одного узла Statement.
+* \return указатель на созданный узел Statement цикла FOR.
+*/
+struct StatementNode * createForStatementWithSingleBody(struct VarDeclarationListNode * list, struct ExpressionNode * cond, struct StatementNode * stmt);
+
+/*! Создать узел Statement на основе цикла FOR с простым телом.
+* \param[in] varDeclList указатель на список переменных, работу по которым производит цикл FOR.
+* \param[in] cond указатель на узел условия работы цикла FOR.
+* \param[in] stmtList Тело цикла, состоящее из узла StatementList.
+* \return указатель на созданный узел Statement цикла FOR.
+*/
+struct StatementNode * createForStatementWithComplexBody(struct VarDeclarationListNode * varDeclList, struct ExpressionNode * cond, struct StatementListNode * stmtList);
+
 
 
 /*------------------------------------ StatementList -------------------------------------*/
