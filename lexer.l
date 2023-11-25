@@ -48,10 +48,16 @@ as\? {printf("(%s) - AS?_KEY_WORD\n", yytext);}
 break {printf("(%s) - BREAK_KEY_WORD\n", yytext);}
 class {printf("(%s) - CLASS_KEY_WORD\n", yytext);}
 continue {printf("(%s) - CONTINUE_KEY_WORD\n", yytext);}
-do {printf("(%s) - DO_KEY_WORD\n", yytext);}
+do {
+    printf("(%s) - DO_KEY_WORD\n", yytext);
+    return DO;
+}
 else {printf("(%s) - ELSE_KEY_WORD\n", yytext);}
 for {printf("(%s) - FOR_KEY_WORD\n", yytext);}
-fun {printf("(%s) - FUN_KEY_WORD\n", yytext);}
+fun {
+    printf("(%s) - FUN_KEY_WORD\n", yytext);
+    return FUNC;
+}
 if {printf("(%s) - IF_KEY_WORD\n", yytext);}
 in {printf("(%s) - IN_KEY_WORD\n", yytext);}
 \!in {printf("(%s) - !IN_KEY_WORD\n", yytext);}
@@ -72,10 +78,19 @@ this {printf("(%s) - THIS_KEY_WORD\n", yytext);}
 throw {printf("(%s) - THROW_KEY_WORD\n", yytext);}
 try {printf("(%s) - TRY_KEY_WORD\n", yytext);}
 typealias {printf("(%s) - TYPEALIAS_KEY_WORD\n", yytext);}
-val {printf("(%s) - VAL_KEY_WORD\n", yytext);}
-var {printf("(%s) - VAR_KEY_WORD\n", yytext);}
+val {
+    printf("(%s) - VAL_KEY_WORD\n", yytext);
+    return VAL;
+}
+var {
+    printf("(%s) - VAR_KEY_WORD\n", yytext);
+    return VAR;
+}
 when {printf("(%s) - WHEN_KEY_WORD\n", yytext);}
-while {printf("(%s) - WHILE_KEY_WORD\n", yytext);}
+while {
+    printf("(%s) - WHILE_KEY_WORD\n", yytext);
+    return WHILE;
+}
 
 true {
     printf("(%s) - TRUE_KEY_WORD\n", yytext);
