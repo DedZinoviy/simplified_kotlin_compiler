@@ -1210,3 +1210,48 @@ struct KotlinFileElementNode * createElementFromFunction(struct ModifierListNode
     node->type = FUNCTION;
     return node;
 }
+
+
+
+/*------------------------------------ KotlinFileElementList -------------------------------------*/
+
+/*! Создать узел списка элементов файла Kotlin на основе элемента Kotlin.
+* \param[in] elem элемент файла Kotlin, на основе которого создается список элементов Kotlin.
+* \return указатель на список элементов файла Kotlin.
+*/
+struct KotlinFileElementListNode * createKotlinFileElementListNode(struct KotlinFileElementNode * elem)
+{
+    struct KotlinFileElementListNode * node = (struct KotlinFileElementListNode *)malloc(sizeof(struct KotlinFileElementListNode));
+    node->id = ID++;
+    node->first = elem;
+    node->last = elem;
+}
+
+/*! Добавить элемент файла Kotlin к списку элементов файла Kotlin.
+* \param[in] elemList список элементов файла Kotlin, к которому добавляется новый элемент.
+* \param[in] elem новый добавляемый элемет файла Kotlin.
+* \return указатель на обновленный список элементов.
+*/
+struct KotlinFileElementListNode * addKotlinFileElementToList(struct KotlinFileElementListNode * elemList, struct KotlinFileElementNode * elem)
+{
+    elemList->last->next = elem;
+    elemList->last = elem;
+    return elemList;
+}
+
+
+
+/*------------------------------------ KotlinFile -------------------------------------*/
+
+/*! Создать корневой узел файла Kotlin на основе списка элементов файла.
+* \param[in] elemList список элементов файла Kotlin, на основе которого создается файл Kotlin.
+* \return указатель на корневой узел файла Kotlin.
+*/
+struct KotlinFileNode * createKotlinFileNode(struct KotlinFileElementListNode * elemList)
+{
+    struct KotlinFileNode * node = (struct KotlinFileNode *)malloc(sizeof(struct KotlinFileNode));
+    node->id = ID++;
+    node->elemList = elemList;
+    root = node;
+    return node;
+}

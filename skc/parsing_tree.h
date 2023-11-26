@@ -1,5 +1,8 @@
 #include "nodes.h"
 
+/// Ссылка на корневой узел программы.
+struct KotlinFileNode * root;
+
 /*------------------------------------ Expression -------------------------------------*/
 
 /*! Создать узел идентификатора.
@@ -507,3 +510,30 @@ struct ModifierListNode * addModifierToList(struct ModifierListNode * modList, s
 * \return указатель на экземпляр структуры-элемента Kotlin.
 */
 struct KotlinFileElementNode * createElementFromFunction(struct ModifierListNode * modList, struct FunctionNode * function);
+
+
+
+/*------------------------------------ KotlinFileElementList -------------------------------------*/
+
+/*! Создать узел списка элементов файла Kotlin на основе элемента Kotlin.
+* \param[in] elem элемент файла Kotlin, на основе которого создается список элементов Kotlin.
+* \return указатель на список элементов файла Kotlin.
+*/
+struct KotlinFileElementListNode * createKotlinFileElementListNode(struct KotlinFileElementNode * elem);
+
+/*! Добавить элемент файла Kotlin к списку элементов файла Kotlin.
+* \param[in] elemList список элементов файла Kotlin, к которому добавляется новый элемент.
+* \param[in] elem новый добавляемый элемет файла Kotlin.
+* \return указатель на обновленный список элементов.
+*/
+struct KotlinFileElementListNode * addKotlinFileElementToList(struct KotlinFileElementListNode * elemList, struct KotlinFileElementNode * elem);
+
+
+
+/*------------------------------------ KotlinFile -------------------------------------*/
+
+/*! Создать корневой узел файла Kotlin на основе списка элементов файла.
+* \param[in] elemList список элементов файла Kotlin, на основе которого создается файл Kotlin.
+* \return указатель на корневой узел файла Kotlin.
+*/
+struct KotlinFileNode * createKotlinFileNode(struct KotlinFileElementListNode * elemList);
