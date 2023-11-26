@@ -1084,3 +1084,73 @@ struct FunctionNode * createFunctionNode(char * ident, struct VarDeclarationList
     node->body = bod;
     return node;
 }
+
+
+
+/*------------------------------------ Modifier -------------------------------------*/
+
+/*! Создать узел модификатора PRIVATE.
+* \return указатель на узел модификатора PRIVATE.
+*/
+struct ModifierNode * createPrivateModiferNode()
+{
+    struct ModifierNode * node = (struct ModifierNode*)malloc(sizeof(struct ModifierNode));
+    node->id = ID++;
+    node->type = PRIVATE;
+    return node;
+}
+
+/*! Создать узел модификатора PUBLIC.
+* \return указатель на узел модификатора PUBLIC.
+*/
+struct ModifierNode * createPublicModiferNode()
+{
+    struct ModifierNode * node = (struct ModifierNode*)malloc(sizeof(struct ModifierNode));
+    node->id = ID++;
+    node->type = PUBLIC;
+    return node;
+}
+
+/*! Создать узел модификатора PROTECTED.
+* \return указатель на узел модификатора PROTECTED.
+*/
+struct ModifierNode * createProtectedeModiferNode()
+{
+    struct ModifierNode * node = (struct ModifierNode*)malloc(sizeof(struct ModifierNode));
+    node->id = ID++;
+    node->type = PROTECTED;
+    return node;
+}
+
+/*! Создать узел модификатора INTERNAL.
+* \return указатель на узел модификатора INTERNAL.
+*/
+struct ModifierNode * createInternalModiferNode()
+{
+    struct ModifierNode * node = (struct ModifierNode*)malloc(sizeof(struct ModifierNode));
+    node->id = ID++;
+    node->type = INTERNAL;
+    return node;
+}
+
+/*! Создать узел модификатора OVERRIDE.
+* \return указатель на узел модификатора OVERRIDE.
+*/
+struct ModifierNode * createOverrideModiferNode()
+{
+    struct ModifierNode * node = (struct ModifierNode*)malloc(sizeof(struct ModifierNode));
+    node->id = ID++;
+    node->type = OVERRIDE;
+    return node;
+}
+
+/*! Создать узел модификатора OPEN.
+* \return указатель на узел модификатора OPEN.
+*/
+struct ModifierNode * createOpenModiferNode()
+{
+    struct ModifierNode * node = (struct ModifierNode*)malloc(sizeof(struct ModifierNode));
+    node->id = ID++;
+    node->type = OPEN;
+    return node;
+}

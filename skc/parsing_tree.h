@@ -445,3 +445,37 @@ struct VarDeclarationListNode * addVarDeclToVarDeclarationListNode(struct VarDec
 * \return Указатель на созданный узел функции.
 */
 struct FunctionNode * createFunctionNode(char * ident, struct VarDeclarationListNode * pars, char * ret, struct StatementListNode * bod);
+
+
+
+/*------------------------------------ Modifier -------------------------------------*/
+
+/*! Создать узел модификатора PRIVATE.
+* \return указатель на узел модификатора PRIVATE.
+*/
+struct ModifierNode * createPrivateModiferNode();
+
+/*! Создать узел модификатора PUBLIC.
+* \return указатель на узел модификатора PUBLIC.
+*/
+struct ModifierNode * createPublicModiferNode();
+
+/*! Создать узел модификатора PROTECTED.
+* \return указатель на узел модификатора PROTECTED.
+*/
+struct ModifierNode * createProtectedeModiferNode();
+
+/*! Создать узел модификатора INTERNAL.
+* \return указатель на узел модификатора INTERNAL.
+*/
+struct ModifierNode * createInternalModiferNode();
+
+/*! Создать узел модификатора OVERRIDE.
+* \return указатель на узел модификатора OVERRIDE.
+*/
+struct ModifierNode * createOverrideModiferNode();
+
+/*! Создать узел модификатора OPEN.
+* \return указатель на узел модификатора OPEN.
+*/
+struct ModifierNode * createOpenModiferNode();
