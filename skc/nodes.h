@@ -187,3 +187,45 @@ struct VarDeclarationListNode
     struct VarDeclarationNode * first;
     struct VarDeclarationNode * last;
 };
+
+
+
+/*------------------------------------ Modifier -------------------------------------*/
+
+/// \brief Перечисление типов модификатора.
+enum ModifierType
+{
+    PRIVATE,
+    PUBLIC,
+    INTERNAL,
+    PROTECTED,
+    OPEN,
+    OVERRIDE
+};
+
+/*! \brief Узел единичного модификатора. */
+struct ModifierNode
+{
+    /// Идентификатор узла.
+    int id;
+
+    /// Тип узла.
+    enum ModifierType type;
+};
+
+
+
+/*------------------------------------ ModifierList -------------------------------------*/
+
+/*! \brief Узел списка модификаторов.*/
+struct ModifierListNode
+{
+    /// Идентификатор узла.
+    int id;
+
+    /// Указатель на первый элемент-узел модификатора. 
+    struct ModifierNode * first;
+
+    /// Указатель на последний элемент-узел модификатора.
+    struct ModifierNode * last;
+};
