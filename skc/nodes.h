@@ -229,3 +229,26 @@ struct ModifierListNode
     /// Указатель на последний элемент-узел модификатора.
     struct ModifierNode * last;
 };
+
+
+
+/*------------------------------------ Function -------------------------------------*/
+
+/*! \brief Структура, описывающая функции и методы. */
+struct FunctionNode
+{
+    /// Идентификатор узла.
+    int id;
+
+    /// Идентфикатор (название) функции.
+    char * identifier;
+
+    /// Список параметорв функции.
+    struct VarDeclarationNode * params;
+    
+    /// Возвращаемой значение функции.
+    char * returnValue;
+
+    /// Тело функции.
+    struct StatementListNode * body;
+};
