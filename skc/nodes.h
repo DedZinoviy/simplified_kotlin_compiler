@@ -156,6 +156,8 @@ struct StatementNode
     struct VarDeclarationListNode  * varDeclList;
 };
 
+
+
 /*------------------------------------ StatementList -------------------------------------*/
 
 /*! \brief Структура узла списка Statement. */
@@ -171,20 +173,40 @@ struct StatementListNode
     struct StatementNode * last;
 };
 
+
+
 /*------------------------------------ VarDeclaration -------------------------------------*/
+
+/*! \brief Структура узла, описывающего объявление переменной. */
 struct VarDeclarationNode
 {
+    /// Идентификатор узла.
     int id;
+
+    /// Идентификатор переменной.
     char * identifier;
+
+    /// Тип переменной.
     char * type;
+
+    /// Указатель на следующий узел объявления переменной в списке.
     struct VarDeclarationNode * next;
 };
 
+
+
 /*------------------------------------ VarDeclarationList -------------------------------------*/
+
+/*! \brief Структура, описывающая список объявлений переменных.*/
 struct VarDeclarationListNode
 {
+    /// Идентификатор узла.
     int id;
+
+    /// Указатель на первый узел объявления переменной.
     struct VarDeclarationNode * first;
+
+    /// Указатель на последний узел объявления переменной.
     struct VarDeclarationNode * last;
 };
 
