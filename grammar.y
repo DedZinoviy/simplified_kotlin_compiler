@@ -131,12 +131,12 @@ DoWhileStatement: DO EndlOpt BlockStatement EndlOpt WHILE EndlOpt '(' EndlOpt Si
                 | DO EndlOpt Statement WHILE EndlOpt '(' EndlOpt SimpleExpression EndlOpt ')' ';' EndlOpt {$$ = createStatementFromDoWhileWithSingleBody($8, $3);}
                 ;
 
-ForStatement: FOR '(' ID IN SimpleExpression')' EndlOpt BlockStatement EndlList
-            | FOR '(' ID IN SimpleExpression')' EndlOpt BlockStatement ';' EndlOpt
-            | FOR '(' ID IN SimpleExpression')' EndlOpt Statement
-            | FOR '(' '(' VarDeclIdList ')' IN SimpleExpression')' EndlOpt BlockStatement EndlList
-            | FOR '(' '(' VarDeclIdList ')' IN SimpleExpression')' EndlOpt BlockStatement ';' EndlOpt
-            | FOR '(' '(' VarDeclIdList ')' IN SimpleExpression')' EndlOpt Statement
+ForStatement: FOR '(' ID IN SimpleExpression')' EndlOpt BlockStatement EndlList {$$ = createForStatementWithComplexBody(createVarDeclarationListNode(createVarDeclarationNode($3, NULL)), $5, $8);}
+            | FOR '(' ID IN SimpleExpression')' EndlOpt BlockStatement ';' EndlOpt {$$ = createForStatementWithComplexBody(createVarDeclarationListNode(createVarDeclarationNode($3, NULL)), $5, $8);}
+            | FOR '(' ID IN SimpleExpression')' EndlOpt Statement {$$ = createForStatementWithSingleBody(createVarDeclarationListNode(createVarDeclarationNode($3, NULL)), $5, $8);}
+            | FOR '(' '(' VarDeclIdList ')' IN SimpleExpression')' EndlOpt BlockStatement EndlList {$$ = createForStatementWithComplexBody($4, $7, $10);}
+            | FOR '(' '(' VarDeclIdList ')' IN SimpleExpression')' EndlOpt BlockStatement ';' EndlOpt {$$ = createForStatementWithComplexBody($4, $7, $10);}
+            | FOR '(' '(' VarDeclIdList ')' IN SimpleExpression')' EndlOpt Statement {$$ = createForStatementWithSingleBody($4, $7, $10);}
             ;
 
 StatementList: Statement {$$ = createStatementListNode($1);}
