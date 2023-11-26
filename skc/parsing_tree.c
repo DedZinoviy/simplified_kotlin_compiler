@@ -986,6 +986,48 @@ struct StatementNode * createForStatementWithComplexBody(struct VarDeclarationLi
     return node;
 }
 
+/*! Создать узел Statement для множественного объявления Val.
+* \param[in] vals список объявлений переменных, для которых создается Val.
+* \param[in] expr выражение, результат которого присваивается Val.
+* \return указатель на созданный узел множественного объявления Val.
+*/
+struct StatementNode * createMultiDeclarationWithVal(struct VarDeclarationListNode * vals, struct ExpressionNode * expr)
+{
+    struct StatementNode * node = (struct StatementNode*)malloc(sizeof(struct StatementNode));
+    node->id = ID++;
+    node->next = NULL;
+    node->varDeclList = vals;
+    node->expression = expr;
+    node->type = MULTI_VAL;
+    node->complexBody = NULL;
+    node->condition = NULL;
+    node->singleBody = NULL;
+    node->varValId = NULL;
+    node->varValType = NULL;
+    return node;
+}
+
+/*! Создать узел Statement для множественного объявления Var.
+* \param[in] vars список объявлений переменных, для которых создается Var.
+* \param[in] expr выражение, результат которого присваивается Var.
+* \return указатель на созданный узел множественного объявления Var.
+*/
+struct StatementNode * createMultiDeclarationWithVar(struct VarDeclarationListNode * vars, struct ExpressionNode * expr)
+{
+    struct StatementNode * node = (struct StatementNode*)malloc(sizeof(struct StatementNode));
+    node->id = ID++;
+    node->next = NULL;
+    node->varDeclList = vars;
+    node->expression = expr;
+    node->type = MULTI_VAR;
+    node->complexBody = NULL;
+    node->condition = NULL;
+    node->singleBody = NULL;
+    node->varValId = NULL;
+    node->varValType = NULL;
+    return node;
+}
+
 
 
 /*------------------------------------ StatementList -------------------------------------*/

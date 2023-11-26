@@ -391,6 +391,20 @@ struct StatementNode * createForStatementWithSingleBody(struct VarDeclarationLis
 */
 struct StatementNode * createForStatementWithComplexBody(struct VarDeclarationListNode * varDeclList, struct ExpressionNode * cond, struct StatementListNode * stmtList);
 
+/*! Создать узел Statement для множественного объявления Val.
+* \param[in] vals список объявлений переменных, для которых создается Val.
+* \param[in] expr выражение, результат которого присваивается Val.
+* \return указатель на созданный узел множественного объявления Val.
+*/
+struct StatementNode * createMultiDeclarationWithVal(struct VarDeclarationListNode * vals, struct ExpressionNode * expr);
+
+/*! Создать узел Statement для множественного объявления Var.
+* \param[in] vars список объявлений переменных, для которых создается Var.
+* \param[in] expr выражение, результат которого присваивается Var.
+* \return указатель на созданный узел множественного объявления Var.
+*/
+struct StatementNode * createMultiDeclarationWithVar(struct VarDeclarationListNode * vars, struct ExpressionNode * expr);
+
 
 
 /*------------------------------------ StatementList -------------------------------------*/

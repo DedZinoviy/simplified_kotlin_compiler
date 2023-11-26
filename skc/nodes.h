@@ -116,7 +116,9 @@ enum StatementType
     FOR,
     EMPTY,
     VAR,
-    VAL
+    VAL,
+    MULTI_VAL,
+    MULTI_VAR
 };
 
 struct StatementListNode;
