@@ -233,6 +233,9 @@ struct ModifierNode
 
     /// Тип узла.
     enum ModifierType type;
+
+    /// Указатель на следующий узел модификатора в списке.
+    struct ModifierNode * next;
 };
 
 

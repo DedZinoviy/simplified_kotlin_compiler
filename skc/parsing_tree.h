@@ -479,3 +479,20 @@ struct ModifierNode * createOverrideModiferNode();
 * \return указатель на узел модификатора OPEN.
 */
 struct ModifierNode * createOpenModiferNode();
+
+
+
+/*------------------------------------ ModifierList -------------------------------------*/
+
+/*! Создать новый узел списка модификаторов на основе узла модификатора.
+* \param[in] mod указатель на узел модификатора, на основе которого осздается список.
+* \return Указатель на созданный узел списка модификаторов.
+*/
+struct ModifierListNode * createModifierListNode(struct ModifierNode * mod);
+
+/*! Добавить узел модификатора к списку узлов модификаторов.
+* \param[in] modList список узлов модификаторов, в который добавляется новый модификатор.
+* \param[in] mod добавляемый узел модификатора.
+* \return указатель на обновленный список.
+*/
+struct ModifierListNode * addModifierToList(struct ModifierListNode * modList, struct ModifierNode * mod);

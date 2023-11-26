@@ -1097,6 +1097,7 @@ struct ModifierNode * createPrivateModiferNode()
     struct ModifierNode * node = (struct ModifierNode*)malloc(sizeof(struct ModifierNode));
     node->id = ID++;
     node->type = PRIVATE;
+    node->next = NULL;
     return node;
 }
 
@@ -1108,6 +1109,7 @@ struct ModifierNode * createPublicModiferNode()
     struct ModifierNode * node = (struct ModifierNode*)malloc(sizeof(struct ModifierNode));
     node->id = ID++;
     node->type = PUBLIC;
+    node->next = NULL;
     return node;
 }
 
@@ -1119,6 +1121,7 @@ struct ModifierNode * createProtectedeModiferNode()
     struct ModifierNode * node = (struct ModifierNode*)malloc(sizeof(struct ModifierNode));
     node->id = ID++;
     node->type = PROTECTED;
+    node->next = NULL;
     return node;
 }
 
@@ -1130,6 +1133,7 @@ struct ModifierNode * createInternalModiferNode()
     struct ModifierNode * node = (struct ModifierNode*)malloc(sizeof(struct ModifierNode));
     node->id = ID++;
     node->type = INTERNAL;
+    node->next = NULL;
     return node;
 }
 
@@ -1141,6 +1145,7 @@ struct ModifierNode * createOverrideModiferNode()
     struct ModifierNode * node = (struct ModifierNode*)malloc(sizeof(struct ModifierNode));
     node->id = ID++;
     node->type = OVERRIDE;
+    node->next = NULL;
     return node;
 }
 
@@ -1152,5 +1157,35 @@ struct ModifierNode * createOpenModiferNode()
     struct ModifierNode * node = (struct ModifierNode*)malloc(sizeof(struct ModifierNode));
     node->id = ID++;
     node->type = OPEN;
+    node->next = NULL;
     return node;
+}
+
+
+
+/*------------------------------------ ModifierList -------------------------------------*/
+
+/*! Создать новый узел списка модификаторов на основе узла модификатора.
+* \param[in] mod указатель на узел модификатора, на основе которого осздается список.
+* \return Указатель на созданный узел списка модификаторов.
+*/
+struct ModifierListNode * createModifierListNode(struct ModifierNode * mod)
+{
+    struct ModifierListNode * node = (struct ModifierListNode*)malloc(sizeof(struct ModifierListNode));
+    node->id = ID++;
+    node->first = mod;
+    node->last = mod;
+    return node;
+}
+
+/*! Добавить узел модификатора к списку узлов модификаторов.
+* \param[in] modList список узлов модификаторов, в который добавляется новый модификатор.
+* \param[in] mod добавляемый узел модификатора.
+* \return указатель на обновленный список.
+*/
+struct ModifierListNode * addModifierToList(struct ModifierListNode * modList, struct ModifierNode * mod)
+{
+    modList->last->next = mod;
+    modList->last = mod;
+    return modList;
 }
