@@ -432,3 +432,16 @@ struct VarDeclarationListNode * createVarDeclarationListNode(struct VarDeclarati
 * \return измененный список VarDeclaration (тот же самый, что и параметр list). 
 */
 struct VarDeclarationListNode * addVarDeclToVarDeclarationListNode(struct VarDeclarationListNode * list, struct VarDeclarationNode * varDecl);
+
+
+
+/*------------------------------------ Function -------------------------------------*/
+
+/*! Создать узел функции.
+* \param[in] ident идентификатор (название) функции.
+* \param[in] pars список параметров функции.
+* \param[in] ret возвращаемое значение функции.
+* \param[in] bod тело функции.
+* \return Указатель на созданный узел функции.
+*/
+struct FunctionNode * createFunctionNode(char * ident, struct VarDeclarationListNode * pars, char * ret, struct StatementListNode * bod);

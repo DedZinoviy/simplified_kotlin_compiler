@@ -1062,3 +1062,25 @@ struct VarDeclarationListNode * addVarDeclToVarDeclarationListNode(struct VarDec
     list->last = varDecl;
     return list;
 }
+
+
+
+/*------------------------------------ Function -------------------------------------*/
+
+/*! Создать узел функции.
+* \param[in] ident идентификатор (название) функции.
+* \param[in] pars список параметров функции.
+* \param[in] ret возвращаемое значение функции.
+* \param[in] bod тело функции.
+* \return Указатель на созданный узел функции.
+*/
+struct FunctionNode * createFunctionNode(char * ident, struct VarDeclarationListNode * pars, char * ret, struct StatementListNode * bod)
+{
+    struct FunctionNode * node = (struct FunctionNode*)malloc(sizeof(struct FunctionNode));
+    node->id = ID++;
+    node->identifier = ident;
+    node->params = pars;
+    node->returnValue = ret;
+    node->body = bod;
+    return node;
+}
