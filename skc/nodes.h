@@ -285,3 +285,66 @@ struct ClassNode
     /// Идентификатор узла.
     int id; 
 };
+
+
+/*------------------------------------ KotlinFileElement -------------------------------------*/
+
+/*! \brief Перечисление типа элемента файла Kotlin. */
+enum KotlinFileElementType
+{
+    CLASS,
+    FUNCTION
+};
+
+/*! \brief Структура, описывающая элемент файла Kotlin. */
+struct KotlinFileElementNode
+{
+    /// Идентификатор узла.
+    int id;
+
+    /// Указатель на список модификаторов.
+    struct ModifierListNode * modifiers;
+
+    /// Тип элемента Kotlin.
+    enum KotlinFileElementType type;
+
+    /// Указатель на узел функции, если элемент - функция.
+    struct FunctionNode * func;
+
+    /// Указатель на узел класса, если элемент - класс.
+    struct ClassNode * class;
+
+    /// Указатель на следующий элемент Kotlin в списке элементов.
+    struct KotlinFileElementNode * next;
+};
+
+
+
+/*------------------------------------ KotlinFileElementList -------------------------------------*/
+
+/*! \brief Структура, описывающая список элементов файла Kotlin.*/
+struct KotlinFileElementListNode
+{
+    /// Идентификатор узла.
+    int id;
+
+    /// Указатель на первый элемент списка.
+    struct KotlinFileElementNode * first;
+
+    /// Указатель на последний элемент списка.
+    struct KotlinFileElementNode * last;
+};
+
+
+
+/*------------------------------------ KotlinFile-------------------------------------*/
+
+/*! \brief Структура, описывающая корневой узел программы - файл Kotlin. */
+struct KotlinFileNode
+{
+    /// Идентификатор узла.
+    int id;
+
+    /// Указатель на список элементов Kotlin, из которых состоит файл Kotlin.
+    struct KotlinFileElementListNode * elemList;
+};
