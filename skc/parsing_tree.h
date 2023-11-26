@@ -496,3 +496,14 @@ struct ModifierListNode * createModifierListNode(struct ModifierNode * mod);
 * \return указатель на обновленный список.
 */
 struct ModifierListNode * addModifierToList(struct ModifierListNode * modList, struct ModifierNode * mod);
+
+
+
+/*------------------------------------ KotlinFileElement -------------------------------------*/
+
+/*! Создать элемент файла Kotlin на основе функции.
+* \param[in] modList список модификаторов элемента.
+* \param[in] function функция, на основе которой создается элемент.
+* \return указатель на экземпляр структуры-элемента Kotlin.
+*/
+struct KotlinFileElementNode * createElementFromFunction(struct ModifierListNode * modList, struct FunctionNode * function);
