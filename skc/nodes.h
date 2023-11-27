@@ -271,7 +271,7 @@ struct FunctionNode
     char * identifier;
 
     /// Список параметорв функции.
-    struct VarDeclarationNode * params;
+    struct VarDeclarationListNode * params;
     
     /// Возвращаемой значение функции.
     char * returnValue;
