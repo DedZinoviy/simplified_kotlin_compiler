@@ -610,23 +610,30 @@ false {
 <CHAR>[\n\r] {printf("ERROR: no closing  \' (single-quote) in CHAR in line %d.\n", multilineBegin); line += 1; yy_pop_state(); return -1;}
 <CHAR>\' {
     int buffLen = buff.length;
+    int isOk = 0;
     if(buffLen > 1)
     {
         printf("ERROR: Too many characters in a character literal in line %d.\n", multilineBegin);
-        return -1;
     }
     else if (buffLen <= 0)
     {
         printf("ERROR: empty character literal in line %d.\n", multilineBegin);
-        return -1;
     }
     else
     {
         printf("(%c) - CHAR\n", buff.buffer[0]);
+        isOk = 1;
+    }
+    yy_pop_state();
+    if(isOk) 
+    {        
         yylval.charLit = buff.buffer[0];
         return CHAR_LITERAL;
     }
-    yy_pop_state();
+    else
+    {
+        return -1;
+    }
 }
 <CHAR><<EOF>> {printf("ERROR: no closing \' (single-quote) in CHAR in line %d.\n", multilineBegin); BEGIN(INITIAL); return -1;}
 
