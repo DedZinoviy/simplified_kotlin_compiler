@@ -94,28 +94,55 @@ do {
     return DO;
 }
 else {printf("(%s) - ELSE_KEY_WORD\n", yytext);}
-for {printf("(%s) - FOR_KEY_WORD\n", yytext);}
+for {
+    printf("(%s) - FOR_KEY_WORD\n", yytext);
+    return FOR;
+}
 fun {
     printf("(%s) - FUN_KEY_WORD\n", yytext);
     return FUNC;
 }
 if {printf("(%s) - IF_KEY_WORD\n", yytext);}
-in {printf("(%s) - IN_KEY_WORD\n", yytext);}
+in {
+    printf("(%s) - IN_KEY_WORD\n", yytext);
+    return IN;
+}
 \!in {printf("(%s) - !IN_KEY_WORD\n", yytext);}
 interface {printf("(%s) - INTERFACE_KEY_WORD\n", yytext);}
-internal {printf("(%s) - INTERNAL_KEY_WORD\n", yytext);}
+internal {
+    printf("(%s) - INTERNAL_KEY_WORD\n", yytext);
+    return INTERNAL;
+}
 is {printf("(%s) - IS_KEY_WORD\n", yytext);}
 \!is {printf("(%s) - !IS_KEY_WORD\n", yytext);}
 null {printf("(%s) - NULL_KEY_WORD\n", yytext);}
 object {printf("(%s) - OBJECT_KEY_WORD\n", yytext);}
-open {printf("(%s) - OPEN_KEY_WORD\n", yytext);}
-private {printf("(%s) - PRIVATE_KEY_WORD\n", yytext);}
-protected {printf("(%s) - PROTECTED_KEY_WORD\n", yytext);}
-public {printf("(%s) - PUBLIC_KEY_WORD\n", yytext);}
+open {
+    printf("(%s) - OPEN_KEY_WORD\n", yytext);
+    return OPEN;
+}
+private {
+    printf("(%s) - PRIVATE_KEY_WORD\n", yytext);
+    return PRIVATE;
+}
+protected {
+    printf("(%s) - PROTECTED_KEY_WORD\n", yytext);
+    return PROTECTED;
+}
+public {
+    printf("(%s) - PUBLIC_KEY_WORD\n", yytext);
+    return PUBLIC;
+}
 package {printf("(%s) - PACKAGE_KEY_WORD\n", yytext);}
 return {printf("(%s) - RETURN_KEY_WORD\n", yytext);}
-super {printf("(%s) - SUPER_KEY_WORD\n", yytext);}
-this {printf("(%s) - THIS_KEY_WORD\n", yytext);}
+super {
+    printf("(%s) - SUPER_KEY_WORD\n", yytext);
+    return SUPER;
+}
+this {
+    printf("(%s) - THIS_KEY_WORD\n", yytext);
+    return THIS;
+}
 throw {printf("(%s) - THROW_KEY_WORD\n", yytext);}
 try {printf("(%s) - TRY_KEY_WORD\n", yytext);}
 typealias {printf("(%s) - TYPEALIAS_KEY_WORD\n", yytext);}
@@ -565,6 +592,8 @@ false {
     else
     {
         printf("(%c) - CHAR\n", buff.buffer[0]);
+        yylval.charLit = buff.buffer[0];
+        return CHAR_LITERAL;
     }
     yy_pop_state();
 }
