@@ -56,12 +56,12 @@
 %type <function>FunctionDeclaration
 
 %% 
-KotlinFile: KotlinFileVisibilityElementList
+KotlinFile: KotlinFileElementList
           ;
 
-KotlinFileVisibilityElementList: KotlinFileVisibilityElement
-                               | KotlinFileVisibilityElementList KotlinFileVisibilityElement
-                               ;
+KotlinFileElementList: KotlinFileElement
+                     | KotlinFileElementList KotlinFileElement
+                     ;
 
 ExpressionList: SimpleExpression {$$ = createExpressionListNode($1);}
               | ExpressionList ',' SimpleExpression {$$ = addExpressionToExpressionList($1, $3);}
@@ -237,22 +237,26 @@ ClassDeclaration: CLASS ID
                 | CLASS ID ':' ID '(' VarDeclarationList ')' '{' EndlOpt ClassModifierMemberList '}'
                 ;
 
-OpenClosedClassDeclaration: ClassDeclaration
-                          | OPEN EndlOpt ClassDeclaration
-                          ;
+ElementModifier: PUBLIC
+               | PRIVATE
+               | INTERNAL
+               | OPEN
+               ;
+
+ElementModifierList: ElementModifier
+                   | ElementModifierList EndlOpt ElementModifier
+                   ;
 
 KotlinFileElement: FunctionDeclaration EndlList
-                 | OpenClosedClassDeclaration EndlList
+                 | ClassDeclaration EndlList
                  | FunctionDeclaration ';' EndlOpt
-                 | OpenClosedClassDeclaration ';' EndlOpt
+                 | ClassDeclaration ';' EndlOpt
+                 | ElementModifierList EndlOpt FunctionDeclaration EndlList
+                 | ElementModifierList EndlOpt ClassDeclaration EndlList
+                 | ElementModifierList EndlOpt FunctionDeclaration ';' EndlOpt
+                 | ElementModifierList EndlOpt ClassDeclaration ';' EndlOpt
+                 | ';' EndlOpt
                  ;
-
-KotlinFileVisibilityElement: KotlinFileElement
-                           | PUBLIC KotlinFileElement
-                           | PRIVATE KotlinFileElement
-                           | INTERNAL KotlinFileElement
-                           | ';'
-                           ;
 
 EndlOpt: /* empty */
        | EndlList
