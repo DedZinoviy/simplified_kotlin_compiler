@@ -148,7 +148,7 @@ false {
 <MULTILINE_COMMENT>"*"+\n {line += 1; strcat(bufferString, yytext);}
 <MULTILINE_COMMENT>"*"+[^*/] {strcat(bufferString, yytext);}
 <MULTILINE_COMMENT>"*"+"/" {printf("(%s) - MULTILINE_COMMENT\n", bufferString); yy_pop_state();}
-<MULTILINE_COMMENT><<EOF>> {printf("ERROR: no closing */ in line %d.\n", multilineBegin); BEGIN(INITIAL);}
+<MULTILINE_COMMENT><<EOF>> {printf("ERROR: no closing */ in line %d.\n", multilineBegin); BEGIN(INITIAL); return -1;}
 
 \/\/ {bufferString[0] = 0; yy_push_state(END_OF_LINE_COMMENT);}
 <END_OF_LINE_COMMENT>[^\n]* {strcat(bufferString, yytext);}
@@ -325,11 +325,13 @@ false {
 <INBRACE><<EOF>> {
     printf("ERROR: expecting \"{\"");
     BEGIN(INITIAL);
+    return -1;
 }
 
 <INTERPOLATION><<EOF>> {
     printf("ERROR: expecting \"{\"");
     BEGIN(INITIAL);
+    return -1;
 }
 
 [A-Za-z_][A-Za-z0-9_]* {printf("(%s) - IDENTIFIER\n", yytext);}
@@ -340,6 +342,7 @@ false {
     if (bufferString[0] == '0' && buffLen > 1)
     {
         printf("ERROR: illegal using of zero in INT in line %d.\n", line);
+        return -1;
     }
     else 
     {
@@ -351,6 +354,7 @@ false {
 
 {DIGIT}(\_*{DIGIT})*\_+ {
     printf("ERROR: illegal underscore in INT in line %d.\n", line);
+    return -1;
 }
 
 0(x|X)[0-9a-fA-F](_*[0-9a-fA-F]+)* { 
@@ -363,14 +367,17 @@ false {
 
 0(x|X)\_* {
     printf("ERROR: missing hex int value in line %d.\n", line);
+    return -1;
 }
 
 0(x|X)[0-9a-fA-F](_*[0-9a-fA-F]+)*\_+ {
     printf("ERROR: illegal underscore in INT in line %d.\n", line);
+    return -1;
 }
 
 0(x|X)\_+[0-9a-fA-F](_*[0-9a-fA-F]+)* {
     printf("ERROR: illegal underscore in INT in line %d.\n", line);
+    return -1;
 }
 
 0(b|B)[0-1](_*[0-1]+)* {
@@ -383,18 +390,22 @@ false {
 
 0(b|B)\_* {
     printf("ERROR: missing binary int value in line %d.\n", line);
+    return -1;
 }
 
 0(b|B)[0-1](_*[0-1]+)*\_+ {
     printf("ERROR: illegal underscore in INT in line %d.\n", line);
+    return -1;
 }
 
 0(b|B)\_+[0-1](_*[0-1]+)* {
     printf("ERROR: illegal underscore in INT in line %d.\n", line);
+    return -1;
 }
 
 0(b|B)[_0-9]* {
     printf("ERROR: oot of range binary value in line %d.\n", line);
+    return -1;
 }
 
 (({DIGIT}(\_*{DIGIT})*)?\.)?{DIGIT}(\_*{DIGIT})*((e|E)(\+|\-)?{DIGIT}(\_*{DIGIT})*)? {
@@ -408,22 +419,27 @@ false {
 
 ({DIGIT}(\_*{DIGIT})*\_+)\.{DIGIT}(\_*{DIGIT})*((e|E)(\+|\-)?{DIGIT}(\_*{DIGIT})*)? {
     printf("ERROR: illegal underscore in DOUBLE in line %d.\n", line);
+    return -1;
 }
 
 ({DIGIT}(\_*{DIGIT})*)?\.{DIGIT}(\_*{DIGIT})*\_+((e|E)(\+|\-)?{DIGIT}(\_*{DIGIT})*)? {
     printf("ERROR: illegal underscore in DOUBLE in line %d.\n", line);
+    return -1;
 }
 
 (({DIGIT}(\_*{DIGIT})*)?\.)?{DIGIT}(\_*{DIGIT})*((e|E)(\+|\-)?\_+{DIGIT}(\_*{DIGIT})*) {
     printf("ERROR: illegal underscore in DOUBLE in line %d.\n", line);
+    return -1;
 }
 
 (({DIGIT}(\_*{DIGIT})*)?\.)?{DIGIT}(\_*{DIGIT})*((e|E)(\+|\-)?{DIGIT}(\_*{DIGIT})*\_+) {
     printf("ERROR: illegal underscore in DOUBLE in line %d.\n", line);
+    return -1;
 }
 
 (({DIGIT}(\_*{DIGIT})*)?\.)?{DIGIT}(\_*{DIGIT})*((e|E)(\+|\-)?)(\_)* {
     printf("ERROR: the value is out of range in DOUBLE in line %d.\n", line);
+    return -1;
 }
 
 \"\"\" {
@@ -478,7 +494,7 @@ false {
     yy_pop_state();
     return STRING_LITERAL;
 }
-<MULTILINE_STRING><<EOF>> {printf("ERROR: no closing \"\"\" (three double-quotes) in MULTILINE STRING in line %d.\n", multilineBegin); BEGIN(INITIAL);}
+<MULTILINE_STRING><<EOF>> {printf("ERROR: no closing \"\"\" (three double-quotes) in MULTILINE STRING in line %d.\n", multilineBegin); BEGIN(INITIAL); return -1;}
 
 \" {
     bufferString[0] = 0;
@@ -507,7 +523,7 @@ false {
     bufferString[0] = 0;
 }
 <STRING>\$[^A-Za-z_\{\"]* {appendChars(&buff, yytext);}
-<STRING>[\n\r] {printf("ERROR: no closing \" (double-quote) in STRING in line %d.\n", multilineBegin); line += 1; yy_pop_state();}
+<STRING>[\n\r] {printf("ERROR: no closing \" (double-quote) in STRING in line %d.\n", multilineBegin); line += 1; yy_pop_state(); return -1;}
 <STRING>\" { 
     printf("(");
     printStringBuffer(&buff);
@@ -515,20 +531,22 @@ false {
     printf("(%s) - ESCAPED_STRING_END\n", yytext);
     yy_pop_state();
 }
-<STRING><<EOF>> {printf("ERROR: no closing \" (double-quote) in STRING in line %d.\n", multilineBegin); BEGIN(INITIAL);}
+<STRING><<EOF>> {printf("ERROR: no closing \" (double-quote) in STRING in line %d.\n", multilineBegin); BEGIN(INITIAL); return -1;}
 
 \' {bufferString[0] = 0; multilineBegin = line; clearStringBuffer(&buff); yy_push_state(CHAR);}
 <CHAR>[^\\\'\n\r] {appendChar(&buff, yytext[0]);}
-<CHAR>[\n\r] {printf("ERROR: no closing  \' (single-quote) in CHAR in line %d.\n", multilineBegin); line += 1; yy_pop_state();}
+<CHAR>[\n\r] {printf("ERROR: no closing  \' (single-quote) in CHAR in line %d.\n", multilineBegin); line += 1; yy_pop_state(); return -1;}
 <CHAR>\' {
     int buffLen = buff.length;
     if(buffLen > 1)
     {
         printf("ERROR: Too many characters in a character literal in line %d.\n", multilineBegin);
+        return -1;
     }
     else if (buffLen <= 0)
     {
         printf("ERROR: empty character literal in line %d.\n", multilineBegin);
+        return -1;
     }
     else
     {
@@ -536,7 +554,7 @@ false {
     }
     yy_pop_state();
 }
-<CHAR><<EOF>> {printf("ERROR: no closing \' (single-quote) in CHAR in line %d.\n", multilineBegin); BEGIN(INITIAL);}
+<CHAR><<EOF>> {printf("ERROR: no closing \' (single-quote) in CHAR in line %d.\n", multilineBegin); BEGIN(INITIAL); return -1;}
 
 <STRING,CHAR>\\n {appendChar(&buff, '\n');}
 <STRING,CHAR>\\t {appendChar(&buff, '\t');}
@@ -550,11 +568,13 @@ false {
     if (strlen(yytext) < 4)
     {
         printf("ERROR: Illegal escape \'\\u\' in line %d", line);
+        return -1;
     }
     int value = strtol(yytext+2,NULL, 16);
     if (value > 127)
     {
         printf("ERROR: non-supported UNICODE character in line %d.", line);
+        return -1;
     }
     else
     {
@@ -579,6 +599,7 @@ false {
     bufferString[0] = 0;
     strcat(bufferString, yytext);
     printf("%s - UNRECOGNIZED TOKEN.", bufferString);
+    return -1;
 }
 
 <INITIAL><<EOF>> { return ';';
