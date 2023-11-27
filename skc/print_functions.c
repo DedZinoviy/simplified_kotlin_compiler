@@ -239,6 +239,56 @@ char * generateDotFromStatement(struct StatementNode * stmt)
             res = concat(res, "[label = \"control_body\"];\n");
         }
         break;
+    case FOR:
+        res = concat(res, "[label=\"FOR\"];\n");
+        res = concat(res, generateDotFromVarDeclarationList(stmt->varDeclList));
+        res = concat(res, itoa(stmt->id, strId, 10));
+        res = concat(res, " -> ");
+        res = concat(res, itoa(stmt->varDeclList->id, strId, 10));
+        res = concat(res, "[label = \"vars\"];\n");
+
+        res = concat(res, generateDotFromExpression(stmt->condition));
+        res = concat(res, itoa(stmt->id, strId, 10));
+        res = concat(res, " -> ");
+        res = concat(res, itoa(stmt->condition->id, strId, 10));
+        res = concat(res, "[label = \"condition\"];\n");
+
+        if (stmt->complexBody != NULL) 
+        {
+            res = concat(res, generateDotFromStatementList(stmt->complexBody));
+            res = concat(res, itoa(stmt->id, strId, 10));
+            res = concat(res, " -> ");
+            res = concat(res, itoa(stmt->complexBody->id, strId, 10));
+            res = concat(res, "[label = \"control_body\"];\n");
+        }
+        else if (stmt->singleBody != NULL)
+        {
+            res = concat(res, generateDotFromStatement(stmt->singleBody));
+            res = concat(res, itoa(stmt->id, strId, 10));
+            res = concat(res, " -> ");
+            res = concat(res, itoa(stmt->singleBody->id, strId, 10));
+            res = concat(res, "[label = \"control_body\"];\n");
+        }
+        break;
+    case EMPTY:
+        res = concat(res, "[label=\"empty_stmt\"];\n");
+        break;
+    case VAL:
+        break;
+    case VAR:
+        break;
+    case MULTI_VAL:
+        break;
+    case MULTI_VAR:
+        break;
+    }
+    if(stmt->next != NULL)
+    {
+        res = concat(res, generateDotFromStatement(stmt->next));
+        res = concat(res, itoa(stmt->id, strId, 10));
+        res = concat(res, " -> ");
+        res = concat(res, itoa(stmt->next->id, strId, 10));
+        res = concat(res, "[label = \"next\"];\n");
     }
     return res;
 }
