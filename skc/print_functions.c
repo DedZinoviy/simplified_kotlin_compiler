@@ -457,16 +457,72 @@ char * generateDotFromFunction(struct FunctionNode * node)
     char base[] = "";
     char strId[10];
     char * res = concat(base, itoa(node->id, strId, 10));
-    res = concat(res, "[label=\"Function ");
+    res = concat(res, "[label=\"Function <ident=");
     res = concat(res, node->identifier);
-    res = concat(res, " <return ");
+    res = concat(res, "> <return ");
     res = concat(res, node->returnValue);
     res = concat(res, ">\"];\n");
-    /*Список параметров.*/
+    if (node->params != NULL) /*Список параметров.*/
+    {
+        res = concat(res, generateDotFromVarDeclarationList(node->params));
+        res = concat(res, itoa(node->id, strId, 10));
+        res = concat(res, " -> ");
+        res = concat(res, itoa(node->params->id, strId, 10));
+        res = concat(res, "[label=\"params\"];\n");
+    }
     res = concat(res, generateDotFromStatementList(node->body));
     res = concat(res, itoa(node->id, strId, 10));
     res = concat(res, " -> ");
     res = concat(res, itoa(node->body->id, strId, 10));
     res = concat(res, "[label=\"body\"];\n");
+    return res;
+}
+
+/*! Сгенерировать DOT-строку для узла объявления переменной.
+* \param[in] node Узел объявления переменной.
+* \return DOT-строка с дочерними узлами.
+*/
+char * generateDotFromVarDeclaration(struct VarDeclarationNode * node)
+{
+    char base[] = "";
+    char strId[10];
+    char * res = concat(base, itoa(node->id, strId, 10));
+    res = concat(res, "[label=\"VarDecl <ident=");
+    res = concat(res, node->identifier);
+    if (node->type != NULL)
+    {
+        res = concat(res, "> <type=");
+        res = concat(res, node->type);
+    }
+    res = concat(res, ">];\n");
+    if(node->next != NULL)
+    {
+        res = concat(res, generateDotFromVarDeclaration(node->next));
+        res = concat(res, itoa(node->id, strId, 10));
+        res = concat(res, " -> ");
+        res = concat(res, itoa(node->next->id, strId, 10));
+        res = concat(res, "[label=\"next\"];\n");
+    }
+    return res;
+}
+
+/*! Сгенерировать DOT-строку для узла списка объявлений переменной.
+* \param[in] node Узел списка объявлений переменной.
+* \return DOT-строка с дочерними узлами.
+*/
+char * generateDotFromVarDeclarationList(struct VarDeclarationListNode * node)
+{
+    char base[] = "";
+    char strId[10];
+    char * res = concat(base, itoa(node->id, strId, 10));
+    res = concat(res, "[label=\"VarDeclList\"];\n");
+    if(node->first != NULL)
+    {
+        res = concat(res, generateDotFromVarDeclaration(node->first));
+        res = concat(res, itoa(node->id, strId, 10));
+        res = concat(res, " -> ");
+        res = concat(res, itoa(node->first->id, strId, 10));
+        res = concat(res, "[label=\"first\"];\n");
+    }
     return res;
 }

@@ -74,3 +74,15 @@ char * generateDotFromModifierList(struct ModifierListNode * node);
 * \return DOT-строка с дочерними узлами.
 */
 char * generateDotFromFunction(struct FunctionNode * node);
+
+/*! Сгенерировать DOT-строку для узла объявления переменной.
+* \param[in] node Узел объявления переменной.
+* \return DOT-строка с дочерними узлами.
+*/
+char * generateDotFromVarDeclaration(struct VarDeclarationNode * node);
+
+/*! Сгенерировать DOT-строку для узла списка объявлений переменной.
+* \param[in] node Узел списка объявлений переменной.
+* \return DOT-строка с дочерними узлами.
+*/
+char * generateDotFromVarDeclarationList(struct VarDeclarationListNode * node);
