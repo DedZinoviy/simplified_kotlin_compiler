@@ -16,6 +16,7 @@
        struct StatementListNode * stmtList;
        struct VarDeclarationNode * varDecl;
        struct VarDeclarationListNode * varDeclList;
+       struct ModifierNode * mod;
 }
 
 %token IF ELSE VAL VAR CLASS PUBLIC PROTECTED PRIVATE INTERNAL ENDL WHILE DO FUNC FOR SUPER THIS OVERRIDE OPEN
@@ -176,10 +177,10 @@ VarDeclIdList: ID {$$ = createVarDeclarationListNode(createVarDeclarationNode($1
              | VarDeclIdList ',' VarDeclaration {$$ = addVarDeclToVarDeclarationListNode($1, $3);}
              ;
 
-MultiDeclararion: VAL EndlOpt '('VarDeclIdList')' EndlOpt '=' EndlOpt SimpleExpression EndlList
-                | VAR EndlOpt '('VarDeclIdList')' EndlOpt '=' EndlOpt SimpleExpression EndlList
-                | VAL EndlOpt '('VarDeclIdList')' EndlOpt '=' EndlOpt SimpleExpression ';' EndlOpt 
-                | VAR EndlOpt '('VarDeclIdList')' EndlOpt '=' EndlOpt SimpleExpression ';' EndlOpt
+MultiDeclararion: VAL EndlOpt '(' VarDeclIdList ')' EndlOpt '=' EndlOpt SimpleExpression EndlList {$$ = createMultiDeclarationWithVal($4, $9);}
+                | VAR EndlOpt '(' VarDeclIdList ')' EndlOpt '=' EndlOpt SimpleExpression EndlList {$$ = createMultiDeclarationWithVar($4, $9);}
+                | VAL EndlOpt '(' VarDeclIdList ')' EndlOpt '=' EndlOpt SimpleExpression ';' EndlOpt {$$ = createMultiDeclarationWithVal($4, $9);}
+                | VAR EndlOpt '(' VarDeclIdList ')' EndlOpt '=' EndlOpt SimpleExpression ';' EndlOpt {$$ = createMultiDeclarationWithVar($4, $9);}
                 ;
 
 VarDeclaration: ID EndlOpt ':' EndlOpt ID {$$ = createVarDeclarationNode($1, $5);}
