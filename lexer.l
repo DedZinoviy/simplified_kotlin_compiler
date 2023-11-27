@@ -334,7 +334,13 @@ false {
     return -1;
 }
 
-[A-Za-z_][A-Za-z0-9_]* {printf("(%s) - IDENTIFIER\n", yytext);}
+[A-Za-z_][A-Za-z0-9_]* {
+    printf("(%s) - IDENTIFIER\n", yytext);
+    char * t = (char*)malloc(strlen(yytext) + 1);
+    strcpy(t, yytext);
+    yylval.ident = t;
+    return ID;
+}
 
 {DIGIT}(\_*{DIGIT})* { bufferString[0] = 0;
     strcat(bufferString, yytext);
