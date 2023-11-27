@@ -258,16 +258,26 @@ PrimaryConstructor: CONSTRUCTOR '(' ')'
                   | '(' ')'
                   ;
        
-ClassDeclaration: CLASS ID
-                | CLASS ID '{' EndlOpt '}'
-                | CLASS ID '{' EndlOpt ClassModifierMemberList '}'
-                | CLASS ID PrimaryConstructor '{' EndlOpt '}'
-                | CLASS ID PrimaryConstructor '{' EndlOpt ClassModifierMemberList '}'
-                | CLASS ID ':' ID
-                | CLASS ID ':' ID '{' EndlOpt '}'
-                | CLASS ID ':' ID '{' EndlOpt ClassModifierMemberList '}'
-                | CLASS ID PrimaryConstructor ':' ID '{' EndlOpt '}'
-                | CLASS ID PrimaryConstructor ':' ID  '{' EndlOpt ClassModifierMemberList '}'
+ClassDeclaration: CLASS EndlOpt ID
+                | CLASS EndlOpt ID '{' EndlOpt '}'
+                | CLASS EndlOpt ID '{' EndlOpt ClassModifierMemberList '}'
+                | CLASS EndlOpt ID PrimaryConstructor EndlOpt '{' EndlOpt '}'
+                | CLASS EndlOpt ID PrimaryConstructor EndlOpt '{' EndlOpt ClassModifierMemberList '}'
+                | CLASS EndlOpt ID ':' EndlOpt ID
+                | CLASS EndlOpt ID ':' EndlOpt ID '(' ')'
+                | CLASS EndlOpt ID ':' EndlOpt ID '(' ExpressionList ')'
+                | CLASS EndlOpt ID ':' EndlOpt ID '{' EndlOpt '}'
+                | CLASS EndlOpt ID ':' EndlOpt ID '(' ')' '{' EndlOpt '}'
+                | CLASS EndlOpt ID ':' EndlOpt ID '(' ExpressionList ')' '{' EndlOpt '}'
+                | CLASS EndlOpt ID ':' EndlOpt ID '{' EndlOpt ClassModifierMemberList '}'
+                | CLASS EndlOpt ID ':' EndlOpt ID '(' ')' '{' EndlOpt ClassModifierMemberList '}'
+                | CLASS EndlOpt ID ':' EndlOpt ID '(' ExpressionList ')' '{' EndlOpt ClassModifierMemberList '}'
+                | CLASS EndlOpt ID PrimaryConstructor ':' EndlOpt ID '{' EndlOpt '}'
+                | CLASS EndlOpt ID PrimaryConstructor ':' EndlOpt ID '(' ')' '{' EndlOpt '}'
+                | CLASS EndlOpt ID PrimaryConstructor ':' EndlOpt ID '(' ExpressionList ')' '{' EndlOpt '}'
+                | CLASS EndlOpt ID PrimaryConstructor ':' EndlOpt ID  '{' EndlOpt ClassModifierMemberList '}'
+                | CLASS EndlOpt ID PrimaryConstructor ':' EndlOpt ID '(' ')' '{' EndlOpt ClassModifierMemberList '}'
+                | CLASS EndlOpt ID PrimaryConstructor ':' EndlOpt ID '(' ExpressionList ')' '{' EndlOpt ClassModifierMemberList '}'
                 ;
 
 ElementModifier: PUBLIC {$$ = createPublicModiferNode();}
