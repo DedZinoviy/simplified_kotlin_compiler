@@ -16,6 +16,7 @@
        struct StatementListNode * stmtList;
        struct VarDeclarationNode * varDecl;
        struct VarDeclarationListNode * varDeclList;
+       struct FunctionNode * function;
        struct ModifierNode * mod;
 }
 
@@ -52,6 +53,7 @@
 %type <stmtList>StatementList BlockStatement
 %type <varDecl>VarDeclaration
 %type <varDeclList>VarDeclarationList VarDeclIdList
+%type <function>FunctionDeclaration
 
 %% 
 KotlinFile: KotlinFileVisibilityElementList
@@ -190,10 +192,10 @@ VarDeclarationList: VarDeclaration {$$ = createVarDeclarationListNode($1);}
                   | VarDeclarationList EndlOpt ',' EndlOpt VarDeclaration {$$ = addVarDeclToVarDeclarationListNode($1, $5);}
                   ;
 
-FunctionDeclaration: FUNC EndlOpt ID EndlOpt '(' EndlOpt ')' EndlOpt BlockStatement
-                   | FUNC EndlOpt ID EndlOpt '(' EndlOpt ')' EndlOpt ':' EndlOpt ID EndlOpt BlockStatement
-                   | FUNC EndlOpt ID EndlOpt '(' EndlOpt  VarDeclarationList  EndlOpt ')' EndlOpt BlockStatement
-                   | FUNC EndlOpt ID EndlOpt '(' EndlOpt VarDeclarationList  EndlOpt ')' EndlOpt ':' EndlOpt ID EndlOpt BlockStatement
+FunctionDeclaration: FUNC EndlOpt ID EndlOpt '(' EndlOpt ')' EndlOpt BlockStatement {$$ = createFunctionNode($3, NULL, "Unit", $9);}
+                   | FUNC EndlOpt ID EndlOpt '(' EndlOpt ')' EndlOpt ':' EndlOpt ID EndlOpt BlockStatement {$$ = createFunctionNode($3, NULL, $11, $13);}
+                   | FUNC EndlOpt ID EndlOpt '(' EndlOpt VarDeclarationList EndlOpt ')' EndlOpt BlockStatement {$$ = createFunctionNode($3, $7, "Unit", $11);}
+                   | FUNC EndlOpt ID EndlOpt '(' EndlOpt VarDeclarationList EndlOpt ')' EndlOpt ':' EndlOpt ID EndlOpt BlockStatement {$$ = createFunctionNode($3, $7, $13, $15);}
                    ;
 
 ClassModifierMember: ClassMember
