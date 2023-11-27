@@ -1245,7 +1245,7 @@ struct KotlinFileElementNode * createElementFromFunction(struct ModifierListNode
 {
     struct KotlinFileElementNode * node = (struct KotlinFileElementNode*)malloc(sizeof(struct KotlinFileElementNode));
     node->id = ID++;
-    node->class = NULL;
+    node->clas = NULL;
     node->next = NULL;
     node->modifiers = modList;
     node->func = function;

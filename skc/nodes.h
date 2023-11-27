@@ -317,7 +317,7 @@ struct KotlinFileElementNode
     struct FunctionNode * func;
 
     /// Указатель на узел класса, если элемент - класс.
-    struct ClassNode * class;
+    struct ClassNode * clas;
 
     /// Указатель на следующий элемент Kotlin в списке элементов.
     struct KotlinFileElementNode * next;
