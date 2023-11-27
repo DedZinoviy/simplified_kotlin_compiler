@@ -31,6 +31,16 @@ DIGIT [0-9]
     \param[in] str - исходная строка.
     */
     void removeUnderline(char* str);
+
+    int hasClosingBrace = 0;
+
+    int hasPlus = 0;
+
+    int hasOpenBracket = 0;
+
+    int hasCloseBracket = 0;
+
+    char tempIdent[1024];
     // Блок ключевых слов.
 %}
 
@@ -41,6 +51,37 @@ DIGIT [0-9]
     struct stringBuffer buff = {"", 0}; // Дополнительный буффер для строк.
     int line = 1;
     int multilineBegin;
+%}
+
+%{
+    if(hasClosingBrace != 0)
+    {
+        hasClosingBrace = 0;
+        return '}';
+    }
+    if(hasPlus != 0)
+    {
+        hasPlus = 0;
+        return '+';
+    }
+    if(hasOpenBracket != 0)
+    {
+        hasOpenBracket = 0;
+        return '(';
+    }
+    if(strlen(tempIdent) != 0)
+    {
+        char * t = (char*)malloc(strlen(tempIdent) + 1);
+        strcpy(t, tempIdent);
+        yylval.ident = t;
+        tempIdent[0] = 0;
+        return ID;
+    }
+    if(hasCloseBracket != 0)
+    {
+        hasOpenBracket = 0;
+        return ')';
+    }
 %}
 
 as {printf("(%s) - AS_KEY_WORD\n", yytext);}
@@ -189,7 +230,8 @@ false {
 }
 <INITIAL>\} {
     printf("(%s) - RIGHT_BRACE\n", yytext);
-    return '}';
+    hasClosingBrace = 1;
+    return ';';
 }
 \[ {printf("(%s) - LEFT_SQUARE_BRACKET\n", yytext);}
 \] {printf("(%s) - RIGHT_SQUARE_BRACKET\n", yytext);}
@@ -394,16 +436,32 @@ false {
 <MULTILINE_STRING>[^\$\"\n\r]+ {strcat(bufferString, yytext);}
 <MULTILINE_STRING>\$\{ {
     printf("(%s) - MULTILINE_STRING\n", bufferString);
+    struct stringBuffer * ns = (struct stringBuffer*)malloc(sizeof(struct stringBuffer));
+    strcpy(ns->buffer, bufferString);
+    ns->length = strlen(bufferString);
+    yylval.stringLit = ns;
+    hasPlus = 1;
+    hasOpenBracket = 1;
     printf("(%s) - BEGIN_INTERPOLATION\n", yytext);
     bufferString[0] = 0;
     yy_push_state(INTERPOLATION);
+    return STRING_LITERAL;
 }
 <MULTILINE_STRING>\$[A-Za-z_][A-Za-z0-9_]* {
     printf("(%s) - MULTILINE_STRING\n", bufferString);
+    struct stringBuffer * ns = (struct stringBuffer*)malloc(sizeof(struct stringBuffer));
+    strcpy(ns->buffer, bufferString);
+    ns->length = strlen(bufferString);
+    yylval.stringLit = ns;
+    hasPlus = 1;
+    hasOpenBracket = 1;
+    strcpy(tempIdent, yytext + 1);
+    hasCloseBracket = 1;
     printf("($) - BEGIN_INTERPOLATION\n");
     printf("(%s) - IDENTIFIER\n", yytext + 1);
     printf("() - END_INTERPOLATION\n");
     bufferString[0] = 0;
+    return STRING_LITERAL;
 }
 <MULTILINE_STRING>\"{1,2} {strcat(bufferString, yytext);}
 <MULTILINE_STRING>\"{3,} {
@@ -411,9 +469,14 @@ false {
     {
         strcat(bufferString, "\"");        
     }
-    printf("(%s) - MULTILINE STRING\n", bufferString); 
+    printf("(%s) - MULTILINE STRING\n", bufferString);
+    struct stringBuffer * ns = (struct stringBuffer*)malloc(sizeof(struct stringBuffer));
+    strcpy(ns->buffer, bufferString);
+    ns->length = strlen(bufferString);
+    yylval.stringLit = ns;
     printf("(\"\"\") - MULTILINE_STRING_END\n", yytext);
     yy_pop_state();
+    return STRING_LITERAL;
 }
 <MULTILINE_STRING><<EOF>> {printf("ERROR: no closing \"\"\" (three double-quotes) in MULTILINE STRING in line %d.\n", multilineBegin); BEGIN(INITIAL);}
 
@@ -509,12 +572,17 @@ false {
 
 [\r\n] {
     line = line + 1;
+    return ENDL;
 }
 
 . {
     bufferString[0] = 0;
     strcat(bufferString, yytext);
     printf("%s - UNRECOGNIZED TOKEN.", bufferString);
+}
+
+<INITIAL><<EOF>> { return ';';
+    BEGIN(INITIAL);
 }
 
 %%
