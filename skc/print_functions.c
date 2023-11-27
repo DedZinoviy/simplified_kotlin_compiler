@@ -347,9 +347,23 @@ char * generateDotFromKotlinFileElement(struct KotlinFileElementNode * node)
 {
     char base[] = "";
     char strId[10];
+    char * res  = concat(base, itoa(node->id, strId, 10));
+    if(node->modifiers != NULL)
+    {
+        res = concat(res, generateDotFromModifierList(node->modifiers));
+        res = concat(res, itoa(node->id, strId, 10));
+        res = concat(res, " -> ");
+        res = concat(res, itoa(node->modifiers->id, strId, 10));
+        res = concat(res, "[label=\"modifiers\"];\n");
+    }
     switch (node->type)
     {
     case FUNCTION:
+        res = concat(res, generateDotFromFunction(node->func));
+        res = concat(res, itoa(node->id, strId, 10));
+        res = concat(res, " -> ");
+        res = concat(res, itoa(node->func->id, strId, 10));
+        res = concat(res, "[label=\"function\"];\n");
         break;
     case CLASS:
         break;
@@ -359,8 +373,13 @@ char * generateDotFromKotlinFileElement(struct KotlinFileElementNode * node)
     
     if (node->next != NULL)
     {
-
+        res = concat(res, generateDotFromKotlinFileElement(node->next));
+        res = concat(res, itoa(node->id, strId, 10));
+        res = concat(res, " -> ");
+        res = concat(res, itoa(node->next->id, strId, 10));
+        res = concat(res, "[label=\"next\"];\n");
     }
+    return res;
 }
 
 /*! Сгенерировать DOT-строку для узла модификатора.
@@ -435,5 +454,19 @@ char * generateDotFromModifierList(struct ModifierListNode * node)
 */
 char * generateDotFromFunction(struct FunctionNode * node)
 {
-
+    char base[] = "";
+    char strId[10];
+    char * res = concat(base, itoa(node->id, strId, 10));
+    res = concat(res, "[label=\"Function ");
+    res = concat(res, node->identifier);
+    res = concat(res, " <return ");
+    res = concat(res, node->returnValue);
+    res = concat(res, ">\"];\n");
+    /*Список параметров.*/
+    res = concat(res, generateDotFromStatementList(node->body));
+    res = concat(res, itoa(node->id, strId, 10));
+    res = concat(res, " -> ");
+    res = concat(res, itoa(node->body->id, strId, 10));
+    res = concat(res, "[label=\"body\"];\n");
+    return res;
 }
