@@ -18,6 +18,10 @@
        struct VarDeclarationListNode * varDeclList;
        struct FunctionNode * function;
        struct ModifierNode * mod;
+       struct ModifierListNode * modList;
+       struct KotlinFileElementNode * elem;
+       struct KotlinFileElementListNode * elemList;
+       struct KotlinFileNode * file;
 }
 
 %token IF ELSE VAL VAR CLASS PUBLIC PROTECTED PRIVATE INTERNAL ENDL WHILE DO FUNC FOR SUPER THIS OVERRIDE OPEN
@@ -54,13 +58,18 @@
 %type <varDecl>VarDeclaration
 %type <varDeclList>VarDeclarationList VarDeclIdList
 %type <function>FunctionDeclaration
+%type <mod>ElementModifier
+%type <modList>ElementModifierList
+%type <elem>KotlinFileElement
+%type <elemList>KotlinFileElementList
+%type <file>KotlinFile
 
 %% 
-KotlinFile: KotlinFileElementList
+KotlinFile: KotlinFileElementList {$$ = createKotlinFileNode($1);}
           ;
 
-KotlinFileElementList: KotlinFileElement
-                     | KotlinFileElementList KotlinFileElement
+KotlinFileElementList: KotlinFileElement {$$ = createKotlinFileElementListNode($1);}
+                     | KotlinFileElementList KotlinFileElement {$$ = addKotlinFileElementToList($1, $2);}
                      ;
 
 ExpressionList: SimpleExpression {$$ = createExpressionListNode($1);}
@@ -237,23 +246,23 @@ ClassDeclaration: CLASS ID
                 | CLASS ID ':' ID '(' VarDeclarationList ')' '{' EndlOpt ClassModifierMemberList '}'
                 ;
 
-ElementModifier: PUBLIC
-               | PRIVATE
-               | INTERNAL
-               | OPEN
+ElementModifier: PUBLIC {$$ = createPublicModiferNode();}
+               | PRIVATE { $$ = createPrivateModiferNode();}
+               | INTERNAL {$$ = createInternalModiferNode();}
+               | OPEN {$$ = createOpenModiferNode();}
                ;
 
-ElementModifierList: ElementModifier
-                   | ElementModifierList EndlOpt ElementModifier
+ElementModifierList: ElementModifier {$$ = createModifierListNode($1);}
+                   | ElementModifierList EndlOpt ElementModifier {$$ = addModifierToList($1, $3);}
                    ;
 
-KotlinFileElement: FunctionDeclaration EndlList
+KotlinFileElement: FunctionDeclaration EndlList {$$ = createElementFromFunction(createModifierListNode(createPublicModiferNode()), $1);}
                  | ClassDeclaration EndlList
-                 | FunctionDeclaration ';' EndlOpt
+                 | FunctionDeclaration ';' EndlOpt {$$ = createElementFromFunction(createModifierListNode(createPublicModiferNode()), $1);}
                  | ClassDeclaration ';' EndlOpt
-                 | ElementModifierList EndlOpt FunctionDeclaration EndlList
+                 | ElementModifierList EndlOpt FunctionDeclaration EndlList {$$ = createElementFromFunction($1, $3);}
                  | ElementModifierList EndlOpt ClassDeclaration EndlList
-                 | ElementModifierList EndlOpt FunctionDeclaration ';' EndlOpt
+                 | ElementModifierList EndlOpt FunctionDeclaration ';' EndlOpt {$$ = createElementFromFunction($1, $3);}
                  | ElementModifierList EndlOpt ClassDeclaration ';' EndlOpt
                  | ';' EndlOpt
                  ;
