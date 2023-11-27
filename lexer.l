@@ -349,6 +349,8 @@ false {
         removeUnderline(bufferString);
         int res = atoi(bufferString);
         printf("(%d) - DECIMAL_INT\n", res);
+        yylval.intLit = res;
+        return INT_LITERAL;
     }
 }
 
@@ -363,6 +365,8 @@ false {
     removeUnderline(bufferString);
     int result = strtol(bufferString + 2, NULL, 16);
     printf("(%d) - HEX_INT\n", result);
+    yylval.intLit = res;
+    return INT_LITERAL;
 }
 
 0(x|X)\_* {
@@ -386,6 +390,8 @@ false {
     removeUnderline(bufferString);
     int result = strtol(bufferString + 2, NULL, 2);
     printf("(%d) - BINARY_INT\n", result);
+    yylval.intLit = res;
+    return INT_LITERAL;
 }
 
 0(b|B)\_* {
@@ -415,6 +421,8 @@ false {
     int resLen = strlen(bufferString);
     double result = atof(bufferString);
     printf("(%.*f) - DOUBLE\n", resLen, result);
+    yylval.doubleLit = result;
+    return DOUBLE_LITERAL;
 }
 
 ({DIGIT}(\_*{DIGIT})*\_+)\.{DIGIT}(\_*{DIGIT})*((e|E)(\+|\-)?{DIGIT}(\_*{DIGIT})*)? {
