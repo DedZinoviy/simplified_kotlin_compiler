@@ -80,6 +80,7 @@ DIGIT [0-9]
     if(hasCloseBracket != 0)
     {
         hasOpenBracket = 0;
+        hasPlus = 1;
         return ')';
     }
 %}
@@ -330,23 +331,29 @@ false {
 <INTERPOLATION>"{" {
     printf("(%s) - LEFT_BRACE\n", yytext);
     yy_push_state(INBRACE);
+    return '{';
 }
 
 <INBRACE>"}" {
     printf("(%s) - RIGHT_BRACE\n", yytext);
+    hasClosingBrace = 1;
     yy_pop_state();
+    return ';';
 }
 
 <INBRACE>"{" {
     printf("(%s) - LEFT_BRACE\n", yytext);
     yy_push_state(INBRACE);
+    return '{';
 }
 
 <INTERPOLATION>"}" {
     printf("(%s) - END_INTERPOLATION\n", yytext);
     bufferString[0] = 0;
     clearStringBuffer(&buff);
+    hasPlus = 1;
     yy_pop_state();
+    return ')';
 }
 
 <INBRACE><<EOF>> {
@@ -548,20 +555,39 @@ false {
     printf("(");
     printStringBuffer(&buff);
     printf(") - ESCAPED_STRING\n");
+
+    struct stringBuffer * ns = (struct stringBuffer*)malloc(sizeof(struct stringBuffer));
+    memcpy(ns->buffer, buff.buffer, buff.length);
+    ns->length = strlen(buff.length);
+    yylval.stringLit = ns;
+    hasPlus = 1;
+    hasOpenBracket = 1;
+
     printf("(%s) - BEGIN_INTERPOLATION\n", yytext);
     clearStringBuffer(&buff);
     yy_push_state(INTERPOLATION);
+    return STRING_LITERAL;
 }
 <STRING>[^\\\"\$\n\r] {appendChar(&buff, yytext[0]);}
 <STRING>\$[A-Za-z_][A-Za-z0-9_]* {
     printf("(");
     printStringBuffer(&buff);
+    
+    struct stringBuffer * ns = (struct stringBuffer*)malloc(sizeof(struct stringBuffer));
+    memcpy(ns->buffer, buff.buffer, buff.length);
+    ns->length = strlen(buff.length);
+    yylval.stringLit = ns;
+    hasPlus = 1;
+    hasOpenBracket = 1;
+    strcpy(tempIdent, yytext + 1);
+    hasCloseBracket = 1;
     printf(") - ESCAPED_STRING\n");
     printf("($) - BEGIN_INTERPOLATION\n");
     printf("(%s) - IDENTIFIER\n", yytext + 1);
     printf("() - END_INTERPOLATION\n");
     clearStringBuffer(&buff);
     bufferString[0] = 0;
+    return STRING_LITERAL;
 }
 <STRING>\$[^A-Za-z_\{\"]* {appendChars(&buff, yytext);}
 <STRING>[\n\r] {printf("ERROR: no closing \" (double-quote) in STRING in line %d.\n", multilineBegin); line += 1; yy_pop_state(); return -1;}
@@ -571,6 +597,11 @@ false {
     printf(") - ESCAPED STRING\n"); 
     printf("(%s) - ESCAPED_STRING_END\n", yytext);
     yy_pop_state();
+    struct stringBuffer * ns = (struct stringBuffer*)malloc(sizeof(struct stringBuffer));
+    memcpy(ns->buffer, buff.buffer, buff.length);
+    ns->length = strlen(buff.length);
+    yylval.stringLit = ns;
+    return STRING_LITERAL;
 }
 <STRING><<EOF>> {printf("ERROR: no closing \" (double-quote) in STRING in line %d.\n", multilineBegin); BEGIN(INITIAL); return -1;}
 
