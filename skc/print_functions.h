@@ -51,8 +51,26 @@ char * generateDotFromKotlinFile(struct KotlinFileNode * node);
 */
 char * generateDotFromKotlinFileElementList(struct KotlinFileElementListNode * node);
 
-/*! Сгенерировать DOT-строку для элемена файла Kotlin.
+/*! Сгенерировать DOT-строку для элемента файла Kotlin.
 * \param[in] node Узел элемента файла Kotlin.
 * \return DOT-строка с дочерними узлами.
 */
 char * generateDotFromKotlinFileElement(struct KotlinFileElementNode * node);
+
+/*! Сгенерировать DOT-строку для узла модификатора.
+* \param[in] node Узел модификатора.
+* \return DOT-строка с дочерними узлами.
+*/
+char * generateDotFromModifier(struct ModifierNode * node);
+
+/*! Сгенерировать DOT-строку для узла списка модификаторов.
+* \param[in] node Узел списка модификаторов.
+* \return DOT-строка с дочерними узлами.
+*/
+char * generateDotFromModifierList(struct ModifierListNode * node);
+
+/*! Сгенерировать DOT-строку для узла функции.
+* \param[in] node Узел функции.
+* \return DOT-строка с дочерними узлами.
+*/
+char * generateDotFromFunction(struct FunctionNode * node);

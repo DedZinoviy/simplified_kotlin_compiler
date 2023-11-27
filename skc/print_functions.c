@@ -362,3 +362,78 @@ char * generateDotFromKotlinFileElement(struct KotlinFileElementNode * node)
 
     }
 }
+
+/*! Сгенерировать DOT-строку для узла модификатора.
+* \param[in] node Узел модификатора.
+* \return DOT-строка с дочерними узлами.
+*/
+char * generateDotFromModifier(struct ModifierNode * node)
+{
+    char base[] = "";
+    char strId[10];
+    char * res = concat(base, itoa(node->id, strId, 10));
+    switch (node->type)
+    {
+        case PUBLIC:
+            res = concat(res, "[label=\"PUBLIC\"];\n");
+            break;
+        case PRIVATE:
+            res = concat(res, "[label=\"PRIVATE\"];\n");
+            break;
+        case PROTECTED:
+            res = concat(res, "[label=\"PROTECTED\"];\n");
+            break;
+        case INTERNAL:
+            res = concat(res, "[label=\"INTERNAL\"];\n");
+            break;
+        case OPEN:
+            res = concat(res, "[label=\"OPEN\"];\n");
+            break;
+        case OVERRIDE:
+            res = concat(res, "[label=\"OVERRIDE\"];\n");
+            break;
+        default:
+            break;
+    }
+
+    if (node->next != NULL)
+    {
+        res = concat(res, generateDotFromModifier(node->next));
+        res = concat(res, itoa(node->id, strId, 10));
+        res = concat(res, " -> ");
+        res = concat(res, itoa(node->next->id, strId, 10));
+        res = concat(res, "[label=\"next\"];\n");
+    }
+
+    return res;
+}
+
+/*! Сгенерировать DOT-строку для узла списка модификаторов.
+* \param[in] node Узел списка модификаторов.
+* \return DOT-строка с дочерними узлами.
+*/
+char * generateDotFromModifierList(struct ModifierListNode * node)
+{
+    char base[] = "";
+    char strId[10];
+    char * res = concat(base, itoa(node->id, strId, 10));
+    res = concat(res, "[label=\"ModifierList\"];\n");
+    if (node->first != NULL)
+    {
+        res = concat(res, generateDotFromModifier(node->first));
+        res = concat(res, itoa(node->id, strId, 10));
+        res = concat(res, " -> ");
+        res = concat(res, itoa(node->first->id, strId, 10));
+        res = concat(res, "[label=\"first\"];\n");
+    }
+    return res;
+}
+
+/*! Сгенерировать DOT-строку для узла функции.
+* \param[in] node Узел функции.
+* \return DOT-строка с дочерними узлами.
+*/
+char * generateDotFromFunction(struct FunctionNode * node)
+{
+
+}
