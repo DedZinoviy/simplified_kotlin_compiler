@@ -24,7 +24,7 @@
        struct KotlinFileNode * file;
 }
 
-%token IF ELSE VAL VAR CLASS PUBLIC PROTECTED PRIVATE INTERNAL ENDL WHILE DO FUNC FOR SUPER THIS OVERRIDE OPEN
+%token IF ELSE VAL VAR CLASS PUBLIC PROTECTED PRIVATE INTERNAL ENDL WHILE DO FUNC FOR SUPER THIS OVERRIDE OPEN CONSTRUCTOR
 %token <ident>ID
 
 %token <intLit>INT_LITERAL 
@@ -233,17 +233,41 @@ ClassMember: FunctionDeclaration
            | VarStmt
            | MultiDeclararion
            ;
+
+ClassParam : ID ':' ID '=' SimpleExpression
+           | ID ':' ID
+           | VAL ID ':' ID '=' SimpleExpression
+           | VAR ID ':' ID '=' SimpleExpression
+           | VAL ID ':' ID
+           | VAR ID ':' ID
+           | MemberModifierList VAL ID ':' ID '=' SimpleExpression
+           | MemberModifierList VAR ID ':' ID '=' SimpleExpression
+           | MemberModifierList VAL ID ':' ID
+           | MemberModifierList VAR ID ':' ID
+           ;
+
+ClassParamList: ClassParam
+              | ClassParamList ',' ClassParam
+              ;
+
+PrimaryConstructor: CONSTRUCTOR '(' ')'
+                  | MemberModifierList CONSTRUCTOR '(' ')'
+                  | CONSTRUCTOR '(' ClassParamList ')'
+                  | MemberModifierList CONSTRUCTOR '(' ClassParamList ')'
+                  | '(' ClassParamList ')'
+                  | '(' ')'
+                  ;
        
 ClassDeclaration: CLASS ID
                 | CLASS ID '{' EndlOpt '}'
                 | CLASS ID '{' EndlOpt ClassModifierMemberList '}'
-                | CLASS ID '(' VarDeclarationList ')' '{' EndlOpt '}'
-                | CLASS ID '(' VarDeclarationList ')' '{' EndlOpt ClassModifierMemberList '}'
+                | CLASS ID PrimaryConstructor '{' EndlOpt '}'
+                | CLASS ID PrimaryConstructor '{' EndlOpt ClassModifierMemberList '}'
                 | CLASS ID ':' ID
                 | CLASS ID ':' ID '{' EndlOpt '}'
                 | CLASS ID ':' ID '{' EndlOpt ClassModifierMemberList '}'
-                | CLASS ID ':' ID '(' VarDeclarationList ')' '{' EndlOpt '}'
-                | CLASS ID ':' ID '(' VarDeclarationList ')' '{' EndlOpt ClassModifierMemberList '}'
+                | CLASS ID PrimaryConstructor ':' ID '{' EndlOpt '}'
+                | CLASS ID PrimaryConstructor ':' ID  '{' EndlOpt ClassModifierMemberList '}'
                 ;
 
 ElementModifier: PUBLIC {$$ = createPublicModiferNode();}
