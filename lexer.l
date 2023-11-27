@@ -551,7 +551,12 @@ int main(int argc, char* argv[])
 	}
 
 	yyin = fopen(argv[1], "r");
-	yylex();
+
+    printf("The parsing process has started.");
+
+	yyparse();
+
+    printf("The parsing process is completed.");
 
 	return 0;
 }
