@@ -296,3 +296,69 @@ char* generateStrForBinOperation(struct ExpressionNode* node)
     res = concat(res, "[label=\"right\"];\n");
     return res;
 }
+
+/*! Сгенерировать DOT-строку для файла Kotlin. трока будет содержать корневую структуру направленного графа digraph prg.
+* \param[in] node Визуализироваемый узел.
+* \return DOT-строка с дочерними узлами.
+*/
+char * generateDotFromKotlinFile(struct KotlinFileNode * node)
+{
+    char base[] = "digraph prg {\n";
+    char strId[10];
+    char * res = concat(base, itoa(node->id, strId, 10));
+    res = concat(res, "[label=\"KotlinFile\"];\n");
+
+    res = concat(res, generateDotFromKotlinFileElementList(node->elemList));
+
+    res = concat(res, itoa(node->id, strId, 10));
+    res = concat(res, " -> ");
+    res = concat(res, itoa(node->elemList->id, strId, 10));
+    res = concat(res, ";\n");
+    res = concat(res, '}');
+    return res;
+}
+
+/*! Сгенерировать DOT-строку для списка элементов файла Kotlin.
+* \param[in] node Узел списка элементов файла Kotlin.
+* \return DOT-строка с дочерними узлами.
+*/
+char * generateDotFromKotlinFileElementList(struct KotlinFileElementListNode * node)
+{
+    char base[] = "";
+    char strId[10];
+    char * res = concat(base, itoa(node->id, strId, 10));
+    res = concat(res, "[label=\"KotlinFileElementList\"];\n");
+    if (node->first != NULL)
+    {
+        res = concat(res, generateDotFromKotlinFileElement(node->first));
+        res = concat(res, itoa(node->id, strId, 10));
+        res = concat(res, " -> ");
+        res = concat(res, itoa(node->first->id, strId, 10));
+        res = concat(res, "[label=\"first\"];\n");
+    }
+    return res;
+}
+
+/*! Сгенерировать DOT-строку для элемена файла Kotlin.
+* \param[in] node Узел элемента файла Kotlin.
+* \return DOT-строка с дочерними узлами.
+*/
+char * generateDotFromKotlinFileElement(struct KotlinFileElementNode * node)
+{
+    char base[] = "";
+    char strId[10];
+    switch (node->type)
+    {
+    case FUNCTION:
+        break;
+    case CLASS:
+        break;
+    default:
+        break;
+    }
+    
+    if (node->next != NULL)
+    {
+
+    }
+}

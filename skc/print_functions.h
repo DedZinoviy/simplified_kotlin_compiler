@@ -38,3 +38,21 @@ char * concat(char * firstStr, char * secStr);
 * \return DOT-строка с дочерними узлами.
 */
 char* generateStrForBinOperation(struct ExpressionNode* node);
+
+/*! Сгенерировать DOT-строку для файла Kotlin. Строка будет содержать корневую структуру направленного графа digraph prg.
+* \param[in] node Визуализироваемый узел.
+* \return DOT-строка с дочерними узлами.
+*/
+char * generateDotFromKotlinFile(struct KotlinFileNode * node);
+
+/*! Сгенерировать DOT-строку для списка элементов файла Kotlin.
+* \param[in] node Узел списка элементов файла Kotlin.
+* \return DOT-строка с дочерними узлами.
+*/
+char * generateDotFromKotlinFileElementList(struct KotlinFileElementListNode * node);
+
+/*! Сгенерировать DOT-строку для элемена файла Kotlin.
+* \param[in] node Узел элемента файла Kotlin.
+* \return DOT-строка с дочерними узлами.
+*/
+char * generateDotFromKotlinFileElement(struct KotlinFileElementNode * node);
