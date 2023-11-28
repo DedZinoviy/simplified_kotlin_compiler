@@ -275,8 +275,40 @@ char * generateDotFromStatement(struct StatementNode * stmt)
         res = concat(res, "[label=\"empty_stmt\"];\n");
         break;
     case _VAL:
+        res = concat(res, "[label=\"VAL <ident=");
+        res = concat(res, stmt->varValId);
+        if (stmt->varValType != NULL)
+        {
+            res = concat(res, "> <type=");
+            res = concat(res, stmt->varValType);
+        }
+        res = concat(res, ">\"];\n");
+        if (stmt->expression != NULL)
+        {
+            res = concat(res, generateDotFromExpression(stmt->expression));
+            res = concat(res, itoa(stmt->id, strId, 10));
+            res = concat(res, " -> ");
+            res = concat(res, itoa(stmt->expression->id, strId, 10));
+            res = concat(res, "[label = \"expr\"];\n");
+        }
         break;
     case _VAR:
+        res = concat(res, "[label=\"VAR <ident=");
+        res = concat(res, stmt->varValId);
+        if (stmt->varValType != NULL)
+        {
+            res = concat(res, "> <type=");
+            res = concat(res, stmt->varValType);
+        }
+        res = concat(res, ">\"];\n");
+        if (stmt->expression != NULL)
+        {
+            res = concat(res, generateDotFromExpression(stmt->expression));
+            res = concat(res, itoa(stmt->id, strId, 10));
+            res = concat(res, " -> ");
+            res = concat(res, itoa(stmt->expression->id, strId, 10));
+            res = concat(res, "[label = \"expr\"];\n");
+        }
         break;
     case _MULTI_VAL:
         break;
