@@ -65,7 +65,7 @@
 %type <file>KotlinFile
 
 %% 
-KotlinFile: KotlinFileElementList {$$ = createKotlinFileNode($1);}
+KotlinFile: KotlinFileElementList {$$ = root = createKotlinFileNode($1);}
           ;
 
 KotlinFileElementList: KotlinFileElement {$$ = createKotlinFileElementListNode($1);}
