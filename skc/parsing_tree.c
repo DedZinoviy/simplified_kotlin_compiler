@@ -1267,6 +1267,7 @@ struct KotlinFileElementListNode * createKotlinFileElementListNode(struct Kotlin
     node->id = ID++;
     node->first = elem;
     node->last = elem;
+    return node;
 }
 
 /*! Добавить элемент файла Kotlin к списку элементов файла Kotlin.
@@ -1294,6 +1295,5 @@ struct KotlinFileNode * createKotlinFileNode(struct KotlinFileElementListNode * 
     struct KotlinFileNode * node = (struct KotlinFileNode *)malloc(sizeof(struct KotlinFileNode));
     node->id = ID++;
     node->elemList = elemList;
-    root = node;
     return node;
 }
