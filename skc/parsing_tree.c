@@ -12,7 +12,7 @@ int ID = 0;
 struct ExpressionNode* createIDExpression(char* idStr) 
 {
     struct ExpressionNode* node = (struct ExpressionNode*)malloc(sizeof(struct ExpressionNode));
-    node->type = IDENTIFIER;
+    node->type = _IDENTIFIER;
     node->identifierString = idStr;
     node->left = NULL;
     node->right = NULL;
@@ -28,7 +28,7 @@ struct ExpressionNode* createIDExpression(char* idStr)
 struct ExpressionNode* createIntLiteralExpressionNode(int value)
 {
     struct ExpressionNode* node = (struct ExpressionNode*)malloc(sizeof(struct ExpressionNode));
-    node->type = INT_LIT;
+    node->type = _INT_LIT;
     node->intValue = value;
     node->left = NULL;
     node->right = NULL;
@@ -44,7 +44,7 @@ struct ExpressionNode* createIntLiteralExpressionNode(int value)
 struct ExpressionNode* createDoubleLiteralExpressionNode(double value)
 {
     struct ExpressionNode* node = (struct ExpressionNode*)malloc(sizeof(struct ExpressionNode));
-    node->type = DOUBLE_LIT;
+    node->type = _DOUBLE_LIT;
     node->doubleValue = value;
     node->left = NULL;
     node->right = NULL;
@@ -59,7 +59,7 @@ struct ExpressionNode* createDoubleLiteralExpressionNode(double value)
 struct ExpressionNode* createTrueLiteralExpressionNode()
 {
     struct ExpressionNode* node = (struct ExpressionNode*)malloc(sizeof(struct ExpressionNode));
-    node->type = BOOLEAN_LIT;
+    node->type = _BOOLEAN_LIT;
     node->boolValue = 1;
     node->left = NULL;
     node->right = NULL;
@@ -74,7 +74,7 @@ struct ExpressionNode* createTrueLiteralExpressionNode()
 struct ExpressionNode* createFalseLiteralExpressionNode()
 {
     struct ExpressionNode* node = (struct ExpressionNode*)malloc(sizeof(struct ExpressionNode));
-    node->type = BOOLEAN_LIT;
+    node->type = _BOOLEAN_LIT;
     node->boolValue = 0;
     node->left = NULL;
     node->right = NULL;
@@ -91,7 +91,7 @@ struct ExpressionNode* createCharLiteralExpressionNode(char value)
 {
     struct ExpressionNode * node = (struct ExpressionNode*)malloc(sizeof(struct ExpressionNode));
     node->id = ID++;
-    node->type = CHAR_LIT;
+    node->type = _CHAR_LIT;
     node->charValue = value;
     node->left = NULL;
     node->right = NULL;
@@ -107,7 +107,7 @@ struct ExpressionNode* createStringLiteralExpressionNode(struct stringBuffer * v
 {
     struct ExpressionNode * node = (struct ExpressionNode*)malloc(sizeof(struct ExpressionNode));
     node->id = ID++;
-    node->type = STRING_LIT;
+    node->type = _STRING_LIT;
     node->stringValue = value;
     node->left = NULL;
     node->right = NULL;
@@ -123,7 +123,7 @@ struct ExpressionNode* createStringLiteralExpressionNode(struct stringBuffer * v
 struct ExpressionNode * createDisjExpressionNode(struct ExpressionNode * leftOperand, struct ExpressionNode * rightOperand)
 {
     struct ExpressionNode* node = (struct ExpressionNode*)malloc(sizeof(struct ExpressionNode));
-    node->type = DISJUNCTION;
+    node->type = _DISJUNCTION;
     node->left = leftOperand;
     node->right = rightOperand;
     node->next = NULL;
@@ -139,7 +139,7 @@ struct ExpressionNode * createDisjExpressionNode(struct ExpressionNode * leftOpe
 struct ExpressionNode * createConjExpressionNode(struct ExpressionNode * leftOperand, struct ExpressionNode * rightOperand)
 {
     struct ExpressionNode* node = (struct ExpressionNode*)malloc(sizeof(struct ExpressionNode));
-    node->type = CONJUNCTION;
+    node->type = _CONJUNCTION;
     node->left = leftOperand;
     node->right = rightOperand;
     node->next = NULL;
@@ -155,7 +155,7 @@ struct ExpressionNode * createConjExpressionNode(struct ExpressionNode * leftOpe
 struct ExpressionNode * createPlusExpressionNode(struct ExpressionNode * leftOperand, struct ExpressionNode * rightOperand)
 {
     struct ExpressionNode* node = (struct ExpressionNode*)malloc(sizeof(struct ExpressionNode));
-    node->type = PLUS;
+    node->type = _PLUS;
     node->left = leftOperand;
     node->right = rightOperand;
     node->next = NULL;
@@ -171,7 +171,7 @@ struct ExpressionNode * createPlusExpressionNode(struct ExpressionNode * leftOpe
 struct ExpressionNode * createMinusExpressionNode(struct ExpressionNode * leftOperand, struct ExpressionNode * rightOperand)
 {
     struct ExpressionNode* node = (struct ExpressionNode*)malloc(sizeof(struct ExpressionNode));
-    node->type = MINUS;
+    node->type = _MINUS;
     node->left = leftOperand;
     node->right = rightOperand;
     node->next = NULL;
@@ -187,7 +187,7 @@ struct ExpressionNode * createMinusExpressionNode(struct ExpressionNode * leftOp
 struct ExpressionNode * createMulExpressionNode(struct ExpressionNode * leftOperand, struct ExpressionNode * rightOperand)
 {
     struct ExpressionNode* node = (struct ExpressionNode*)malloc(sizeof(struct ExpressionNode));
-    node->type = MUL;
+    node->type = _MUL;
     node->left = leftOperand;
     node->right = rightOperand;
     node->next = NULL;
@@ -203,7 +203,7 @@ struct ExpressionNode * createMulExpressionNode(struct ExpressionNode * leftOper
 struct ExpressionNode * createDivExpressionNode(struct ExpressionNode * leftOperand, struct ExpressionNode * rightOperand)
 {
     struct ExpressionNode* node = (struct ExpressionNode*)malloc(sizeof(struct ExpressionNode));
-    node->type = DIV;
+    node->type = _DIV;
     node->left = leftOperand;
     node->right = rightOperand;
     node->next = NULL;
@@ -219,7 +219,7 @@ struct ExpressionNode * createDivExpressionNode(struct ExpressionNode * leftOper
 struct ExpressionNode * createModExpressionNode(struct ExpressionNode * leftOperand, struct ExpressionNode * rightOperand)
 {
     struct ExpressionNode* node = (struct ExpressionNode*)malloc(sizeof(struct ExpressionNode));
-    node->type = MOD;
+    node->type = _MOD;
     node->left = leftOperand;
     node->right = rightOperand;
     node->next = NULL;
@@ -235,7 +235,7 @@ struct ExpressionNode * createModExpressionNode(struct ExpressionNode * leftOper
 struct ExpressionNode* createGreatExpressionNode(struct ExpressionNode* leftOperand, struct ExpressionNode* rightOperand)
 {
     struct ExpressionNode* node = (struct ExpressionNode*)malloc(sizeof(struct ExpressionNode));
-    node->type = GREAT;
+    node->type = _GREAT;
     node->left = leftOperand;
     node->right = rightOperand;
     node->next = NULL;
@@ -251,7 +251,7 @@ struct ExpressionNode* createGreatExpressionNode(struct ExpressionNode* leftOper
 struct ExpressionNode* createLessExpressionNode(struct ExpressionNode* leftOperand, struct ExpressionNode* rightOperand)
 {
     struct ExpressionNode* node = (struct ExpressionNode*)malloc(sizeof(struct ExpressionNode));
-    node->type = LESS;
+    node->type = _LESS;
     node->left = leftOperand;
     node->right = rightOperand;
     node->next = NULL;
@@ -267,7 +267,7 @@ struct ExpressionNode* createLessExpressionNode(struct ExpressionNode* leftOpera
 struct ExpressionNode* createGreatEqualExpressionNode(struct ExpressionNode* leftOperand, struct ExpressionNode* rightOperand)
 {
     struct ExpressionNode* node = (struct ExpressionNode*)malloc(sizeof(struct ExpressionNode));
-    node->type = GREAT_EQUAL;
+    node->type = _GREAT_EQUAL;
     node->left = leftOperand;
     node->right = rightOperand;
     node->next = NULL;
@@ -283,7 +283,7 @@ struct ExpressionNode* createGreatEqualExpressionNode(struct ExpressionNode* lef
 struct ExpressionNode* createLessEqualExpressionNode(struct ExpressionNode* leftOperand, struct ExpressionNode* rightOperand)
 {
     struct ExpressionNode* node = (struct ExpressionNode*)malloc(sizeof(struct ExpressionNode));
-    node->type = LESS_EQUAL;
+    node->type = _LESS_EQUAL;
     node->left = leftOperand;
     node->right = rightOperand;
     node->next = NULL;
@@ -299,7 +299,7 @@ struct ExpressionNode* createLessEqualExpressionNode(struct ExpressionNode* left
 struct ExpressionNode* createEqualExpressionNode(struct ExpressionNode* leftOperand, struct ExpressionNode* rightOperand)
 {
     struct ExpressionNode* node = (struct ExpressionNode*)malloc(sizeof(struct ExpressionNode));
-    node->type = EQUAL;
+    node->type = _EQUAL;
     node->left = leftOperand;
     node->right = rightOperand;
     node->next = NULL;
@@ -315,7 +315,7 @@ struct ExpressionNode* createEqualExpressionNode(struct ExpressionNode* leftOper
 struct ExpressionNode* createNotEqualExpressionNode(struct ExpressionNode* leftOperand, struct ExpressionNode* rightOperand)
 {
     struct ExpressionNode* node = (struct ExpressionNode*)malloc(sizeof(struct ExpressionNode));
-    node->type = NOT_EQUAL;
+    node->type = _NOT_EQUAL;
     node->left = leftOperand;
     node->right = rightOperand;
     node->next = NULL;
@@ -332,7 +332,7 @@ struct ExpressionNode* createFunctionCallExpressionNode(char * idStr, struct Exp
 {
     struct ExpressionNode * node = (struct ExpressionNode*)malloc(sizeof(struct ExpressionNode));
     node->id = ID++;
-    node->type = FUNC_CALL;
+    node->type = _FUNC_CALL;
     node->identifierString = idStr;
     node->params = list;
     node->left = NULL;
@@ -350,7 +350,7 @@ struct ExpressionNode* createFieldAccessExpressionNode(struct ExpressionNode * o
 {
     struct ExpressionNode * node = (struct ExpressionNode*)malloc(sizeof(struct ExpressionNode));
     node->id = ID++;
-    node->type = FIELD_ACCESS;
+    node->type = _FIELD_ACCESS;
     node->identifierString = membId;
     node->left = object;
     node->next = NULL;
@@ -369,7 +369,7 @@ struct ExpressionNode* createMethodAccessExpressionNode(struct ExpressionNode * 
 {
     struct ExpressionNode * node = (struct ExpressionNode*)malloc(sizeof(struct ExpressionNode));
     node->id = ID++;
-    node->type = FIELD_ACCESS;
+    node->type = _METHOD_ACCESS;
     node->identifierString = membId;
     node->left = object;
     node->next = NULL;
@@ -387,7 +387,7 @@ struct ExpressionNode * createAssignmentExpressionNode(struct ExpressionNode * l
 {
     struct ExpressionNode * node = (struct ExpressionNode*)malloc(sizeof(struct ExpressionNode));
     node->id = ID++;
-    node->type = ASSIGNMENT;
+    node->type = _ASSIGNMENT;
     node->left = leftOperand;
     node->next = NULL;
     node->params = NULL;
@@ -400,11 +400,11 @@ struct ExpressionNode * createAssignmentExpressionNode(struct ExpressionNode * l
 * \param[in] rightOperand указатель на правый операнд присваивания.
 * \return указатель на созданный узел оператора присваивания со сложением.
 */
-struct ExpressionNode * createPlusAssignmentExpressioNode(struct ExpressionNode * leftOperand, struct ExpressionNode * rightOperand)
+struct ExpressionNode * createPlusAssignmentExpressionNode(struct ExpressionNode * leftOperand, struct ExpressionNode * rightOperand)
 {
     struct ExpressionNode * node = (struct ExpressionNode*)malloc(sizeof(struct ExpressionNode));
     node->id = ID++;
-    node->type = PLUS_ASSIGNMENT;
+    node->type = _PLUS_ASSIGNMENT;
     node->left = leftOperand;
     node->next = NULL;
     node->params = NULL;
@@ -421,7 +421,7 @@ struct ExpressionNode * createMinusAssignmentExpressionNode(struct ExpressionNod
 {
     struct ExpressionNode * node = (struct ExpressionNode*)malloc(sizeof(struct ExpressionNode));
     node->id = ID++;
-    node->type = MINUS_ASSIGNMENT;
+    node->type = _MINUS_ASSIGNMENT;
     node->left = leftOperand;
     node->next = NULL;
     node->params = NULL;
@@ -438,7 +438,7 @@ struct ExpressionNode * createMulAssignmentExpressionNode(struct ExpressionNode 
 {
     struct ExpressionNode * node = (struct ExpressionNode*)malloc(sizeof(struct ExpressionNode));
     node->id = ID++;
-    node->type = MUL_ASSIGNMENT;
+    node->type = _MUL_ASSIGNMENT;
     node->left = leftOperand;
     node->next = NULL;
     node->params = NULL;
@@ -455,7 +455,7 @@ struct ExpressionNode * createDivAssignmentExpressionNode(struct ExpressionNode 
 {
     struct ExpressionNode * node = (struct ExpressionNode*)malloc(sizeof(struct ExpressionNode));
     node->id = ID++;
-    node->type = DIV_ASSIGNMENT;
+    node->type = _DIV_ASSIGNMENT;
     node->left = leftOperand;
     node->next = NULL;
     node->params = NULL;
@@ -472,7 +472,7 @@ struct ExpressionNode * createModAssignmentExpressionNode(struct ExpressionNode 
 {
     struct ExpressionNode * node = (struct ExpressionNode*)malloc(sizeof(struct ExpressionNode));
     node->id = ID++;
-    node->type = MOD_ASSIGNMENT;
+    node->type = _MOD_ASSIGNMENT;
     node->left = leftOperand;
     node->next = NULL;
     node->params = NULL;
@@ -488,7 +488,7 @@ struct ExpressionNode * createBracketExpressionNode(struct ExpressionNode * inne
 {
     struct ExpressionNode * node = (struct ExpressionNode*)malloc(sizeof(struct ExpressionNode));
     node->id = ID++;
-    node->type = BRACKETS;
+    node->type = _BRACKETS;
     node->left = innerExpression;
     node->next = NULL;
     node->params = NULL;
@@ -504,7 +504,7 @@ struct ExpressionNode * createIDExpressionNode(char * ident)
 {
     struct ExpressionNode * node = (struct ExpressionNode*)malloc(sizeof(struct ExpressionNode));
     node->id = ID++;
-    node->type = IDENTIFIER;
+    node->type = _IDENTIFIER;
     node->identifierString = ident;
     node->left = NULL;
     node->next = NULL;
@@ -520,7 +520,7 @@ struct ExpressionNode * createThisExpressionNode()
 {
     struct ExpressionNode * node = (struct ExpressionNode*)malloc(sizeof(struct ExpressionNode));
     node->id = ID++;
-    node->type = THIS;
+    node->type = _THIS;
     node->left = NULL;
     node->next = NULL;
     node->params = NULL;
@@ -535,7 +535,7 @@ struct ExpressionNode * createSuperExpressionNode()
 {
     struct ExpressionNode * node = (struct ExpressionNode*)malloc(sizeof(struct ExpressionNode));
     node->id = ID++;
-    node->type = SUPER;
+    node->type = _SUPER;
     node->left = NULL;
     node->next = NULL;
     node->params = NULL;
@@ -552,7 +552,7 @@ struct ExpressionNode * createRangeExpressionNode(struct ExpressionNode * leftOp
 {
     struct ExpressionNode * node = (struct ExpressionNode*)malloc(sizeof(struct ExpressionNode));
     node->id = ID++;
-    node->type = RANGE;
+    node->type = _RANGE;
     node->left = leftOperand;
     node->next = NULL;
     node->params = NULL;
@@ -568,7 +568,7 @@ struct ExpressionNode * createPrefIncrementExpressionNode(struct ExpressionNode 
 {
     struct ExpressionNode * node = (struct ExpressionNode*)malloc(sizeof(struct ExpressionNode));
     node->id = ID++;
-    node->type = PREF_INCREMENT;
+    node->type = _PREF_INCREMENT;
     node->left = NULL;
     node->next = NULL;
     node->params = NULL;
@@ -584,7 +584,7 @@ struct ExpressionNode * createPrefDecrementExpressionNode(struct ExpressionNode 
 {
     struct ExpressionNode * node = (struct ExpressionNode*)malloc(sizeof(struct ExpressionNode));
     node->id = ID++;
-    node->type = PREF_DECREMENT;
+    node->type = _PREF_DECREMENT;
     node->left = NULL;
     node->next = NULL;
     node->params = NULL;
@@ -600,7 +600,7 @@ struct ExpressionNode * createPostIncrementExpressionNode(struct ExpressionNode 
 {
     struct ExpressionNode * node = (struct ExpressionNode*)malloc(sizeof(struct ExpressionNode));
     node->id = ID++;
-    node->type = POST_INCREMENT;
+    node->type = _POST_INCREMENT;
     node->left = value;
     node->next = NULL;
     node->params = NULL;
@@ -616,7 +616,7 @@ struct ExpressionNode * createPostDecrementExpressionNode(struct ExpressionNode 
 {
     struct ExpressionNode * node = (struct ExpressionNode*)malloc(sizeof(struct ExpressionNode));
     node->id = ID++;
-    node->type = POST_DECREMENT;
+    node->type = _POST_DECREMENT;
     node->left = value;
     node->next = NULL;
     node->params = NULL;
@@ -632,7 +632,7 @@ struct ExpressionNode * createUnaryPlusExpressionNode(struct ExpressionNode * va
 {
     struct ExpressionNode * node = (struct ExpressionNode*)malloc(sizeof(struct ExpressionNode));
     node->id = ID++;
-    node->type = UNARY_PLUS;
+    node->type = _UNARY_PLUS;
     node->left = NULL;
     node->next = NULL;
     node->params = NULL;
@@ -648,7 +648,7 @@ struct ExpressionNode * createUnaryMinusExpressionNode(struct ExpressionNode * v
 {
     struct ExpressionNode * node = (struct ExpressionNode*)malloc(sizeof(struct ExpressionNode));
     node->id = ID++;
-    node->type = UNARY_MINUS;
+    node->type = _UNARY_MINUS;
     node->left = NULL;
     node->next = NULL;
     node->params = NULL;
@@ -664,7 +664,7 @@ struct ExpressionNode * createNotExpressionNode(struct ExpressionNode * value)
 {
     struct ExpressionNode * node = (struct ExpressionNode*)malloc(sizeof(struct ExpressionNode));
     node->id = ID++;
-    node->type = NOT;
+    node->type = _NOT;
     node->left = NULL;
     node->next = NULL;
     node->params = NULL;
@@ -711,7 +711,7 @@ struct ExpressionListNode * addExpressionToExpressionList(struct ExpressionListN
 struct StatementNode * createStatementFromExpression(struct ExpressionNode * expr)
 {
     struct StatementNode * stmt = (struct StatementNode*)malloc(sizeof(struct StatementNode));
-    stmt->type = EXPRESSION;
+    stmt->type = _EXPRESSION;
     stmt->expression = expr;
     stmt->complexBody = NULL;
     stmt->condition = NULL;
@@ -731,7 +731,7 @@ struct StatementNode * createStatementFromExpression(struct ExpressionNode * exp
 struct StatementNode * createStatementFromWhileWithSingleBody(struct ExpressionNode * cond, struct StatementNode * stmt)
 {
     struct StatementNode * statement = (struct StatementNode*)malloc(sizeof(struct StatementNode));
-    statement->type = WHILE;
+    statement->type = _WHILE;
     statement->condition = cond;
     statement->singleBody = stmt;
     statement->complexBody = NULL;
@@ -750,7 +750,7 @@ struct StatementNode * createStatementFromWhileWithSingleBody(struct ExpressionN
 struct StatementNode * createStatementFromWhileWithComplexBody(struct ExpressionNode * cond, struct StatementListNode * stmtList)
 {
     struct StatementNode * statement = (struct StatementNode*)malloc(sizeof(struct StatementNode));
-    statement->type = WHILE;
+    statement->type = _WHILE;
     statement->condition = cond;
     statement->singleBody = NULL;
     statement->complexBody = stmtList;
@@ -769,7 +769,7 @@ struct StatementNode * createStatementFromWhileWithComplexBody(struct Expression
 struct StatementNode * createStatementFromDoWhileWithSingleBody(struct ExpressionNode * cond, struct StatementNode * stmt)
 {
     struct StatementNode * statement = (struct StatementNode*)malloc(sizeof(struct StatementNode));
-    statement->type = DOWHILE;
+    statement->type = _DOWHILE;
     statement->condition = cond;
     statement->singleBody = stmt;
     statement->complexBody = NULL;
@@ -788,7 +788,7 @@ struct StatementNode * createStatementFromDoWhileWithSingleBody(struct Expressio
 struct StatementNode * createStatementFromDoWhileWithComplexBody(struct ExpressionNode * cond, struct StatementListNode * stmtList)
 {
     struct StatementNode * statement = (struct StatementNode*)malloc(sizeof(struct StatementNode));
-    statement->type = DOWHILE;
+    statement->type = _DOWHILE;
     statement->condition = cond;
     statement->singleBody = NULL;
     statement->complexBody = stmtList;
@@ -806,7 +806,7 @@ struct StatementNode * createEmptyStatement()
 {
     struct StatementNode * node = (struct StatementNode*)malloc(sizeof(struct StatementNode));
     node->id = ID++;
-    node->type = EMPTY;
+    node->type = _EMPTY;
     node->expression = NULL;
     node->condition = NULL;
     node->complexBody = NULL;
@@ -825,7 +825,7 @@ struct StatementNode * createValStatement(char * valId, struct ExpressionNode * 
 {
     struct StatementNode * node = (struct StatementNode*)malloc(sizeof(struct StatementNode));
     node->id = ID++;
-    node->type = VAL;
+    node->type = _VAL;
     node->complexBody = NULL;
     node->condition = NULL;
     node->next = NULL;
@@ -846,7 +846,7 @@ struct StatementNode * createValStatementWithType(char * valId, char * type ,str
 {
     struct StatementNode * node = (struct StatementNode*)malloc(sizeof(struct StatementNode));
     node->id = ID++;
-    node->type = VAL;
+    node->type = _VAL;
     node->complexBody = NULL;
     node->condition = NULL;
     node->next = NULL;
@@ -867,7 +867,7 @@ struct StatementNode * createValStatementFromVarDeclaration(struct VarDeclaratio
 {
     struct StatementNode * node = (struct StatementNode*)malloc(sizeof(struct StatementNode));
     node->id = ID++;
-    node->type = VAL;
+    node->type = _VAL;
     node->next = NULL;
     node->varValId = decl->identifier;
     node->varValType = decl->type;
@@ -888,7 +888,7 @@ struct StatementNode * createVarStatement(char * varId, struct ExpressionNode * 
 {
     struct StatementNode * node = (struct StatementNode*)malloc(sizeof(struct StatementNode));
     node->id = ID++;
-    node->type = VAR;
+    node->type = _VAR;
     node->complexBody = NULL;
     node->condition = NULL;
     node->next = NULL;
@@ -909,7 +909,7 @@ struct StatementNode * createVarStatementWithType(char * varId, char * type ,str
 {
     struct StatementNode * node = (struct StatementNode*)malloc(sizeof(struct StatementNode));
     node->id = ID++;
-    node->type = VAR;
+    node->type = _VAR;
     node->complexBody = NULL;
     node->condition = NULL;
     node->next = NULL;
@@ -930,7 +930,7 @@ struct StatementNode * createVarStatementFromVarDeclaration(struct VarDeclaratio
 {
     struct StatementNode * node = (struct StatementNode*)malloc(sizeof(struct StatementNode));
     node->id = ID++;
-    node->type = VAR;
+    node->type = _VAR;
     node->next = NULL;
     node->varValId = decl->identifier;
     node->varValType = decl->type;
@@ -952,7 +952,7 @@ struct StatementNode * createForStatementWithSingleBody(struct VarDeclarationLis
 {
     struct StatementNode * node = (struct StatementNode*)malloc(sizeof(struct StatementNode));
     node->id = ID++;
-    node->type = FOR;
+    node->type = _FOR;
     node->next = NULL;
     node->varValId = NULL;
     node->varValType = NULL;
@@ -974,7 +974,7 @@ struct StatementNode * createForStatementWithComplexBody(struct VarDeclarationLi
 {
     struct StatementNode * node = (struct StatementNode*)malloc(sizeof(struct StatementNode));
     node->id = ID++;
-    node->type = FOR;
+    node->type = _FOR;
     node->next = NULL;
     node->varValId = NULL;
     node->varValType = NULL;
@@ -998,7 +998,7 @@ struct StatementNode * createMultiDeclarationWithVal(struct VarDeclarationListNo
     node->next = NULL;
     node->varDeclList = vals;
     node->expression = expr;
-    node->type = MULTI_VAL;
+    node->type = _MULTI_VAL;
     node->complexBody = NULL;
     node->condition = NULL;
     node->singleBody = NULL;
@@ -1019,7 +1019,7 @@ struct StatementNode * createMultiDeclarationWithVar(struct VarDeclarationListNo
     node->next = NULL;
     node->varDeclList = vars;
     node->expression = expr;
-    node->type = MULTI_VAR;
+    node->type = _MULTI_VAR;
     node->complexBody = NULL;
     node->condition = NULL;
     node->singleBody = NULL;
@@ -1138,7 +1138,7 @@ struct ModifierNode * createPrivateModiferNode()
 {
     struct ModifierNode * node = (struct ModifierNode*)malloc(sizeof(struct ModifierNode));
     node->id = ID++;
-    node->type = PRIVATE;
+    node->type = _PRIVATE;
     node->next = NULL;
     return node;
 }
@@ -1150,7 +1150,7 @@ struct ModifierNode * createPublicModiferNode()
 {
     struct ModifierNode * node = (struct ModifierNode*)malloc(sizeof(struct ModifierNode));
     node->id = ID++;
-    node->type = PUBLIC;
+    node->type = _PUBLIC;
     node->next = NULL;
     return node;
 }
@@ -1162,7 +1162,7 @@ struct ModifierNode * createProtectedeModiferNode()
 {
     struct ModifierNode * node = (struct ModifierNode*)malloc(sizeof(struct ModifierNode));
     node->id = ID++;
-    node->type = PROTECTED;
+    node->type = _PROTECTED;
     node->next = NULL;
     return node;
 }
@@ -1174,7 +1174,7 @@ struct ModifierNode * createInternalModiferNode()
 {
     struct ModifierNode * node = (struct ModifierNode*)malloc(sizeof(struct ModifierNode));
     node->id = ID++;
-    node->type = INTERNAL;
+    node->type = _INTERNAL;
     node->next = NULL;
     return node;
 }
@@ -1186,7 +1186,7 @@ struct ModifierNode * createOverrideModiferNode()
 {
     struct ModifierNode * node = (struct ModifierNode*)malloc(sizeof(struct ModifierNode));
     node->id = ID++;
-    node->type = OVERRIDE;
+    node->type = _OVERRIDE;
     node->next = NULL;
     return node;
 }
@@ -1198,7 +1198,7 @@ struct ModifierNode * createOpenModiferNode()
 {
     struct ModifierNode * node = (struct ModifierNode*)malloc(sizeof(struct ModifierNode));
     node->id = ID++;
-    node->type = OPEN;
+    node->type = _OPEN;
     node->next = NULL;
     return node;
 }
@@ -1249,7 +1249,7 @@ struct KotlinFileElementNode * createElementFromFunction(struct ModifierListNode
     node->next = NULL;
     node->modifiers = modList;
     node->func = function;
-    node->type = FUNCTION;
+    node->type = _FUNCTION;
     return node;
 }
 

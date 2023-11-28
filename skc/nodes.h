@@ -1,3 +1,4 @@
+#pragma once
 #include "stringBuffer.h"
 
 /*------------------------------------ Expression -------------------------------------*/
@@ -5,45 +6,45 @@
 /*! \brief Перечисление типов Expression. */
 enum ExpressionType
 {
-    IDENTIFIER,
-    BOOLEAN_LIT,
-    INT_LIT,
-    DOUBLE_LIT,
-    CHAR_LIT,
-    STRING_LIT,
-    PLUS,
-    MINUS,
-    DIV,
-    MUL,
-    MOD,
-    LESS,
-    GREAT,
-    LESS_EQUAL,
-    GREAT_EQUAL,
-    EQUAL,
-    NOT_EQUAL,
-    FUNC_CALL,
-    BRACKETS,
-    FIELD_ACCESS,
-    METHOD_ACCESS,
-    ASSIGNMENT,
-    PLUS_ASSIGNMENT,
-    MINUS_ASSIGNMENT,
-    MUL_ASSIGNMENT,
-    DIV_ASSIGNMENT,
-    MOD_ASSIGNMENT,
-    THIS,
-    SUPER,
-    RANGE,
-    PREF_INCREMENT,
-    PREF_DECREMENT,
-    POST_INCREMENT,
-    POST_DECREMENT,
-    UNARY_PLUS,
-    UNARY_MINUS,
-    NOT,
-    DISJUNCTION,
-    CONJUNCTION
+    _IDENTIFIER,
+    _BOOLEAN_LIT,
+    _INT_LIT,
+    _DOUBLE_LIT,
+    _CHAR_LIT,
+    _STRING_LIT,
+    _PLUS,
+    _MINUS,
+    _DIV,
+    _MUL,
+    _MOD,
+    _LESS,
+    _GREAT,
+    _LESS_EQUAL,
+    _GREAT_EQUAL,
+    _EQUAL,
+    _NOT_EQUAL,
+    _FUNC_CALL,
+    _BRACKETS,
+    _FIELD_ACCESS,
+    _METHOD_ACCESS,
+    _ASSIGNMENT,
+    _PLUS_ASSIGNMENT,
+    _MINUS_ASSIGNMENT,
+    _MUL_ASSIGNMENT,
+    _DIV_ASSIGNMENT,
+    _MOD_ASSIGNMENT,
+    _THIS,
+    _SUPER,
+    _RANGE,
+    _PREF_INCREMENT,
+    _PREF_DECREMENT,
+    _POST_INCREMENT,
+    _POST_DECREMENT,
+    _UNARY_PLUS,
+    _UNARY_MINUS,
+    _NOT,
+    _DISJUNCTION,
+    _CONJUNCTION
 };
 
 /*! \brief Структура узла Expression. */
@@ -110,15 +111,15 @@ struct ExpressionListNode
 /*! \brief Перечисление типов Statement. */
 enum StatementType
 {
-    EXPRESSION,
-    WHILE,
-    DOWHILE,
-    FOR,
-    EMPTY,
-    VAR,
-    VAL,
-    MULTI_VAL,
-    MULTI_VAR
+    _EXPRESSION,
+    _WHILE,
+    _DOWHILE,
+    _FOR,
+    _EMPTY,
+    _VAR,
+    _VAL,
+    _MULTI_VAL,
+    _MULTI_VAR
 };
 
 struct StatementListNode;
@@ -219,12 +220,12 @@ struct VarDeclarationListNode
 /// \brief Перечисление типов модификатора.
 enum ModifierType
 {
-    PRIVATE,
-    PUBLIC,
-    INTERNAL,
-    PROTECTED,
-    OPEN,
-    OVERRIDE
+    _PRIVATE,
+    _PUBLIC,
+    _INTERNAL,
+    _PROTECTED,
+    _OPEN,
+    _OVERRIDE
 };
 
 /*! \brief Узел единичного модификатора. */
@@ -297,8 +298,8 @@ struct ClassNode
 /*! \brief Перечисление типа элемента файла Kotlin. */
 enum KotlinFileElementType
 {
-    CLASS,
-    FUNCTION
+    _CLASS,
+    _FUNCTION
 };
 
 /*! \brief Структура, описывающая элемент файла Kotlin. */

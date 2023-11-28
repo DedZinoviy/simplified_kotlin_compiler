@@ -1,3 +1,4 @@
+#pragma once
 #include "nodes.h"
 
 /// Ссылка на корневой узел программы.
@@ -170,7 +171,7 @@ struct ExpressionNode * createAssignmentExpressionNode(struct ExpressionNode * l
 * \param[in] rightOperand указатель на правый операнд присваивания.
 * \return указатель на созданный узел оператора присваивания со сложением.
 */
-struct ExpressionNode * createPlusAssignmentExpressioNode(struct ExpressionNode * leftOperand, struct ExpressionNode * rightOperand);
+struct ExpressionNode * createPlusAssignmentExpressionNode(struct ExpressionNode * leftOperand, struct ExpressionNode * rightOperand);
 
 /*! Создать узел оператора присваивания с вычитанием.
 * \param[in] leftOperand указатель на левый операнд присваивания.

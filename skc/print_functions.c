@@ -1,4 +1,5 @@
 #include <stdlib.h>
+#pragma warning(disable : 4996)
 #include "print_functions.h"
 
 /*! Сгегнерировать строку в DOT-формате для дальнейшей визуализации для узла Expression.
@@ -12,17 +13,17 @@ char * generateDotFromExpression(struct ExpressionNode * node)
     char* res = concat(base, itoa(node->id, idStr, 10));
     switch (node->type)
     {
-    case IDENTIFIER:
+    case _IDENTIFIER:
         res = concat(res, "[label=\"");
         res = concat(res, node->identifierString);
         res = concat(res, "\"];\n");
         break;
-    case INT_LIT:
+    case _INT_LIT:
         res = concat(res, "[label=\"");
         res = concat(res, itoa(node->intValue, idStr, 10));
         res = concat(res, "\"];\n");
         break;
-    case BOOLEAN_LIT:
+    case _BOOLEAN_LIT:
         res = concat(res, "[label=\"");
         if (node->boolValue == 0) 
         {
@@ -34,7 +35,7 @@ char * generateDotFromExpression(struct ExpressionNode * node)
         }
         res = concat(res, "\"];\n");
         break;
-    case DOUBLE_LIT:
+    case _DOUBLE_LIT:
         res = concat(res, "[label=\"");
         double d = node->doubleValue;
         char dstr[20];
@@ -42,55 +43,55 @@ char * generateDotFromExpression(struct ExpressionNode * node)
         res = concat(res, dstr);
         res = concat(res, "\"];\n");
         break;
-    case PLUS:
+    case _PLUS:
         res = concat(res, "[label=\"+\"];\n");
         res = concat(res, generateStrForBinOperation(node));
         break;
-    case MINUS:
+    case _MINUS:
         res = concat(res, "[label=\"-\"];\n");
         res = concat(res, generateStrForBinOperation(node));
         break;
-    case MUL:
+    case _MUL:
         res = concat(res, "[label=\"*\"];\n");
         res = concat(res, generateStrForBinOperation(node));
         break;
-    case DIV:
+    case _DIV:
         res = concat(res, "[label=\"/\"];\n");
         res = concat(res, generateStrForBinOperation(node));
         break;
-    case MOD:
+    case _MOD:
         res = concat(res, "[label=\"%\"];\n");
         res = concat(res, generateStrForBinOperation(node));
         break;
-    case LESS:
+    case _LESS:
         res = concat(res, "[label=\"<\"];\n");
         res = concat(res, generateStrForBinOperation(node));
         break;
-    case GREAT:
+    case _GREAT:
         res = concat(res, "[label=\">\"];\n");
         res = concat(res, generateStrForBinOperation(node));
         break;
-    case EQUAL:
+    case _EQUAL:
         res = concat(res, "[label=\"==\"];\n");
         res = concat(res, generateStrForBinOperation(node));
         break;
-    case GREAT_EQUAL:
+    case _GREAT_EQUAL:
         res = concat(res, "[label=\">=\"];\n");
         res = concat(res, generateStrForBinOperation(node));
         break;
-    case LESS_EQUAL:
+    case _LESS_EQUAL:
         res = concat(res, "[label=\"<=\"];\n");
         res = concat(res, generateStrForBinOperation(node));
         break;
-    case NOT_EQUAL:
+    case _NOT_EQUAL:
         res = concat(res, "[label=\"!=\"];\n");
         res = concat(res, generateStrForBinOperation(node));
         break;
-    case RANGE:
+    case _RANGE:
         res = concat(res, "[label=\"..\"];\n");
         res = concat(res, generateStrForBinOperation(node));
         break;
-    case UNARY_PLUS:
+    case _UNARY_PLUS:
         res = concat(res, "[label=\"U_+\"];\n");
         res = concat(res, generateDotFromExpression(node->right));
         res = concat(res, itoa(node->id, idStr, 10));
@@ -98,7 +99,7 @@ char * generateDotFromExpression(struct ExpressionNode * node)
         res = concat(res, itoa(node->right->id, idStr, 10));
         res = concat(res, ";\n");
         break;
-    case UNARY_MINUS:
+    case _UNARY_MINUS:
         res = concat(res, "[label=\"U_-\"];\n");
         res = concat(res, generateDotFromExpression(node->right));
         res = concat(res, itoa(node->id, idStr, 10));
@@ -106,7 +107,7 @@ char * generateDotFromExpression(struct ExpressionNode * node)
         res = concat(res, itoa(node->right->id, idStr, 10));
         res = concat(res, ";\n");
         break;
-    case PREF_INCREMENT:
+    case _PREF_INCREMENT:
         res = concat(res, "[label=\"PREF_++\"];\n");
         res = concat(res, generateDotFromExpression(node->right));
         res = concat(res, itoa(node->id, idStr, 10));
@@ -114,7 +115,7 @@ char * generateDotFromExpression(struct ExpressionNode * node)
         res = concat(res, itoa(node->right->id, idStr, 10));
         res = concat(res, ";\n");
         break;
-    case PREF_DECREMENT:
+    case _PREF_DECREMENT:
         res = concat(res, "[label=\"PREF_--\"];\n");
         res = concat(res, generateDotFromExpression(node->right));
         res = concat(res, itoa(node->id, idStr, 10));
@@ -122,7 +123,7 @@ char * generateDotFromExpression(struct ExpressionNode * node)
         res = concat(res, itoa(node->right->id, idStr, 10));
         res = concat(res, ";\n");
         break;
-    case POST_INCREMENT:
+    case _POST_INCREMENT:
         res = concat(res, "[label=\"POST_++\"];\n");
         res = concat(res, generateDotFromExpression(node->right));
         res = concat(res, itoa(node->id, idStr, 10));
@@ -130,7 +131,7 @@ char * generateDotFromExpression(struct ExpressionNode * node)
         res = concat(res, itoa(node->right->id, idStr, 10));
         res = concat(res, ";\n");
         break;
-    case POST_DECREMENT:
+    case _POST_DECREMENT:
         res = concat(res, "[label=\"POST_--\"];\n");
         res = concat(res, generateDotFromExpression(node->right));
         res = concat(res, itoa(node->id, idStr, 10));
@@ -161,7 +162,7 @@ char * generateDotFromExpressionList(struct ExpressionListNode * listNode)
     char base[] = "";
     char strId[10];
     char* res = concat(base, itoa(listNode->id, strId, 10));
-    char* res = concat(res, "[label=\"ExprList\"];\n");
+    res = concat(res, "[label=\"ExprList\"];\n");
     if (listNode->first != NULL)
     {
         res = concat(res, generateDotFromExpression(listNode->first));
@@ -183,7 +184,7 @@ char * generateDotFromStatement(struct StatementNode * stmt)
     char strId[10];
     char* res = concat(base, itoa(stmt->id, strId, 10));
     switch (stmt->type) {
-    case EXPRESSION:
+    case _EXPRESSION:
         res = concat(res, "[label=\"stmt\"];\n");
         res = concat(res, generateDotFromExpression(stmt->expression));
         res = concat(res, itoa(stmt->id, strId, 10));
@@ -191,7 +192,7 @@ char * generateDotFromStatement(struct StatementNode * stmt)
         res = concat(res, itoa(stmt->expression->id, strId, 10));
         res = concat(res, "[label=\"expr\"];\n");
         break;
-    case DOWHILE:
+    case _DOWHILE:
         res = concat(res, "[label=\"DO_WHILE\"];\n");
         res = concat(res, generateDotFromExpression(stmt->condition));
         res = concat(res, itoa(stmt->id, strId, 10));
@@ -215,7 +216,7 @@ char * generateDotFromStatement(struct StatementNode * stmt)
             res = concat(res, "[label = \"control_body\"];\n");
         }
         break;
-    case WHILE:
+    case _WHILE:
         res = concat(res, "[label=\"WHILE\"];\n");
         res = concat(res, generateDotFromExpression(stmt->condition));
         res = concat(res, itoa(stmt->id, strId, 10));
@@ -239,7 +240,7 @@ char * generateDotFromStatement(struct StatementNode * stmt)
             res = concat(res, "[label = \"control_body\"];\n");
         }
         break;
-    case FOR:
+    case _FOR:
         res = concat(res, "[label=\"FOR\"];\n");
         res = concat(res, generateDotFromVarDeclarationList(stmt->varDeclList));
         res = concat(res, itoa(stmt->id, strId, 10));
@@ -270,16 +271,16 @@ char * generateDotFromStatement(struct StatementNode * stmt)
             res = concat(res, "[label = \"control_body\"];\n");
         }
         break;
-    case EMPTY:
+    case _EMPTY:
         res = concat(res, "[label=\"empty_stmt\"];\n");
         break;
-    case VAL:
+    case _VAL:
         break;
-    case VAR:
+    case _VAR:
         break;
-    case MULTI_VAL:
+    case _MULTI_VAL:
         break;
-    case MULTI_VAR:
+    case _MULTI_VAR:
         break;
     }
     if(stmt->next != NULL)
@@ -302,7 +303,7 @@ char * generateDotFromStatementList(struct StatementListNode * stmtList)
     char base[] = "";
     char strId[10];
     char* res = concat(base, itoa(stmtList->id, strId, 10));
-    char* res = concat(res, "[label=\"StmtList\"];\n");
+    res = concat(res, "[label=\"StmtList\"];\n");
     if (stmtList->first != NULL)
     {
         res = concat(res, generateDotFromStatement(stmtList->first));
@@ -408,14 +409,14 @@ char * generateDotFromKotlinFileElement(struct KotlinFileElementNode * node)
     }
     switch (node->type)
     {
-    case FUNCTION:
+    case _FUNCTION:
         res = concat(res, generateDotFromFunction(node->func));
         res = concat(res, itoa(node->id, strId, 10));
         res = concat(res, " -> ");
         res = concat(res, itoa(node->func->id, strId, 10));
         res = concat(res, "[label=\"function\"];\n");
         break;
-    case CLASS:
+    case _CLASS:
         break;
     default:
         break;
@@ -443,22 +444,22 @@ char * generateDotFromModifier(struct ModifierNode * node)
     char * res = concat(base, itoa(node->id, strId, 10));
     switch (node->type)
     {
-        case PUBLIC:
+        case _PUBLIC:
             res = concat(res, "[label=\"PUBLIC\"];\n");
             break;
-        case PRIVATE:
+        case _PRIVATE:
             res = concat(res, "[label=\"PRIVATE\"];\n");
             break;
-        case PROTECTED:
+        case _PROTECTED:
             res = concat(res, "[label=\"PROTECTED\"];\n");
             break;
-        case INTERNAL:
+        case _INTERNAL:
             res = concat(res, "[label=\"INTERNAL\"];\n");
             break;
-        case OPEN:
+        case _OPEN:
             res = concat(res, "[label=\"OPEN\"];\n");
             break;
-        case OVERRIDE:
+        case _OVERRIDE:
             res = concat(res, "[label=\"OVERRIDE\"];\n");
             break;
         default:

@@ -118,7 +118,7 @@ SimpleExpression: INT_LITERAL {$$ = createIntLiteralExpressionNode($1);}
                 | '+' EndlOpt SimpleExpression %prec UPLUS {$$ = createUnaryPlusExpressionNode($3);}
                 | INCREMENT EndlOpt SimpleExpression %prec PREF_INCREMENT {$$ = createPrefIncrementExpressionNode($3);}
                 | DECREMENT EndlOpt SimpleExpression %prec PREF_DECREMENT {$$ = createPrefDecrementExpressionNode($3);}
-                | '!' EndlOpt SimpleExpression {$$ = createNotExpressionNoode($3);}
+                | '!' EndlOpt SimpleExpression {$$ = createNotExpressionNode($3);}
                 | SimpleExpression DECREMENT %prec POST_DECREMENT {$$ = createPostDecrementExpressionNode($1);}
                 | SimpleExpression INCREMENT %prec POST_INCREMENT {$$ = createPostIncrementExpressionNode($1);}
                 ;

@@ -1,3 +1,9 @@
+%{
+    #include "grammar_tab.h"
+    #include "parsing_tree.h"
+    #include "print_functions.h"
+    extern int yyparse();
+%}
 %option noyywrap
 %option never-interactive
 %option stack
@@ -727,6 +733,14 @@ int main(int argc, char* argv[])
 	yyparse();
 
     printf("The parsing process is completed.");
+
+    FILE *f = fopen("result.gv", "w");
+
+    char * res = generateDotFromKotlinFile(root);
+
+    fprintf(f, "%s", res);
+
+    fclose(f);
 
 	return 0;
 }
