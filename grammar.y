@@ -184,7 +184,7 @@ VarStmt: VAR EndlOpt VarDeclaration EndlList {$$ = createVarStatementFromVarDecl
 
 VarDeclIdList: ID {$$ = createVarDeclarationListNode(createVarDeclarationNode($1, NULL));}
              | VarDeclaration {$$ = createVarDeclarationListNode($1);}
-             | VarDeclIdList ',' ID {$$ = addVarDeclToVarDeclarationListNode($1, createVarDeclarationNode($1, $3));}
+             | VarDeclIdList ',' ID {$$ = addVarDeclToVarDeclarationListNode($1, createVarDeclarationNode($3, NULL));}
              | VarDeclIdList ',' VarDeclaration {$$ = addVarDeclToVarDeclarationListNode($1, $3);}
              ;
 
@@ -201,9 +201,9 @@ VarDeclarationList: VarDeclaration {$$ = createVarDeclarationListNode($1);}
                   | VarDeclarationList EndlOpt ',' EndlOpt VarDeclaration {$$ = addVarDeclToVarDeclarationListNode($1, $5);}
                   ;
 
-FunctionDeclaration: FUNC EndlOpt ID EndlOpt '(' EndlOpt ')' EndlOpt BlockStatement {$$ = createFunctionNode($3, NULL, "Unit", $9);}
+FunctionDeclaration: FUNC EndlOpt ID EndlOpt '(' EndlOpt ')' EndlOpt BlockStatement {$$ = createFunctionNode($3, NULL, (char*)"Unit", $9);}
                    | FUNC EndlOpt ID EndlOpt '(' EndlOpt ')' EndlOpt ':' EndlOpt ID EndlOpt BlockStatement {$$ = createFunctionNode($3, NULL, $11, $13);}
-                   | FUNC EndlOpt ID EndlOpt '(' EndlOpt VarDeclarationList EndlOpt ')' EndlOpt BlockStatement {$$ = createFunctionNode($3, $7, "Unit", $11);}
+                   | FUNC EndlOpt ID EndlOpt '(' EndlOpt VarDeclarationList EndlOpt ')' EndlOpt BlockStatement {$$ = createFunctionNode($3, $7, (char*)"Unit", $11);}
                    | FUNC EndlOpt ID EndlOpt '(' EndlOpt VarDeclarationList EndlOpt ')' EndlOpt ':' EndlOpt ID EndlOpt BlockStatement {$$ = createFunctionNode($3, $7, $13, $15);}
                    ;
 

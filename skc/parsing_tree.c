@@ -1120,9 +1120,21 @@ struct FunctionNode * createFunctionNode(char * ident, struct VarDeclarationList
 {
     struct FunctionNode * node = (struct FunctionNode*)malloc(sizeof(struct FunctionNode));
     node->id = ID++;
-    node->identifier = ident;
+    if(ident != NULL)
+    {
+        char * tempI = (char*)malloc(strlen(ident)+1);
+        strcpy(tempI, ident);
+        node->identifier = tempI;
+    }
+    else {node->identifier = NULL;}
     node->params = pars;
-    node->returnValue = ret;
+    if (ret != NULL)
+    {
+        char * tempRet = (char*)malloc(strlen(ret)+1);
+        strcpy(tempRet, ret);
+        node->returnValue = tempRet;
+    }
+    else {node->returnValue = NULL;}
     node->body = bod;
     return node;
 }
