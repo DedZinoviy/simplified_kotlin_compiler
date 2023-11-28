@@ -564,7 +564,7 @@ false {
 
     struct stringBuffer * ns = (struct stringBuffer*)malloc(sizeof(struct stringBuffer));
     memcpy(ns->buffer, buff.buffer, buff.length);
-    ns->length = strlen(buff.length);
+    ns->length = buff.length;
     yylval.stringLit = ns;
     hasPlus = 1;
     hasOpenBracket = 1;
@@ -581,7 +581,7 @@ false {
     
     struct stringBuffer * ns = (struct stringBuffer*)malloc(sizeof(struct stringBuffer));
     memcpy(ns->buffer, buff.buffer, buff.length);
-    ns->length = strlen(buff.length);
+    ns->length = buff.length;
     yylval.stringLit = ns;
     hasPlus = 1;
     hasOpenBracket = 1;
@@ -605,7 +605,7 @@ false {
     yy_pop_state();
     struct stringBuffer * ns = (struct stringBuffer*)malloc(sizeof(struct stringBuffer));
     memcpy(ns->buffer, buff.buffer, buff.length);
-    ns->length = strlen(buff.length);
+    ns->length = buff.length;
     yylval.stringLit = ns;
     return STRING_LITERAL;
 }
