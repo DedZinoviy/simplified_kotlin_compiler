@@ -411,7 +411,7 @@ false {
     removeUnderline(bufferString);
     int result = strtol(bufferString + 2, NULL, 16);
     printf("(%d) - HEX_INT\n", result);
-    yylval.intLit = res;
+    yylval.intLit = result;
     return INT_LITERAL;
 }
 
@@ -436,7 +436,7 @@ false {
     removeUnderline(bufferString);
     int result = strtol(bufferString + 2, NULL, 2);
     printf("(%d) - BINARY_INT\n", result);
-    yylval.intLit = res;
+    yylval.intLit = result;
     return INT_LITERAL;
 }
 
