@@ -43,6 +43,19 @@ char * generateDotFromExpression(struct ExpressionNode * node)
         res = concat(res, dstr);
         res = concat(res, (char *)"\"];\n");
         break;
+    case _STRING_LIT:
+        res = concat(res, (char*)"[label=\"");
+        char * str = getSafeCString(node->stringValue->buffer);
+        res = concat(res, (char *)"\"];\n");
+        break;
+    case _CHAR_LIT:
+        res = concat(res, (char*)"[label=\"");
+        char tmp[2];
+        tmp[1] = 0;
+        if (node->charValue != 0) tmp[0] = node->charValue;
+        else tmp[0] = 32;
+        res = concat(res, tmp);
+        res = concat(res, (char *)"\"];\n");
     case _PLUS:
         res = concat(res, (char *)"[label=\"+\"];\n");
         res = concat(res, generateStrForBinOperation(node));
@@ -91,6 +104,14 @@ char * generateDotFromExpression(struct ExpressionNode * node)
         res = concat(res, (char *)"[label=\"..\"];\n");
         res = concat(res, generateStrForBinOperation(node));
         break;
+    case _CONJUNCTION:
+        res = concat(res, (char *)"[label=\"&&\"];\n");
+        res = concat(res, generateStrForBinOperation(node));
+        break;
+    case _DISJUNCTION:
+        res = concat(res, (char *)"[label=\"||\"];\n");
+        res = concat(res, generateStrForBinOperation(node));
+        break;
     case _UNARY_PLUS:
         res = concat(res, (char *)"[label=\"U_+\"];\n");
         res = concat(res, generateDotFromExpression(node->right));
@@ -125,19 +146,26 @@ char * generateDotFromExpression(struct ExpressionNode * node)
         break;
     case _POST_INCREMENT:
         res = concat(res, (char *)"[label=\"POST_++\"];\n");
-        res = concat(res, generateDotFromExpression(node->right));
+        res = concat(res, generateDotFromExpression(node->left));
         res = concat(res, itoa(node->id, idStr, 10));
         res = concat(res, (char *)" -> ");
-        res = concat(res, itoa(node->right->id, idStr, 10));
+        res = concat(res, itoa(node->left->id, idStr, 10));
         res = concat(res, (char *)";\n");
         break;
     case _POST_DECREMENT:
         res = concat(res, (char *)"[label=\"POST_--\"];\n");
-        res = concat(res, generateDotFromExpression(node->right));
+        res = concat(res, generateDotFromExpression(node->left));
         res = concat(res, itoa(node->id, idStr, 10));
         res = concat(res, (char *)" -> ");
-        res = concat(res, itoa(node->right->id, idStr, 10));
+        res = concat(res, itoa(node->left->id, idStr, 10));
         res = concat(res, (char *)";\n");
+        break;
+    case _BRACKETS:
+        res = concat(res, (char*)"[label=\"()\"];\n");
+        res = concat(res, itoa(node->id, idStr, 10));
+        res = concat(res, (char *)" -> ");
+        res = concat(res, itoa(node->left->id, idStr, 10));
+        res = concat(res, (char *)"[label=\"inner\"];\n");
         break;
     default:
         break;
