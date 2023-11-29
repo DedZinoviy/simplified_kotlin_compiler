@@ -56,6 +56,12 @@ char * generateDotFromExpression(struct ExpressionNode * node)
         else tmp[0] = 32;
         res = concat(res, tmp);
         res = concat(res, (char *)"\"];\n");
+    case _THIS:
+        res = concat(res, (char *)"[label=\"THIS\"];\n");
+        break;
+    case _SUPER:
+        res = concat(res, (char *)"[label=\"SUPER\"];\n");
+        break;
     case _PLUS:
         res = concat(res, (char *)"[label=\"+\"];\n");
         res = concat(res, generateStrForBinOperation(node));
@@ -112,6 +118,30 @@ char * generateDotFromExpression(struct ExpressionNode * node)
         res = concat(res, (char *)"[label=\"||\"];\n");
         res = concat(res, generateStrForBinOperation(node));
         break;
+    case _ASSIGNMENT:
+        res = concat(res, (char *)"[label=\"=\"];\n");
+        res = concat(res, generateStrForBinOperation(node));
+        break;
+    case _PLUS_ASSIGNMENT:
+        res = concat(res, (char *)"[label=\"+=\"];\n");
+        res = concat(res, generateStrForBinOperation(node));
+        break;
+    case _MINUS_ASSIGNMENT:
+        res = concat(res, (char *)"[label=\"-=\"];\n");
+        res = concat(res, generateStrForBinOperation(node));
+        break;
+    case _MUL_ASSIGNMENT:
+        res = concat(res, (char *)"[label=\"*=\"];\n");
+        res = concat(res, generateStrForBinOperation(node));
+        break;
+    case _DIV_ASSIGNMENT:
+        res = concat(res, (char *)"[label=\"/=\"];\n");
+        res = concat(res, generateStrForBinOperation(node));
+        break;
+    case _MOD_ASSIGNMENT:
+        res = concat(res, (char *)"[label=\"%=\"];\n");
+        res = concat(res, generateStrForBinOperation(node));
+        break;
     case _UNARY_PLUS:
         res = concat(res, (char *)"[label=\"U_+\"];\n");
         res = concat(res, generateDotFromExpression(node->right));
@@ -144,6 +174,14 @@ char * generateDotFromExpression(struct ExpressionNode * node)
         res = concat(res, itoa(node->right->id, idStr, 10));
         res = concat(res, (char *)";\n");
         break;
+    case _NOT:
+        res = concat(res, (char *)"[label=\"!\"];\n");
+        res = concat(res, generateDotFromExpression(node->right));
+        res = concat(res, itoa(node->id, idStr, 10));
+        res = concat(res, (char *)" -> ");
+        res = concat(res, itoa(node->right->id, idStr, 10));
+        res = concat(res, (char *)";\n");
+        break;
     case _POST_INCREMENT:
         res = concat(res, (char *)"[label=\"POST_++\"];\n");
         res = concat(res, generateDotFromExpression(node->left));
@@ -166,6 +204,47 @@ char * generateDotFromExpression(struct ExpressionNode * node)
         res = concat(res, (char *)" -> ");
         res = concat(res, itoa(node->left->id, idStr, 10));
         res = concat(res, (char *)"[label=\"inner\"];\n");
+        break;
+    case _FUNC_CALL:
+        res = concat(res, (char*)"[label=\"invoke <name=");
+        res = concat(res, node->identifierString);
+        res = concat(res, (char*)">\"];\n");
+        if(node->params != NULL)
+        {
+            res = concat(res, generateDotFromExpressionList(node->params));
+            res = concat(res, itoa(node->id, idStr, 10));
+            res = concat(res, (char *)" -> ");
+            res = concat(res, itoa(node->params->id, idStr, 10));
+            res = concat(res, (char *)"[label=\"params\"];\n");
+        }
+        break;
+    case _FIELD_ACCESS:
+        res = concat(res, (char*)"[label=\"field_access <name=");
+        res = concat(res, node->identifierString);
+        res = concat(res, (char*)">\"];\n");
+        res = concat(res, generateDotFromExpression(node->left));
+        res = concat(res, itoa(node->id, idStr, 10));
+        res = concat(res, (char *)" -> ");
+        res = concat(res, itoa(node->left->id, idStr, 10));
+        res = concat(res, (char *)"[label=\"object\"];\n");
+        break;
+    case _METHOD_ACCESS:
+        res = concat(res, (char*)"[label=\"method_invoke <name=");
+        res = concat(res, node->identifierString);
+        res = concat(res, (char*)">\"];\n");
+        res = concat(res, generateDotFromExpression(node->left));
+        res = concat(res, itoa(node->id, idStr, 10));
+        res = concat(res, (char *)" -> ");
+        res = concat(res, itoa(node->left->id, idStr, 10));
+        res = concat(res, (char *)"[label=\"object\"];\n");
+        if(node->params != NULL)
+        {
+            res = concat(res, generateDotFromExpressionList(node->params));
+            res = concat(res, itoa(node->id, idStr, 10));
+            res = concat(res, (char *)" -> ");
+            res = concat(res, itoa(node->params->id, idStr, 10));
+            res = concat(res, (char *)"[label=\"params\"];\n");
+        }
         break;
     default:
         break;
