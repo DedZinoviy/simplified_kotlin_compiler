@@ -45,7 +45,7 @@ char * generateDotFromExpression(struct ExpressionNode * node)
         break;
     case _STRING_LIT:
         res = concat(res, (char*)"[label=\"");
-        char * str = getSafeCString(node->stringValue->buffer);
+        res = concat(res, getSafeCString(node->stringValue->buffer));
         res = concat(res, (char *)"\"];\n");
         break;
     case _CHAR_LIT:
@@ -200,6 +200,7 @@ char * generateDotFromExpression(struct ExpressionNode * node)
         break;
     case _BRACKETS:
         res = concat(res, (char*)"[label=\"()\"];\n");
+        res = concat(res, generateDotFromExpression(node->left));
         res = concat(res, itoa(node->id, idStr, 10));
         res = concat(res, (char *)" -> ");
         res = concat(res, itoa(node->left->id, idStr, 10));
@@ -605,7 +606,6 @@ char * generateDotFromKotlinFileElement(struct KotlinFileElementNode * node)
     
     if (node->next != NULL)
     {
-        printf("NEXT iD: %d\n", node->next->id);
         res = concat(res, generateDotFromKotlinFileElement(node->next));
         res = concat(res, itoa(node->id, strId, 10));
         res = concat(res, (char *)" -> ");

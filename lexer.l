@@ -86,7 +86,7 @@ DIGIT [0-9]
     }
     if(hasCloseBracket != 0)
     {
-        hasOpenBracket = 0;
+        hasCloseBracket = 0;
         hasPlus = 1;
         return ')';
     }

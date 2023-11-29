@@ -832,6 +832,7 @@ struct StatementNode * createValStatement(char * valId, struct ExpressionNode * 
     node->singleBody = NULL;
     node->expression = expr;
     node->varValId = valId;
+    node->varValType = NULL;
     node->varDeclList = NULL;
     return node;
 }
@@ -896,6 +897,7 @@ struct StatementNode * createVarStatement(char * varId, struct ExpressionNode * 
     node->expression = expr;
     node->varValId = varId;
     node->varDeclList = NULL;
+    node->varValType = NULL;
     return node;
 }
 
