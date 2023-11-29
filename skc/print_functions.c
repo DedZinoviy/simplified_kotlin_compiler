@@ -25,7 +25,7 @@ char * generateDotFromExpression(struct ExpressionNode * node)
         break;
     case _BOOLEAN_LIT:
         res = concat(res, (char *)"[label=\"");
-        if (node->boolValue == 0) 
+        if (node->boolValue == 1) 
         {
             res = concat(res, (char *)"true");
         }
