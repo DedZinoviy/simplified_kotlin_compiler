@@ -418,8 +418,42 @@ char * generateDotFromStatement(struct StatementNode * stmt)
         }
         break;
     case _MULTI_VAL:
+        res = concat(res, (char *)"[label=\"MULTI_VAL\"];\n");
+        if (stmt->varDeclList != NULL)
+        {
+            res = concat(res, generateDotFromVarDeclarationList(stmt->varDeclList));
+            res = concat(res, itoa(stmt->id, strId, 10));
+            res = concat(res, (char *)" -> ");
+            res = concat(res, itoa(stmt->varDeclList->id, strId, 10));
+            res = concat(res, (char *)"[label = \"vals\"];\n");
+        }
+        if (stmt->expression != NULL)
+        {
+            res = concat(res, generateDotFromExpression(stmt->expression));
+            res = concat(res, itoa(stmt->id, strId, 10));
+            res = concat(res, (char *)" -> ");
+            res = concat(res, itoa(stmt->expression->id, strId, 10));
+            res = concat(res, (char *)"[label = \"expr\"];\n");
+        }
         break;
     case _MULTI_VAR:
+        res = concat(res, (char *)"[label=\"MULTI_VAR\"];\n");
+                if (stmt->varDeclList != NULL)
+        {
+            res = concat(res, generateDotFromVarDeclarationList(stmt->varDeclList));
+            res = concat(res, itoa(stmt->id, strId, 10));
+            res = concat(res, (char *)" -> ");
+            res = concat(res, itoa(stmt->varDeclList->id, strId, 10));
+            res = concat(res, (char *)"[label = \"vars\"];\n");
+        }
+        if (stmt->expression != NULL)
+        {
+            res = concat(res, generateDotFromExpression(stmt->expression));
+            res = concat(res, itoa(stmt->id, strId, 10));
+            res = concat(res, (char *)" -> ");
+            res = concat(res, itoa(stmt->expression->id, strId, 10));
+            res = concat(res, (char *)"[label = \"expr\"];\n");
+        }
         break;
     }
     if(stmt->next != NULL)
