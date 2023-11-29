@@ -16,6 +16,7 @@
 %x STRING
 %x MULTILINE_STRING
 %x CHAR
+%x OVER
 
 DIGIT [0-9]
 
@@ -689,8 +690,13 @@ false {
     return -1;
 }
 
-<INITIAL><<EOF>> { return ';';
-    BEGIN(INITIAL);
+<INITIAL><<EOF>> { 
+    BEGIN(OVER);
+    return ';';
+}
+
+<OVER><<EOF>> {
+    yyterminate();
 }
 
 %%
