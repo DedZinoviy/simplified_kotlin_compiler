@@ -1265,6 +1265,20 @@ struct KotlinFileElementNode * createElementFromFunction(struct ModifierListNode
     return node;
 }
 
+/*! Создать пустой элемент файла Kotlin.
+* \return указатель на экземпляр структуры-элемента Kotlin.
+*/
+struct KotlinFileElementNode* createEmptyElement()
+{
+    struct KotlinFileElementNode* node = (struct KotlinFileElementNode*)malloc(sizeof(struct KotlinFileElementNode));
+    node->id = ID++;
+    node->clas = NULL;
+    node->next = NULL;
+    node->modifiers = NULL;
+    node->func = NULL;
+    node->type = _EMPT;
+    return node;
+}
 
 
 /*------------------------------------ KotlinFileElementList -------------------------------------*/

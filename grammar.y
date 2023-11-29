@@ -298,7 +298,7 @@ KotlinFileElement: FunctionDeclaration EndlList {$$ = createElementFromFunction(
                  | ElementModifierList EndlOpt ClassDeclaration EndlList
                  | ElementModifierList EndlOpt FunctionDeclaration ';' EndlOpt {$$ = createElementFromFunction($1, $3);}
                  | ElementModifierList EndlOpt ClassDeclaration ';' EndlOpt
-                 | ';' EndlOpt
+                 | ';' EndlOpt {$$ = createEmptyElement();}
                  ;
 
 EndlOpt: /* empty */

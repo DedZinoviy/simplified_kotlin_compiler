@@ -526,6 +526,10 @@ struct ModifierListNode * addModifierToList(struct ModifierListNode * modList, s
 */
 struct KotlinFileElementNode * createElementFromFunction(struct ModifierListNode * modList, struct FunctionNode * function);
 
+/*! Создать пустой элемент файла Kotlin.
+* \return указатель на экземпляр структуры-элемента Kotlin.
+*/
+struct KotlinFileElementNode* createEmptyElement();
 
 
 /*------------------------------------ KotlinFileElementList -------------------------------------*/

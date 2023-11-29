@@ -355,8 +355,11 @@ char * generateDotFromStatementList(struct StatementListNode * stmtList)
 char * concat(char * firstStr, char * secStr)
 {
     char * result = (char *)malloc((strlen(firstStr)  + strlen(secStr) + 1) * sizeof(char));
+    result[0] = 0;
     strcpy(result, firstStr);
     strcat(result, secStr);
+    //printf("len of \"%s\" is %d\n\n\n", firstStr, strlen(firstStr));
+    //printf("len of \"%s\" is %d\n\n\n", secStr, strlen(secStr));
     return result;
 }
 
@@ -398,7 +401,7 @@ char * generateDotFromKotlinFile(struct KotlinFileNode * node)
     res = concat(res, (char *)" -> ");
     res = concat(res, itoa(node->elemList->id, strId, 10));
     res = concat(res, (char *)";\n");
-    res = concat(res, (char *)'}');
+    res = concat(res, (char *)"}");
     return res;
 }
 
@@ -432,6 +435,8 @@ char * generateDotFromKotlinFileElement(struct KotlinFileElementNode * node)
     char base[] = "";
     char strId[10];
     char * res  = concat(base, itoa(node->id, strId, 10));
+    if (node->type != _EMPT) res = concat(res, (char*)"[label=\"KotlinFileElement\"];\n");
+    else res = concat(res, (char*)"[label=\"EmptyElement\"];\n");
     if(node->modifiers != NULL)
     {
         res = concat(res, generateDotFromModifierList(node->modifiers));
@@ -451,12 +456,15 @@ char * generateDotFromKotlinFileElement(struct KotlinFileElementNode * node)
         break;
     case _CLASS:
         break;
+    case _EMPT:
+        break;
     default:
         break;
     }
     
     if (node->next != NULL)
     {
+        printf("NEXT iD: %d\n", node->next->id);
         res = concat(res, generateDotFromKotlinFileElement(node->next));
         res = concat(res, itoa(node->id, strId, 10));
         res = concat(res, (char *)" -> ");
@@ -581,7 +589,7 @@ char * generateDotFromVarDeclaration(struct VarDeclarationNode * node)
         res = concat(res, (char *)"> <type=");
         res = concat(res, node->type);
     }
-    res = concat(res, (char *)">];\n");
+    res = concat(res, (char *)">\"];\n");
     if(node->next != NULL)
     {
         res = concat(res, generateDotFromVarDeclaration(node->next));

@@ -299,7 +299,8 @@ struct ClassNode
 enum KotlinFileElementType
 {
     _CLASS,
-    _FUNCTION
+    _FUNCTION,
+    _EMPT
 };
 
 /*! \brief Структура, описывающая элемент файла Kotlin. */
