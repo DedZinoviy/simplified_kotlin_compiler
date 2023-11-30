@@ -35,6 +35,7 @@
 
 %nonassoc INCREMENT DECREMENT
 %nonassoc ENDL
+%nonassoc '{' ':'
 %right '=' PLUS_ASSIGNMENT MINUS_ASSIGNMENT MUL_ASSIGNMENT DIV_ASSIGNMENT MOD_ASSIGNMENT
 %left DISJ
 %left CONJ
@@ -201,10 +202,10 @@ VarDeclarationList: VarDeclaration {$$ = createVarDeclarationListNode($1);}
                   | VarDeclarationList EndlOpt ',' EndlOpt VarDeclaration {$$ = addVarDeclToVarDeclarationListNode($1, $5);}
                   ;
 
-FunctionDeclaration: FUNC EndlOpt ID EndlOpt '(' EndlOpt ')' EndlOpt BlockStatement {$$ = createFunctionNode($3, NULL, (char*)"Unit", $9);}
-                   | FUNC EndlOpt ID EndlOpt '(' EndlOpt ')' EndlOpt ':' EndlOpt ID EndlOpt BlockStatement {$$ = createFunctionNode($3, NULL, $11, $13);}
-                   | FUNC EndlOpt ID EndlOpt '(' EndlOpt VarDeclarationList EndlOpt ')' EndlOpt BlockStatement {$$ = createFunctionNode($3, $7, (char*)"Unit", $11);}
-                   | FUNC EndlOpt ID EndlOpt '(' EndlOpt VarDeclarationList EndlOpt ')' EndlOpt ':' EndlOpt ID EndlOpt BlockStatement {$$ = createFunctionNode($3, $7, $13, $15);}
+FunctionDeclaration: FUNC EndlOpt ID EndlOpt '(' EndlOpt ')' EndlOpt BlockStatement  EndlOpt {$$ = createFunctionNode($3, NULL, (char*)"Unit", $9);}
+                   | FUNC EndlOpt ID EndlOpt '(' EndlOpt ')' EndlOpt ':' EndlOpt ID EndlOpt BlockStatement  EndlOpt {$$ = createFunctionNode($3, NULL, $11, $13);}
+                   | FUNC EndlOpt ID EndlOpt '(' EndlOpt VarDeclarationList EndlOpt ')' EndlOpt BlockStatement  EndlOpt {$$ = createFunctionNode($3, $7, (char*)"Unit", $11);}
+                   | FUNC EndlOpt ID EndlOpt '(' EndlOpt VarDeclarationList EndlOpt ')' EndlOpt ':' EndlOpt ID EndlOpt BlockStatement  EndlOpt {$$ = createFunctionNode($3, $7, $13, $15);}
                    ;
 
 ClassModifierMember: ClassMember
@@ -240,44 +241,46 @@ ClassParam : ID ':' ID '=' SimpleExpression
            | VAR ID ':' ID '=' SimpleExpression
            | VAL ID ':' ID
            | VAR ID ':' ID
-           | MemberModifierList VAL ID ':' ID '=' SimpleExpression
-           | MemberModifierList VAR ID ':' ID '=' SimpleExpression
-           | MemberModifierList VAL ID ':' ID
-           | MemberModifierList VAR ID ':' ID
+           | MemberModifierList EndlOpt VAL ID ':' ID '=' SimpleExpression
+           | MemberModifierList EndlOpt VAR ID ':' ID '=' SimpleExpression
+           | MemberModifierList EndlOpt VAL ID ':' ID
+           | MemberModifierList EndlOpt VAR ID ':' ID
            ;
 
 ClassParamList: ClassParam
               | ClassParamList ',' ClassParam
               ;
 
-PrimaryConstructor: CONSTRUCTOR '(' ')'
-                  | MemberModifierList CONSTRUCTOR '(' ')'
-                  | CONSTRUCTOR '(' ClassParamList ')'
-                  | MemberModifierList CONSTRUCTOR '(' ClassParamList ')'
+PrimaryConstructor: CONSTRUCTOR EndlOpt '(' ')'
+                  | MemberModifierList EndlOpt CONSTRUCTOR EndlOpt '(' ')'
+                  | CONSTRUCTOR EndlOpt '(' ClassParamList ')'
+                  | MemberModifierList EndlOpt CONSTRUCTOR EndlOpt '(' ClassParamList ')'
                   | '(' ClassParamList ')'
                   | '(' ')'
                   ;
        
-ClassDeclaration: CLASS EndlOpt ID
-                | CLASS EndlOpt ID '{' EndlOpt '}'
-                | CLASS EndlOpt ID '{' EndlOpt ClassModifierMemberList '}'
-                | CLASS EndlOpt ID PrimaryConstructor EndlOpt '{' EndlOpt '}'
-                | CLASS EndlOpt ID PrimaryConstructor EndlOpt '{' EndlOpt ClassModifierMemberList '}'
-                | CLASS EndlOpt ID ':' EndlOpt ID
-                | CLASS EndlOpt ID ':' EndlOpt ID '(' ')'
-                | CLASS EndlOpt ID ':' EndlOpt ID '(' ExpressionList ')'
-                | CLASS EndlOpt ID ':' EndlOpt ID '{' EndlOpt '}'
-                | CLASS EndlOpt ID ':' EndlOpt ID '(' ')' '{' EndlOpt '}'
-                | CLASS EndlOpt ID ':' EndlOpt ID '(' ExpressionList ')' '{' EndlOpt '}'
-                | CLASS EndlOpt ID ':' EndlOpt ID '{' EndlOpt ClassModifierMemberList '}'
-                | CLASS EndlOpt ID ':' EndlOpt ID '(' ')' '{' EndlOpt ClassModifierMemberList '}'
-                | CLASS EndlOpt ID ':' EndlOpt ID '(' ExpressionList ')' '{' EndlOpt ClassModifierMemberList '}'
-                | CLASS EndlOpt ID PrimaryConstructor ':' EndlOpt ID '{' EndlOpt '}'
-                | CLASS EndlOpt ID PrimaryConstructor ':' EndlOpt ID '(' ')' '{' EndlOpt '}'
-                | CLASS EndlOpt ID PrimaryConstructor ':' EndlOpt ID '(' ExpressionList ')' '{' EndlOpt '}'
-                | CLASS EndlOpt ID PrimaryConstructor ':' EndlOpt ID  '{' EndlOpt ClassModifierMemberList '}'
-                | CLASS EndlOpt ID PrimaryConstructor ':' EndlOpt ID '(' ')' '{' EndlOpt ClassModifierMemberList '}'
-                | CLASS EndlOpt ID PrimaryConstructor ':' EndlOpt ID '(' ExpressionList ')' '{' EndlOpt ClassModifierMemberList '}'
+ClassDeclaration: CLASS EndlOpt ID EndlList
+                | CLASS EndlOpt ID ';' EndlOpt
+                | CLASS EndlOpt ID EndlOpt '{' EndlOpt '}' EndlOpt
+                | CLASS EndlOpt ID EndlOpt '{' EndlOpt ClassModifierMemberList '}' EndlOpt
+                | CLASS EndlOpt ID PrimaryConstructor EndlOpt
+                | CLASS EndlOpt ID PrimaryConstructor EndlOpt '{' EndlOpt '}' EndlOpt
+                | CLASS EndlOpt ID PrimaryConstructor EndlOpt '{' EndlOpt ClassModifierMemberList '}' EndlOpt
+                | CLASS EndlOpt ID EndlOpt ':' EndlOpt ID EndlOpt
+                | CLASS EndlOpt ID EndlOpt ':' EndlOpt ID EndlOpt '(' ')' EndlOpt
+                | CLASS EndlOpt ID EndlOpt ':' EndlOpt ID EndlOpt '(' ExpressionList ')' EndlOpt
+                | CLASS EndlOpt ID EndlOpt ':' EndlOpt ID EndlOpt '{' EndlOpt '}' EndlOpt
+                | CLASS EndlOpt ID EndlOpt ':' EndlOpt ID EndlOpt '(' ')' EndlOpt '{' EndlOpt '}' EndlOpt
+                | CLASS EndlOpt ID EndlOpt ':' EndlOpt ID EndlOpt '(' ExpressionList ')' EndlOpt '{' EndlOpt '}' EndlOpt
+                | CLASS EndlOpt ID EndlOpt ':' EndlOpt ID EndlOpt '{' EndlOpt ClassModifierMemberList '}' EndlOpt
+                | CLASS EndlOpt ID EndlOpt ':' EndlOpt ID EndlOpt '(' ')' EndlOpt '{' EndlOpt ClassModifierMemberList '}' EndlOpt
+                | CLASS EndlOpt ID EndlOpt ':' EndlOpt ID EndlOpt '(' ExpressionList ')' EndlOpt '{' EndlOpt ClassModifierMemberList '}' EndlOpt
+                | CLASS EndlOpt ID PrimaryConstructor EndlOpt ':' EndlOpt ID EndlOpt '{' EndlOpt '}' EndlOpt
+                | CLASS EndlOpt ID PrimaryConstructor EndlOpt ':' EndlOpt ID EndlOpt '(' ')' EndlOpt '{' EndlOpt '}' EndlOpt
+                | CLASS EndlOpt ID PrimaryConstructor EndlOpt ':' EndlOpt ID EndlOpt '(' ExpressionList ')' EndlOpt '{' EndlOpt '}' EndlOpt
+                | CLASS EndlOpt ID PrimaryConstructor EndlOpt ':' EndlOpt ID EndlOpt '{' EndlOpt ClassModifierMemberList '}' EndlOpt
+                | CLASS EndlOpt ID PrimaryConstructor EndlOpt ':' EndlOpt ID EndlOpt '(' ')' EndlOpt '{' EndlOpt ClassModifierMemberList '}' EndlOpt
+                | CLASS EndlOpt ID PrimaryConstructor EndlOpt ':' EndlOpt ID EndlOpt '(' ExpressionList ')' EndlOpt '{' EndlOpt ClassModifierMemberList '}' EndlOpt
                 ;
 
 ElementModifier: PUBLIC {$$ = createPublicModiferNode();}
@@ -290,14 +293,10 @@ ElementModifierList: ElementModifier {$$ = createModifierListNode($1);}
                    | ElementModifierList EndlOpt ElementModifier {$$ = addModifierToList($1, $3);}
                    ;
 
-KotlinFileElement: FunctionDeclaration EndlList {$$ = createElementFromFunction(createModifierListNode(createPublicModiferNode()), $1);}
-                 | ClassDeclaration EndlList
-                 | FunctionDeclaration ';' EndlOpt {$$ = createElementFromFunction(createModifierListNode(createPublicModiferNode()), $1);}
-                 | ClassDeclaration ';' EndlOpt
-                 | ElementModifierList EndlOpt FunctionDeclaration EndlList {$$ = createElementFromFunction($1, $3);}
-                 | ElementModifierList EndlOpt ClassDeclaration EndlList
-                 | ElementModifierList EndlOpt FunctionDeclaration ';' EndlOpt {$$ = createElementFromFunction($1, $3);}
-                 | ElementModifierList EndlOpt ClassDeclaration ';' EndlOpt
+KotlinFileElement: FunctionDeclaration {$$ = createElementFromFunction(createModifierListNode(createPublicModiferNode()), $1);}
+                 | ClassDeclaration
+                 | ElementModifierList EndlOpt FunctionDeclaration {$$ = createElementFromFunction($1, $3);}
+                 | ElementModifierList EndlOpt ClassDeclaration
                  | ';' EndlOpt {$$ = createEmptyElement();}
                  ;
 
