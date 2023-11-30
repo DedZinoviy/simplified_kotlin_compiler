@@ -21,6 +21,12 @@
        struct ModifierListNode * modList;
        struct KotlinFileElementNode * elem;
        struct KotlinFileElementListNode * elemList;
+       struct ClassMemberNode * member;
+       struct ClassMemberListNode * memberList;
+       struct ClassParamNode * classParam;
+       struct ClassParamListNode * classParams;
+       struct PrimaryConstructorNode * primConstr;
+       struct ClassNode * cls;
        struct KotlinFileNode * file;
 }
 
@@ -64,6 +70,12 @@
 %type <elem>KotlinFileElement
 %type <elemList>KotlinFileElementList
 %type <file>KotlinFile
+%type <member>ClassMember ClassModifierMember
+%type <memberList>ClassModifierMemberList
+%type <classParam>ClassParam
+%type <classParams>ClassParamList
+%type <primConstr>PrimaryConstructor
+%type <cls>ClassDeclaration
 
 %% 
 KotlinFile: KotlinFileElementList {$$ = root = createKotlinFileNode($1);}
@@ -208,9 +220,9 @@ FunctionDeclaration: FUNC EndlOpt ID EndlOpt '(' EndlOpt ')' EndlOpt BlockStatem
                    | FUNC EndlOpt ID EndlOpt '(' EndlOpt VarDeclarationList EndlOpt ')' EndlOpt ':' EndlOpt ID EndlOpt BlockStatement  EndlOpt {$$ = createFunctionNode($3, $7, $13, $15);}
                    ;
 
-ClassModifierMember: ClassMember
-                   | MemberModifierList ClassMember
-                   | ';'
+ClassModifierMember: ClassMember {$$ = $1;}
+                   | MemberModifierList ClassMember {$$ = assignModsToClassMember($1, $2);}
+                   | ';' {$$ = createEmptyClassMemberNode();}
                    ;
 
 MemberModifier: PUBLIC {$$ = createPublicModiferNode();}
@@ -225,62 +237,60 @@ MemberModifierList: MemberModifier {$$ = createModifierListNode($1);}
                   | MemberModifierList EndlOpt MemberModifier {$$ = addModifierToList($1, $3);}
                   ;
 
-ClassModifierMemberList: ClassModifierMember
-                       | ClassModifierMemberList ClassModifierMember
+ClassModifierMemberList: ClassModifierMember {$$ = createClassMemberListNode($1);}
+                       | ClassModifierMemberList ClassModifierMember {$$ = addClassMemberToListNode($1, $2);}
                        ;
 
-ClassMember: FunctionDeclaration
-           | ValStmt
-           | VarStmt
-           | MultiDeclararion
+ClassMember: FunctionDeclaration {$$ = createMethodClassMemberNode(NULL, $1);}
+           | ValStmt {$$ = createFieldClassMemberNode(NULL, $1);}
+           | VarStmt {$$ = createFieldClassMemberNode(NULL, $1);}
            ;
 
-ClassParam : ID ':' ID '=' SimpleExpression
-           | ID ':' ID
-           | VAL ID ':' ID '=' SimpleExpression
-           | VAR ID ':' ID '=' SimpleExpression
-           | VAL ID ':' ID
-           | VAR ID ':' ID
-           | MemberModifierList EndlOpt VAL ID ':' ID '=' SimpleExpression
-           | MemberModifierList EndlOpt VAR ID ':' ID '=' SimpleExpression
-           | MemberModifierList EndlOpt VAL ID ':' ID
-           | MemberModifierList EndlOpt VAR ID ':' ID
+ClassParam : ID ':' ID '=' SimpleExpression {$$ = createClassParamNodeFromVarDecl(createVarDeclarationNode($1, $3), $5)}
+           | ID ':' ID {$$ = createClassParamNodeFromVarDecl(createVarDeclarationNode($1, $3), NULL)}
+           | VAL ID ':' ID '=' SimpleExpression {$$ = createClassParamNodeFromVarValStmt(createModifierListNode(createPublicModiferNode()), createValStatementFromVarDeclaration(createVarDeclarationNode($2, $4), $6));}
+           | VAR ID ':' ID '=' SimpleExpression {$$ = createClassParamNodeFromVarValStmt(createModifierListNode(createPublicModiferNode()), createVarStatementFromVarDeclaration(createVarDeclarationNode($2, $4), $6));}
+           | VAL ID ':' ID {$$ = createClassParamNodeFromVarValStmt(createModifierListNode(createPublicModiferNode()), createValStatementFromVarDeclaration(createVarDeclarationNode($2, $4), NULL));}
+           | VAR ID ':' ID {$$ = createClassParamNodeFromVarValStmt(createModifierListNode(createPublicModiferNode()), createVarStatementFromVarDeclaration(createVarDeclarationNode($2, $4), NULL));}
+           | MemberModifierList EndlOpt VAL ID ':' ID '=' SimpleExpression {$$ = createClassParamNodeFromVarValStmt($1, createVarStatementFromVarDeclaration(createValDeclarationNode($4, $6), $8));}
+           | MemberModifierList EndlOpt VAR ID ':' ID '=' SimpleExpression {$$ = createClassParamNodeFromVarValStmt($1, createVarStatementFromVarDeclaration(createVarDeclarationNode($4, $6), $8));}
+           | MemberModifierList EndlOpt VAL ID ':' ID {$$ = createClassParamNodeFromVarValStmt($1, createVarStatementFromVarDeclaration(createValDeclarationNode($4, $6), NULL));}
+           | MemberModifierList EndlOpt VAR ID ':' ID {$$ = createClassParamNodeFromVarValStmt($1, createVarStatementFromVarDeclaration(createVarDeclarationNode($4, $6), NULL));}
            ;
 
-ClassParamList: ClassParam
-              | ClassParamList ',' ClassParam
+ClassParamList: ClassParam {$$ = createClassParamListNode($1);}
+              | ClassParamList ',' ClassParam {$$ = addClassParamToListNode($1, $3);}
               ;
 
-PrimaryConstructor: CONSTRUCTOR EndlOpt '(' ')'
-                  | MemberModifierList EndlOpt CONSTRUCTOR EndlOpt '(' ')'
-                  | CONSTRUCTOR EndlOpt '(' ClassParamList ')'
-                  | MemberModifierList EndlOpt CONSTRUCTOR EndlOpt '(' ClassParamList ')'
-                  | '(' ClassParamList ')'
-                  | '(' ')'
+PrimaryConstructor: CONSTRUCTOR EndlOpt '(' ')' {$$ = createPrimaryConstructor(createModifierListNode(createPublicModiferNode()), NULL);} 
+                  | MemberModifierList EndlOpt CONSTRUCTOR EndlOpt '(' ')' {$$ = createPrimaryConstructor($1, NULL);} 
+                  | CONSTRUCTOR EndlOpt '(' ClassParamList ')'{$$ = createPrimaryConstructor(createModifierListNode(createPublicModiferNode()), $4);} 
+                  | MemberModifierList EndlOpt CONSTRUCTOR EndlOpt '(' ClassParamList ')' {$$ = createPrimaryConstructor($1, $6);} 
+                  | '(' ClassParamList ')' {$$ = createPrimaryConstructor(createModifierListNode(createPublicModiferNode()), $2);} 
+                  | '(' ')' {$$ = createPrimaryConstructor(createModifierListNode(createPublicModiferNode()), NULL);} 
                   ;
        
-ClassDeclaration: CLASS EndlOpt ID EndlList
-                | CLASS EndlOpt ID ';' EndlOpt
-                | CLASS EndlOpt ID EndlOpt '{' EndlOpt '}' EndlOpt
-                | CLASS EndlOpt ID EndlOpt '{' EndlOpt ClassModifierMemberList '}' EndlOpt
-                | CLASS EndlOpt ID PrimaryConstructor EndlOpt
-                | CLASS EndlOpt ID PrimaryConstructor EndlOpt '{' EndlOpt '}' EndlOpt
-                | CLASS EndlOpt ID PrimaryConstructor EndlOpt '{' EndlOpt ClassModifierMemberList '}' EndlOpt
-                | CLASS EndlOpt ID EndlOpt ':' EndlOpt ID EndlOpt
-                | CLASS EndlOpt ID EndlOpt ':' EndlOpt ID EndlOpt '(' ')' EndlOpt
-                | CLASS EndlOpt ID EndlOpt ':' EndlOpt ID EndlOpt '(' ExpressionList ')' EndlOpt
-                | CLASS EndlOpt ID EndlOpt ':' EndlOpt ID EndlOpt '{' EndlOpt '}' EndlOpt
-                | CLASS EndlOpt ID EndlOpt ':' EndlOpt ID EndlOpt '(' ')' EndlOpt '{' EndlOpt '}' EndlOpt
-                | CLASS EndlOpt ID EndlOpt ':' EndlOpt ID EndlOpt '(' ExpressionList ')' EndlOpt '{' EndlOpt '}' EndlOpt
-                | CLASS EndlOpt ID EndlOpt ':' EndlOpt ID EndlOpt '{' EndlOpt ClassModifierMemberList '}' EndlOpt
-                | CLASS EndlOpt ID EndlOpt ':' EndlOpt ID EndlOpt '(' ')' EndlOpt '{' EndlOpt ClassModifierMemberList '}' EndlOpt
-                | CLASS EndlOpt ID EndlOpt ':' EndlOpt ID EndlOpt '(' ExpressionList ')' EndlOpt '{' EndlOpt ClassModifierMemberList '}' EndlOpt
-                | CLASS EndlOpt ID PrimaryConstructor EndlOpt ':' EndlOpt ID EndlOpt '{' EndlOpt '}' EndlOpt
-                | CLASS EndlOpt ID PrimaryConstructor EndlOpt ':' EndlOpt ID EndlOpt '(' ')' EndlOpt '{' EndlOpt '}' EndlOpt
-                | CLASS EndlOpt ID PrimaryConstructor EndlOpt ':' EndlOpt ID EndlOpt '(' ExpressionList ')' EndlOpt '{' EndlOpt '}' EndlOpt
-                | CLASS EndlOpt ID PrimaryConstructor EndlOpt ':' EndlOpt ID EndlOpt '{' EndlOpt ClassModifierMemberList '}' EndlOpt
-                | CLASS EndlOpt ID PrimaryConstructor EndlOpt ':' EndlOpt ID EndlOpt '(' ')' EndlOpt '{' EndlOpt ClassModifierMemberList '}' EndlOpt
-                | CLASS EndlOpt ID PrimaryConstructor EndlOpt ':' EndlOpt ID EndlOpt '(' ExpressionList ')' EndlOpt '{' EndlOpt ClassModifierMemberList '}' EndlOpt
+ClassDeclaration: CLASS EndlOpt ID EndlList {$$ = createClassNode($3, createPrimaryConstructor(createModifierListNode(createPublicModiferNode()), NULL), NULL, createIDExpressionNode((char*)"Any"));}
+                | CLASS EndlOpt ID ';' EndlOpt {$$ = createClassNode($3, createPrimaryConstructor(createModifierListNode(createPublicModiferNode()), NULL), NULL, createIDExpressionNode((char*)"Any"));}
+                | CLASS EndlOpt ID EndlOpt '{' EndlOpt '}' EndlOpt {$$ = createClassNode($3, createPrimaryConstructor(createModifierListNode(createPublicModiferNode()), NULL), NULL, createIDExpressionNode((char*)"Any"));}
+                | CLASS EndlOpt ID EndlOpt '{' EndlOpt ClassModifierMemberList '}' EndlOpt {$$ = createClassNode($3, createPrimaryConstructor(createModifierListNode(createPublicModiferNode()), NULL), $7, createIDExpressionNode((char*)"Any"));}
+                | CLASS EndlOpt ID PrimaryConstructor EndlOpt {$$ = createClassNode($3, $4, NULL, createIDExpressionNode((char*)"Any"));}
+                | CLASS EndlOpt ID PrimaryConstructor EndlOpt '{' EndlOpt '}' EndlOpt {$$ = createClassNode($3, $4, NULL, createIDExpressionNode((char*)"Any"));}
+                | CLASS EndlOpt ID PrimaryConstructor EndlOpt '{' EndlOpt ClassModifierMemberList '}' EndlOpt {$$ = createClassNode($3, $4, $8, createIDExpressionNode((char*)"Any"));}
+                | CLASS EndlOpt ID EndlOpt ':' EndlOpt ID EndlOpt '{' EndlOpt ClassModifierMemberList '}' EndlOpt {$$ = createClassNode($3, createPrimaryConstructor(createModifierListNode(createPublicModiferNode()), NULL) , $11, createIDExpressionNode($7));}
+                | CLASS EndlOpt ID EndlOpt ':' EndlOpt ID EndlOpt '(' ')' EndlOpt {$$ = createClassNode($3, createPrimaryConstructor(createModifierListNode(createPublicModiferNode()), NULL) , NULL, createFunctionCallExpressionNode($7, NULL));}
+                | CLASS EndlOpt ID EndlOpt ':' EndlOpt ID EndlOpt '(' ExpressionList ')' EndlOpt  {$$ = createClassNode($3, createPrimaryConstructor(createModifierListNode(createPublicModiferNode()), NULL) , NULL, createFunctionCallExpressionNode($7, $10));}
+                | CLASS EndlOpt ID EndlOpt ':' EndlOpt ID EndlOpt '{' EndlOpt '}' EndlOpt {$$ = createClassNode($3, createPrimaryConstructor(createModifierListNode(createPublicModiferNode()), NULL) , NULL, createIDExpressionNode($7));}
+                | CLASS EndlOpt ID EndlOpt ':' EndlOpt ID EndlOpt '(' ')' EndlOpt '{' EndlOpt '}' EndlOpt {$$ = createClassNode($3, createPrimaryConstructor(createModifierListNode(createPublicModiferNode()), NULL) , NULL, createFunctionCallExpressionNode($7, NULL));}
+                | CLASS EndlOpt ID EndlOpt ':' EndlOpt ID EndlOpt '(' ExpressionList ')' EndlOpt '{' EndlOpt '}' EndlOpt {$$ = createClassNode($3, createPrimaryConstructor(createModifierListNode(createPublicModiferNode()), NULL) , NULL, createFunctionCallExpressionNode($7, $10));}
+                | CLASS EndlOpt ID EndlOpt ':' EndlOpt ID EndlOpt '(' ')' EndlOpt '{' EndlOpt ClassModifierMemberList '}' EndlOpt {$$ = createClassNode($3, createPrimaryConstructor(createModifierListNode(createPublicModiferNode()), NULL) , $14, createFunctionCallExpressionNode($7, NULL));}
+                | CLASS EndlOpt ID EndlOpt ':' EndlOpt ID EndlOpt '(' ExpressionList ')' EndlOpt '{' EndlOpt ClassModifierMemberList '}' EndlOpt {$$ = createClassNode($3, createPrimaryConstructor(createModifierListNode(createPublicModiferNode()), NULL) , $15, createFunctionCallExpressionNode($7, $10));}
+                | CLASS EndlOpt ID PrimaryConstructor EndlOpt ':' EndlOpt ID EndlOpt '{' EndlOpt '}' EndlOpt {$$ = createClassNode($3, $4 , NULL, createIDExpressionNode($8));}
+                | CLASS EndlOpt ID PrimaryConstructor EndlOpt ':' EndlOpt ID EndlOpt '(' ')' EndlOpt '{' EndlOpt '}' EndlOpt {$$ = createClassNode($3, $4 , NULL, createFunctionCallExpressionNode($8, NULL));}
+                | CLASS EndlOpt ID PrimaryConstructor EndlOpt ':' EndlOpt ID EndlOpt '(' ExpressionList ')' EndlOpt '{' EndlOpt '}' EndlOpt {$$ = createClassNode($3, $4 , NULL, createFunctionCallExpressionNode($11, NULL));}
+                | CLASS EndlOpt ID PrimaryConstructor EndlOpt ':' EndlOpt ID EndlOpt '{' EndlOpt ClassModifierMemberList '}' EndlOpt {$$ = createClassNode($3, $4 , $12, createIDExpressionNode($8));}
+                | CLASS EndlOpt ID PrimaryConstructor EndlOpt ':' EndlOpt ID EndlOpt '(' ')' EndlOpt '{' EndlOpt ClassModifierMemberList '}' EndlOpt {$$ = createClassNode($3, $4 , $15, createFunctionCallExpressionNode($8, NULL));}
+                | CLASS EndlOpt ID PrimaryConstructor EndlOpt ':' EndlOpt ID EndlOpt '(' ExpressionList ')' EndlOpt '{' EndlOpt ClassModifierMemberList '}' EndlOpt {$$ = createClassNode($3, $4 , $16, createFunctionCallExpressionNode($8, $11));}
                 ;
 
 ElementModifier: PUBLIC {$$ = createPublicModiferNode();}
@@ -294,9 +304,9 @@ ElementModifierList: ElementModifier {$$ = createModifierListNode($1);}
                    ;
 
 KotlinFileElement: FunctionDeclaration {$$ = createElementFromFunction(createModifierListNode(createPublicModiferNode()), $1);}
-                 | ClassDeclaration
+                 | ClassDeclaration {$$ = createElementFromClass(createModifierListNode(createPublicModiferNode()), $1);}
                  | ElementModifierList EndlOpt FunctionDeclaration {$$ = createElementFromFunction($1, $3);}
-                 | ElementModifierList EndlOpt ClassDeclaration
+                 | ElementModifierList EndlOpt ClassDeclaration {$$ = createElementFromClass($1, $3);}
                  | ';' EndlOpt {$$ = createEmptyElement();}
                  ;
 

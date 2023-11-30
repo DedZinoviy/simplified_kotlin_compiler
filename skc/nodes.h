@@ -340,6 +340,8 @@ struct ClassParamNode
 
     /// Указатель на следующий узел параметра класса.
     struct ClassParamNode * next;
+
+    struct ExpressionNode * expr;
 };
 
 struct ClassParamListNode
@@ -363,7 +365,7 @@ struct PrimaryConstructorNode
     struct ModifierListNode * mods;
 
     /// Указатель на список параметорв класса.
-    struct ParamListNode * params;
+    struct ClassParamListNode * params;
 };
 
 /*! \brief Структура, описывающая классы. */

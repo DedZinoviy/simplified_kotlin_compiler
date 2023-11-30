@@ -526,6 +526,8 @@ struct ModifierListNode * addModifierToList(struct ModifierListNode * modList, s
 */
 struct KotlinFileElementNode * createElementFromFunction(struct ModifierListNode * modList, struct FunctionNode * function);
 
+struct KotlinFileElementNode * createElementFromClass(struct ModifierListNode * modList, struct ClassNode * cls);
+
 /*! Создать пустой элемент файла Kotlin.
 * \return указатель на экземпляр структуры-элемента Kotlin.
 */
@@ -561,12 +563,22 @@ struct ClassMemberNode * createEmptyClassMemberNode();
 
 struct ClassMemberNode * createMethodClassMemberNode(struct ModifierListNode * modList, struct FunctionNode * func);
 
-struct ClassMemberNode * createFieldClassMemberNode(struct ModifierListNode * modList, struct StatementNode * stmt, enum ClassMemberType type);
+struct ClassMemberNode * createFieldClassMemberNode(struct ModifierListNode * modList, struct StatementNode * stmt);
+
+struct ClassMemberNode * assignModsToClassMember(struct ModifierListNode * modList, struct ClassMemberNode * member);
 
 struct ClassMemberListNode * createClassMemberListNode(struct ClassMemberNode * member);
 
 struct ClassMemberListNode * addClassMemberToListNode(struct ClassMemberListNode * memberList, struct ClassMemberNode * member);
 
-struct ClassParamNode * createClassParamNodeFromVarDecl(struct VarDeclarationNode * varDecl);
+struct ClassParamNode * createClassParamNodeFromVarDecl(struct VarDeclarationNode * varDecl, struct ExpressionNode * expression);
 
 struct ClassParamNode * createClassParamNodeFromVarValStmt(struct ModifierListNode * modList, struct StatementNode * stmt);
+
+struct ClassParamListNode * createClassParamListNode(struct ClassParamNode * param);
+
+struct ClassParamListNode * addClassParamToListNode(struct ClassParamListNode * paramList, struct ClassParamNode * param);
+
+struct PrimaryConstructorNode * createPrimaryConstructor(struct ModifierListNode * modList, struct ClassParamListNode * paramList);
+
+struct ClassNode * createClassNode(char * ident, struct PrimaryConstructorNode * constructor, struct ClassMemberListNode * memberList, struct ExpressionNode * parent);
