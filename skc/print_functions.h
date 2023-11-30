@@ -86,3 +86,39 @@ char * generateDotFromVarDeclaration(struct VarDeclarationNode * node);
 * \return DOT-строка с дочерними узлами.
 */
 char * generateDotFromVarDeclarationList(struct VarDeclarationListNode * node);
+
+/*! Сгенерировать DOT-строку для узла класса.
+* \param[in] node Узел класса.
+* \return DOT-строка с дочерними узлами.
+*/
+char * generateDotFromClass(struct ClassNode * node);
+
+/*! Сгенерировать DOT-строку для узла первичного конструктора.
+* \param[in] node Узел первичного конструктора.
+* \return DOT-строка с дочерними узлами.
+*/
+char * generateDotFromPrimaryConstructor(struct PrimaryConstructorNode * node);
+
+/*! Сгенерировать DOT-строку для узла члена класса.
+* \param[in] node Узел члена класса.
+* \return DOT-строка с дочерними узлами.
+*/
+char * generateDotFromClassMember(struct ClassMemberNode * node);
+
+/*! Сгенерировать DOT-строку для узла списка членов класса.
+* \param[in] node Узел списка членов класса.
+* \return DOT-строка с дочерними узлами.
+*/
+char * generateDotFromClassMemberList(struct ClassMemberListNode * node);
+
+/*! Сгенерировать DOT-строку для узла списка параметров класса.
+* \param[in] node Узел списка параметров класса.
+* \return DOT-строка с дочерними узлами.
+*/
+char * generateDotFromClassParamList(struct ClassParamListNode * node);
+
+/*! Сгенерировать DOT-строку для узла параметра класса.
+* \param[in] node Узел параметра класса.
+* \return DOT-строка с дочерними узлами.
+*/
+char * generateDotFromClassParam(struct ClassParamNode * node);

@@ -597,6 +597,11 @@ char * generateDotFromKotlinFileElement(struct KotlinFileElementNode * node)
         res = concat(res, (char *)"[label=\"function\"];\n");
         break;
     case _CLASS:
+        res = concat(res, generateDotFromClass(node->clas));
+        res = concat(res, itoa(node->id, strId, 10));
+        res = concat(res, (char *)" -> ");
+        res = concat(res, itoa(node->clas->id, strId, 10));
+        res = concat(res, (char *)"[label=\"class\"];\n");
         break;
     case _EMPT:
         break;
@@ -759,6 +764,224 @@ char * generateDotFromVarDeclarationList(struct VarDeclarationListNode * node)
         res = concat(res, (char *)" -> ");
         res = concat(res, itoa(node->first->id, strId, 10));
         res = concat(res, (char *)"[label=\"first\"];\n");
+    }
+    return res;
+}
+
+/*! Сгенерировать DOT-строку для узла класса.
+* \param[in] node Узел класса.
+* \return DOT-строка с дочерними узлами.
+*/
+char * generateDotFromClass(struct ClassNode * node)
+{
+    char base[] = "";
+    char strId[10];
+    char * res = concat(base, itoa(node->id, strId, 10));
+    res = concat(res, (char *)"[label=\"Class <ident=");
+    res = concat(res, node->identifier);
+    res = concat(res, (char *)">\"];\n");
+
+    if (node->base != NULL)
+    {
+        res = concat(res, generateDotFromExpression(node->base));
+        res = concat(res, itoa(node->id, strId, 10));
+        res = concat(res, (char *)" -> ");
+        res = concat(res, itoa(node->base->id, strId, 10));
+        res = concat(res, (char *)"[label=\"parent\"];\n");
+    }
+
+    if (node->members != NULL)
+    {
+        res = concat(res, generateDotFromClassMemberList(node->members));
+        res = concat(res, itoa(node->id, strId, 10));
+        res = concat(res, (char *)" -> ");
+        res = concat(res, itoa(node->members->id, strId, 10));
+        res = concat(res, (char *)"[label=\"members\"];\n");
+    }
+    
+    if (node->constr != NULL)
+    {
+        res = concat(res, generateDotFromPrimaryConstructor(node->constr));
+        res = concat(res, itoa(node->id, strId, 10));
+        res = concat(res, (char *)" -> ");
+        res = concat(res, itoa(node->constr->id, strId, 10));
+        res = concat(res, (char *)"[label=\"prim constructor\"];\n");
+    }
+
+    return res;
+}
+
+/*! Сгенерировать DOT-строку для узла первичного конструктора.
+* \param[in] node Узел первичного конструктора.
+* \return DOT-строка с дочерними узлами.
+*/
+char * generateDotFromPrimaryConstructor(struct PrimaryConstructorNode * node)
+{
+    char base[] = "";
+    char strId[10];
+    char * res = concat(base, itoa(node->id, strId, 10));
+    res = concat(res, (char *)"[label=\"Primary Constructor\"];\n");
+    
+    if(node->mods != NULL)
+    {
+        res = concat(res, generateDotFromModifierList(node->mods));
+        res = concat(res, itoa(node->id, strId, 10));
+        res = concat(res, (char *)" -> ");
+        res = concat(res, itoa(node->mods->id, strId, 10));
+        res = concat(res, (char *)"[label=\"modifiers\"];\n");
+    }
+
+    if(node->params != NULL)
+    {
+        res = concat(res, generateDotFromClassParamList(node->params));
+        res = concat(res, itoa(node->id, strId, 10));
+        res = concat(res, (char *)" -> ");
+        res = concat(res, itoa(node->params->id, strId, 10));
+        res = concat(res, (char *)"[label=\"class parameters\"];\n");
+    }
+
+    return res;
+}
+
+/*! Сгенерировать DOT-строку для узла члена класса.
+* \param[in] node Узел члена класса.
+* \return DOT-строка с дочерними узлами.
+*/
+char * generateDotFromClassMember(struct ClassMemberNode * node)
+{
+    char base[] = "";
+    char strId[10];
+    char * res = concat(base, itoa(node->id, strId, 10));
+    
+    switch (node->type)
+    {
+        case _C_EMPTY:
+            res = concat(res, (char *)"[label=\"Empty Class Member\"];\n");
+            break;
+        case _FIELD:
+            res = concat(res, (char *)"[label=\"Class Field Member\"];\n");
+            res = concat(res, generateDotFromStatement(node->stmt));
+            res = concat(res, itoa(node->id, strId, 10));
+            res = concat(res, (char *)" -> ");
+            res = concat(res, itoa(node->stmt->id, strId, 10));
+            res = concat(res, (char *)"[label=\"field\"];\n");
+            break;
+        case _METHOD:
+            res = concat(res, (char *)"[label=\"Class Method Member\"];\n");
+            res = concat(res, generateDotFromFunction(node->method));
+            res = concat(res, itoa(node->id, strId, 10));
+            res = concat(res, (char *)" -> ");
+            res = concat(res, itoa(node->method->id, strId, 10));
+            res = concat(res, (char *)"[label=\"method\"];\n");
+            break;
+        default:
+            break;
+    }
+
+    if(node->mods != NULL)
+    {
+        res = concat(res, generateDotFromModifierList(node->mods));
+        res = concat(res, itoa(node->id, strId, 10));
+        res = concat(res, (char *)" -> ");
+        res = concat(res, itoa(node->mods->id, strId, 10));
+        res = concat(res, (char *)"[label=\"modifiers\"];\n");
+    }
+
+    if(node->next != NULL)
+    {
+        res = concat(res, generateDotFromClassMember(node->next));
+        res = concat(res, itoa(node->id, strId, 10));
+        res = concat(res, (char *)" -> ");
+        res = concat(res, itoa(node->next->id, strId, 10));
+        res = concat(res, (char *)"[label=\"next\"];\n");
+    }
+
+    return res;
+}
+
+/*! Сгенерировать DOT-строку для узла списка членов класса.
+* \param[in] node Узел списка членов класса.
+* \return DOT-строка с дочерними узлами.
+*/
+char * generateDotFromClassMemberList(struct ClassMemberListNode * node)
+{
+    char base[] = "";
+    char strId[10];
+    char * res = concat(base, itoa(node->id, strId, 10));
+    res = concat(res, (char *)"[label=\"ClassMemberList\"];\n");
+    if(node->first != NULL)
+    {
+        res = concat(res, generateDotFromClassMember(node->first));
+        res = concat(res, itoa(node->id, strId, 10));
+        res = concat(res, (char *)" -> ");
+        res = concat(res, itoa(node->first->id, strId, 10));
+        res = concat(res, (char *)"[label=\"first\"];\n");
+    }
+    return res;
+}
+
+/*! Сгенерировать DOT-строку для узла списка параметров класса.
+* \param[in] node Узел списка параметров класса.
+* \return DOT-строка с дочерними узлами.
+*/
+char * generateDotFromClassParamList(struct ClassParamListNode * node)
+{
+    char base[] = "";
+    char strId[10];
+    char * res = concat(base, itoa(node->id, strId, 10));
+    res = concat(res, (char *)"[label=\"ClassParamList\"];\n");
+    if(node->first != NULL)
+    {
+        res = concat(res, generateDotFromClassParam(node->first));
+        res = concat(res, itoa(node->id, strId, 10));
+        res = concat(res, (char *)" -> ");
+        res = concat(res, itoa(node->first->id, strId, 10));
+        res = concat(res, (char *)"[label=\"first\"];\n");
+    }
+    return res;
+}
+
+/*! Сгенерировать DOT-строку для узла параметра класса.
+* \param[in] node Узел параметра класса.
+* \return DOT-строка с дочерними узлами.
+*/
+char * generateDotFromClassParam(struct ClassParamNode * node)
+{
+    char base[] = "";
+    char strId[10];
+    char * res = concat(base, itoa(node->id, strId, 10));
+    res = concat(res, (char *)"[label=\"ClassParam\"];\n");
+    if(node->varDecl != NULL)
+    {
+        res = concat(res, generateDotFromVarDeclaration(node->varDecl));
+        res = concat(res, itoa(node->id, strId, 10));
+        res = concat(res, (char *)" -> ");
+        res = concat(res, itoa(node->varDecl->id, strId, 10));
+        res = concat(res, (char *)"[label=\"varDecl\"];\n");
+        if(node->expr != NULL)
+        {
+            res = concat(res, generateDotFromExpression(node->expr));
+            res = concat(res, itoa(node->id, strId, 10));
+            res = concat(res, (char *)" -> ");
+            res = concat(res, itoa(node->expr->id, strId, 10));
+            res = concat(res, (char *)"[label=\"expression\"];\n");
+        }
+    }
+    else if (node->valVar != NULL)
+    {
+        res = concat(res, generateDotFromStatement(node->valVar));
+        res = concat(res, itoa(node->id, strId, 10));
+        res = concat(res, (char *)" -> ");
+        res = concat(res, itoa(node->valVar->id, strId, 10));
+        res = concat(res, (char *)"[label=\"val|var\"];\n");
+    }
+    if(node->next != NULL)
+    {
+        res = concat(res, generateDotFromClassParam(node->next));
+        res = concat(res, itoa(node->id, strId, 10));
+        res = concat(res, (char *)" -> ");
+        res = concat(res, itoa(node->next->id, strId, 10));
+        res = concat(res, (char *)"[label=\"next\"];\n");
     }
     return res;
 }

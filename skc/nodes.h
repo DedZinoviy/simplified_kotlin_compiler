@@ -309,7 +309,7 @@ struct ClassMemberNode
     struct FunctionNode * method;
 
     /// Указатель на следующий член класса.
-    struct ClassMember * next;
+    struct ClassMemberNode * next;
 };
 
 struct ClassMemberListNode
@@ -333,7 +333,7 @@ struct ClassParamNode
     struct ModifierNode * mods;
 
     /// Указатель на узел Объявления переменной.
-    struct VarDeclareationNode * varDecl;
+    struct VarDeclarationNode * varDecl;
 
     /// Указатель на выражение переменной.
     struct StatementNode * valVar;
