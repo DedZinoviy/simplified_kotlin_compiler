@@ -95,7 +95,14 @@ DIGIT [0-9]
 as {printf("(%s) - AS_KEY_WORD\n", yytext);}
 as\? {printf("(%s) - AS?_KEY_WORD\n", yytext);}
 break {printf("(%s) - BREAK_KEY_WORD\n", yytext);}
-class {printf("(%s) - CLASS_KEY_WORD\n", yytext);}
+class {
+    printf("(%s) - CLASS_KEY_WORD\n", yytext);
+    return CLASS;
+}
+constructor {
+    printf("(%s) - CONSTRUCTOR_KEY_WORD\n", yytext);
+    return CONSTRUCTOR;
+}
 continue {printf("(%s) - CONTINUE_KEY_WORD\n", yytext);}
 do {
     printf("(%s) - DO_KEY_WORD\n", yytext);
