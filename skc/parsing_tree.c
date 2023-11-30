@@ -1325,3 +1325,77 @@ struct KotlinFileNode * createKotlinFileNode(struct KotlinFileElementListNode * 
     node->elemList = elemList;
     return node;
 }
+
+struct ClassMemberNode * createEmptyClassMemberNode()
+{
+    struct ClassMemberNode * node = (struct ClassMemberNode *)malloc(sizeof(struct ClassMemberNode));
+    node->id = ID++;
+    node->next = NULL;
+    node->mods = NULL;
+    node->method = NULL;
+    node->type = _C_EMPTY;
+    node->stmt = NULL;
+    return node;
+}
+
+struct ClassMemberNode * createMethodClassMemberNode(struct ModifierListNode * modList, struct FunctionNode * func)
+{
+    struct ClassMemberNode * node = (struct ClassMemberNode *)malloc(sizeof(struct ClassMemberNode));
+    node->id = ID++;
+    node->next = NULL;
+    node->mods = modList;
+    node->method = func;
+    node->type = _METHOD;
+    node->stmt = NULL;
+    return node;
+}
+
+struct ClassMemberNode * createFieldClassMemberNode(struct ModifierListNode * modList, struct StatementNode * stmt, enum ClassMemberType type)
+{
+    struct ClassMemberNode * node = (struct ClassMemberNode *)malloc(sizeof(struct ClassMemberNode));
+    node->id = ID++;
+    node->next = NULL;
+    node->mods = modList;
+    node->method = NULL;
+    node->type = _FIELD;
+    node->stmt = stmt;
+    return node;
+}
+
+struct ClassMemberListNode * createClassMemberListNode(struct ClassMemberNode * member)
+{
+    struct ClassMemberListNode * node = (struct ClassMemberListNode *)malloc(sizeof(struct ClassMemberListNode));
+    node->id = ID++;
+    node->first = member;
+    node->last = member;
+    return node;
+}
+
+struct ClassMemberListNode * addClassMemberToListNode(struct ClassMemberListNode * memberList, struct ClassMemberNode * member)
+{
+    memberList->last->next = member;
+    memberList->last = member;
+    return memberList;
+}
+
+struct ClassParamNode * createClassParamNodeFromVarDecl(struct VarDeclarationNode * varDecl)
+{
+    struct ClassParamNode * node = (struct ClassParamNode *)malloc(sizeof(struct ClassParamNode));
+    node->id = ID++;
+    node->next = NULL;
+    node->varDecl = varDecl;
+    node->mods = NULL;
+    node->valVar = NULL;
+    return node;
+}
+
+struct ClassParamNode * createClassParamNodeFromVarValStmt(struct ModifierListNode * modList, struct StatementNode * stmt)
+{
+    struct ClassParamNode * node = (struct ClassParamNode *)malloc(sizeof(struct ClassParamNode));
+    node->id = ID++;
+    node->next = NULL;
+    node->varDecl = NULL;
+    node->mods = modList;
+    node->valVar = stmt;
+    return node;
+}

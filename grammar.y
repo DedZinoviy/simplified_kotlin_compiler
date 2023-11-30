@@ -59,8 +59,8 @@
 %type <varDecl>VarDeclaration
 %type <varDeclList>VarDeclarationList VarDeclIdList
 %type <function>FunctionDeclaration
-%type <mod>ElementModifier
-%type <modList>ElementModifierList
+%type <mod>ElementModifier MemberModifier
+%type <modList>ElementModifierList MemberModifierList
 %type <elem>KotlinFileElement
 %type <elemList>KotlinFileElementList
 %type <file>KotlinFile
@@ -209,25 +209,25 @@ FunctionDeclaration: FUNC EndlOpt ID EndlOpt '(' EndlOpt ')' EndlOpt BlockStatem
                    ;
 
 ClassModifierMember: ClassMember
-                     | MemberModifierList ClassMember
-                     | ';'
-                     ;
+                   | MemberModifierList ClassMember
+                   | ';'
+                   ;
 
-MemberModifier: PUBLIC
-              | PRIVATE
-              | PROTECTED
-              | INTERNAL
-              | OPEN
-              | OVERRIDE
+MemberModifier: PUBLIC {$$ = createPublicModiferNode();}
+              | PRIVATE {$$ = createPrivateModiferNode();}
+              | PROTECTED {$$ = createProtectedModiferNode();}
+              | INTERNAL {$$ = createInternalModiferNode();}
+              | OPEN {$$ = createOpenModiferNode();}
+              | OVERRIDE {$$ = createOverrideModiferNode();}
               ;
 
-MemberModifierList: MemberModifier
-                  | MemberModifierList EndlOpt MemberModifier
+MemberModifierList: MemberModifier {$$ = createModifierListNode($1);}
+                  | MemberModifierList EndlOpt MemberModifier {$$ = addModifierToList($1, $3);}
                   ;
 
 ClassModifierMemberList: ClassModifierMember
-                         | ClassModifierMemberList ClassModifierMember
-                         ;
+                       | ClassModifierMemberList ClassModifierMember
+                       ;
 
 ClassMember: FunctionDeclaration
            | ValStmt

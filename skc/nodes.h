@@ -285,12 +285,102 @@ struct FunctionNode
 
 /*------------------------------------ Class -------------------------------------*/
 
+enum ClassMemberType
+{
+    _FIELD,
+    _METHOD,
+    _C_EMPTY
+};
+
+struct ClassMemberNode
+{
+    /// Идентификатор узла.
+    int id; 
+    
+    struct ModifierListNode * mods;
+
+    /// Тип члена класса
+    enum ClassMemberType type;
+
+    /// Statement члена класса - поля.
+    struct StatementNode * stmt;
+
+    /// Указатель на узел метода (функции).
+    struct FunctionNode * method;
+
+    /// Указатель на следующий член класса.
+    struct ClassMember * next;
+};
+
+struct ClassMemberListNode
+{
+    /// Идентификатор узла.
+    int id;
+
+    /// Указатель на первый член класса.
+    struct ClassMemberNode * first;
+
+    /// Указатель на последний член класса.
+    struct ClassMemberNode * last;
+};
+
+struct ClassParamNode
+{
+    /// Идентификатор узла.
+    int id;
+
+    /// Указатель на узел списка модификаторов параметра. 
+    struct ModifierNode * mods;
+
+    /// Указатель на узел Объявления переменной.
+    struct VarDeclareationNode * varDecl;
+
+    /// Указатель на выражение переменной.
+    struct StatementNode * valVar;
+
+    /// Указатель на следующий узел параметра класса.
+    struct ClassParamNode * next;
+};
+
+struct ClassParamListNode
+{
+    /// Идентификатор узла.
+    int id;
+
+    /// Указатель на первый элемент списка параметров класса.
+    struct ClassParamNode * first;
+
+    /// Указатель на последний элемент списка параметров класса.
+    struct ClassParamNode * last;
+};
+
+struct PrimaryConstructorNode
+{
+    /// Идентификатор узла.
+    int id;
+
+    /// Указатель на узел списка модификаторов.
+    struct ModifierListNode * mods;
+
+    /// Указатель на список параметорв класса.
+    struct ParamListNode * params;
+};
+
 /*! \brief Структура, описывающая классы. */
 struct ClassNode
 {
     /// Идентификатор узла.
-    int id; 
+    int id;
+
+    char * identifier;
+
+    struct PrimaryConstructorNode * constr;
+
+    struct ClassMemberListNode * members;
+
+    struct ExpressionNode * base;
 };
+
 
 
 /*------------------------------------ KotlinFileElement -------------------------------------*/

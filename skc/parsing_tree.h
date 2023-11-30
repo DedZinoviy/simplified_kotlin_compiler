@@ -556,3 +556,17 @@ struct KotlinFileElementListNode * addKotlinFileElementToList(struct KotlinFileE
 * \return указатель на корневой узел файла Kotlin.
 */
 struct KotlinFileNode * createKotlinFileNode(struct KotlinFileElementListNode * elemList);
+
+struct ClassMemberNode * createEmptyClassMemberNode();
+
+struct ClassMemberNode * createMethodClassMemberNode(struct ModifierListNode * modList, struct FunctionNode * func);
+
+struct ClassMemberNode * createFieldClassMemberNode(struct ModifierListNode * modList, struct StatementNode * stmt, enum ClassMemberType type);
+
+struct ClassMemberListNode * createClassMemberListNode(struct ClassMemberNode * member);
+
+struct ClassMemberListNode * addClassMemberToListNode(struct ClassMemberListNode * memberList, struct ClassMemberNode * member);
+
+struct ClassParamNode * createClassParamNodeFromVarDecl(struct VarDeclarationNode * varDecl);
+
+struct ClassParamNode * createClassParamNodeFromVarValStmt(struct ModifierListNode * modList, struct StatementNode * stmt);
