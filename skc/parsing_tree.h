@@ -481,7 +481,7 @@ struct ModifierNode * createPublicModiferNode();
 /*! Создать узел модификатора PROTECTED.
 * \return указатель на узел модификатора PROTECTED.
 */
-struct ModifierNode * createProtectedeModiferNode();
+struct ModifierNode * createProtectedModifierNode();
 
 /*! Создать узел модификатора INTERNAL.
 * \return указатель на узел модификатора INTERNAL.

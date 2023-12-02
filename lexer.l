@@ -194,7 +194,8 @@ false {
 
 \/\/ {bufferString[0] = 0; yy_push_state(END_OF_LINE_COMMENT);}
 <END_OF_LINE_COMMENT>[^\n]* {strcat(bufferString, yytext);}
-<END_OF_LINE_COMMENT>[\r\n] {printf("(%s) - END_OF_LINE_COMMENT\n", bufferString);  line += 1; yy_pop_state();}
+<END_OF_LINE_COMMENT>[\r\n] {printf("(%s) - END_OF_LINE_COMMENT\n", bufferString);  line += 1; yy_pop_state();
+return ENDL; }
 <END_OF_LINE_COMMENT><<EOF>> {printf("(%s) - END_OF_LINE_COMMENT\n", bufferString); BEGIN(INITIAL);}
 
 \+ {

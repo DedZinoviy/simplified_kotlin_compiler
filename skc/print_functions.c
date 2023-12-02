@@ -56,6 +56,7 @@ char * generateDotFromExpression(struct ExpressionNode * node)
         else tmp[0] = 32;
         res = concat(res, tmp);
         res = concat(res, (char *)"\"];\n");
+        break;
     case _THIS:
         res = concat(res, (char *)"[label=\"THIS\"];\n");
         break;

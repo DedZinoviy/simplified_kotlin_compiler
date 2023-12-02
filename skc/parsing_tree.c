@@ -1172,7 +1172,7 @@ struct ModifierNode * createPublicModiferNode()
 /*! Создать узел модификатора PROTECTED.
 * \return указатель на узел модификатора PROTECTED.
 */
-struct ModifierNode * createProtectedeModiferNode()
+struct ModifierNode * createProtectedModifierNode()
 {
     struct ModifierNode * node = (struct ModifierNode*)malloc(sizeof(struct ModifierNode));
     node->id = ID++;

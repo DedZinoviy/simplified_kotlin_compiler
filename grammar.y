@@ -150,9 +150,9 @@ WhileStatement: WHILE EndlOpt '(' EndlOpt SimpleExpression EndlOpt ')' EndlOpt S
               | WHILE EndlOpt '(' EndlOpt SimpleExpression EndlOpt ')' EndlOpt BlockStatement ';' EndlOpt {$$ = createStatementFromWhileWithComplexBody($5, $9);}
               ;
 
-DoWhileStatement: DO EndlOpt BlockStatement EndlOpt WHILE EndlOpt '(' EndlOpt SimpleExpression EndlOpt ')' EndlList {$$ = createStatementFromWhileWithComplexBody($9, $3);}
+DoWhileStatement: DO EndlOpt BlockStatement EndlOpt WHILE EndlOpt '(' EndlOpt SimpleExpression EndlOpt ')' EndlList {$$ = createStatementFromDoWhileWithComplexBody($9, $3);}
                 | DO EndlOpt Statement WHILE EndlOpt '(' EndlOpt SimpleExpression EndlOpt ')' EndlList {$$ = createStatementFromDoWhileWithSingleBody($8, $3);}
-                | DO EndlOpt BlockStatement EndlOpt WHILE EndlOpt '(' EndlOpt SimpleExpression EndlOpt ')' ';' EndlOpt {$$ = createStatementFromWhileWithComplexBody($9, $3);}
+                | DO EndlOpt BlockStatement EndlOpt WHILE EndlOpt '(' EndlOpt SimpleExpression EndlOpt ')' ';' EndlOpt {$$ = createStatementFromDoWhileWithComplexBody($9, $3);}
                 | DO EndlOpt Statement WHILE EndlOpt '(' EndlOpt SimpleExpression EndlOpt ')' ';' EndlOpt {$$ = createStatementFromDoWhileWithSingleBody($8, $3);}
                 ;
 
@@ -252,9 +252,9 @@ ClassParam : ID ':' ID '=' SimpleExpression {$$ = createClassParamNodeFromVarDec
            | VAR ID ':' ID '=' SimpleExpression {$$ = createClassParamNodeFromVarValStmt(createModifierListNode(createPublicModiferNode()), createVarStatementFromVarDeclaration(createVarDeclarationNode($2, $4), $6));}
            | VAL ID ':' ID {$$ = createClassParamNodeFromVarValStmt(createModifierListNode(createPublicModiferNode()), createValStatementFromVarDeclaration(createVarDeclarationNode($2, $4), NULL));}
            | VAR ID ':' ID {$$ = createClassParamNodeFromVarValStmt(createModifierListNode(createPublicModiferNode()), createVarStatementFromVarDeclaration(createVarDeclarationNode($2, $4), NULL));}
-           | MemberModifierList EndlOpt VAL ID ':' ID '=' SimpleExpression {$$ = createClassParamNodeFromVarValStmt($1, createVarStatementFromVarDeclaration(createValDeclarationNode($4, $6), $8));}
+           | MemberModifierList EndlOpt VAL ID ':' ID '=' SimpleExpression {$$ = createClassParamNodeFromVarValStmt($1, createValStatementFromVarDeclaration(createVarDeclarationNode($4, $6), $8));}
            | MemberModifierList EndlOpt VAR ID ':' ID '=' SimpleExpression {$$ = createClassParamNodeFromVarValStmt($1, createVarStatementFromVarDeclaration(createVarDeclarationNode($4, $6), $8));}
-           | MemberModifierList EndlOpt VAL ID ':' ID {$$ = createClassParamNodeFromVarValStmt($1, createVarStatementFromVarDeclaration(createValDeclarationNode($4, $6), NULL));}
+           | MemberModifierList EndlOpt VAL ID ':' ID {$$ = createClassParamNodeFromVarValStmt($1, createValStatementFromVarDeclaration(createVarDeclarationNode($4, $6), NULL));}
            | MemberModifierList EndlOpt VAR ID ':' ID {$$ = createClassParamNodeFromVarValStmt($1, createVarStatementFromVarDeclaration(createVarDeclarationNode($4, $6), NULL));}
            ;
 
