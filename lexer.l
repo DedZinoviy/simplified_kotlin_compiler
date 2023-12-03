@@ -1,5 +1,5 @@
 %{
-    #include "grammar_tab.h"
+    #include "parser_tab.h"
     #include "parsing_tree.h"
     #include "print_functions.h"
     extern int yyparse();
