@@ -78,7 +78,7 @@
 %type <cls>ClassDeclaration
 
 %% 
-KotlinFile: KotlinFileElementList {$$ = root = createKotlinFileNode($1);}
+KotlinFile: EndlOpt KotlinFileElementList {$$ = root = createKotlinFileNode($2);}
           ;
 
 KotlinFileElementList: KotlinFileElement {$$ = createKotlinFileElementListNode($1);}

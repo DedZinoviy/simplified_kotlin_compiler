@@ -29,7 +29,7 @@
 
 
 %% 
-KotlinFile: KotlinFileElementList
+KotlinFile: EndlOpt KotlinFileElementList
           ;
 
 KotlinFileElementList: KotlinFileElement
