@@ -222,7 +222,7 @@ FunctionDeclaration: FUNC EndlOpt ID EndlOpt '(' EndlOpt ')' EndlOpt BlockStatem
 
 ClassModifierMember: ClassMember {$$ = $1;}
                    | MemberModifierList ClassMember {$$ = assignModsToClassMember($1, $2);}
-                   | ';' {$$ = createEmptyClassMemberNode();}
+                   | ';' EndlOpt {$$ = createEmptyClassMemberNode();}
                    ;
 
 MemberModifier: PUBLIC {$$ = createPublicModifierNode();}
