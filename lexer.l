@@ -372,13 +372,13 @@ return ENDL; }
 }
 
 <INBRACE><<EOF>> {
-    printf("ERROR: expecting \"{\"");
+    printf("ERROR: expecting \"{\"\n");
     BEGIN(INITIAL);
     return -1;
 }
 
 <INTERPOLATION><<EOF>> {
-    printf("ERROR: expecting \"{\"");
+    printf("ERROR: expecting \"{\"\n");
     BEGIN(INITIAL);
     return -1;
 }
@@ -663,13 +663,13 @@ return ENDL; }
 <STRING,CHAR>\\u[0-9A-Fa-f]{0,4} {
     if (strlen(yytext) < 4)
     {
-        printf("ERROR: Illegal escape \'\\u\' in line %d", line);
+        printf("ERROR: Illegal escape \'\\u\' in line %d\n", line);
         return -1;
     }
     int value = strtol(yytext+2,NULL, 16);
     if (value > 127)
     {
-        printf("ERROR: non-supported UNICODE character in line %d.", line);
+        printf("ERROR: non-supported UNICODE character in line %d.\n", line);
         return -1;
     }
     else
@@ -694,7 +694,7 @@ return ENDL; }
 . {
     bufferString[0] = 0;
     strcat(bufferString, yytext);
-    printf("%s - UNRECOGNIZED TOKEN.", bufferString);
+    printf("%s - UNRECOGNIZED TOKEN.\n", bufferString);
     return -1;
 }
 
@@ -742,17 +742,19 @@ int main(int argc, char* argv[])
 
 	yyin = fopen(argv[1], "r");
 
-    printf("The parsing process has started.");
+    printf("The parsing process has started.\n");
 
 	yyparse();
 
-    printf("The parsing process is completed.");
+    printf("The parsing process is completed.\n");
 
     FILE *f = fopen("result.gv", "w");
 
     char * res = generateDotFromKotlinFile(root);
 
     fprintf(f, "%s", res);
+
+    printf("%s\n", res);
 
     fclose(f);
 
