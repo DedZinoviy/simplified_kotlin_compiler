@@ -471,12 +471,12 @@ struct FunctionNode * createFunctionNode(char * ident, struct VarDeclarationList
 /*! Создать узел модификатора PRIVATE.
 * \return указатель на узел модификатора PRIVATE.
 */
-struct ModifierNode * createPrivateModiferNode();
+struct ModifierNode * createPrivateModifierNode();
 
 /*! Создать узел модификатора PUBLIC.
 * \return указатель на узел модификатора PUBLIC.
 */
-struct ModifierNode * createPublicModiferNode();
+struct ModifierNode * createPublicModifierNode();
 
 /*! Создать узел модификатора PROTECTED.
 * \return указатель на узел модификатора PROTECTED.
@@ -486,17 +486,17 @@ struct ModifierNode * createProtectedModifierNode();
 /*! Создать узел модификатора INTERNAL.
 * \return указатель на узел модификатора INTERNAL.
 */
-struct ModifierNode * createInternalModiferNode();
+struct ModifierNode * createInternalModifierNode();
 
 /*! Создать узел модификатора OVERRIDE.
 * \return указатель на узел модификатора OVERRIDE.
 */
-struct ModifierNode * createOverrideModiferNode();
+struct ModifierNode * createOverrideModifierNode();
 
 /*! Создать узел модификатора OPEN.
 * \return указатель на узел модификатора OPEN.
 */
-struct ModifierNode * createOpenModiferNode();
+struct ModifierNode * createOpenModifierNode();
 
 
 
