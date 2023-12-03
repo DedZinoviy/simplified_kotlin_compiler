@@ -1267,6 +1267,11 @@ struct KotlinFileElementNode * createElementFromFunction(struct ModifierListNode
     return node;
 }
 
+/*! Создать элемент файла Kotlin на основе класса.
+* \param[in] modList список модификаторов элемента.
+* \param[in] cls класс, на основе которого создается элемент.
+* \return указатель на экземпляр структуры-элемента Kotlin.
+*/
 struct KotlinFileElementNode * createElementFromClass(struct ModifierListNode * modList, struct ClassNode * cls)
 {
     struct KotlinFileElementNode * node = (struct KotlinFileElementNode*)malloc(sizeof(struct KotlinFileElementNode));
@@ -1338,6 +1343,13 @@ struct KotlinFileNode * createKotlinFileNode(struct KotlinFileElementListNode * 
     return node;
 }
 
+
+
+/*------------------------------------ Class Member -------------------------------------*/
+
+/*! Создать узел пустого члена класса.
+* \return указатель на узел пустого члена класса.
+*/
 struct ClassMemberNode * createEmptyClassMemberNode()
 {
     struct ClassMemberNode * node = (struct ClassMemberNode *)malloc(sizeof(struct ClassMemberNode));
@@ -1350,6 +1362,11 @@ struct ClassMemberNode * createEmptyClassMemberNode()
     return node;
 }
 
+/*! Создать узел метода.
+* \param[in] modList Указатель на узел списка модификаторов.
+* \param[in] func Указатель на узел функции - определение метода.
+* \return указатель на узел метода.
+*/
 struct ClassMemberNode * createMethodClassMemberNode(struct ModifierListNode * modList, struct FunctionNode * func)
 {
     struct ClassMemberNode * node = (struct ClassMemberNode *)malloc(sizeof(struct ClassMemberNode));
@@ -1362,6 +1379,11 @@ struct ClassMemberNode * createMethodClassMemberNode(struct ModifierListNode * m
     return node;
 }
 
+/*! Создать узел поля класса.
+* \param[in] modList Указатель на узел списка модификаторов.
+* \param[in] stmt Указатель на узел объявления переменной.
+* \return указатель на узел поля класса.
+*/
 struct ClassMemberNode * createFieldClassMemberNode(struct ModifierListNode * modList, struct StatementNode * stmt)
 {
     struct ClassMemberNode * node = (struct ClassMemberNode *)malloc(sizeof(struct ClassMemberNode));
@@ -1374,12 +1396,25 @@ struct ClassMemberNode * createFieldClassMemberNode(struct ModifierListNode * mo
     return node;
 }
 
+/*! Присвоить список модификаторов члену класса.
+* \param[in] modList Указатель на присываиваемый узел списка модификаторов.
+* \param[in] member Указатель на узел члена класса, которому требуется присвоить список модификаторов.
+* \return Указатель на узел члена класса с присвоенным списком модификаторов.
+*/
 struct ClassMemberNode * assignModsToClassMember(struct ModifierListNode * modList, struct ClassMemberNode * member)
 {
     member->mods = modList;
     return member;
 }
 
+
+
+/*------------------------------------ Class Member List -------------------------------------*/
+
+/*! Создать узел списка членов класса.
+* \param[in] member Указатель на узел члена класса, на основе которого создается список.
+* \return Указатель на созданный узел списка членов класса.
+*/
 struct ClassMemberListNode * createClassMemberListNode(struct ClassMemberNode * member)
 {
     struct ClassMemberListNode * node = (struct ClassMemberListNode *)malloc(sizeof(struct ClassMemberListNode));
@@ -1389,6 +1424,11 @@ struct ClassMemberListNode * createClassMemberListNode(struct ClassMemberNode * 
     return node;
 }
 
+/*! Добавить нового члена класса к списку членов класса.
+* \param[in] memberList Указатель на узел списка членов класса, в который добавляется новый узел.
+* \param[in] member Указатель на добавляемый узел члена класса.
+* \return Указатель на изменный узел списка членов класса.
+*/
 struct ClassMemberListNode * addClassMemberToListNode(struct ClassMemberListNode * memberList, struct ClassMemberNode * member)
 {
     memberList->last->next = member;
@@ -1396,6 +1436,15 @@ struct ClassMemberListNode * addClassMemberToListNode(struct ClassMemberListNode
     return memberList;
 }
 
+
+
+/*------------------------------------ Class Param -------------------------------------*/
+
+/*! Создать узел параметра класса на основе узла объявления переменной.
+* \param[in] varDecl указатель на узел объявления переменной, на основе которого создается параметр класса.
+* \param[in] expression указатель на выражение, значение которого будет использоваться как параметр по умолчанию; в случае ненадобности передать NULL.
+* \return указатель на узел параметра класса.
+*/
 struct ClassParamNode * createClassParamNodeFromVarDecl(struct VarDeclarationNode * varDecl, struct ExpressionNode * expression)
 {
     struct ClassParamNode * node = (struct ClassParamNode *)malloc(sizeof(struct ClassParamNode));
@@ -1408,6 +1457,11 @@ struct ClassParamNode * createClassParamNodeFromVarDecl(struct VarDeclarationNod
     return node;
 }
 
+/*! Создать узел параметра класса на основе выражения переменной с целью дальнейшего преобразования в поле класса.
+* \param[in] modList указатель на узел списка модификаторов, которые применятся к полю класса.
+* \param[in] stmt указатель на узел выражения переменной VAL или VAR.
+* \return указатель на узел параметра класса.
+*/
 struct ClassParamNode * createClassParamNodeFromVarValStmt(struct ModifierListNode * modList, struct StatementNode * stmt)
 {
     struct ClassParamNode * node = (struct ClassParamNode *)malloc(sizeof(struct ClassParamNode));
@@ -1420,6 +1474,14 @@ struct ClassParamNode * createClassParamNodeFromVarValStmt(struct ModifierListNo
     return node;
 }
 
+
+
+/*------------------------------------ Class Param List -------------------------------------*/
+
+/*! Создать узел списка параметров класса на основе узла параметра класса.
+* \param[in] param указатель на узел параметра класса, на основе которого создается список параметров.
+* \return указатель на узел списка параметров класса.
+*/
 struct ClassParamListNode * createClassParamListNode(struct ClassParamNode * param)
 {
     struct ClassParamListNode * node = (struct ClassParamListNode *)malloc(sizeof(struct ClassParamListNode));
@@ -1429,6 +1491,11 @@ struct ClassParamListNode * createClassParamListNode(struct ClassParamNode * par
     return node;
 }
 
+/*! Добавить узел параметра класса к списку параметров класса.
+* \param[in] paramList Указатель на узел списка параметров класса, в который добавляется новый узел.
+* \param[in] param указатель на добавляемый узел параметра класса.
+* \return указатель на измененный узел списка параметров класса.
+*/
 struct ClassParamListNode * addClassParamToListNode(struct ClassParamListNode * paramList, struct ClassParamNode * param)
 {
     paramList->last->next = param;
@@ -1436,6 +1503,15 @@ struct ClassParamListNode * addClassParamToListNode(struct ClassParamListNode * 
     return paramList;
 }
 
+
+
+/*------------------------------------ Primary Constructor -------------------------------------*/
+
+/*! Создать узел первичного конструктора класса.
+* \param[in] modList указатель на узел списка модификаторов для первичного конструктора.
+* \param[in] paramList указатель на узел списка параметров класса, используемых первичным конструктором.
+* \return указатель на узел первичного конструктора.
+*/
 struct PrimaryConstructorNode * createPrimaryConstructor(struct ModifierListNode * modList, struct ClassParamListNode * paramList)
 {
     struct PrimaryConstructorNode * node = (struct PrimaryConstructorNode *)malloc(sizeof(struct PrimaryConstructorNode));
@@ -1445,6 +1521,17 @@ struct PrimaryConstructorNode * createPrimaryConstructor(struct ModifierListNode
     return node;
 }
 
+
+
+/*------------------------------------ Class -------------------------------------*/
+
+/*! Создать узел класса.
+* \param[in] ident идентификатор класса.
+* \param[in] constructor указатель на узел первичного конструктора класса.
+* \param[in] memberList указатель на узел списка параметров класса; передать NULL в случае отсутствия тела класса.
+* \param[in] parent указатель на выражение - родительский класс; в случае отсутсвия передать выражение идентификатора глобального суперкласса Any.
+* \return указатель на созданный узел класса.
+*/
 struct ClassNode * createClassNode(char * ident, struct PrimaryConstructorNode * constructor, struct ClassMemberListNode * memberList, struct ExpressionNode * parent)
 {
     struct ClassNode * node = (struct ClassNode *)malloc(sizeof(struct ClassNode));
