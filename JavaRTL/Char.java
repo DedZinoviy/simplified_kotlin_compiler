@@ -5,13 +5,13 @@ package JavaRTL;
  */
 public class Char {
 
-    public char _char;
+    public char _value;
 
     public Char(char chr) {
-        this._char = chr;
+        this._value = chr;
     }
 
     Char(int charVal) {
-        this._char = (char)charVal;
+        this._value = (char)charVal;
     }
 }
