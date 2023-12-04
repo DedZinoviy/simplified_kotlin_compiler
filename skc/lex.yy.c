@@ -666,18 +666,25 @@ char *yytext;
     #include <stdio.h>
     #include <string.h>
     #include "stringBuffer.h"
-#line 30 "lexer.l"
+    #include "iohandler.h"
+#line 31 "lexer.l"
     /*! Удалить символ из строки по его индексу в ней.
-    \param[in] str - исходная строка.
-    \param[in] index - индекс удаляемого символа.
-    \return - 0, если удалено успешно, 1 - если нет.
+    * \param[in] str исходная строка.
+    * \param[in] index индекс удаляемого символа.
+    * \return 0, если удалено успешно, 1 - если нет.
     */
     int removeCharFromStringByIndex(char * str, int index); 
 
     /*! Удалить из строки нижние подчеркивания.
-    \param[in] str - исходная строка.
+    * \param[in] str исходная строка.
     */
     void removeUnderline(char* str);
+
+    /*! Опциональный вывод лексем в зависимости от значения флага.
+    * \param[in] str выводимая строка.
+    * \param[in] token выводимый токен.
+    */
+    void printHandler(char* str, char * token);
 
     int hasClosingBrace = 0;
 
@@ -687,9 +694,11 @@ char *yytext;
 
     int hasCloseBracket = 0;
 
+    int needsTokens = 0;
+
     char tempIdent[1024];
     // Блок ключевых слов.
-#line 693 "lex.yy.c"
+#line 702 "lex.yy.c"
 
 /* Macros after this point can all be overridden by user definitions in
  * section 1.
@@ -836,7 +845,7 @@ YY_DECL
 	register char *yy_cp, *yy_bp;
 	register int yy_act;
 
-#line 54 "lexer.l"
+#line 63 "lexer.l"
 
 
 
@@ -878,7 +887,7 @@ YY_DECL
     }
 
 
-#line 882 "lex.yy.c"
+#line 891 "lex.yy.c"
 
 	if ( yy_init )
 		{
@@ -963,612 +972,612 @@ do_action:	/* This label is used only to access EOF actions. */
 
 case 1:
 YY_RULE_SETUP
-#line 95 "lexer.l"
-{printf("(%s) - AS_KEY_WORD\n", yytext);}
+#line 104 "lexer.l"
+{printHandler((char*)"AS_KEY_WORD", yytext);}
 	YY_BREAK
 case 2:
 YY_RULE_SETUP
-#line 96 "lexer.l"
-{printf("(%s) - AS?_KEY_WORD\n", yytext);}
+#line 105 "lexer.l"
+{printHandler((char * )"AS?_KEY_WORD", yytext);}
 	YY_BREAK
 case 3:
 YY_RULE_SETUP
-#line 97 "lexer.l"
-{printf("(%s) - BREAK_KEY_WORD\n", yytext);}
+#line 106 "lexer.l"
+{printHandler((char*)"BREAK_KEY_WORD", yytext);}
 	YY_BREAK
 case 4:
 YY_RULE_SETUP
-#line 98 "lexer.l"
+#line 107 "lexer.l"
 {
-    printf("(%s) - CLASS_KEY_WORD\n", yytext);
+    printHandler((char*)"CLASS_KEY_WORD", yytext);
     return CLASS;
 }
 	YY_BREAK
 case 5:
 YY_RULE_SETUP
-#line 102 "lexer.l"
+#line 111 "lexer.l"
 {
-    printf("(%s) - CONSTRUCTOR_KEY_WORD\n", yytext);
+    printHandler((char*)"CONSTRUCTOR_KEY_WORD", yytext);
     return CONSTRUCTOR;
 }
 	YY_BREAK
 case 6:
 YY_RULE_SETUP
-#line 106 "lexer.l"
-{printf("(%s) - CONTINUE_KEY_WORD\n", yytext);}
+#line 115 "lexer.l"
+{printHandler((char*)"CONTINUE_KEY_WORD", yytext);}
 	YY_BREAK
 case 7:
 YY_RULE_SETUP
-#line 107 "lexer.l"
+#line 116 "lexer.l"
 {
-    printf("(%s) - DO_KEY_WORD\n", yytext);
+    printHandler((char*)"DO_KEY_WORD", yytext);
     return DO;
 }
 	YY_BREAK
 case 8:
 YY_RULE_SETUP
-#line 111 "lexer.l"
-{printf("(%s) - ELSE_KEY_WORD\n", yytext);}
+#line 120 "lexer.l"
+{printHandler((char*)"ELSE_KEY_WORD", yytext);}
 	YY_BREAK
 case 9:
 YY_RULE_SETUP
-#line 112 "lexer.l"
+#line 121 "lexer.l"
 {
-    printf("(%s) - FOR_KEY_WORD\n", yytext);
+    printHandler((char*)"FOR_KEY_WORD", yytext);
     return FOR;
 }
 	YY_BREAK
 case 10:
 YY_RULE_SETUP
-#line 116 "lexer.l"
+#line 125 "lexer.l"
 {
-    printf("(%s) - FUN_KEY_WORD\n", yytext);
+    printHandler((char*)"FUN_KEY_WORD", yytext);
     return FUNC;
 }
 	YY_BREAK
 case 11:
 YY_RULE_SETUP
-#line 120 "lexer.l"
-{printf("(%s) - IF_KEY_WORD\n", yytext);}
+#line 129 "lexer.l"
+{printHandler((char*)"IF_KEY_WORD", yytext);}
 	YY_BREAK
 case 12:
 YY_RULE_SETUP
-#line 121 "lexer.l"
+#line 130 "lexer.l"
 {
-    printf("(%s) - IN_KEY_WORD\n", yytext);
+    printHandler((char*)"IN_KEY_WORD", yytext);
     return IN;
 }
 	YY_BREAK
 case 13:
 YY_RULE_SETUP
-#line 125 "lexer.l"
-{printf("(%s) - !IN_KEY_WORD\n", yytext);}
+#line 134 "lexer.l"
+{printHandler((char*)"!IN_KEY_WORD", yytext);}
 	YY_BREAK
 case 14:
 YY_RULE_SETUP
-#line 126 "lexer.l"
-{printf("(%s) - INTERFACE_KEY_WORD\n", yytext);}
+#line 135 "lexer.l"
+{printHandler((char*)"INTERFACE_KEY_WORD", yytext);}
 	YY_BREAK
 case 15:
 YY_RULE_SETUP
-#line 127 "lexer.l"
+#line 136 "lexer.l"
 {
-    printf("(%s) - INTERNAL_KEY_WORD\n", yytext);
+    printHandler((char*)"INTERNAL_KEY_WORD", yytext);
     return INTERNAL;
 }
 	YY_BREAK
 case 16:
 YY_RULE_SETUP
-#line 131 "lexer.l"
-{printf("(%s) - IS_KEY_WORD\n", yytext);}
+#line 140 "lexer.l"
+{printHandler((char*)"IS_KEY_WORD", yytext);}
 	YY_BREAK
 case 17:
 YY_RULE_SETUP
-#line 132 "lexer.l"
-{printf("(%s) - !IS_KEY_WORD\n", yytext);}
+#line 141 "lexer.l"
+{printHandler((char*)"!IS_KEY_WORD", yytext);}
 	YY_BREAK
 case 18:
 YY_RULE_SETUP
-#line 133 "lexer.l"
-{printf("(%s) - NULL_KEY_WORD\n", yytext);}
+#line 142 "lexer.l"
+{printHandler((char*)"NULL_KEY_WORD", yytext);}
 	YY_BREAK
 case 19:
 YY_RULE_SETUP
-#line 134 "lexer.l"
-{printf("(%s) - OBJECT_KEY_WORD\n", yytext);}
+#line 143 "lexer.l"
+{printHandler((char*)"OBJECT_KEY_WORD", yytext);}
 	YY_BREAK
 case 20:
 YY_RULE_SETUP
-#line 135 "lexer.l"
+#line 144 "lexer.l"
 {
-    printf("(%s) - OPEN_KEY_WORD\n", yytext);
+    printHandler((char*)"OPEN_KEY_WORD", yytext);
     return OPEN;
 }
 	YY_BREAK
 case 21:
 YY_RULE_SETUP
-#line 139 "lexer.l"
+#line 148 "lexer.l"
 {
-    printf("(%s) - PRIVATE_KEY_WORD\n", yytext);
+    printHandler((char*)"PRIVATE_KEY_WORD", yytext);
     return PRIVATE;
 }
 	YY_BREAK
 case 22:
 YY_RULE_SETUP
-#line 143 "lexer.l"
+#line 152 "lexer.l"
 {
-    printf("(%s) - PROTECTED_KEY_WORD\n", yytext);
+    printHandler((char*)"PROTECTED_KEY_WORD", yytext);
     return PROTECTED;
 }
 	YY_BREAK
 case 23:
 YY_RULE_SETUP
-#line 147 "lexer.l"
+#line 156 "lexer.l"
 {
-    printf("(%s) - PUBLIC_KEY_WORD\n", yytext);
+    printHandler((char*)"PUBLIC_KEY_WORD", yytext);
     return PUBLIC;
 }
 	YY_BREAK
 case 24:
 YY_RULE_SETUP
-#line 151 "lexer.l"
-{printf("(%s) - PACKAGE_KEY_WORD\n", yytext);}
+#line 160 "lexer.l"
+{printHandler((char*)"PACKAGE_KEY_WORD", yytext);}
 	YY_BREAK
 case 25:
 YY_RULE_SETUP
-#line 152 "lexer.l"
-{printf("(%s) - RETURN_KEY_WORD\n", yytext);}
+#line 161 "lexer.l"
+{printHandler((char*)"RETURN_KEY_WORD", yytext);}
 	YY_BREAK
 case 26:
 YY_RULE_SETUP
-#line 153 "lexer.l"
+#line 162 "lexer.l"
 {
-    printf("(%s) - SUPER_KEY_WORD\n", yytext);
+    printHandler((char*)"SUPER_KEY_WORD", yytext);
     return SUPER;
 }
 	YY_BREAK
 case 27:
 YY_RULE_SETUP
-#line 157 "lexer.l"
+#line 166 "lexer.l"
 {
-    printf("(%s) - THIS_KEY_WORD\n", yytext);
+    printHandler((char*)"THIS_KEY_WORD", yytext);
     return THIS;
 }
 	YY_BREAK
 case 28:
 YY_RULE_SETUP
-#line 161 "lexer.l"
-{printf("(%s) - THROW_KEY_WORD\n", yytext);}
+#line 170 "lexer.l"
+{printHandler((char*)"THROW_KEY_WORD", yytext);}
 	YY_BREAK
 case 29:
 YY_RULE_SETUP
-#line 162 "lexer.l"
-{printf("(%s) - TRY_KEY_WORD\n", yytext);}
+#line 171 "lexer.l"
+{printHandler((char*)"TRY_KEY_WORD", yytext);}
 	YY_BREAK
 case 30:
 YY_RULE_SETUP
-#line 163 "lexer.l"
-{printf("(%s) - TYPEALIAS_KEY_WORD\n", yytext);}
+#line 172 "lexer.l"
+{printHandler((char*)"TYPEALIAS_KEY_WORD", yytext);}
 	YY_BREAK
 case 31:
 YY_RULE_SETUP
-#line 164 "lexer.l"
+#line 173 "lexer.l"
 {
-    printf("(%s) - VAL_KEY_WORD\n", yytext);
+    printHandler((char*)"VAL_KEY_WORD", yytext);
     return VAL;
 }
 	YY_BREAK
 case 32:
 YY_RULE_SETUP
-#line 168 "lexer.l"
+#line 177 "lexer.l"
 {
-    printf("(%s) - VAR_KEY_WORD\n", yytext);
+    printHandler((char*)"VAR_KEY_WORD", yytext);
     return VAR;
 }
 	YY_BREAK
 case 33:
 YY_RULE_SETUP
-#line 172 "lexer.l"
-{printf("(%s) - WHEN_KEY_WORD\n", yytext);}
+#line 181 "lexer.l"
+{printHandler((char*)"WHEN_KEY_WORD", yytext);}
 	YY_BREAK
 case 34:
 YY_RULE_SETUP
-#line 173 "lexer.l"
+#line 182 "lexer.l"
 {
-    printf("(%s) - WHILE_KEY_WORD\n", yytext);
+    printHandler((char*)"WHILE_KEY_WORD", yytext);
     return WHILE;
 }
 	YY_BREAK
 case 35:
 YY_RULE_SETUP
-#line 178 "lexer.l"
+#line 187 "lexer.l"
 {
-    printf("(%s) - TRUE_KEY_WORD\n", yytext);
+    printHandler((char*)"TRUE_KEY_WORD", yytext);
     return TRUE_LITERAL;
 }
 	YY_BREAK
 case 36:
 YY_RULE_SETUP
-#line 182 "lexer.l"
+#line 191 "lexer.l"
 {
-    printf("(%s) - FALSE_KEY_WORD\n", yytext);
+    printHandler((char*)"FALSE_KEY_WORD", yytext);
     return FALSE_LITERAL;
 }
 	YY_BREAK
 case 37:
 YY_RULE_SETUP
-#line 187 "lexer.l"
+#line 196 "lexer.l"
 {bufferString[0] = 0; multilineBegin = line; yy_push_state(MULTILINE_COMMENT);}
 	YY_BREAK
 case 38:
 YY_RULE_SETUP
-#line 188 "lexer.l"
+#line 197 "lexer.l"
 {strcat(bufferString, yytext);}
 	YY_BREAK
 case 39:
 YY_RULE_SETUP
-#line 189 "lexer.l"
+#line 198 "lexer.l"
 {line += 1; strcat(bufferString, yytext);}
 	YY_BREAK
 case 40:
 YY_RULE_SETUP
-#line 190 "lexer.l"
+#line 199 "lexer.l"
 {line += 1; strcat(bufferString, yytext);}
 	YY_BREAK
 case 41:
 YY_RULE_SETUP
-#line 191 "lexer.l"
+#line 200 "lexer.l"
 {strcat(bufferString, yytext);}
 	YY_BREAK
 case 42:
 YY_RULE_SETUP
-#line 192 "lexer.l"
-{printf("(%s) - MULTILINE_COMMENT\n", bufferString); yy_pop_state();}
+#line 201 "lexer.l"
+{printHandler((char*)"MULTILINE_COMMENT", bufferString); yy_pop_state();}
 	YY_BREAK
 case YY_STATE_EOF(MULTILINE_COMMENT):
-#line 193 "lexer.l"
+#line 202 "lexer.l"
 {printf("ERROR: no closing */ in line %d.\n", multilineBegin); BEGIN(INITIAL); return -1;}
 	YY_BREAK
 case 43:
 YY_RULE_SETUP
-#line 195 "lexer.l"
+#line 204 "lexer.l"
 {bufferString[0] = 0; yy_push_state(END_OF_LINE_COMMENT);}
 	YY_BREAK
 case 44:
 YY_RULE_SETUP
-#line 196 "lexer.l"
+#line 205 "lexer.l"
 {strcat(bufferString, yytext);}
 	YY_BREAK
 case 45:
 YY_RULE_SETUP
-#line 197 "lexer.l"
-{printf("(%s) - END_OF_LINE_COMMENT\n", bufferString);  line += 1; yy_pop_state();
+#line 206 "lexer.l"
+{printHandler((char*)"END_OF_LINE_COMMENT", bufferString);  line += 1; yy_pop_state();
 return ENDL; }
 	YY_BREAK
 case YY_STATE_EOF(END_OF_LINE_COMMENT):
-#line 199 "lexer.l"
-{printf("(%s) - END_OF_LINE_COMMENT\n", bufferString); BEGIN(INITIAL);}
+#line 208 "lexer.l"
+{printHandler((char*)"END_OF_LINE_COMMENT", bufferString); BEGIN(INITIAL);}
 	YY_BREAK
 case 46:
 YY_RULE_SETUP
-#line 201 "lexer.l"
+#line 210 "lexer.l"
 {
-    printf("(%s) - PLUS_OPERATOR\n", yytext);
+    printHandler((char*)"PLUS_OPERATOR", yytext);
     return '+';
 }
 	YY_BREAK
 case 47:
 YY_RULE_SETUP
-#line 205 "lexer.l"
+#line 214 "lexer.l"
 {
-    printf("(%s) - MINUS_OPERATOR\n", yytext);
+    printHandler((char*)"MINUS_OPERATOR", yytext);
     return '-';
 }
 	YY_BREAK
 case 48:
 YY_RULE_SETUP
-#line 209 "lexer.l"
+#line 218 "lexer.l"
 {
-    printf("(%s) - MUL_OPERATOR\n", yytext);
+    printHandler((char*)"MUL_OPERATOR", yytext);
     return '*';
 }
 	YY_BREAK
 case 49:
 YY_RULE_SETUP
-#line 213 "lexer.l"
+#line 222 "lexer.l"
 {
-    printf("(%s) - DIV_OPERATOR\n", yytext);
+    printHandler((char*)"DIV_OPERATOR", yytext);
     return '/';
 }
 	YY_BREAK
 case 50:
 YY_RULE_SETUP
-#line 217 "lexer.l"
+#line 226 "lexer.l"
 {
-    printf("(%s) - ASSIGNMENT_OPERATOR\n", yytext);
+    printHandler((char*)"ASSIGNMENT_OPERATOR", yytext);
     return '=';
 }
 	YY_BREAK
 case 51:
 YY_RULE_SETUP
-#line 221 "lexer.l"
+#line 230 "lexer.l"
 {
-    printf("(%s) - GREATER_EQUAL_OPERATOR\n", yytext);
+    printHandler((char*)"GREATER_EQUAL_OPERATOR", yytext);
     return GREATER_EQUAL;
 }
 	YY_BREAK
 case 52:
 YY_RULE_SETUP
-#line 225 "lexer.l"
+#line 234 "lexer.l"
 {
-    printf("(%s) - LESS_EQUAL_OPERATOR\n", yytext);
+    printHandler((char*)"LESS_EQUAL_OPERATOR", yytext);
     return LESS_EQUAL;
 }
 	YY_BREAK
 case 53:
 YY_RULE_SETUP
-#line 229 "lexer.l"
+#line 238 "lexer.l"
 {
-    printf("(%s) - GREATER_OPERATOR\n", yytext);
+    printHandler((char*)"GREATER_OPERATOR", yytext);
     return '>';
 }
 	YY_BREAK
 case 54:
 YY_RULE_SETUP
-#line 233 "lexer.l"
+#line 242 "lexer.l"
 {
-    printf("(%s) - LESS_OPERATOR\n", yytext);
+    printHandler((char*)"LESS_OPERATOR", yytext);
     return '<';
 }
 	YY_BREAK
 case 55:
 YY_RULE_SETUP
-#line 237 "lexer.l"
+#line 246 "lexer.l"
 {
-    printf("(%s) - NOT_EQUAL_OPERATOR\n", yytext);
+    printHandler((char*)"NOT_EQUAL_OPERATOR", yytext);
     return NOT_EQUAL;
 }
 	YY_BREAK
 case 56:
 YY_RULE_SETUP
-#line 241 "lexer.l"
+#line 250 "lexer.l"
 {
-    printf("(%s) - EQUAL_OPERATOR\n", yytext);
+    printHandler((char*)"EQUAL_OPERATOR", yytext);
     return EQUAL;
 }
 	YY_BREAK
 case 57:
 YY_RULE_SETUP
-#line 245 "lexer.l"
+#line 254 "lexer.l"
 {
-    printf("(%s) - MOD_OPERATOR\n", yytext);
+    printHandler((char*)"MOD_OPERATOR", yytext);
     return '%';
 }
 	YY_BREAK
 case 58:
 YY_RULE_SETUP
-#line 249 "lexer.l"
+#line 258 "lexer.l"
 {
-    printf("(%s) - DIV_ASSIGNMENT_OPERATOR\n", yytext);
+    printHandler((char*)"DIV_ASSIGNMENT_OPERATOR", yytext);
     return DIV_ASSIGNMENT;
 }
 	YY_BREAK
 case 59:
 YY_RULE_SETUP
-#line 253 "lexer.l"
+#line 262 "lexer.l"
 {
-    printf("(%s) - PLUS_ASSIGNMENT_OPERATOR\n", yytext);
+    printHandler((char*)"PLUS_ASSIGNMENT_OPERATOR", yytext);
     return PLUS_ASSIGNMENT;
 }
 	YY_BREAK
 case 60:
 YY_RULE_SETUP
-#line 257 "lexer.l"
+#line 266 "lexer.l"
 {
-    printf("(%s) - MUL_ASSIGNMENT_OPERATOR\n", yytext);
+    printHandler((char*)"MUL_ASSIGNMENT_OPERATOR", yytext);
     return MUL_ASSIGNMENT;
 }
 	YY_BREAK
 case 61:
 YY_RULE_SETUP
-#line 261 "lexer.l"
+#line 270 "lexer.l"
 {
-    printf("(%s) - MINUS_ASSIGNMENT_OPERATOR\n", yytext);
+    printHandler((char*)"MINUS_ASSIGNMENT_OPERATOR", yytext);
     return MINUS_ASSIGNMENT;
 }
 	YY_BREAK
 case 62:
 YY_RULE_SETUP
-#line 265 "lexer.l"
+#line 274 "lexer.l"
 {
-    printf("(%s) - MOD_ASSIGNMENT_OPERATOR\n", yytext);
+    printHandler((char*)"MOD_ASSIGNMENT_OPERATOR", yytext);
     return MOD_ASSIGNMENT;
 }
 	YY_BREAK
 case 63:
 YY_RULE_SETUP
-#line 270 "lexer.l"
+#line 279 "lexer.l"
 {
-    printf("(%s) - LEFT_BRACE\n", yytext);
+    printHandler((char*)"LEFT_BRACE", yytext);
     return '{';
 }
 	YY_BREAK
 case 64:
 YY_RULE_SETUP
-#line 274 "lexer.l"
+#line 283 "lexer.l"
 {
-    printf("(%s) - RIGHT_BRACE\n", yytext);
+    printHandler((char*)"RIGHT_BRACE", yytext);
     hasClosingBrace = 1;
     return ';';
 }
 	YY_BREAK
 case 65:
 YY_RULE_SETUP
-#line 279 "lexer.l"
-{printf("(%s) - LEFT_SQUARE_BRACKET\n", yytext);}
+#line 288 "lexer.l"
+{printHandler((char*)"LEFT_SQUARE_BRACKET", yytext);}
 	YY_BREAK
 case 66:
 YY_RULE_SETUP
-#line 280 "lexer.l"
-{printf("(%s) - RIGHT_SQUARE_BRACKET\n", yytext);}
+#line 289 "lexer.l"
+{printHandler((char*)"RIGHT_SQUARE_BRACKET", yytext);}
 	YY_BREAK
 case 67:
 YY_RULE_SETUP
-#line 281 "lexer.l"
+#line 290 "lexer.l"
 {
-    printf("(%s) - LEFT_ROUND_BRACKET\n", yytext);
+    printHandler((char*)"LEFT_ROUND_BRACKET", yytext);
     yy_push_state(INBRACKET);
     return '(';
 }
 	YY_BREAK
 case 68:
 YY_RULE_SETUP
-#line 286 "lexer.l"
+#line 295 "lexer.l"
 {
-    printf("(%s) - RIGHT_ROUND_BRACKET\n", yytext);
+    printHandler((char*)"RIGHT_ROUND_BRACKET", yytext);
     yy_pop_state();
     return ')';
 }
 	YY_BREAK
 case 69:
 YY_RULE_SETUP
-#line 291 "lexer.l"
+#line 300 "lexer.l"
 {
-    printf("(%s) - COLON\n", yytext);
+    printHandler((char*)"COLON", yytext);
     return ':';
 }
 	YY_BREAK
 case 70:
 YY_RULE_SETUP
-#line 295 "lexer.l"
+#line 304 "lexer.l"
 {
-    printf("(%s) - SEMICOLON\n", yytext);
+    printHandler((char*)"SEMICOLON", yytext);
     return ';';
 }
 	YY_BREAK
 case 71:
 YY_RULE_SETUP
-#line 299 "lexer.l"
+#line 308 "lexer.l"
 {
-    printf("(%s) - DOT\n", yytext);
+    printHandler((char*)"DOT", yytext);
     return '.';
 }
 	YY_BREAK
 case 72:
 YY_RULE_SETUP
-#line 303 "lexer.l"
+#line 312 "lexer.l"
 {
-    printf("(%s) - COMMA\n", yytext);
+    printHandler((char*)"COMMA", yytext);
     return ',';
 }
 	YY_BREAK
 case 73:
 YY_RULE_SETUP
-#line 308 "lexer.l"
+#line 317 "lexer.l"
 {
-    printf("(%s) - INCREMENT_OPERATOR\n", yytext);
+    printHandler((char*)"INCREMENT_OPERATOR", yytext);
     return INCREMENT;
 }
 	YY_BREAK
 case 74:
 YY_RULE_SETUP
-#line 312 "lexer.l"
+#line 321 "lexer.l"
 {
-    printf("(%s) - DECREMENT_OPERATOR\n", yytext);
+    printHandler((char*)"DECREMENT_OPERATOR", yytext);
     return DECREMENT;
 }
 	YY_BREAK
 case 75:
 YY_RULE_SETUP
-#line 317 "lexer.l"
-{printf("(%s) - REF_EQUAL_OPERATOR\n", yytext);}
+#line 326 "lexer.l"
+{printHandler((char*)"REF_EQUAL_OPERATOR", yytext);}
 	YY_BREAK
 case 76:
 YY_RULE_SETUP
-#line 318 "lexer.l"
-{printf("(%s) - REF_NOT_EQUAL_OPERATOR\n", yytext);}
+#line 327 "lexer.l"
+{printHandler((char*)"REF_NOT_EQUAL_OPERATOR", yytext);}
 	YY_BREAK
 case 77:
 YY_RULE_SETUP
-#line 320 "lexer.l"
+#line 329 "lexer.l"
 {
-    printf("(%s) - NOT_OPERATOR\n", yytext);
+    printHandler((char*)"NOT_OPERATOR", yytext);
     return '!';
 }
 	YY_BREAK
 case 78:
 YY_RULE_SETUP
-#line 324 "lexer.l"
+#line 333 "lexer.l"
 {
-    printf("(%s) - OR_OPERATOR\n", yytext);
+    printHandler((char*)"OR_OPERATOR", yytext);
     return DISJ;
 } 
 	YY_BREAK
 case 79:
 YY_RULE_SETUP
-#line 328 "lexer.l"
+#line 337 "lexer.l"
 {
-    printf("(%s) - AND_OPERATOR\n", yytext);
+    printHandler((char*)"AND_OPERATOR", yytext);
     return CONJ;
 }
 	YY_BREAK
 case 80:
 YY_RULE_SETUP
-#line 333 "lexer.l"
+#line 342 "lexer.l"
 {
-    printf("(%s) - RANGE_OPERATOR\n", yytext);
+    printHandler((char*)"RANGE_OPERATOR", yytext);
     return RANGE;
 }
 	YY_BREAK
 case 81:
 YY_RULE_SETUP
-#line 337 "lexer.l"
-{printf("(%s) - NOT_NULL_ASSERTION_OPERATOR\n", yytext);}
+#line 346 "lexer.l"
+{printHandler((char*)"NOT_NULL_ASSERTION_OPERATOR", yytext);}
 	YY_BREAK
 case 82:
 YY_RULE_SETUP
-#line 338 "lexer.l"
-{printf("(%s) - SAFE_CALL_OPERATOR\n", yytext);}
+#line 347 "lexer.l"
+{printHandler((char*)"SAFE_CALL_OPERATOR", yytext);}
 	YY_BREAK
 case 83:
 YY_RULE_SETUP
-#line 340 "lexer.l"
-{printf("(%s) - ELVIS_OPERATOR\n", yytext);}
+#line 349 "lexer.l"
+{printHandler((char*)"ELVIS_OPERATOR", yytext);}
 	YY_BREAK
 case 84:
 YY_RULE_SETUP
-#line 341 "lexer.l"
-{printf("(%s) - UNIT_REFERENCE_OPERATOR\n", yytext);}
+#line 350 "lexer.l"
+{printHandler((char*)"UNIT_REFERENCE_OPERATOR", yytext);}
 	YY_BREAK
 case 85:
 YY_RULE_SETUP
-#line 342 "lexer.l"
-{printf("(%s) - ALLOW_NULL_OPERATOR\n", yytext);}
+#line 351 "lexer.l"
+{printHandler((char*)"ALLOW_NULL_OPERATOR", yytext);}
 	YY_BREAK
 case 86:
 YY_RULE_SETUP
-#line 343 "lexer.l"
-{printf("(%s) - LAMBDA_OPERATOR\n", yytext);}
+#line 352 "lexer.l"
+{printHandler((char*)"LAMBDA_OPERATOR", yytext);}
 	YY_BREAK
 case 87:
 YY_RULE_SETUP
-#line 344 "lexer.l"
-{printf("(%s) - ANNOTATION_OPERATOR\n", yytext);}
+#line 353 "lexer.l"
+{printHandler((char*)"ANNOTATION_OPERATOR", yytext);}
 	YY_BREAK
 case 88:
 YY_RULE_SETUP
-#line 346 "lexer.l"
+#line 355 "lexer.l"
 {
-    printf("(%s) - LEFT_BRACE\n", yytext);
+    printHandler((char*)"LEFT_BRACE", yytext);
     yy_push_state(INBRACE);
     return '{';
 }
 	YY_BREAK
 case 89:
 YY_RULE_SETUP
-#line 352 "lexer.l"
+#line 361 "lexer.l"
 {
-    printf("(%s) - RIGHT_BRACE\n", yytext);
+    printHandler((char*)"RIGHT_BRACE", yytext);
     hasClosingBrace = 1;
     yy_pop_state();
     return ';';
@@ -1576,18 +1585,18 @@ YY_RULE_SETUP
 	YY_BREAK
 case 90:
 YY_RULE_SETUP
-#line 359 "lexer.l"
+#line 368 "lexer.l"
 {
-    printf("(%s) - LEFT_BRACE\n", yytext);
+    printHandler((char*)"LEFT_BRACE", yytext);
     yy_push_state(INBRACE);
     return '{';
 }
 	YY_BREAK
 case 91:
 YY_RULE_SETUP
-#line 365 "lexer.l"
+#line 374 "lexer.l"
 {
-    printf("(%s) - END_INTERPOLATION\n", yytext);
+    printHandler((char*)"END_INTERPOLATION", yytext);
     bufferString[0] = 0;
     clearStringBuffer(&buff);
     hasPlus = 1;
@@ -1596,7 +1605,7 @@ YY_RULE_SETUP
 }
 	YY_BREAK
 case YY_STATE_EOF(INBRACE):
-#line 374 "lexer.l"
+#line 383 "lexer.l"
 {
     printf("ERROR: expecting \"{\"\n");
     BEGIN(INITIAL);
@@ -1604,7 +1613,7 @@ case YY_STATE_EOF(INBRACE):
 }
 	YY_BREAK
 case YY_STATE_EOF(INTERPOLATION):
-#line 380 "lexer.l"
+#line 389 "lexer.l"
 {
     printf("ERROR: expecting \"{\"\n");
     BEGIN(INITIAL);
@@ -1613,9 +1622,9 @@ case YY_STATE_EOF(INTERPOLATION):
 	YY_BREAK
 case 92:
 YY_RULE_SETUP
-#line 386 "lexer.l"
+#line 395 "lexer.l"
 {
-    printf("(%s) - IDENTIFIER\n", yytext);
+    printHandler((char*)"IDENTIFIER", yytext);
     char * t = (char*)malloc(strlen(yytext) + 1);
     strcpy(t, yytext);
     yylval.ident = t;
@@ -1624,7 +1633,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 93:
 YY_RULE_SETUP
-#line 394 "lexer.l"
+#line 403 "lexer.l"
 { bufferString[0] = 0;
     strcat(bufferString, yytext);
     int buffLen = strlen(bufferString);
@@ -1637,7 +1646,7 @@ YY_RULE_SETUP
     {
         removeUnderline(bufferString);
         int res = atoi(bufferString);
-        printf("(%d) - DECIMAL_INT\n", res);
+        if(needsTokens) printf("(%d) - DECIMAL_INT\n", res);
         yylval.intLit = res;
         return INT_LITERAL;
     }
@@ -1645,7 +1654,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 94:
 YY_RULE_SETUP
-#line 412 "lexer.l"
+#line 421 "lexer.l"
 {
     printf("ERROR: illegal underscore in INT in line %d.\n", line);
     return -1;
@@ -1653,20 +1662,20 @@ YY_RULE_SETUP
 	YY_BREAK
 case 95:
 YY_RULE_SETUP
-#line 417 "lexer.l"
+#line 426 "lexer.l"
 { 
     bufferString[0] = 0;
     strcat(bufferString, yytext);
     removeUnderline(bufferString);
     int result = strtol(bufferString + 2, NULL, 16);
-    printf("(%d) - HEX_INT\n", result);
+    if(needsTokens) printf("(%d) - HEX_INT\n", result);
     yylval.intLit = result;
     return INT_LITERAL;
 }
 	YY_BREAK
 case 96:
 YY_RULE_SETUP
-#line 427 "lexer.l"
+#line 436 "lexer.l"
 {
     printf("ERROR: missing hex int value in line %d.\n", line);
     return -1;
@@ -1674,7 +1683,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 97:
 YY_RULE_SETUP
-#line 432 "lexer.l"
+#line 441 "lexer.l"
 {
     printf("ERROR: illegal underscore in INT in line %d.\n", line);
     return -1;
@@ -1682,7 +1691,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 98:
 YY_RULE_SETUP
-#line 437 "lexer.l"
+#line 446 "lexer.l"
 {
     printf("ERROR: illegal underscore in INT in line %d.\n", line);
     return -1;
@@ -1690,20 +1699,20 @@ YY_RULE_SETUP
 	YY_BREAK
 case 99:
 YY_RULE_SETUP
-#line 442 "lexer.l"
+#line 451 "lexer.l"
 {
     bufferString[0] = 0;
     strcat(bufferString, yytext);
     removeUnderline(bufferString);
     int result = strtol(bufferString + 2, NULL, 2);
-    printf("(%d) - BINARY_INT\n", result);
+    if(needsTokens) printf("(%d) - BINARY_INT\n", result);
     yylval.intLit = result;
     return INT_LITERAL;
 }
 	YY_BREAK
 case 100:
 YY_RULE_SETUP
-#line 452 "lexer.l"
+#line 461 "lexer.l"
 {
     printf("ERROR: missing binary int value in line %d.\n", line);
     return -1;
@@ -1711,7 +1720,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 101:
 YY_RULE_SETUP
-#line 457 "lexer.l"
+#line 466 "lexer.l"
 {
     printf("ERROR: illegal underscore in INT in line %d.\n", line);
     return -1;
@@ -1719,7 +1728,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 102:
 YY_RULE_SETUP
-#line 462 "lexer.l"
+#line 471 "lexer.l"
 {
     printf("ERROR: illegal underscore in INT in line %d.\n", line);
     return -1;
@@ -1727,7 +1736,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 103:
 YY_RULE_SETUP
-#line 467 "lexer.l"
+#line 476 "lexer.l"
 {
     printf("ERROR: oot of range binary value in line %d.\n", line);
     return -1;
@@ -1735,21 +1744,21 @@ YY_RULE_SETUP
 	YY_BREAK
 case 104:
 YY_RULE_SETUP
-#line 472 "lexer.l"
+#line 481 "lexer.l"
 {
     bufferString[0] = 0;
     strcat(bufferString, yytext);
     removeUnderline(bufferString);
     int resLen = strlen(bufferString);
     double result = atof(bufferString);
-    printf("(%.*f) - DOUBLE\n", resLen, result);
+    if(needsTokens) printf("(%.*f) - DOUBLE\n", resLen, result);
     yylval.doubleLit = result;
     return DOUBLE_LITERAL;
 }
 	YY_BREAK
 case 105:
 YY_RULE_SETUP
-#line 483 "lexer.l"
+#line 492 "lexer.l"
 {
     printf("ERROR: illegal underscore in DOUBLE in line %d.\n", line);
     return -1;
@@ -1757,7 +1766,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 106:
 YY_RULE_SETUP
-#line 488 "lexer.l"
+#line 497 "lexer.l"
 {
     printf("ERROR: illegal underscore in DOUBLE in line %d.\n", line);
     return -1;
@@ -1765,7 +1774,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 107:
 YY_RULE_SETUP
-#line 493 "lexer.l"
+#line 502 "lexer.l"
 {
     printf("ERROR: illegal underscore in DOUBLE in line %d.\n", line);
     return -1;
@@ -1773,7 +1782,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 108:
 YY_RULE_SETUP
-#line 498 "lexer.l"
+#line 507 "lexer.l"
 {
     printf("ERROR: illegal underscore in DOUBLE in line %d.\n", line);
     return -1;
@@ -1781,7 +1790,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 109:
 YY_RULE_SETUP
-#line 503 "lexer.l"
+#line 512 "lexer.l"
 {
     printf("ERROR: the value is out of range in DOUBLE in line %d.\n", line);
     return -1;
@@ -1789,36 +1798,36 @@ YY_RULE_SETUP
 	YY_BREAK
 case 110:
 YY_RULE_SETUP
-#line 508 "lexer.l"
+#line 517 "lexer.l"
 {
     bufferString[0] = 0;
     multilineBegin = line;
-    printf("(%s) - MULTILINE_STRING_BEGIN\n", yytext);
+    printHandler((char*)"MULTILINE_STRING_BEGIN", yytext);
     yy_push_state(MULTILINE_STRING); 
 }
 	YY_BREAK
 case 111:
 YY_RULE_SETUP
-#line 514 "lexer.l"
+#line 523 "lexer.l"
 {line += 1; strcat(bufferString, yytext);}
 	YY_BREAK
 case 112:
 YY_RULE_SETUP
-#line 515 "lexer.l"
+#line 524 "lexer.l"
 {strcat(bufferString, yytext);}
 	YY_BREAK
 case 113:
 YY_RULE_SETUP
-#line 516 "lexer.l"
+#line 525 "lexer.l"
 {
-    printf("(%s) - MULTILINE_STRING\n", bufferString);
+    printHandler((char*)"MULTILINE_STRING", bufferString);
     struct stringBuffer * ns = (struct stringBuffer*)malloc(sizeof(struct stringBuffer));
     strcpy(ns->buffer, bufferString);
     ns->length = strlen(bufferString);
     yylval.stringLit = ns;
     hasPlus = 1;
     hasOpenBracket = 1;
-    printf("(%s) - BEGIN_INTERPOLATION\n", yytext);
+    printHandler((char*)"BEGIN_INTERPOLATION", yytext);
     bufferString[0] = 0;
     yy_push_state(INTERPOLATION);
     return STRING_LITERAL;
@@ -1826,9 +1835,9 @@ YY_RULE_SETUP
 	YY_BREAK
 case 114:
 YY_RULE_SETUP
-#line 529 "lexer.l"
+#line 538 "lexer.l"
 {
-    printf("(%s) - MULTILINE_STRING\n", bufferString);
+    printHandler((char*)"MULTILINE_STRING", bufferString);
     struct stringBuffer * ns = (struct stringBuffer*)malloc(sizeof(struct stringBuffer));
     strcpy(ns->buffer, bufferString);
     ns->length = strlen(bufferString);
@@ -1837,58 +1846,56 @@ YY_RULE_SETUP
     hasOpenBracket = 1;
     strcpy(tempIdent, yytext + 1);
     hasCloseBracket = 1;
-    printf("($) - BEGIN_INTERPOLATION\n");
-    printf("(%s) - IDENTIFIER\n", yytext + 1);
-    printf("() - END_INTERPOLATION\n");
+    printHandler((char*)"BEGIN_INTERPOLATION", (char*)"$");
+    printHandler((char*)"IDENTIFIER", yytext + 1);
+    printHandler((char*)"END_INTERPOLATION", (char*)" ");
     bufferString[0] = 0;
     return STRING_LITERAL;
 }
 	YY_BREAK
 case 115:
 YY_RULE_SETUP
-#line 545 "lexer.l"
+#line 554 "lexer.l"
 {strcat(bufferString, yytext);}
 	YY_BREAK
 case 116:
 YY_RULE_SETUP
-#line 546 "lexer.l"
+#line 555 "lexer.l"
 {
     for (int i = 0; i < yyleng - 3; i++)
     {
         strcat(bufferString, "\"");        
     }
-    printf("(%s) - MULTILINE STRING\n", bufferString);
+    printHandler((char*)"MULTILINE STRING", bufferString);
     struct stringBuffer * ns = (struct stringBuffer*)malloc(sizeof(struct stringBuffer));
     strcpy(ns->buffer, bufferString);
     ns->length = strlen(bufferString);
     yylval.stringLit = ns;
-    printf("(\"\"\") - MULTILINE_STRING_END\n", yytext);
+    printHandler((char*)"MULTILINE_STRING_END", (char*)"\"\"\"");
     yy_pop_state();
     return STRING_LITERAL;
 }
 	YY_BREAK
 case YY_STATE_EOF(MULTILINE_STRING):
-#line 560 "lexer.l"
+#line 569 "lexer.l"
 {printf("ERROR: no closing \"\"\" (three double-quotes) in MULTILINE STRING in line %d.\n", multilineBegin); BEGIN(INITIAL); return -1;}
 	YY_BREAK
 case 117:
 YY_RULE_SETUP
-#line 562 "lexer.l"
+#line 571 "lexer.l"
 {
     bufferString[0] = 0;
     multilineBegin = line;
     clearStringBuffer(&buff);
-    printf("(%s) - ESCAPED_STRING_BEGIN\n", yytext);
+    printHandler((char*)"ESCAPED_STRING_BEGIN", yytext);
     yy_push_state(STRING);
 }
 	YY_BREAK
 case 118:
 YY_RULE_SETUP
-#line 569 "lexer.l"
+#line 578 "lexer.l"
 {
-    printf("(");
-    printStringBuffer(&buff);
-    printf(") - ESCAPED_STRING\n");
+    printHandler((char*)"ESCAPED_STRING", getSafeCString(&buff));
 
     struct stringBuffer * ns = (struct stringBuffer*)malloc(sizeof(struct stringBuffer));
     memcpy(ns->buffer, buff.buffer, buff.length);
@@ -1897,7 +1904,7 @@ YY_RULE_SETUP
     hasPlus = 1;
     hasOpenBracket = 1;
 
-    printf("(%s) - BEGIN_INTERPOLATION\n", yytext);
+    printHandler((char*)"BEGIN_INTERPOLATION", yytext);
     clearStringBuffer(&buff);
     yy_push_state(INTERPOLATION);
     return STRING_LITERAL;
@@ -1905,16 +1912,13 @@ YY_RULE_SETUP
 	YY_BREAK
 case 119:
 YY_RULE_SETUP
-#line 586 "lexer.l"
+#line 593 "lexer.l"
 {appendChar(&buff, yytext[0]);}
 	YY_BREAK
 case 120:
 YY_RULE_SETUP
-#line 587 "lexer.l"
+#line 594 "lexer.l"
 {
-    printf("(");
-    printStringBuffer(&buff);
-    
     struct stringBuffer * ns = (struct stringBuffer*)malloc(sizeof(struct stringBuffer));
     memcpy(ns->buffer, buff.buffer, buff.length);
     ns->length = buff.length;
@@ -1923,10 +1927,10 @@ YY_RULE_SETUP
     hasOpenBracket = 1;
     strcpy(tempIdent, yytext + 1);
     hasCloseBracket = 1;
-    printf(") - ESCAPED_STRING\n");
-    printf("($) - BEGIN_INTERPOLATION\n");
-    printf("(%s) - IDENTIFIER\n", yytext + 1);
-    printf("() - END_INTERPOLATION\n");
+    printHandler((char*)"ESCAPED_STRING", getSafeCString(&buff));
+    printHandler((char*)"BEGIN_INTERPOLATION", (char*)"$");
+    printHandler((char*)"IDENTIFIER", yytext + 1);
+    printHandler((char*)"END_INTERPOLATION", (char*)" ");
     clearStringBuffer(&buff);
     bufferString[0] = 0;
     return STRING_LITERAL;
@@ -1934,22 +1938,20 @@ YY_RULE_SETUP
 	YY_BREAK
 case 121:
 YY_RULE_SETUP
-#line 607 "lexer.l"
+#line 611 "lexer.l"
 {appendChars(&buff, yytext);}
 	YY_BREAK
 case 122:
 YY_RULE_SETUP
-#line 608 "lexer.l"
+#line 612 "lexer.l"
 {printf("ERROR: no closing \" (double-quote) in STRING in line %d.\n", multilineBegin); line += 1; yy_pop_state(); return -1;}
 	YY_BREAK
 case 123:
 YY_RULE_SETUP
-#line 609 "lexer.l"
+#line 613 "lexer.l"
 { 
-    printf("(");
-    printStringBuffer(&buff);
-    printf(") - ESCAPED STRING\n"); 
-    printf("(%s) - ESCAPED_STRING_END\n", yytext);
+    printHandler((char*)"ESCAPED STRING", getSafeCString(&buff)); 
+    printHandler((char*)"ESCAPED_STRING_END", yytext);
     yy_pop_state();
     struct stringBuffer * ns = (struct stringBuffer*)malloc(sizeof(struct stringBuffer));
     memcpy(ns->buffer, buff.buffer, buff.length);
@@ -1959,27 +1961,27 @@ YY_RULE_SETUP
 }
 	YY_BREAK
 case YY_STATE_EOF(STRING):
-#line 621 "lexer.l"
+#line 623 "lexer.l"
 {printf("ERROR: no closing \" (double-quote) in STRING in line %d.\n", multilineBegin); BEGIN(INITIAL); return -1;}
 	YY_BREAK
 case 124:
 YY_RULE_SETUP
-#line 623 "lexer.l"
+#line 625 "lexer.l"
 {bufferString[0] = 0; multilineBegin = line; clearStringBuffer(&buff); yy_push_state(CHAR);}
 	YY_BREAK
 case 125:
 YY_RULE_SETUP
-#line 624 "lexer.l"
+#line 626 "lexer.l"
 {appendChar(&buff, yytext[0]);}
 	YY_BREAK
 case 126:
 YY_RULE_SETUP
-#line 625 "lexer.l"
+#line 627 "lexer.l"
 {printf("ERROR: no closing  \' (single-quote) in CHAR in line %d.\n", multilineBegin); line += 1; yy_pop_state(); return -1;}
 	YY_BREAK
 case 127:
 YY_RULE_SETUP
-#line 626 "lexer.l"
+#line 628 "lexer.l"
 {
     int buffLen = buff.length;
     int isOk = 0;
@@ -1993,7 +1995,7 @@ YY_RULE_SETUP
     }
     else
     {
-        printf("(%c) - CHAR\n", buff.buffer[0]);
+        if (needsTokens) printf("(%c) - CHAR\n", buff.buffer[0]);
         isOk = 1;
     }
     yy_pop_state();
@@ -2009,52 +2011,52 @@ YY_RULE_SETUP
 }
 	YY_BREAK
 case YY_STATE_EOF(CHAR):
-#line 653 "lexer.l"
+#line 655 "lexer.l"
 {printf("ERROR: no closing \' (single-quote) in CHAR in line %d.\n", multilineBegin); BEGIN(INITIAL); return -1;}
 	YY_BREAK
 case 128:
 YY_RULE_SETUP
-#line 655 "lexer.l"
+#line 657 "lexer.l"
 {appendChar(&buff, '\n');}
 	YY_BREAK
 case 129:
 YY_RULE_SETUP
-#line 656 "lexer.l"
+#line 658 "lexer.l"
 {appendChar(&buff, '\t');}
 	YY_BREAK
 case 130:
 YY_RULE_SETUP
-#line 657 "lexer.l"
+#line 659 "lexer.l"
 {appendChar(&buff, '\b');}
 	YY_BREAK
 case 131:
 YY_RULE_SETUP
-#line 658 "lexer.l"
+#line 660 "lexer.l"
 {appendChar(&buff, '\r');}
 	YY_BREAK
 case 132:
 YY_RULE_SETUP
-#line 659 "lexer.l"
+#line 661 "lexer.l"
 {appendChar(&buff, '$');}
 	YY_BREAK
 case 133:
 YY_RULE_SETUP
-#line 660 "lexer.l"
+#line 662 "lexer.l"
 {appendChar(&buff, '\"');}
 	YY_BREAK
 case 134:
 YY_RULE_SETUP
-#line 661 "lexer.l"
+#line 663 "lexer.l"
 {appendChar(&buff, '\'');}
 	YY_BREAK
 case 135:
 YY_RULE_SETUP
-#line 662 "lexer.l"
+#line 664 "lexer.l"
 {appendChar(&buff, '\\');}
 	YY_BREAK
 case 136:
 YY_RULE_SETUP
-#line 663 "lexer.l"
+#line 665 "lexer.l"
 {
     if (strlen(yytext) < 4)
     {
@@ -2075,21 +2077,21 @@ YY_RULE_SETUP
 	YY_BREAK
 case 137:
 YY_RULE_SETUP
-#line 681 "lexer.l"
+#line 683 "lexer.l"
 {
     // Игнорирование лишних пробелов и табуляций. 
 }
 	YY_BREAK
 case 138:
 YY_RULE_SETUP
-#line 685 "lexer.l"
+#line 687 "lexer.l"
 {
     line = line + 1;
 }
 	YY_BREAK
 case 139:
 YY_RULE_SETUP
-#line 689 "lexer.l"
+#line 691 "lexer.l"
 {
     line = line + 1;
     return ENDL;
@@ -2097,7 +2099,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 140:
 YY_RULE_SETUP
-#line 694 "lexer.l"
+#line 696 "lexer.l"
 {
     bufferString[0] = 0;
     strcat(bufferString, yytext);
@@ -2106,24 +2108,24 @@ YY_RULE_SETUP
 }
 	YY_BREAK
 case YY_STATE_EOF(INITIAL):
-#line 701 "lexer.l"
+#line 703 "lexer.l"
 { 
     BEGIN(OVER);
     return ';';
 }
 	YY_BREAK
 case YY_STATE_EOF(OVER):
-#line 706 "lexer.l"
+#line 708 "lexer.l"
 {
     yyterminate();
 }
 	YY_BREAK
 case 141:
 YY_RULE_SETUP
-#line 710 "lexer.l"
+#line 712 "lexer.l"
 ECHO;
 	YY_BREAK
-#line 2127 "lex.yy.c"
+#line 2129 "lex.yy.c"
 case YY_STATE_EOF(INBRACKET):
 	yyterminate();
 
@@ -2983,7 +2985,7 @@ int main()
 	return 0;
 	}
 #endif
-#line 710 "lexer.l"
+#line 712 "lexer.l"
 
 
 int removeCharFromStringByIndex(char * str, int index) 
@@ -3013,11 +3015,46 @@ int main(int argc, char* argv[])
 {
 	if (argc < 2)
 	{
-		printf("The path to the input file is missing.\n");
+		printf("The path to the input file is missing; use -h to get help using the utility.\n");
 		return -1;
 	}
 
-	yyin = fopen(argv[1], "r");
+    int needsDotCon = 0;
+    int needsDotFile = 0;
+	int needsHelp = 0;
+    int opt = 0;
+
+    while((opt = t_getopt(argc, argv, "cfht")) != -1)
+    {
+        switch(opt) 
+        {
+            case 'h':
+                printf("%s", getHelp());
+				needsHelp = 1;
+                return 0;
+                break;
+            case 't':
+                needsTokens = 1;
+                break;
+            case 'c':
+                needsDotCon = 1;
+                break;
+            case 'f':
+                needsDotFile = 1;
+                break;
+            case '?':
+                printf("%c : unrecognized option; use -h to get help using the utility.\n", opt);
+                return -1;
+                break;
+        }   
+    }
+	if (!needsHelp && argv[argc - 1][0] == '-')
+	{
+		printf("The path to the input file is missing; use -h to get help using the utility.\n");
+		return -1;
+	}
+
+	yyin = fopen(argv[argc - 1], "r");
 
     printf("The parsing process has started.\n");
 
@@ -3025,15 +3062,29 @@ int main(int argc, char* argv[])
 
     printf("The parsing process is completed.\n");
 
-    FILE *f = fopen("result.gv", "w");
-
-    char * res = generateDotFromKotlinFile(root);
-
-    fprintf(f, "%s", res);
-
-    printf("%s\n", res);
-
-    fclose(f);
+    if (needsDotCon || needsDotFile) 
+    {   
+        char * res = generateDotFromKotlinFile(root);
+        if (needsDotFile)
+        {
+            FILE *f = fopen("result.gv", "w");
+            fprintf(f, "%s", res);
+            fclose(f);
+        }
+        if (needsDotCon)
+        {
+            printf("%s\n", res);
+        }
+    
+    }
 
 	return 0;
+}
+
+void printHandler(char* str, char * token)
+{
+    if(needsTokens != 0)
+    {
+        printf("(%s) - %s\n", token, str);
+    }
 }
