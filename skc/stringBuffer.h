@@ -35,3 +35,9 @@ void printStringBuffer(struct stringBuffer* buffer);
 * \param[in,out] buffer очищаемый буффер.
 */
 void clearStringBuffer(struct stringBuffer* buffer);
+
+/*! Получить строку в стиле Си (массив Char), окончанием которой будет является терминальный 0. Промежуточные терминальные 0 будут заменены на пробелы.
+* \param[in] buffer Строковый буффер, который требуется перевести в Си-строку.
+* \return Массив char - строка в Си-стиле.
+*/
+char * getSafeCString(struct stringBuffer* buffer);
