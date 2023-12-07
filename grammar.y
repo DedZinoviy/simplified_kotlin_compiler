@@ -7,7 +7,7 @@
 %token DOUBLE_LITERAL 
 %token STRING_LITERAL 
 %token TRUE_LITERAL FALSE_LITERAL
-%token ARRAY
+%token ARRAY RETURN
 
 %nonassoc INCREMENT DECREMENT
 %nonassoc ENDL
@@ -134,7 +134,14 @@ Statement: ';' EndlOpt
          | WhileStatement
          | DoWhileStatement
          | ForStatement
-         ;         
+         | ReturnStatement
+         ;
+
+ReturnStatement: RETURN EndlList
+               | RETURN SimpleExpression EndlList
+               | RETURN SimpleExpression ';' EndlOpt
+               | RETURN ';' EndlOpt
+               ; 
 
 ValStmt: VAL EndlOpt VarDeclaration EndlList
        | VAL EndlOpt VarDeclaration ';' EndlOpt
