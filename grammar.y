@@ -7,6 +7,7 @@
 %token DOUBLE_LITERAL 
 %token STRING_LITERAL 
 %token TRUE_LITERAL FALSE_LITERAL
+%token ARRAY
 
 %nonassoc INCREMENT DECREMENT
 %nonassoc ENDL
@@ -87,6 +88,10 @@ SimpleExpression: INT_LITERAL
                 | SimpleExpression INCREMENT %prec POST_INCREMENT
                 ;
 
+Type: ID
+    | ARRAY EndlOpt '<' EndlOpt Type EndlOpt '>'
+    ;
+
 BlockStatement: '{' EndlOpt StatementList '}'
                | '{' EndlOpt '}'
                ;
@@ -158,7 +163,7 @@ MultiDeclararion: VAL EndlOpt '(' VarDeclIdList ')' EndlOpt '=' EndlOpt SimpleEx
                 | VAR EndlOpt '(' VarDeclIdList ')' EndlOpt '=' EndlOpt SimpleExpression ';' EndlOpt
                 ;
 
-VarDeclaration: ID EndlOpt ':' EndlOpt ID
+VarDeclaration: ID EndlOpt ':' EndlOpt Type
               ;
 
 VarDeclarationList: VarDeclaration
@@ -166,9 +171,9 @@ VarDeclarationList: VarDeclaration
                   ;
 
 FunctionDeclaration: FUNC EndlOpt ID EndlOpt '(' EndlOpt ')' EndlOpt BlockStatement  EndlOpt
-                   | FUNC EndlOpt ID EndlOpt '(' EndlOpt ')' EndlOpt ':' EndlOpt ID EndlOpt BlockStatement  EndlOpt
+                   | FUNC EndlOpt ID EndlOpt '(' EndlOpt ')' EndlOpt ':' EndlOpt Type EndlOpt BlockStatement  EndlOpt
                    | FUNC EndlOpt ID EndlOpt '(' EndlOpt VarDeclarationList EndlOpt ')' EndlOpt BlockStatement  EndlOpt
-                   | FUNC EndlOpt ID EndlOpt '(' EndlOpt VarDeclarationList EndlOpt ')' EndlOpt ':' EndlOpt ID EndlOpt BlockStatement  EndlOpt
+                   | FUNC EndlOpt ID EndlOpt '(' EndlOpt VarDeclarationList EndlOpt ')' EndlOpt ':' EndlOpt Type EndlOpt BlockStatement  EndlOpt
                    ;
 
 ClassModifierMember: ClassMember
@@ -197,16 +202,16 @@ ClassMember: FunctionDeclaration
            | VarStmt
            ;
 
-ClassParam : ID ':' ID '=' SimpleExpression
-           | ID ':' ID
-           | VAL ID ':' ID '=' SimpleExpression
-           | VAR ID ':' ID '=' SimpleExpression
-           | VAL ID ':' ID
-           | VAR ID ':' ID
-           | MemberModifierList EndlOpt VAL ID ':' ID '=' SimpleExpression
-           | MemberModifierList EndlOpt VAR ID ':' ID '=' SimpleExpression
-           | MemberModifierList EndlOpt VAL ID ':' ID
-           | MemberModifierList EndlOpt VAR ID ':' ID
+ClassParam : ID ':' Type '=' SimpleExpression
+           | ID ':' Type
+           | VAL ID ':' Type '=' SimpleExpression
+           | VAR ID ':' Type '=' SimpleExpression
+           | VAL ID ':' Type
+           | VAR ID ':' Type
+           | MemberModifierList EndlOpt VAL ID ':' Type '=' SimpleExpression
+           | MemberModifierList EndlOpt VAR ID ':' Type '=' SimpleExpression
+           | MemberModifierList EndlOpt VAL ID ':' Type
+           | MemberModifierList EndlOpt VAR ID ':' Type
            ;
 
 ClassParamList: ClassParam
