@@ -24,7 +24,7 @@
 %left UMINUS UPLUS
 %right PREF_INCREMENT PREF_DECREMENT '!'
 %left POST_INCREMENT POST_DECREMENT '.'
-%nonassoc '(' ')'
+%nonassoc '(' ')' '[' ']'
 
 %start KotlinFile
 
@@ -86,6 +86,7 @@ SimpleExpression: INT_LITERAL
                 | '!' EndlOpt SimpleExpression
                 | SimpleExpression DECREMENT %prec POST_DECREMENT
                 | SimpleExpression INCREMENT %prec POST_INCREMENT
+                | SimpleExpression '[' EndlOpt SimpleExpression EndlOpt ']'
                 ;
 
 Type: ID
