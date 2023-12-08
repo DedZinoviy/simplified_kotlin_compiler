@@ -1,4 +1,5 @@
 %{
+       #include "modifier_head.h"
        #include "parsing_tree.h"
        void yyerror(char const * s);
        extern int yylex(void);
@@ -9,6 +10,7 @@
        char charLit;
        double doubleLit;
        struct stringBuffer * stringLit;
+       struct ModifierHead * modHead;
        char * ident;
        struct ExpressionNode * expression;
        struct ExpressionListNode * exprList;

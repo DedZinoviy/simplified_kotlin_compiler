@@ -2,6 +2,7 @@
     #include "parser_tab.h"
     #include "parsing_tree.h"
     #include "print_functions.h"
+    #include "modifier_head.h"
     extern int yyparse();
 %}
 %option noyywrap
@@ -16,6 +17,7 @@
 %x STRING
 %x MULTILINE_STRING
 %x CHAR
+%x MODIFIER
 %x OVER
 
 DIGIT [0-9]
@@ -57,6 +59,8 @@ DIGIT [0-9]
     int needsTokens = 0;
 
     char tempIdent[1024];
+
+    struct ModifierHead * head = createEmptyModifierHead();
     // Блок ключевых слов.
 %}
 
@@ -101,15 +105,201 @@ DIGIT [0-9]
     }
 %}
 
+<MODIFIER>public {
+    if (head->isPublic != 0)
+    {
+        if((head->isInternal != 0) || (head->isProtected != 0) || (head->isPrivate != 0))
+        {
+            printf("ERROR: Incompatible visibility modifiers in line %d.\n", line);
+            BEGIN(INITIAL);
+            return -1;    
+        }
+        else
+        {
+            printHandler((char*)"PUBLIC_KEY_WORD", yytext);
+            head->isPublic = 1;
+        }
+    }
+    else
+    {
+        printf("ERROR: Repeated \"public\" modifier in line %d.\n", line);
+        BEGIN(INITIAL);
+        return -1;
+    }
+}
+<MODIFIER>internal {
+    if (head->isInternal != 0)
+    {
+        if((head->isPublic != 0) || (head->isProtected != 0) || (head->isPrivate != 0))
+        {
+            printf("ERROR: Incompatible visibility modifiers in line %d.\n", line);
+            BEGIN(INITIAL);
+            return -1;    
+        }
+        else
+        {
+            printHandler((char*)"INTERNAL_KEY_WORD", yytext);
+            head->isInternal = 1;
+        }
+    }
+    else
+    {
+        printf("ERROR: Repeated \"internal\" modifier in line %d.\n", line);
+        BEGIN(INITIAL);
+        return -1;
+    }
+}
+<MODIFIER>protected {
+    if (head->isProtected != 0)
+    {
+        if((head->isPublic != 0) || (head->isInternal != 0) || (head->isPrivate != 0))
+        {
+            printf("ERROR: Incompatible visibility modifiers in line %d.\n", line);
+            BEGIN(INITIAL);
+            return -1;    
+        }
+        else
+        {
+            printHandler((char*)"PROTECTED_KEY_WORD", yytext);
+            head->isProtected = 1;
+        }
+    }
+    else
+    {
+        printf("ERROR: Repeated \"protected\" modifier in line %d.\n", line);
+        BEGIN(INITIAL);
+        return -1;
+    }
+}
+<MODIFIER>private {
+    if (head->isPrivate != 0)
+    {
+        if((head->isPublic != 0) || (head->isInternal != 0) || (head->isProtected != 0))
+        {
+            printf("ERROR: Incompatible visibility modifiers in line %d.\n", line);
+            BEGIN(INITIAL);
+            return -1;    
+        }
+        else
+        {
+            printHandler((char*)"PRIVATE_KEY_WORD", yytext);
+            head->isPrivate = 1;
+        }
+    }
+    else
+    {
+        printf("ERROR: Repeated \"private\" modifier in line %d.\n", line);
+        BEGIN(INITIAL);
+        return -1;
+    }
+}
+<MODIFIER>open {
+    if (head->isOpen != 0)
+    {
+        if((head->isFinal != 0))
+        {
+            printf("ERROR: Incompatible modifiers \"open\" and \"final\" in line %d.\n", line);
+            BEGIN(INITIAL);
+            return -1;    
+        }
+        else
+        {
+            printHandler((char*)"OPEN_KEY_WORD", yytext);
+            head->isOpen = 1;
+        }
+    }
+    else
+    {
+        printf("ERROR: Repeated \"open\" modifier in line %d.\n", line);
+        BEGIN(INITIAL);
+        return -1;
+    }
+}
+<MODIFIER>final {
+    if (head->isFinal != 0)
+    {
+        if((head->isOpen != 0))
+        {
+            printf("ERROR: Incompatible modifiers \"open\" and \"final\" in line %d.\n", line);
+            BEGIN(INITIAL);
+            return -1;    
+        }
+        else
+        {
+            head->isFinal = 1;
+            printHandler((char*)"FINAL_KEY_WORD", yytext);
+        }
+    }
+    else
+    {
+        printf("ERROR: Repeated \"final\" modifier in line %d.\n", line);
+        BEGIN(INITIAL);
+        return -1;
+    }
+}
+<MODIFIER>override {
+    if (head->isOverride != 0)
+    {
+        printHandler((char*)"OVERRIDE_KEY_WORD", yytext);
+        head->isOverride = 1;
+    }
+    else
+    {
+        printf("ERROR: Repeated \"override\" modifier in line %d.\n", line);
+        BEGIN(INITIAL);
+        return -1;
+    }
+}
+
+<MODIFIER>fun {
+    struct ModifierHead * copy = copyModifierHead(head);
+    yylval.modHead = copy;
+    head = clearModifierHead(head);
+    yy_pop_state();
+    return FUNC;
+}
+<MODIFIER>class {
+    struct ModifierHead * copy = copyModifierHead(head);
+    yylval.modHead = copy;
+    head = clearModifierHead(head);
+    yy_pop_state();
+    return CLASS;
+}
+<MODIFIER>constructor {
+    struct ModifierHead * copy = copyModifierHead(head);
+    yylval.modHead = copy;
+    head = clearModifierHead(head);
+    yy_pop_state();
+    return CONSTRUCTOR;
+}
+<MODIFIER>val {
+    struct ModifierHead * copy = copyModifierHead(head);
+    yylval.modHead = copy;
+    head = clearModifierHead(head);
+    yy_pop_state();
+    return VAL;
+}
+<MODIFIER>var {
+    struct ModifierHead * copy = copyModifierHead(head);
+    yylval.modHead = copy;
+    head = clearModifierHead(head);
+    yy_pop_state();
+    return VAR;
+}
+
 as {printHandler((char*)"AS_KEY_WORD", yytext);}
 as\? {printHandler((char * )"AS?_KEY_WORD", yytext);}
 break {printHandler((char*)"BREAK_KEY_WORD", yytext);}
 class {
     printHandler((char*)"CLASS_KEY_WORD", yytext);
+    struct ModifierHead * copy = copyModifierHead(head);
+    yylval.modHead = copy;
     return CLASS;
 }
 constructor {
     printHandler((char*)"CONSTRUCTOR_KEY_WORD", yytext);
+    struct ModifierHead * copy = copyModifierHead(head);
+    yylval.modHead = copy;
     return CONSTRUCTOR;
 }
 continue {printHandler((char*)"CONTINUE_KEY_WORD", yytext);}
@@ -124,6 +314,8 @@ for {
 }
 fun {
     printHandler((char*)"FUN_KEY_WORD", yytext);
+    struct ModifierHead * copy = copyModifierHead(head);
+    yylval.modHead = copy;
     return FUNC;
 }
 if {printHandler((char*)"IF_KEY_WORD", yytext);}
@@ -135,27 +327,42 @@ in {
 interface {printHandler((char*)"INTERFACE_KEY_WORD", yytext);}
 internal {
     printHandler((char*)"INTERNAL_KEY_WORD", yytext);
-    return INTERNAL;
+    head->isInternal = 1;
+    yy_push_state(MODIFIER);
 }
 is {printHandler((char*)"IS_KEY_WORD", yytext);}
 \!is {printHandler((char*)"!IS_KEY_WORD", yytext);}
 null {printHandler((char*)"NULL_KEY_WORD", yytext);}
 object {printHandler((char*)"OBJECT_KEY_WORD", yytext);}
+final {
+    printHandler((char*)"FINAL_KEY_WORD", yytext);
+    head->isFinal = 1;
+    yy_push_state(MODIFIER);
+}
+override {
+    printHandler((char*)"OVERRIDE_KEY_WORD", yytext);
+    head->isPublic = 1;
+    yy_push_state(MODIFIER);
+}
 open {
     printHandler((char*)"OPEN_KEY_WORD", yytext);
-    return OPEN;
+    head->isPublic = 1;
+    yy_push_state(MODIFIER);
 }
 private {
     printHandler((char*)"PRIVATE_KEY_WORD", yytext);
-    return PRIVATE;
+    head->isPublic = 1;
+    yy_push_state(MODIFIER);
 }
 protected {
     printHandler((char*)"PROTECTED_KEY_WORD", yytext);
-    return PROTECTED;
+    head->isProtected = 1;
+    yy_push_state(MODIFIER);
 }
 public {
     printHandler((char*)"PUBLIC_KEY_WORD", yytext);
-    return PUBLIC;
+    head->isPublic = 1;
+    yy_push_state(MODIFIER);
 }
 package {printHandler((char*)"PACKAGE_KEY_WORD", yytext);}
 return {printHandler((char*)"RETURN_KEY_WORD", yytext);}
@@ -172,10 +379,14 @@ try {printHandler((char*)"TRY_KEY_WORD", yytext);}
 typealias {printHandler((char*)"TYPEALIAS_KEY_WORD", yytext);}
 val {
     printHandler((char*)"VAL_KEY_WORD", yytext);
+    struct ModifierHead * copy = copyModifierHead(head);
+    yylval.modHead = copy;
     return VAL;
 }
 var {
     printHandler((char*)"VAR_KEY_WORD", yytext);
+    struct ModifierHead * copy = copyModifierHead(head);
+    yylval.modHead = copy;
     return VAR;
 }
 when {printHandler((char*)"WHEN_KEY_WORD", yytext);}
@@ -697,6 +908,12 @@ return ENDL; }
     bufferString[0] = 0;
     strcat(bufferString, yytext);
     printf("%s - UNRECOGNIZED TOKEN.\n", bufferString);
+    return -1;
+}
+
+<MODIFIER><<EOF>> {
+    BEGIN(OVER);
+    printf("ERROR: Exprecting top level declaration.\n");
     return -1;
 }
 
