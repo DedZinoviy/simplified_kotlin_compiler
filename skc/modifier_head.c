@@ -15,7 +15,14 @@ struct ModifierHead * createEmptyModifierHead()
 
 struct ModifierHead * clearModifierHead(struct ModifierHead * head)
 {
-
+    head->isFinal = 0;
+    head->isInternal = 0;
+    head->isOpen = 0;
+    head->isOverride = 0;
+    head->isPrivate = 0;
+    head->isProtected = 0;
+    head->isPublic = 0;
+    return head;
 }
 
 struct ModifierHead * copyModifierHead(struct ModifierHead * head)
