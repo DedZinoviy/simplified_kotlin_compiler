@@ -87,6 +87,8 @@ SimpleExpression: INT_LITERAL
                 | SimpleExpression DECREMENT %prec POST_DECREMENT
                 | SimpleExpression INCREMENT %prec POST_INCREMENT
                 | SimpleExpression '[' EndlOpt SimpleExpression EndlOpt ']'
+                | ARRAY '(' SimpleExpression ',' '{' SimpleExpression '}' ')'
+                | ARRAY '(' SimpleExpression ')' EndlOpt '{' EndlOpt SimpleExpression EndlOpt '}'
                 ;
 
 Type: ID
