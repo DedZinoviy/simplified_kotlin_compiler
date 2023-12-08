@@ -184,6 +184,10 @@ FunctionDeclaration: FUNC EndlOpt ID EndlOpt '(' EndlOpt ')' EndlOpt BlockStatem
                    | FUNC EndlOpt ID EndlOpt '(' EndlOpt ')' EndlOpt ':' EndlOpt Type EndlOpt BlockStatement  EndlOpt
                    | FUNC EndlOpt ID EndlOpt '(' EndlOpt VarDeclarationList EndlOpt ')' EndlOpt BlockStatement  EndlOpt
                    | FUNC EndlOpt ID EndlOpt '(' EndlOpt VarDeclarationList EndlOpt ')' EndlOpt ':' EndlOpt Type EndlOpt BlockStatement  EndlOpt
+                   | FUNC EndlOpt ID EndlOpt '(' EndlOpt ')' EndlOpt '=' EndlOpt SimpleExpression  EndlOpt
+                   | FUNC EndlOpt ID EndlOpt '(' EndlOpt ')' EndlOpt ':' EndlOpt Type EndlOpt '=' EndlOpt SimpleExpression  EndlOpt
+                   | FUNC EndlOpt ID EndlOpt '(' EndlOpt VarDeclarationList EndlOpt ')' EndlOpt '=' EndlOpt SimpleExpression  EndlOpt
+                   | FUNC EndlOpt ID EndlOpt '(' EndlOpt VarDeclarationList EndlOpt ')' EndlOpt ':' EndlOpt Type EndlOpt '=' EndlOpt SimpleExpression  EndlOpt
                    ;
 
 ClassModifierMember: ClassMember
