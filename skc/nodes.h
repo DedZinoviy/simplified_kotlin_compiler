@@ -1,5 +1,6 @@
 #pragma once
 #include "stringBuffer.h"
+#include "modifier_head.h"
 
 /*------------------------------------ Expression -------------------------------------*/
 
@@ -121,7 +122,13 @@ enum ExpressionType
     _DISJUNCTION,
 
     /// Конъюнкция ("И").
-    _CONJUNCTION
+    _CONJUNCTION,
+
+    /// Создание массива.
+    _ARRAY_CREATION,
+
+    /// Доступ к члену массива.
+    _ARRAY_ACCESS
 };
 
 /*! \brief Структура узла Expression. */
@@ -251,6 +258,9 @@ struct StatementNode
 
     /// Указатель на список переменных.
     struct VarDeclarationListNode  * varDeclList;
+
+    /// Временное хранилище модификаторов.
+    struct ModifierHead * _tempHead;
 };
 
 
@@ -319,7 +329,8 @@ enum ModifierType
     _INTERNAL,
     _PROTECTED,
     _OPEN,
-    _OVERRIDE
+    _OVERRIDE,
+    _FINAL
 };
 
 /*! \brief Узел единичного модификатора. */
@@ -373,6 +384,9 @@ struct FunctionNode
 
     /// Тело функции.
     struct StatementListNode * body;
+
+    /// Временное хранилище модификаторов.
+    struct ModifierHead * _tempHead;
 };
 
 
@@ -510,6 +524,9 @@ struct ClassNode
 
     /// Указатель на выражение - родительский класс.
     struct ExpressionNode * base;
+
+    /// Временное хранилище модификаторов.
+    struct ModifierHead * _tempHead;
 };
 
 

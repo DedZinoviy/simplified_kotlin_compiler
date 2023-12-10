@@ -304,13 +304,13 @@ as\? {printHandler((char * )"AS?_KEY_WORD", yytext);}
 break {printHandler((char*)"BREAK_KEY_WORD", yytext);}
 class {
     printHandler((char*)"CLASS_KEY_WORD", yytext);
-    struct ModifierHead * copy = copyModifierHead(head);
+    struct ModifierHead * copy = copyModifierHead(&head);
     yylval.modHead = copy;
     return CLASS;
 }
 constructor {
     printHandler((char*)"CONSTRUCTOR_KEY_WORD", yytext);
-    struct ModifierHead * copy = copyModifierHead(head);
+    struct ModifierHead * copy = copyModifierHead(&head);
     yylval.modHead = copy;
     return CONSTRUCTOR;
 }
@@ -326,7 +326,7 @@ for {
 }
 fun {
     printHandler((char*)"FUN_KEY_WORD", yytext);
-    struct ModifierHead * copy = copyModifierHead(head);
+    struct ModifierHead * copy = copyModifierHead(&head);
     yylval.modHead = copy;
     yy_push_state(FUNCTION);
     return FUNC;
@@ -399,13 +399,13 @@ try {printHandler((char*)"TRY_KEY_WORD", yytext);}
 typealias {printHandler((char*)"TYPEALIAS_KEY_WORD", yytext);}
 val {
     printHandler((char*)"VAL_KEY_WORD", yytext);
-    struct ModifierHead * copy = copyModifierHead(head);
+    struct ModifierHead * copy = copyModifierHead(&head);
     yylval.modHead = copy;
     return VAL;
 }
 var {
     printHandler((char*)"VAR_KEY_WORD", yytext);
-    struct ModifierHead * copy = copyModifierHead(head);
+    struct ModifierHead * copy = copyModifierHead(&head);
     yylval.modHead = copy;
     return VAR;
 }

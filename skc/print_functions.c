@@ -650,6 +650,9 @@ char * generateDotFromModifier(struct ModifierNode * node)
         case _OVERRIDE:
             res = concat(res, (char *)"[label=\"OVERRIDE\"];\n");
             break;
+        case _FINAL:
+            res = concat(res, (char *)"[label=\"FINAL\"];\n");
+            break;
         default:
             break;
     }

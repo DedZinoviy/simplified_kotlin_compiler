@@ -1,7 +1,7 @@
 #pragma once
 #include <stdlib.h>
 
-/*! Структура, определяющая применяемые модификаторы к элементу. */
+/*! \brief Структура, определяющая применяемые модификаторы к элементу. */
 struct ModifierHead 
 {
     int isPrivate;
@@ -29,3 +29,9 @@ struct ModifierHead * clearModifierHead(struct ModifierHead * head);
 * \return копия структуры модификаторов.
 */
 struct ModifierHead * copyModifierHead(struct ModifierHead * head);
+
+/*! Проверить, являются ли все поля структуры равными 0.
+* \param[in] head проверяемая структура.
+* \return результат проверки: 1 = если все поля равны 0, 0 - если нет.
+*/
+int isZeroHead(struct ModifierHead * head);

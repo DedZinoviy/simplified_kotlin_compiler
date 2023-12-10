@@ -37,3 +37,18 @@ struct ModifierHead * copyModifierHead(struct ModifierHead * head)
     newHead->isPublic = 0;
     return newHead;
 }
+
+/*! Проверить, являются ли все поля структуры равными 0.
+* \param[in] head проверяемая структура.
+* \return результат проверки: 1 = если все поля равны 0, 0 - если нет.
+*/
+int isZeroHead(struct ModifierHead * head)
+{
+    int isFlag = head->isFinal == 0 && head->isInternal == 0 && head->isOpen == 0 && head->isOverride == 0 && head->isPrivate == 0 &&
+    head->isProtected == 0 && head->isPublic == 0;
+    if(isFlag)
+    {
+        return 1;
+    }
+    return 0;
+}

@@ -1217,6 +1217,18 @@ struct ModifierNode * createOpenModifierNode()
     return node;
 }
 
+/*! Создать узел модификатора FINAL.
+* \return указатель на узел модификатора FINAL.
+*/
+struct ModifierNode * createFinalModifierNode()
+{
+    struct ModifierNode * node = (struct ModifierNode*)malloc(sizeof(struct ModifierNode));
+    node->id = ID++;
+    node->type = _FINAL;
+    node->next = NULL;
+    return node;
+}
+
 
 
 /*------------------------------------ ModifierList -------------------------------------*/
@@ -1530,9 +1542,10 @@ struct PrimaryConstructorNode * createPrimaryConstructor(struct ModifierListNode
 * \param[in] constructor указатель на узел первичного конструктора класса.
 * \param[in] memberList указатель на узел списка параметров класса; передать NULL в случае отсутствия тела класса.
 * \param[in] parent указатель на выражение - родительский класс; в случае отсутсвия передать выражение идентификатора глобального суперкласса Any.
+* \param[in] head список модификаторов, полученный из лексера.
 * \return указатель на созданный узел класса.
 */
-struct ClassNode * createClassNode(char * ident, struct PrimaryConstructorNode * constructor, struct ClassMemberListNode * memberList, struct ExpressionNode * parent)
+struct ClassNode * createClassNode(char * ident, struct PrimaryConstructorNode * constructor, struct ClassMemberListNode * memberList, struct ExpressionNode * parent, struct ModifierHead * head)
 {
     struct ClassNode * node = (struct ClassNode *)malloc(sizeof(struct ClassNode));
     node->id = ID++;
@@ -1540,5 +1553,6 @@ struct ClassNode * createClassNode(char * ident, struct PrimaryConstructorNode *
     node->constr = constructor;
     node->members = memberList;
     node->base = parent;
+    node->_tempHead = head;
     return node;
 }
