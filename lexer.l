@@ -326,6 +326,7 @@ in {
 \!in {printHandler((char*)"!IN_KEY_WORD", yytext);}
 interface {printHandler((char*)"INTERFACE_KEY_WORD", yytext);}
 internal {
+    multilineBegin = line;
     printHandler((char*)"INTERNAL_KEY_WORD", yytext);
     head->isInternal = 1;
     yy_push_state(MODIFIER);
@@ -335,31 +336,37 @@ is {printHandler((char*)"IS_KEY_WORD", yytext);}
 null {printHandler((char*)"NULL_KEY_WORD", yytext);}
 object {printHandler((char*)"OBJECT_KEY_WORD", yytext);}
 final {
+    multilineBegin = line;
     printHandler((char*)"FINAL_KEY_WORD", yytext);
     head->isFinal = 1;
     yy_push_state(MODIFIER);
 }
 override {
+    multilineBegin = line;
     printHandler((char*)"OVERRIDE_KEY_WORD", yytext);
     head->isPublic = 1;
     yy_push_state(MODIFIER);
 }
 open {
+    multilineBegin = line;
     printHandler((char*)"OPEN_KEY_WORD", yytext);
     head->isPublic = 1;
     yy_push_state(MODIFIER);
 }
 private {
+    multilineBegin = line;
     printHandler((char*)"PRIVATE_KEY_WORD", yytext);
     head->isPublic = 1;
     yy_push_state(MODIFIER);
 }
 protected {
+    multilineBegin = line;
     printHandler((char*)"PROTECTED_KEY_WORD", yytext);
     head->isProtected = 1;
     yy_push_state(MODIFIER);
 }
 public {
+    multilineBegin = line;
     printHandler((char*)"PUBLIC_KEY_WORD", yytext);
     head->isPublic = 1;
     yy_push_state(MODIFIER);
@@ -592,7 +599,7 @@ return ENDL; }
 }
 
 <INBRACE><<EOF>> {
-    printf("ERROR: expecting \"{\"\n");
+    printf("ERROR: expecting \"}\".\n");
     BEGIN(INITIAL);
     return -1;
 }
@@ -913,7 +920,7 @@ return ENDL; }
 
 <MODIFIER><<EOF>> {
     BEGIN(OVER);
-    printf("ERROR: Exprecting top level declaration.\n");
+    printf("ERROR: Exprecting top level declaration in line %d.\n", multilineBegin);
     return -1;
 }
 
