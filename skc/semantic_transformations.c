@@ -62,12 +62,18 @@ static void _replaceLiteralsToObjectsInExpressionList(struct ExpressionListNode 
 
 static void _replaceLiteralsToObjectsInStatement(struct StatementNode * statement)
 {
-
+    if (statement->next != NULL) // Заменить литералы на объекты, если есть следующий Statement.
+    {
+        _replaceLiteralsToObjectsInStatement(statement->next);
+    }
 }
 
-static void _replaceLiteralsToObjectsInStatementList(struct StatementListNode * statement)
+static void _replaceLiteralsToObjectsInStatementList(struct StatementListNode * statementList)
 {
-
+    if (statementList->first != NULL) // Заменить литералы на объекты в списке, если имеется хотя бы один Statement.
+    {
+        _replaceLiteralsToObjectsInStatement(statementList->first);
+    }
 }
 
 static void _replaceLiteralsToObjectsInKotlinElementList(struct KotlinFileElementListNode * elemList)
@@ -101,7 +107,10 @@ static void _replaceLiteralsToObjectsInKotlinElement(struct KotlinFileElementNod
 
 static void _replaceLiteralsToObjectsInFunction(struct FunctionNode * func)
 {
-
+    if (func->body != NULL)
+    {
+        _replaceLiteralsToObjectsInStatementList(func->body);
+    }
 }
 
 static void _replaceLiteralsToObjectsInClass(struct ClassNode * clas)
