@@ -1258,6 +1258,58 @@ struct ModifierListNode * addModifierToList(struct ModifierListNode * modList, s
     return modList;
 }
 
+/*! Создать заполненный узел списка модификаторов на основе структуры перечня модификаторов лексера.
+* \param[in] head указатель на структуру перечня модфикаторов.
+* \return указатель на созданный узел списка модификаторов; NULL, если передан NULL или перечень пустой.
+*/
+struct ModifierListNode * createModifierListFrom(struct ModifierHead * head)
+{
+    // Считать, что в перечне отсуствуют модификаторы.
+    struct ModifierNode * open = NULL;
+    struct ModifierNode * final = NULL;
+    struct ModifierNode * override = NULL;
+    struct ModifierNode * public = NULL;
+    struct ModifierNode * private = NULL;
+    struct ModifierNode * protected = NULL;
+    struct ModifierNode * internal = NULL;
+
+    // Создать структуры модификаторов на основе перечня.
+    if (head != NULL)
+    {
+        if (head->isOpen != 0) open = createOpenModifierNode();
+        if (head->isFinal != 0) final = createFinalModifierNode();
+        if (head->isInternal != 0) internal = createInternalModifierNode();
+        if (head->isOverride != 0) override = createOverrideModifierNode();
+        if (head->isPrivate != 0) private = createPrivateModifierNode();
+        if (head->isProtected != 0) protected = createProtectedModifierNode();
+        if (head->isPublic != 0) public = createPublicModifierNode();
+    }
+    
+    // Создать список модификаторов.
+    struct ModifierListNode * list = NULL;
+    if (open != NULL) {list = createModifierListNode(open); open = NULL;}
+    else if (final != NULL) {list = createModifierListNode(final); final = NULL;}
+    else if (override != NULL) {list = createModifierListNode(override); override = NULL;}
+    else if (public != NULL) {list = createModifierListNode(public); public = NULL;}
+    else if (private != NULL) {list = createModifierListNode(private); private = NULL;}
+    else if (protected != NULL) {list = createModifierListNode(protected); protected = NULL;}
+    else if (internal != NULL) {list = createModifierListNode(internal); internal = NULL;}
+
+    // Заполнить список модификаторов.
+    if (list != NULL) 
+    {
+        if (open != NULL) {list = addModifierToList(list, open);}
+        if (final != NULL) {list = addModifierToList(list, final);}
+        if (override != NULL) {list = addModifierToList(list, override);}
+        if (public != NULL) {list = addModifierToList(list, public);}
+        if (private != NULL) {list = addModifierToList(list, private);}
+        if (protected != NULL) {list = addModifierToList(list, protected);}
+        if (internal != NULL) {list = addModifierToList(list, internal);}
+    }
+
+    return list;
+}
+
 
 
 /*------------------------------------ KotlinFileElement -------------------------------------*/

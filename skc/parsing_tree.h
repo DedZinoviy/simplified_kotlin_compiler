@@ -520,6 +520,12 @@ struct ModifierListNode * createModifierListNode(struct ModifierNode * mod);
 */
 struct ModifierListNode * addModifierToList(struct ModifierListNode * modList, struct ModifierNode * mod);
 
+/*! Создать заполненный узел списка модификаторов на основе структуры перечня модификаторов лексера.
+* \param[in] head указатель на структуру перечня модфикаторов.
+* \return указатель на созданный узел списка модификаторов; NULL, если передан NULL или перечень пустой.
+*/
+struct ModifierListNode * createModifierListFrom(struct ModifierHead * head);
+
 
 
 /*------------------------------------ KotlinFileElement -------------------------------------*/
