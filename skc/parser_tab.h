@@ -3,6 +3,7 @@ typedef union {
        char charLit;
        double doubleLit;
        struct stringBuffer * stringLit;
+       struct ModifierHead * modHead;
        char * ident;
        struct ExpressionNode * expression;
        struct ExpressionListNode * exprList;
@@ -25,24 +26,24 @@ typedef union {
 } YYSTYPE;
 #define	IF	258
 #define	ELSE	259
-#define	VAL	260
-#define	VAR	261
-#define	CLASS	262
-#define	PUBLIC	263
-#define	PROTECTED	264
-#define	PRIVATE	265
-#define	INTERNAL	266
-#define	ENDL	267
-#define	WHILE	268
-#define	DO	269
-#define	FUNC	270
-#define	FOR	271
-#define	SUPER	272
-#define	THIS	273
-#define	OVERRIDE	274
-#define	OPEN	275
+#define	PUBLIC	260
+#define	PROTECTED	261
+#define	PRIVATE	262
+#define	INTERNAL	263
+#define	ENDL	264
+#define	WHILE	265
+#define	DO	266
+#define	FOR	267
+#define	SUPER	268
+#define	THIS	269
+#define	OVERRIDE	270
+#define	OPEN	271
+#define	ID	272
+#define	VAL	273
+#define	VAR	274
+#define	CLASS	275
 #define	CONSTRUCTOR	276
-#define	ID	277
+#define	FUNC	277
 #define	INT_LITERAL	278
 #define	CHAR_LITERAL	279
 #define	DOUBLE_LITERAL	280

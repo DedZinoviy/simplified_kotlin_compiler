@@ -29,12 +29,12 @@ struct ModifierHead * copyModifierHead(struct ModifierHead * head)
 {
     struct ModifierHead * newHead = (struct ModifierHead *)malloc(sizeof(struct ModifierHead));
     newHead->isFinal = head->isFinal;
-    newHead->isInternal = 0;
-    newHead->isOpen = 0;
-    newHead->isOverride = 0;
-    newHead->isPrivate = 0;
-    newHead->isProtected = 0;
-    newHead->isPublic = 0;
+    newHead->isInternal = head->isInternal;
+    newHead->isOpen = head->isOpen;
+    newHead->isOverride = head->isOverride;
+    newHead->isPrivate = head->isPrivate;
+    newHead->isProtected = head->isProtected;
+    newHead->isPublic = head->isPublic;
     return newHead;
 }
 

@@ -268,6 +268,7 @@ DIGIT [0-9]
     clearModifierHead(&head);
     yy_pop_state();
     yy_push_state(FUNCTION);
+    printHandler((char*)"FUN_KEY_WORD", yytext);
     return FUNC;
 }
 <MODIFIER>class {
@@ -275,6 +276,7 @@ DIGIT [0-9]
     yylval.modHead = copy;
     clearModifierHead(&head);
     yy_pop_state();
+    printHandler((char*)"CLASS_KEY_WORD", yytext);
     return CLASS;
 }
 <MODIFIER>constructor {
@@ -282,6 +284,7 @@ DIGIT [0-9]
     yylval.modHead = copy;
     clearModifierHead(&head);
     yy_pop_state();
+    printHandler((char*)"CONSTUCTOR_KEY_WORD", yytext);
     return CONSTRUCTOR;
 }
 <MODIFIER>val {
@@ -289,6 +292,7 @@ DIGIT [0-9]
     yylval.modHead = copy;
     clearModifierHead(&head);
     yy_pop_state();
+    printHandler((char*)"VAL_KEYWORD", yytext);
     return VAL;
 }
 <MODIFIER>var {
@@ -296,6 +300,7 @@ DIGIT [0-9]
     yylval.modHead = copy;
     clearModifierHead(&head);
     yy_pop_state();
+    printHandler((char*)"VAR_KEYWORD", yytext);
     return VAR;
 }
 
@@ -312,6 +317,7 @@ constructor {
     printHandler((char*)"CONSTRUCTOR_KEY_WORD", yytext);
     struct ModifierHead * copy = copyModifierHead(&head);
     yylval.modHead = copy;
+    printHandler((char*)"CONSTUCTOR", yytext);
     return CONSTRUCTOR;
 }
 continue {printHandler((char*)"CONTINUE_KEY_WORD", yytext);}
@@ -357,19 +363,19 @@ final {
 override {
     multilineBegin = line;
     printHandler((char*)"OVERRIDE_KEY_WORD", yytext);
-    head.isPublic = 1;
+    head.isOverride = 1;
     yy_push_state(MODIFIER);
 }
 open {
     multilineBegin = line;
     printHandler((char*)"OPEN_KEY_WORD", yytext);
-    head.isPublic = 1;
+    head.isOpen = 1;
     yy_push_state(MODIFIER);
 }
 private {
     multilineBegin = line;
     printHandler((char*)"PRIVATE_KEY_WORD", yytext);
-    head.isPublic = 1;
+    head.isPrivate = 1;
     yy_push_state(MODIFIER);
 }
 protected {
