@@ -1356,7 +1356,6 @@ YY_RULE_SETUP
     printHandler((char*)"CONSTRUCTOR_KEY_WORD", yytext);
     struct ModifierHead * copy = copyModifierHead(&head);
     yylval.modHead = copy;
-    printHandler((char*)"CONSTUCTOR", yytext);
     return CONSTRUCTOR;
 }
 	YY_BREAK

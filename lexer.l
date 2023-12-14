@@ -317,7 +317,6 @@ constructor {
     printHandler((char*)"CONSTRUCTOR_KEY_WORD", yytext);
     struct ModifierHead * copy = copyModifierHead(&head);
     yylval.modHead = copy;
-    printHandler((char*)"CONSTUCTOR", yytext);
     return CONSTRUCTOR;
 }
 continue {printHandler((char*)"CONTINUE_KEY_WORD", yytext);}
