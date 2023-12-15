@@ -672,6 +672,41 @@ struct ExpressionNode * createNotExpressionNode(struct ExpressionNode * value)
     return node;
 }
 
+/*! Создать узел оператора Создания массива.
+* \param[in] len выражение, определяющее длину массива.
+* \param[in] init выражение, определяющее инициализатор.
+* \return указатель на узел оператора созданий.
+*/
+struct ExpressionNode * createArrayCreationExpression(struct ExpressionNode * len, struct ExpressionNode * init)
+{
+    struct ExpressionNode * node = (struct ExpressionNode*)malloc(sizeof(struct ExpressionNode));
+    node->id = ID++;
+    node->type = _ARRAY_CREATION;
+    node->left = len;
+    node->next = NULL;
+    node->params = NULL;
+    node->right = init;
+    return node;
+}
+
+/*! Создать узел оператора доступа к члену массива.
+* \param[in] arr выражение, определяющее массив.
+* \param[in] index выражение, определяющее индекс массива.
+* \return указатель на узел оператора созданий.
+*/
+struct ExpressionNode * createArrayElementAccessExpression(struct ExpressionNode * arr, struct ExpressionNode * index)
+{
+    struct ExpressionNode * node = (struct ExpressionNode*)malloc(sizeof(struct ExpressionNode));
+    node->id = ID++;
+    node->type = _ARRAY_ACCESS;
+    node->left = arr;
+    node->next = NULL;
+    node->params = NULL;
+    node->right = index;
+    return node;
+}
+
+
 
 /*------------------------------------ ExpressionList -------------------------------------*/
 
@@ -1022,6 +1057,26 @@ struct StatementNode * createMultiDeclarationWithVar(struct VarDeclarationListNo
     node->varDeclList = vars;
     node->expression = expr;
     node->type = _MULTI_VAR;
+    node->complexBody = NULL;
+    node->condition = NULL;
+    node->singleBody = NULL;
+    node->varValId = NULL;
+    node->varValType = NULL;
+    return node;
+}
+
+/*! Создать узел Return Statement.
+* \param[in] expr выражение, результат которого возвращается; может быть NULL, если ничего не возвращается.
+* \return созданный узел Return Stmt.
+*/
+struct StatementNode * createReturnStatement(struct ExpressionNode * expr)
+{
+    struct StatementNode * node = (struct StatementNode*)malloc(sizeof(struct StatementNode));
+    node->id = ID++;
+    node->next = NULL;
+    node->varDeclList = NULL;
+    node->expression = expr;
+    node->type = _RETURN;
     node->complexBody = NULL;
     node->condition = NULL;
     node->singleBody = NULL;

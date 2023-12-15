@@ -220,7 +220,10 @@ enum StatementType
     _MULTI_VAL,
 
     /// Множественное объявление переменной VAR.
-    _MULTI_VAR
+    _MULTI_VAR,
+
+    /// Возврат из функции.
+    _RETURN
 };
 
 struct StatementListNode;

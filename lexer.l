@@ -306,6 +306,10 @@ DIGIT [0-9]
 
 as {printHandler((char*)"AS_KEY_WORD", yytext);}
 as\? {printHandler((char * )"AS?_KEY_WORD", yytext);}
+Array {
+    printHandler((char * )"ARRAY_KEY_WORD", yytext);
+    return ARRAY;
+}
 break {printHandler((char*)"BREAK_KEY_WORD", yytext);}
 class {
     printHandler((char*)"CLASS_KEY_WORD", yytext);
@@ -390,7 +394,10 @@ public {
     yy_push_state(MODIFIER);
 }
 package {printHandler((char*)"PACKAGE_KEY_WORD", yytext);}
-return {printHandler((char*)"RETURN_KEY_WORD", yytext);}
+return {
+    printHandler((char*)"RETURN_KEY_WORD", yytext);
+    return RETURN;
+}
 super {
     printHandler((char*)"SUPER_KEY_WORD", yytext);
     return SUPER;
@@ -531,8 +538,14 @@ return ENDL; }
     hasClosingBrace = 1;
     return ';';
 }
-\[ {printHandler((char*)"LEFT_SQUARE_BRACKET", yytext);}
-\] {printHandler((char*)"RIGHT_SQUARE_BRACKET", yytext);}
+\[ {
+    printHandler((char*)"LEFT_SQUARE_BRACKET", yytext);
+    return '[';
+}
+\] {
+    printHandler((char*)"RIGHT_SQUARE_BRACKET", yytext);
+    return ']';
+}
 \( {
     printHandler((char*)"LEFT_ROUND_BRACKET", yytext);
     yy_push_state(INBRACKET);

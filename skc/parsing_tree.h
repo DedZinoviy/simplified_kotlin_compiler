@@ -272,6 +272,20 @@ struct ExpressionNode * createUnaryMinusExpressionNode(struct ExpressionNode * v
 */
 struct ExpressionNode * createNotExpressionNode(struct ExpressionNode * value);
 
+/*! Создать узел оператора Создания массива.
+* \param[in] len выражение, определяющее длину массива.
+* \param[in] init выражение, определяющее инициализатор.
+* \return указатель на узел оператора созданий.
+*/
+struct ExpressionNode * createArrayCreationExpression(struct ExpressionNode * len, struct ExpressionNode * init);
+
+/*! Создать узел оператора доступа к члену массива.
+* \param[in] arr выражение, определяющее массив.
+* \param[in] index выражение, определяющее индекс массива.
+* \return указатель на узел оператора созданий.
+*/
+struct ExpressionNode * createArrayElementAccessExpression(struct ExpressionNode * arr, struct ExpressionNode * index);
+
 
 
 /*------------------------------------ ExpressionList -------------------------------------*/
@@ -405,6 +419,12 @@ struct StatementNode * createMultiDeclarationWithVal(struct VarDeclarationListNo
 * \return указатель на созданный узел множественного объявления Var.
 */
 struct StatementNode * createMultiDeclarationWithVar(struct VarDeclarationListNode * vars, struct ExpressionNode * expr);
+
+/*! Создать узел Return Statement.
+* \param[in] expr выражение, результат которого возвращается; может быть NULL, если ничего не возвращается.
+* \return созданный узел Return Stmt.
+*/
+struct StatementNode * createReturnStatement(struct ExpressionNode * expr);
 
 
 

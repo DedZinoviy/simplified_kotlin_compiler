@@ -32,7 +32,7 @@
        struct KotlinFileNode * file;
 }
 
-%token IF ELSE PUBLIC PROTECTED PRIVATE INTERNAL ENDL WHILE DO FOR SUPER THIS OVERRIDE OPEN
+%token IF ELSE PUBLIC PROTECTED PRIVATE INTERNAL ENDL WHILE DO FOR SUPER THIS OVERRIDE OPEN ARRAY RETURN
 %token <ident>ID
 %token <modHead>VAL VAR CLASS CONSTRUCTOR FUNC
 
@@ -57,7 +57,7 @@
 %left UMINUS UPLUS
 %right PREF_INCREMENT PREF_DECREMENT '!'
 %left POST_INCREMENT POST_DECREMENT '.'
-%nonassoc '(' ')'
+%nonassoc '(' ')' '[' ']'
 
 %start KotlinFile
 
@@ -137,6 +137,9 @@ SimpleExpression: INT_LITERAL {$$ = createIntLiteralExpressionNode($1);}
                 | '!' EndlOpt SimpleExpression {$$ = createNotExpressionNode($3);}
                 | SimpleExpression DECREMENT %prec POST_DECREMENT {$$ = createPostDecrementExpressionNode($1);}
                 | SimpleExpression INCREMENT %prec POST_INCREMENT {$$ = createPostIncrementExpressionNode($1);}
+                | SimpleExpression '[' EndlOpt SimpleExpression EndlOpt ']'
+                | ARRAY '(' SimpleExpression ',' '{' SimpleExpression '}' ')'
+                | ARRAY '(' SimpleExpression ')' EndlOpt '{' EndlOpt SimpleExpression EndlOpt '}'
                 ;
 
 BlockStatement: '{' EndlOpt StatementList '}' {$$ = $3;}
@@ -180,7 +183,14 @@ Statement: ';' EndlOpt {$$ = createEmptyStatement();}
          | WhileStatement {$$ = $1;}
          | DoWhileStatement {$$ = $1;}
          | ForStatement {$$ = $1;}
-         ;         
+         | ReturnStatement {}
+         ;
+
+ReturnStatement: RETURN EndlList {}
+               | RETURN SimpleExpression EndlList {}
+               | RETURN SimpleExpression ';' EndlOpt {}
+               | RETURN ';' EndlOpt {}
+               ; 
 
 ValStmt: VAL EndlOpt VarDeclaration EndlList {$$ = createValStatementFromVarDeclaration($3, NULL); $$->_tempHead = $1;}
        | VAL EndlOpt VarDeclaration ';' EndlOpt {$$ = createValStatementFromVarDeclaration($3, NULL); $$->_tempHead = $1;}

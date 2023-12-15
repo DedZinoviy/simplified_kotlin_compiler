@@ -248,6 +248,14 @@ char * generateDotFromExpression(struct ExpressionNode * node)
             res = concat(res, (char *)"[label=\"params\"];\n");
         }
         break;
+    case _ARRAY_ACCESS:
+        res = concat(res, (char *)"[label=\"array_access\"];\n");
+        res = concat(res, generateStrForBinOperation(node));
+        break;
+    case _ARRAY_CREATION:
+        res = concat(res, (char *)"[label=\"array_creation\"];\n");
+        res = concat(res, generateStrForBinOperation(node));
+        break;
     default:
         break;
     }
@@ -449,6 +457,17 @@ char * generateDotFromStatement(struct StatementNode * stmt)
             res = concat(res, (char *)"[label = \"vars\"];\n");
         }
         if (stmt->expression != NULL)
+        {
+            res = concat(res, generateDotFromExpression(stmt->expression));
+            res = concat(res, itoa(stmt->id, strId, 10));
+            res = concat(res, (char *)" -> ");
+            res = concat(res, itoa(stmt->expression->id, strId, 10));
+            res = concat(res, (char *)"[label = \"expr\"];\n");
+        }
+        break;
+    case _RETURN:
+        res = concat(res, (char *)"[label=\"RETURN\"];\n");
+        if (stmt->expression != NULL) 
         {
             res = concat(res, generateDotFromExpression(stmt->expression));
             res = concat(res, itoa(stmt->id, strId, 10));
