@@ -63,7 +63,7 @@
 
 %type <expression>SimpleExpression
 %type <exprList>ExpressionList
-%type <statement>Statement WhileStatement DoWhileStatement ForStatement ValStmt VarStmt MultiDeclararion
+%type <statement>Statement WhileStatement DoWhileStatement ForStatement ValStmt VarStmt MultiDeclararion ReturnStatement
 %type <stmtList>StatementList BlockStatement
 %type <varDecl>VarDeclaration
 %type <varDeclList>VarDeclarationList VarDeclIdList
@@ -137,14 +137,18 @@ SimpleExpression: INT_LITERAL {$$ = createIntLiteralExpressionNode($1);}
                 | '!' EndlOpt SimpleExpression {$$ = createNotExpressionNode($3);}
                 | SimpleExpression DECREMENT %prec POST_DECREMENT {$$ = createPostDecrementExpressionNode($1);}
                 | SimpleExpression INCREMENT %prec POST_INCREMENT {$$ = createPostIncrementExpressionNode($1);}
-                | SimpleExpression '[' EndlOpt SimpleExpression EndlOpt ']'
-                | ARRAY '(' SimpleExpression ',' '{' SimpleExpression '}' ')'
-                | ARRAY '(' SimpleExpression ')' EndlOpt '{' EndlOpt SimpleExpression EndlOpt '}'
+                | SimpleExpression '[' EndlOpt SimpleExpression EndlOpt ']' {$$ = createArrayElementAccessExpression($1, $4);}
+                | ARRAY '(' SimpleExpression ',' '{' SimpleExpression ';' '}' ')' {$$ = createArrayCreationExpression($3, $6);}
+                | ARRAY '(' SimpleExpression ')' EndlOpt '{' EndlOpt SimpleExpression EndlOpt ';' '}' {$$ = createArrayCreationExpression($3, $8);}
                 ;
 
+Type: ID
+    | ARRAY EndlOpt '<' EndlOpt Type EndlOpt '>'
+    ;
+
 BlockStatement: '{' EndlOpt StatementList '}' {$$ = $3;}
-               | '{' EndlOpt '}' {$$ = createStatementListNode(NULL);}
-               ;
+              | '{' EndlOpt '}' {$$ = createStatementListNode(NULL);}
+              ;
               
 IfStatement: IF '(' SimpleExpression ')' BlockStatement
            | IF '(' SimpleExpression ')' SimpleExpression
@@ -183,13 +187,13 @@ Statement: ';' EndlOpt {$$ = createEmptyStatement();}
          | WhileStatement {$$ = $1;}
          | DoWhileStatement {$$ = $1;}
          | ForStatement {$$ = $1;}
-         | ReturnStatement {}
+         | ReturnStatement {$$ = $1;}
          ;
 
-ReturnStatement: RETURN EndlList {}
-               | RETURN SimpleExpression EndlList {}
-               | RETURN SimpleExpression ';' EndlOpt {}
-               | RETURN ';' EndlOpt {}
+ReturnStatement: RETURN EndlList {$$ = createReturnStatement(NULL);}
+               | RETURN SimpleExpression EndlList {$$ = createReturnStatement($2);}
+               | RETURN SimpleExpression ';' EndlOpt {$$ = createReturnStatement($2);}
+               | RETURN ';' EndlOpt {$$ = createReturnStatement(NULL);}
                ; 
 
 ValStmt: VAL EndlOpt VarDeclaration EndlList {$$ = createValStatementFromVarDeclaration($3, NULL); $$->_tempHead = $1;}
@@ -320,6 +324,7 @@ ClassDeclaration: CLASS EndlOpt ID EndlOpt {$$ = createClassNode($3, createPrima
                 | CLASS EndlOpt ID EndlOpt PrimaryConstructor EndlOpt ':' EndlOpt ID EndlOpt {$$ = createClassNode($3, $5 , NULL, createIDExpressionNode($9), $1); }
                 | CLASS EndlOpt ID EndlOpt PrimaryConstructor EndlOpt ':' EndlOpt ID EndlOpt '(' ')' EndlOpt {$$ = createClassNode($3, $5 , NULL, createFunctionCallExpressionNode($9, NULL), $1); }
                 | CLASS EndlOpt ID EndlOpt PrimaryConstructor EndlOpt ':' EndlOpt ID EndlOpt '(' ExpressionList ')' EndlOpt {$$ = createClassNode($3, $5 , NULL, createFunctionCallExpressionNode($9, $12), $1); }
+                ;
 
 ElementModifier: PUBLIC {$$ = createPublicModifierNode();}
                | PRIVATE { $$ = createPrivateModifierNode();}
