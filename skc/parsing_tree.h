@@ -359,7 +359,7 @@ struct StatementNode * createValStatement(char * valId, struct ExpressionNode * 
 * \param[in] expr выражение, результат которого присваивается Val; может быть NULL, если ничего не присаивается.
 * \return созданный узел ValStmt.
 */
-struct StatementNode * createValStatementWithType(char * valId, char * type ,struct ExpressionNode * expr);
+struct StatementNode * createValStatementWithType(char * valId, struct TypeNode * type ,struct ExpressionNode * expr);
 
 /*! Создать узел Val Statement с явным указаением типа через VarDeclaration.
 * \param[in] decl узел объявления переменной.
@@ -381,7 +381,7 @@ struct StatementNode * createVarStatement(char * varId, struct ExpressionNode * 
 * \param[in] expr выражение, результат которого присваивается Var; может быть NULL, если ничего не присаивается.
 * \return созданный узел VarStmt.
 */
-struct StatementNode * createVarStatementWithType(char * varId, char * type ,struct ExpressionNode * expr);
+struct StatementNode * createVarStatementWithType(char * varId, struct TypeNode * type ,struct ExpressionNode * expr);
 
 /*! Создать узел Var Statement с явным указаением типа через VarDeclaration.
 * \param[in] decl узел объявления переменной.
@@ -449,10 +449,10 @@ struct StatementListNode * addStatementToStatementList(struct StatementListNode 
 
 /*! Создать узел VarDeclaration на основе идентификатора и его типа.
 * \param[in] ident строка - наименование идентификатора.
-* \param[in] typ строка - тип идентификатора.
+* \param[in] typ тип идентификатора; NULL, если не указан.
 * \return указатель на узел VarDeclaration.
 */
-struct VarDeclarationNode * createVarDeclarationNode(char * ident, char * typ);
+struct VarDeclarationNode * createVarDeclarationNode(char * ident, struct TypeNode * typ);
 
 
 
@@ -482,7 +482,7 @@ struct VarDeclarationListNode * addVarDeclToVarDeclarationListNode(struct VarDec
 * \param[in] bod тело функции.
 * \return Указатель на созданный узел функции.
 */
-struct FunctionNode * createFunctionNode(char * ident, struct VarDeclarationListNode * pars, char * ret, struct StatementListNode * bod);
+struct FunctionNode * createFunctionNode(char * ident, struct VarDeclarationListNode * pars, struct TypeNode * ret, struct StatementListNode * bod);
 
 
 

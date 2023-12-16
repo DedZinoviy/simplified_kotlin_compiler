@@ -878,7 +878,7 @@ struct StatementNode * createValStatement(char * valId, struct ExpressionNode * 
 * \param[in] expr выражение, результат которого присваивается Val; может быть NULL, если ничего не присаивается.
 * \return созданный узел ValStmt.
 */
-struct StatementNode * createValStatementWithType(char * valId, char * type ,struct ExpressionNode * expr)
+struct StatementNode * createValStatementWithType(char * valId, struct TypeNode * type ,struct ExpressionNode * expr)
 {
     struct StatementNode * node = (struct StatementNode*)malloc(sizeof(struct StatementNode));
     node->id = ID++;
@@ -942,7 +942,7 @@ struct StatementNode * createVarStatement(char * varId, struct ExpressionNode * 
 * \param[in] expr выражение, результат которого присваивается Var; может быть NULL, если ничего не присаивается.
 * \return созданный узел VarStmt.
 */
-struct StatementNode * createVarStatementWithType(char * varId, char * type ,struct ExpressionNode * expr)
+struct StatementNode * createVarStatementWithType(char * varId, struct TypeNode * type ,struct ExpressionNode * expr)
 {
     struct StatementNode * node = (struct StatementNode*)malloc(sizeof(struct StatementNode));
     node->id = ID++;
@@ -1120,10 +1120,10 @@ struct StatementListNode * addStatementToStatementList(struct StatementListNode 
 
 /*! Создать узел VarDeclaration на основе идентификатора и его типа.
 * \param[in] ident строка - наименование идентификатора.
-* \param[in] typ строка - тип идентификатора.
+* \param[in] typ тип идентификатора; NULL, если не указан.
 * \return указатель на узел VarDeclaration.
 */
-struct VarDeclarationNode * createVarDeclarationNode(char * ident, char * typ)
+struct VarDeclarationNode * createVarDeclarationNode(char * ident, struct TypeNode * typ)
 {
     struct VarDeclarationNode * node = (struct VarDeclarationNode*)malloc(sizeof(struct VarDeclarationNode));
     node->id = ID++;
@@ -1173,7 +1173,7 @@ struct VarDeclarationListNode * addVarDeclToVarDeclarationListNode(struct VarDec
 * \param[in] bod тело функции.
 * \return Указатель на созданный узел функции.
 */
-struct FunctionNode * createFunctionNode(char * ident, struct VarDeclarationListNode * pars, char * ret, struct StatementListNode * bod)
+struct FunctionNode * createFunctionNode(char * ident, struct VarDeclarationListNode * pars, struct TypeNode * ret, struct StatementListNode * bod)
 {
     struct FunctionNode * node = (struct FunctionNode*)malloc(sizeof(struct FunctionNode));
     node->id = ID++;
@@ -1187,9 +1187,7 @@ struct FunctionNode * createFunctionNode(char * ident, struct VarDeclarationList
     node->params = pars;
     if (ret != NULL)
     {
-        char * tempRet = (char*)malloc(strlen(ret)+1);
-        strcpy(tempRet, ret);
-        node->returnValue = tempRet;
+        node->returnValue = ret;
     }
     else {node->returnValue = NULL;}
     node->body = bod;

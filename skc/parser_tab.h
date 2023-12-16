@@ -23,6 +23,7 @@ typedef union {
        struct PrimaryConstructorNode * primConstr;
        struct ClassNode * cls;
        struct KotlinFileNode * file;
+       struct TypeNode * typ;
 } YYSTYPE;
 #define	IF	258
 #define	ELSE	259

@@ -226,6 +226,7 @@ enum StatementType
     _RETURN
 };
 
+struct TypeNode;
 struct StatementListNode;
 struct VarDeclarationListNode;
 
@@ -242,7 +243,7 @@ struct StatementNode
     char * varValId;
 
     /// Тип переменной для выражения объявления переменной с явным указанием типа.
-    char * varValType;
+    struct TypeNode * varValType;
 
     /// Ссылка на Expression, которое используется при созании Statement.
     struct ExpressionNode * expression;
@@ -297,7 +298,7 @@ struct VarDeclarationNode
     char * identifier;
 
     /// Тип переменной.
-    char * type;
+    struct TypeNode * type;
 
     /// Указатель на следующий узел объявления переменной в списке.
     struct VarDeclarationNode * next;
@@ -383,7 +384,7 @@ struct FunctionNode
     struct VarDeclarationListNode * params;
     
     /// Возвращаемой значение функции.
-    char * returnValue;
+    struct TypeNode * returnValue;
 
     /// Тело функции.
     struct StatementListNode * body;

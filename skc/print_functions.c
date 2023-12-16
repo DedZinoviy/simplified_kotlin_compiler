@@ -394,12 +394,15 @@ char * generateDotFromStatement(struct StatementNode * stmt)
     case _VAL:
         res = concat(res, (char *)"[label=\"VAL <ident=");
         res = concat(res, stmt->varValId);
+        res = concat(res, (char *)">\"];\n");
         if (stmt->varValType != NULL)
         {
-            res = concat(res, (char *)"> <type=");
-            res = concat(res, stmt->varValType);
+            res = concat(res, generateDotFromType(stmt->varValType));
+            res = concat(res, itoa(stmt->id, strId, 10));
+            res = concat(res, (char *)" -> ");
+            res = concat(res, itoa(stmt->varValType->id, strId, 10));
+            res = concat(res, (char *)"[label = \"type\"];\n");
         }
-        res = concat(res, (char *)">\"];\n");
         if (stmt->expression != NULL)
         {
             res = concat(res, generateDotFromExpression(stmt->expression));
@@ -412,12 +415,15 @@ char * generateDotFromStatement(struct StatementNode * stmt)
     case _VAR:
         res = concat(res, (char *)"[label=\"VAR <ident=");
         res = concat(res, stmt->varValId);
+        res = concat(res, (char *)">\"];\n");
         if (stmt->varValType != NULL)
         {
-            res = concat(res, (char *)"> <type=");
-            res = concat(res, stmt->varValType);
+            res = concat(res, generateDotFromType(stmt->varValType));
+            res = concat(res, itoa(stmt->id, strId, 10));
+            res = concat(res, (char *)" -> ");
+            res = concat(res, itoa(stmt->varValType->id, strId, 10));
+            res = concat(res, (char *)"[label = \"type\"];\n");
         }
-        res = concat(res, (char *)">\"];\n");
         if (stmt->expression != NULL)
         {
             res = concat(res, generateDotFromExpression(stmt->expression));
@@ -720,12 +726,15 @@ char * generateDotFromFunction(struct FunctionNode * node)
     char * res = concat(base, itoa(node->id, strId, 10));
     res = concat(res, (char *)"[label=\"Function <ident=");
     res = concat(res, node->identifier);
+    res = concat(res, (char *)">\"];\n");
     if (node->returnValue != NULL) 
     {
-        res = concat(res, (char *)"> <return ");
-        res = concat(res, node->returnValue);
+        res = concat(res, generateDotFromType(node->returnValue));
+        res = concat(res, itoa(node->id, strId, 10));
+        res = concat(res, (char *)" -> ");
+        res = concat(res, itoa(node->returnValue->id, strId, 10));
+        res = concat(res, (char *)"[label=\"type\"];\n");
     }
-    res = concat(res, (char *)">\"];\n");
     if (node->params != NULL) /*Список параметров.*/
     {
         res = concat(res, generateDotFromVarDeclarationList(node->params));
@@ -753,12 +762,15 @@ char * generateDotFromVarDeclaration(struct VarDeclarationNode * node)
     char * res = concat(base, itoa(node->id, strId, 10));
     res = concat(res, (char *)"[label=\"VarDecl <ident=");
     res = concat(res, node->identifier);
+    res = concat(res, (char *)">\"];\n");
     if (node->type != NULL)
     {
-        res = concat(res, (char *)"> <type=");
-        res = concat(res, node->type);
+        res = concat(res, generateDotFromType(node->type));
+        res = concat(res, itoa(node->id, strId, 10));
+        res = concat(res, (char *)" -> ");
+        res = concat(res, itoa(node->type->id, strId, 10));
+        res = concat(res, (char *)"[label=\"type\"];\n");
     }
-    res = concat(res, (char *)">\"];\n");
     if(node->next != NULL)
     {
         res = concat(res, generateDotFromVarDeclaration(node->next));
@@ -1006,6 +1018,14 @@ char * generateDotFromClassParam(struct ClassParamNode * node)
         res = concat(res, itoa(node->next->id, strId, 10));
         res = concat(res, (char *)"[label=\"next\"];\n");
     }
+    if (node->mods != NULL)
+    {
+        res = concat(res, generateDotFromModifierList(node->mods));
+        res = concat(res, itoa(node->id, strId, 10));
+        res = concat(res, (char *)" -> ");
+        res = concat(res, itoa(node->mods->id, strId, 10));
+        res = concat(res, (char *)"[label=\"modifiers\"];\n");
+    }
     return res;
 }
 
@@ -1023,13 +1043,13 @@ char * generateDotFromType(struct TypeNode * node)
         case _CLS:
             if(node->ident != NULL) 
             {
-                res = concat(res, (char *)"[label=\"Array_Type <ident = ");
+                res = concat(res, (char *)"[label=\"Class_Type <ident = ");
                 res = concat(res, node->ident);
                 res = concat(res, ">\"];\n");
             }
             break;
         case _ARRAY:
-            res = concat(res, (char *)"[label=\"Class_Type\"];\n");
+            res = concat(res, (char *)"[label=\"Array_Type\"];\n");
             if (node->complexType != NULL)
             {
                 res = concat(res, generateDotFromType(node->complexType));
