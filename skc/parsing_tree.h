@@ -701,3 +701,19 @@ struct PrimaryConstructorNode * createPrimaryConstructor(struct ModifierListNode
 * \return указатель на созданный узел класса.
 */
 struct ClassNode * createClassNode(char * ident, struct PrimaryConstructorNode * constructor, struct ClassMemberListNode * memberList, struct ExpressionNode * parent, struct ModifierHead * head);
+
+
+
+/*------------------------------------ Type -------------------------------------*/
+
+/*! Создать узел типа данных, основанного на пользовательском классе.
+* \param[in] identifier идентификатор пользовательского класса.
+* \return Указатель на созданный узел типа данных.
+*/
+struct TypeNode * createTypeFromClass(char * identifier);
+
+/*! Создать узел типа данных, основанного на массиве.
+* \param[in] typ Тип данных, применяющегося к шаблогизированному массиву.
+* \return Указатель на созданный узел типа данных.
+*/
+struct TypeNode * createTypeFromArray(struct TypeNode * typ);

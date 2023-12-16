@@ -1663,3 +1663,35 @@ struct ClassNode * createClassNode(char * ident, struct PrimaryConstructorNode *
     node->_tempHead = head;
     return node;
 }
+
+
+
+/*------------------------------------ Type -------------------------------------*/
+
+/*! Создать узел типа данных, основанного на пользовательском классе.
+* \param[in] identifier идентификатор пользовательского класса.
+* \return Указатель на созданный узел типа данных.
+*/
+struct TypeNode * createTypeFromClass(char * identifier)
+{
+    struct TypeNode * node = (struct TypeNode *)malloc(sizeof(struct TypeNode));
+    node->id = ID++;
+    node->type = _CLS;
+    node->complexType = NULL;
+    node->ident = identifier;
+    return node;
+}
+
+/*! Создать узел типа данных, основанного на массиве.
+* \param[in] typ Тип данных, применяющегося к шаблогизированному массиву.
+* \return Указатель на созданный узел типа данных.
+*/
+struct TypeNode * createTypeFromArray(struct TypeNode * typ)
+{
+    struct TypeNode * node = (struct TypeNode *)malloc(sizeof(struct TypeNode));
+    node->id = ID++;
+    node->type = _ARRAY;
+    node->complexType = typ;
+    node->ident = NULL;
+    return node;
+}

@@ -1008,3 +1008,38 @@ char * generateDotFromClassParam(struct ClassParamNode * node)
     }
     return res;
 }
+
+/*! Сгенерировать DOT-строку для узла типа данных.
+* \param[in] node Узел типа данных.
+* \return DOT-строка с дочерними узлами.
+*/
+char * generateDotFromType(struct TypeNode * node)
+{
+    char base[] = "";
+    char strId[10];
+    char * res = concat(base, itoa(node->id, strId, 10));
+    switch (node->type)
+    {
+        case _CLS:
+            if(node->ident != NULL) 
+            {
+                res = concat(res, (char *)"[label=\"Array_Type <ident = ");
+                res = concat(res, node->ident);
+                res = concat(res, ">\"];\n");
+            }
+            break;
+        case _ARRAY:
+            res = concat(res, (char *)"[label=\"Class_Type\"];\n");
+            if (node->complexType != NULL)
+            {
+                res = concat(res, generateDotFromType(node->complexType));
+                res = concat(res, itoa(node->id, strId, 10));
+                res = concat(res, (char *)" -> ");
+                res = concat(res, itoa(node->complexType->id, strId, 10));
+                res = concat(res, (char *)"[label=\"nested_type\"];\n");
+            }
+            break;
+    }
+
+    return res;
+}
