@@ -2,12 +2,13 @@
 %token IF ELSE VAL VAR CLASS PUBLIC PROTECTED PRIVATE INTERNAL ENDL WHILE DO FUNC FOR SUPER THIS OVERRIDE OPEN CONSTRUCTOR
 %token ID
 
+%token ARRAY RETURN
+
 %token INT_LITERAL 
 %token CHAR_LITERAL 
 %token DOUBLE_LITERAL 
 %token STRING_LITERAL 
 %token TRUE_LITERAL FALSE_LITERAL
-%token ARRAY RETURN
 
 %nonassoc INCREMENT DECREMENT
 %nonassoc ENDL
@@ -87,8 +88,8 @@ SimpleExpression: INT_LITERAL
                 | SimpleExpression DECREMENT %prec POST_DECREMENT
                 | SimpleExpression INCREMENT %prec POST_INCREMENT
                 | SimpleExpression '[' EndlOpt SimpleExpression EndlOpt ']'
-                | ARRAY '(' SimpleExpression ',' '{' SimpleExpression '}' ')'
-                | ARRAY '(' SimpleExpression ')' EndlOpt '{' EndlOpt SimpleExpression EndlOpt '}'
+                | ARRAY '(' SimpleExpression ',' '{' SimpleExpression ';' '}' ')'
+                | ARRAY '(' SimpleExpression ')' EndlOpt '{' EndlOpt SimpleExpression EndlOpt ';' '}'
                 ;
 
 Type: ID
@@ -96,8 +97,8 @@ Type: ID
     ;
 
 BlockStatement: '{' EndlOpt StatementList '}'
-               | '{' EndlOpt '}'
-               ;
+              | '{' EndlOpt '}'
+              ;
               
 IfStatement: IF '(' SimpleExpression ')' BlockStatement
            | IF '(' SimpleExpression ')' SimpleExpression
@@ -185,13 +186,12 @@ FunctionDeclaration: FUNC EndlOpt ID EndlOpt '(' EndlOpt ')' EndlOpt BlockStatem
                    | FUNC EndlOpt ID EndlOpt '(' EndlOpt VarDeclarationList EndlOpt ')' EndlOpt BlockStatement  EndlOpt
                    | FUNC EndlOpt ID EndlOpt '(' EndlOpt VarDeclarationList EndlOpt ')' EndlOpt ':' EndlOpt Type EndlOpt BlockStatement  EndlOpt
                    | FUNC EndlOpt ID EndlOpt '(' EndlOpt ')' EndlOpt '=' EndlOpt SimpleExpression  EndlOpt
-                   | FUNC EndlOpt ID EndlOpt '(' EndlOpt ')' EndlOpt ':' EndlOpt Type EndlOpt '=' EndlOpt SimpleExpression  EndlOpt
-                   | FUNC EndlOpt ID EndlOpt '(' EndlOpt VarDeclarationList EndlOpt ')' EndlOpt '=' EndlOpt SimpleExpression  EndlOpt
-                   | FUNC EndlOpt ID EndlOpt '(' EndlOpt VarDeclarationList EndlOpt ')' EndlOpt ':' EndlOpt Type EndlOpt '=' EndlOpt SimpleExpression  EndlOpt
+                   | FUNC EndlOpt ID EndlOpt '(' EndlOpt ')' EndlOpt ':' EndlOpt Type EndlOpt '=' EndlOpt SimpleExpression EndlOpt
+                   | FUNC EndlOpt ID EndlOpt '(' EndlOpt VarDeclarationList EndlOpt ')' EndlOpt '=' EndlOpt SimpleExpression EndlOpt
+                   | FUNC EndlOpt ID EndlOpt '(' EndlOpt VarDeclarationList EndlOpt ')' EndlOpt ':' EndlOpt Type EndlOpt '=' EndlOpt SimpleExpression EndlOpt
                    ;
 
 ClassModifierMember: ClassMember
-                   | MemberModifierList ClassMember
                    | ';' EndlOpt
                    ;
 
@@ -233,20 +233,17 @@ ClassParamList: ClassParam
               ;
 
 PrimaryConstructor: CONSTRUCTOR EndlOpt '(' ')'
-                  | MemberModifierList EndlOpt CONSTRUCTOR EndlOpt '(' ')'
                   | CONSTRUCTOR EndlOpt '(' ClassParamList ')'
-                  | MemberModifierList EndlOpt CONSTRUCTOR EndlOpt '(' ClassParamList ')' 
                   | '(' ClassParamList ')'
                   | '(' ')'
                   ;
        
-ClassDeclaration: CLASS EndlOpt ID EndlList
-                | CLASS EndlOpt ID ';' EndlOpt
+ClassDeclaration: CLASS EndlOpt ID EndlOpt
                 | CLASS EndlOpt ID EndlOpt '{' EndlOpt '}' EndlOpt
                 | CLASS EndlOpt ID EndlOpt '{' EndlOpt ClassModifierMemberList '}' EndlOpt
-                | CLASS EndlOpt ID PrimaryConstructor EndlOpt
-                | CLASS EndlOpt ID PrimaryConstructor EndlOpt '{' EndlOpt '}' EndlOpt
-                | CLASS EndlOpt ID PrimaryConstructor EndlOpt '{' EndlOpt ClassModifierMemberList '}' EndlOpt
+                | CLASS EndlOpt ID EndlOpt PrimaryConstructor EndlOpt
+                | CLASS EndlOpt ID EndlOpt PrimaryConstructor EndlOpt '{' EndlOpt '}' EndlOpt
+                | CLASS EndlOpt ID EndlOpt PrimaryConstructor EndlOpt '{' EndlOpt ClassModifierMemberList '}' EndlOpt
                 | CLASS EndlOpt ID EndlOpt ':' EndlOpt ID EndlOpt '{' EndlOpt ClassModifierMemberList '}' EndlOpt
                 | CLASS EndlOpt ID EndlOpt ':' EndlOpt ID EndlOpt '(' ')' EndlOpt
                 | CLASS EndlOpt ID EndlOpt ':' EndlOpt ID EndlOpt '(' ExpressionList ')' EndlOpt
@@ -255,31 +252,19 @@ ClassDeclaration: CLASS EndlOpt ID EndlList
                 | CLASS EndlOpt ID EndlOpt ':' EndlOpt ID EndlOpt '(' ExpressionList ')' EndlOpt '{' EndlOpt '}' EndlOpt
                 | CLASS EndlOpt ID EndlOpt ':' EndlOpt ID EndlOpt '(' ')' EndlOpt '{' EndlOpt ClassModifierMemberList '}' EndlOpt
                 | CLASS EndlOpt ID EndlOpt ':' EndlOpt ID EndlOpt '(' ExpressionList ')' EndlOpt '{' EndlOpt ClassModifierMemberList '}' EndlOpt
-                | CLASS EndlOpt ID PrimaryConstructor EndlOpt ':' EndlOpt ID EndlOpt '{' EndlOpt '}' EndlOpt
-                | CLASS EndlOpt ID PrimaryConstructor EndlOpt ':' EndlOpt ID EndlOpt '(' ')' EndlOpt '{' EndlOpt '}' EndlOpt
-                | CLASS EndlOpt ID PrimaryConstructor EndlOpt ':' EndlOpt ID EndlOpt '(' ExpressionList ')' EndlOpt '{' EndlOpt '}' EndlOpt
-                | CLASS EndlOpt ID PrimaryConstructor EndlOpt ':' EndlOpt ID EndlOpt '{' EndlOpt ClassModifierMemberList '}' EndlOpt
-                | CLASS EndlOpt ID PrimaryConstructor EndlOpt ':' EndlOpt ID EndlOpt '(' ')' EndlOpt '{' EndlOpt ClassModifierMemberList '}' EndlOpt
-                | CLASS EndlOpt ID PrimaryConstructor EndlOpt ':' EndlOpt ID EndlOpt '(' ExpressionList ')' EndlOpt '{' EndlOpt ClassModifierMemberList '}' EndlOpt
-                | CLASS EndlOpt ID PrimaryConstructor EndlOpt ':' EndlOpt ID EndlOpt
-                | CLASS EndlOpt ID PrimaryConstructor EndlOpt ':' EndlOpt ID EndlOpt '(' ')' EndlOpt
-                | CLASS EndlOpt ID PrimaryConstructor EndlOpt ':' EndlOpt ID EndlOpt '(' ExpressionList ')' EndlOpt
+                | CLASS EndlOpt ID EndlOpt PrimaryConstructor EndlOpt ':' EndlOpt ID EndlOpt '{' EndlOpt '}' EndlOpt
+                | CLASS EndlOpt ID EndlOpt PrimaryConstructor EndlOpt ':' EndlOpt ID EndlOpt '(' ')' EndlOpt '{' EndlOpt '}' EndlOpt
+                | CLASS EndlOpt ID EndlOpt PrimaryConstructor EndlOpt ':' EndlOpt ID EndlOpt '(' ExpressionList ')' EndlOpt '{' EndlOpt '}' EndlOpt
+                | CLASS EndlOpt ID EndlOpt PrimaryConstructor EndlOpt ':' EndlOpt ID EndlOpt '{' EndlOpt ClassModifierMemberList '}' EndlOpt
+                | CLASS EndlOpt ID EndlOpt PrimaryConstructor EndlOpt ':' EndlOpt ID EndlOpt '(' ')' EndlOpt '{' EndlOpt ClassModifierMemberList '}' EndlOpt
+                | CLASS EndlOpt ID EndlOpt PrimaryConstructor EndlOpt ':' EndlOpt ID EndlOpt '(' ExpressionList ')' EndlOpt '{' EndlOpt ClassModifierMemberList '}' EndlOpt
+                | CLASS EndlOpt ID EndlOpt PrimaryConstructor EndlOpt ':' EndlOpt ID EndlOpt
+                | CLASS EndlOpt ID EndlOpt PrimaryConstructor EndlOpt ':' EndlOpt ID EndlOpt '(' ')' EndlOpt
+                | CLASS EndlOpt ID EndlOpt PrimaryConstructor EndlOpt ':' EndlOpt ID EndlOpt '(' ExpressionList ')' EndlOpt
                 ;
-
-ElementModifier: PUBLIC
-               | PRIVATE
-               | INTERNAL
-               | OPEN
-               ;
-
-ElementModifierList: ElementModifier
-                   | ElementModifierList EndlOpt ElementModifier
-                   ;
 
 KotlinFileElement: FunctionDeclaration
                  | ClassDeclaration
-                 | ElementModifierList EndlOpt FunctionDeclaration
-                 | ElementModifierList EndlOpt ClassDeclaration
                  | ';' EndlOpt
                  ;
 
