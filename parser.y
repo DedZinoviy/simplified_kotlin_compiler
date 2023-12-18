@@ -237,6 +237,10 @@ FunctionDeclaration: FUNC EndlOpt ID EndlOpt '(' EndlOpt ')' EndlOpt BlockStatem
                    | FUNC EndlOpt ID EndlOpt '(' EndlOpt ')' EndlOpt ':' EndlOpt Type EndlOpt BlockStatement  EndlOpt {$$ = createFunctionNode($3, NULL, $11, $13); $$->_tempHead = $1;}
                    | FUNC EndlOpt ID EndlOpt '(' EndlOpt VarDeclarationList EndlOpt ')' EndlOpt BlockStatement  EndlOpt {$$ = createFunctionNode($3, $7, createTypeFromClass((char*)"Unit"), $11); $$->_tempHead = $1;}
                    | FUNC EndlOpt ID EndlOpt '(' EndlOpt VarDeclarationList EndlOpt ')' EndlOpt ':' EndlOpt Type EndlOpt BlockStatement  EndlOpt {$$ = createFunctionNode($3, $7, $13, $15); $$->_tempHead = $1;}
+                   | FUNC EndlOpt ID EndlOpt '(' EndlOpt ')' EndlOpt '=' EndlOpt SimpleExpression  EndlOpt {$$ = createFunctionNode($3, NULL, NULL, createStatementListNode(createReturnStatement($11))); $$->_tempHead = $1;}
+                   | FUNC EndlOpt ID EndlOpt '(' EndlOpt ')' EndlOpt ':' EndlOpt Type EndlOpt '=' EndlOpt SimpleExpression EndlOpt {$$ = createFunctionNode($3, NULL, $11, createStatementListNode(createReturnStatement($15))); $$->_tempHead = $1;}
+                   | FUNC EndlOpt ID EndlOpt '(' EndlOpt VarDeclarationList EndlOpt ')' EndlOpt '=' EndlOpt SimpleExpression EndlOpt {$$ = createFunctionNode($3, $7, NULL, createStatementListNode(createReturnStatement($13))); $$->_tempHead = $1;}
+                   | FUNC EndlOpt ID EndlOpt '(' EndlOpt VarDeclarationList EndlOpt ')' EndlOpt ':' EndlOpt Type EndlOpt '=' EndlOpt SimpleExpression EndlOpt {$$ = createFunctionNode($3, $7, $13, createStatementListNode(createReturnStatement($17))); $$->_tempHead = $1;}
                    ;
 
 ClassModifierMember: ClassMember {$$ = $1;}
