@@ -3,6 +3,7 @@ typedef union {
        char charLit;
        double doubleLit;
        struct stringBuffer * stringLit;
+       struct ModifierHead * modHead;
        char * ident;
        struct ExpressionNode * expression;
        struct ExpressionListNode * exprList;
@@ -22,54 +23,57 @@ typedef union {
        struct PrimaryConstructorNode * primConstr;
        struct ClassNode * cls;
        struct KotlinFileNode * file;
+       struct TypeNode * typ;
 } YYSTYPE;
 #define	IF	258
 #define	ELSE	259
-#define	VAL	260
-#define	VAR	261
-#define	CLASS	262
-#define	PUBLIC	263
-#define	PROTECTED	264
-#define	PRIVATE	265
-#define	INTERNAL	266
-#define	ENDL	267
-#define	WHILE	268
-#define	DO	269
-#define	FUNC	270
-#define	FOR	271
-#define	SUPER	272
-#define	THIS	273
-#define	OVERRIDE	274
-#define	OPEN	275
-#define	CONSTRUCTOR	276
-#define	ID	277
-#define	INT_LITERAL	278
-#define	CHAR_LITERAL	279
-#define	DOUBLE_LITERAL	280
-#define	STRING_LITERAL	281
-#define	TRUE_LITERAL	282
-#define	FALSE_LITERAL	283
-#define	INCREMENT	284
-#define	DECREMENT	285
-#define	PLUS_ASSIGNMENT	286
-#define	MINUS_ASSIGNMENT	287
-#define	MUL_ASSIGNMENT	288
-#define	DIV_ASSIGNMENT	289
-#define	MOD_ASSIGNMENT	290
-#define	DISJ	291
-#define	CONJ	292
-#define	EQUAL	293
-#define	NOT_EQUAL	294
-#define	GREATER_EQUAL	295
-#define	LESS_EQUAL	296
-#define	IN	297
-#define	RANGE	298
-#define	UMINUS	299
-#define	UPLUS	300
-#define	PREF_INCREMENT	301
-#define	PREF_DECREMENT	302
-#define	POST_INCREMENT	303
-#define	POST_DECREMENT	304
+#define	PUBLIC	260
+#define	PROTECTED	261
+#define	PRIVATE	262
+#define	INTERNAL	263
+#define	ENDL	264
+#define	WHILE	265
+#define	DO	266
+#define	FOR	267
+#define	SUPER	268
+#define	THIS	269
+#define	OVERRIDE	270
+#define	OPEN	271
+#define	ARRAY	272
+#define	RETURN	273
+#define	ID	274
+#define	VAL	275
+#define	VAR	276
+#define	CLASS	277
+#define	CONSTRUCTOR	278
+#define	FUNC	279
+#define	INT_LITERAL	280
+#define	CHAR_LITERAL	281
+#define	DOUBLE_LITERAL	282
+#define	STRING_LITERAL	283
+#define	TRUE_LITERAL	284
+#define	FALSE_LITERAL	285
+#define	INCREMENT	286
+#define	DECREMENT	287
+#define	PLUS_ASSIGNMENT	288
+#define	MINUS_ASSIGNMENT	289
+#define	MUL_ASSIGNMENT	290
+#define	DIV_ASSIGNMENT	291
+#define	MOD_ASSIGNMENT	292
+#define	DISJ	293
+#define	CONJ	294
+#define	EQUAL	295
+#define	NOT_EQUAL	296
+#define	GREATER_EQUAL	297
+#define	LESS_EQUAL	298
+#define	IN	299
+#define	RANGE	300
+#define	UMINUS	301
+#define	UPLUS	302
+#define	PREF_INCREMENT	303
+#define	PREF_DECREMENT	304
+#define	POST_INCREMENT	305
+#define	POST_DECREMENT	306
 
 
 extern YYSTYPE yylval;

@@ -672,6 +672,41 @@ struct ExpressionNode * createNotExpressionNode(struct ExpressionNode * value)
     return node;
 }
 
+/*! Создать узел оператора Создания массива.
+* \param[in] len выражение, определяющее длину массива.
+* \param[in] init выражение, определяющее инициализатор.
+* \return указатель на узел оператора созданий.
+*/
+struct ExpressionNode * createArrayCreationExpression(struct ExpressionNode * len, struct ExpressionNode * init)
+{
+    struct ExpressionNode * node = (struct ExpressionNode*)malloc(sizeof(struct ExpressionNode));
+    node->id = ID++;
+    node->type = _ARRAY_CREATION;
+    node->left = len;
+    node->next = NULL;
+    node->params = NULL;
+    node->right = init;
+    return node;
+}
+
+/*! Создать узел оператора доступа к члену массива.
+* \param[in] arr выражение, определяющее массив.
+* \param[in] index выражение, определяющее индекс массива.
+* \return указатель на узел оператора созданий.
+*/
+struct ExpressionNode * createArrayElementAccessExpression(struct ExpressionNode * arr, struct ExpressionNode * index)
+{
+    struct ExpressionNode * node = (struct ExpressionNode*)malloc(sizeof(struct ExpressionNode));
+    node->id = ID++;
+    node->type = _ARRAY_ACCESS;
+    node->left = arr;
+    node->next = NULL;
+    node->params = NULL;
+    node->right = index;
+    return node;
+}
+
+
 
 /*------------------------------------ ExpressionList -------------------------------------*/
 
@@ -843,7 +878,7 @@ struct StatementNode * createValStatement(char * valId, struct ExpressionNode * 
 * \param[in] expr выражение, результат которого присваивается Val; может быть NULL, если ничего не присаивается.
 * \return созданный узел ValStmt.
 */
-struct StatementNode * createValStatementWithType(char * valId, char * type ,struct ExpressionNode * expr)
+struct StatementNode * createValStatementWithType(char * valId, struct TypeNode * type ,struct ExpressionNode * expr)
 {
     struct StatementNode * node = (struct StatementNode*)malloc(sizeof(struct StatementNode));
     node->id = ID++;
@@ -907,7 +942,7 @@ struct StatementNode * createVarStatement(char * varId, struct ExpressionNode * 
 * \param[in] expr выражение, результат которого присваивается Var; может быть NULL, если ничего не присаивается.
 * \return созданный узел VarStmt.
 */
-struct StatementNode * createVarStatementWithType(char * varId, char * type ,struct ExpressionNode * expr)
+struct StatementNode * createVarStatementWithType(char * varId, struct TypeNode * type ,struct ExpressionNode * expr)
 {
     struct StatementNode * node = (struct StatementNode*)malloc(sizeof(struct StatementNode));
     node->id = ID++;
@@ -1030,6 +1065,26 @@ struct StatementNode * createMultiDeclarationWithVar(struct VarDeclarationListNo
     return node;
 }
 
+/*! Создать узел Return Statement.
+* \param[in] expr выражение, результат которого возвращается; может быть NULL, если ничего не возвращается.
+* \return созданный узел Return Stmt.
+*/
+struct StatementNode * createReturnStatement(struct ExpressionNode * expr)
+{
+    struct StatementNode * node = (struct StatementNode*)malloc(sizeof(struct StatementNode));
+    node->id = ID++;
+    node->next = NULL;
+    node->varDeclList = NULL;
+    node->expression = expr;
+    node->type = _RETURN;
+    node->complexBody = NULL;
+    node->condition = NULL;
+    node->singleBody = NULL;
+    node->varValId = NULL;
+    node->varValType = NULL;
+    return node;
+}
+
 
 
 /*------------------------------------ StatementList -------------------------------------*/
@@ -1065,10 +1120,10 @@ struct StatementListNode * addStatementToStatementList(struct StatementListNode 
 
 /*! Создать узел VarDeclaration на основе идентификатора и его типа.
 * \param[in] ident строка - наименование идентификатора.
-* \param[in] typ строка - тип идентификатора.
+* \param[in] typ тип идентификатора; NULL, если не указан.
 * \return указатель на узел VarDeclaration.
 */
-struct VarDeclarationNode * createVarDeclarationNode(char * ident, char * typ)
+struct VarDeclarationNode * createVarDeclarationNode(char * ident, struct TypeNode * typ)
 {
     struct VarDeclarationNode * node = (struct VarDeclarationNode*)malloc(sizeof(struct VarDeclarationNode));
     node->id = ID++;
@@ -1118,7 +1173,7 @@ struct VarDeclarationListNode * addVarDeclToVarDeclarationListNode(struct VarDec
 * \param[in] bod тело функции.
 * \return Указатель на созданный узел функции.
 */
-struct FunctionNode * createFunctionNode(char * ident, struct VarDeclarationListNode * pars, char * ret, struct StatementListNode * bod)
+struct FunctionNode * createFunctionNode(char * ident, struct VarDeclarationListNode * pars, struct TypeNode * ret, struct StatementListNode * bod)
 {
     struct FunctionNode * node = (struct FunctionNode*)malloc(sizeof(struct FunctionNode));
     node->id = ID++;
@@ -1132,9 +1187,7 @@ struct FunctionNode * createFunctionNode(char * ident, struct VarDeclarationList
     node->params = pars;
     if (ret != NULL)
     {
-        char * tempRet = (char*)malloc(strlen(ret)+1);
-        strcpy(tempRet, ret);
-        node->returnValue = tempRet;
+        node->returnValue = ret;
     }
     else {node->returnValue = NULL;}
     node->body = bod;
@@ -1217,6 +1270,18 @@ struct ModifierNode * createOpenModifierNode()
     return node;
 }
 
+/*! Создать узел модификатора FINAL.
+* \return указатель на узел модификатора FINAL.
+*/
+struct ModifierNode * createFinalModifierNode()
+{
+    struct ModifierNode * node = (struct ModifierNode*)malloc(sizeof(struct ModifierNode));
+    node->id = ID++;
+    node->type = _FINAL;
+    node->next = NULL;
+    return node;
+}
+
 
 
 /*------------------------------------ ModifierList -------------------------------------*/
@@ -1244,6 +1309,58 @@ struct ModifierListNode * addModifierToList(struct ModifierListNode * modList, s
     modList->last->next = mod;
     modList->last = mod;
     return modList;
+}
+
+/*! Создать заполненный узел списка модификаторов на основе структуры перечня модификаторов лексера.
+* \param[in] head указатель на структуру перечня модфикаторов.
+* \return указатель на созданный узел списка модификаторов; NULL, если передан NULL или перечень пустой.
+*/
+struct ModifierListNode * createModifierListFrom(struct ModifierHead * head)
+{
+    // Считать, что в перечне отсуствуют модификаторы.
+    struct ModifierNode * open = NULL;
+    struct ModifierNode * final = NULL;
+    struct ModifierNode * override = NULL;
+    struct ModifierNode * public = NULL;
+    struct ModifierNode * private = NULL;
+    struct ModifierNode * protected = NULL;
+    struct ModifierNode * internal = NULL;
+
+    // Создать структуры модификаторов на основе перечня.
+    if (head != NULL)
+    {
+        if (head->isOpen != 0) open = createOpenModifierNode();
+        if (head->isFinal != 0) final = createFinalModifierNode();
+        if (head->isInternal != 0) internal = createInternalModifierNode();
+        if (head->isOverride != 0) override = createOverrideModifierNode();
+        if (head->isPrivate != 0) private = createPrivateModifierNode();
+        if (head->isProtected != 0) protected = createProtectedModifierNode();
+        if (head->isPublic != 0) public = createPublicModifierNode();
+    }
+    
+    // Создать список модификаторов.
+    struct ModifierListNode * list = NULL;
+    if (open != NULL) {list = createModifierListNode(open); open = NULL;}
+    else if (final != NULL) {list = createModifierListNode(final); final = NULL;}
+    else if (override != NULL) {list = createModifierListNode(override); override = NULL;}
+    else if (public != NULL) {list = createModifierListNode(public); public = NULL;}
+    else if (private != NULL) {list = createModifierListNode(private); private = NULL;}
+    else if (protected != NULL) {list = createModifierListNode(protected); protected = NULL;}
+    else if (internal != NULL) {list = createModifierListNode(internal); internal = NULL;}
+
+    // Заполнить список модификаторов.
+    if (list != NULL) 
+    {
+        if (open != NULL) {list = addModifierToList(list, open);}
+        if (final != NULL) {list = addModifierToList(list, final);}
+        if (override != NULL) {list = addModifierToList(list, override);}
+        if (public != NULL) {list = addModifierToList(list, public);}
+        if (private != NULL) {list = addModifierToList(list, private);}
+        if (protected != NULL) {list = addModifierToList(list, protected);}
+        if (internal != NULL) {list = addModifierToList(list, internal);}
+    }
+
+    return list;
 }
 
 
@@ -1530,9 +1647,10 @@ struct PrimaryConstructorNode * createPrimaryConstructor(struct ModifierListNode
 * \param[in] constructor указатель на узел первичного конструктора класса.
 * \param[in] memberList указатель на узел списка параметров класса; передать NULL в случае отсутствия тела класса.
 * \param[in] parent указатель на выражение - родительский класс; в случае отсутсвия передать выражение идентификатора глобального суперкласса Any.
+* \param[in] head список модификаторов, полученный из лексера.
 * \return указатель на созданный узел класса.
 */
-struct ClassNode * createClassNode(char * ident, struct PrimaryConstructorNode * constructor, struct ClassMemberListNode * memberList, struct ExpressionNode * parent)
+struct ClassNode * createClassNode(char * ident, struct PrimaryConstructorNode * constructor, struct ClassMemberListNode * memberList, struct ExpressionNode * parent, struct ModifierHead * head)
 {
     struct ClassNode * node = (struct ClassNode *)malloc(sizeof(struct ClassNode));
     node->id = ID++;
@@ -1540,5 +1658,38 @@ struct ClassNode * createClassNode(char * ident, struct PrimaryConstructorNode *
     node->constr = constructor;
     node->members = memberList;
     node->base = parent;
+    node->_tempHead = head;
+    return node;
+}
+
+
+
+/*------------------------------------ Type -------------------------------------*/
+
+/*! Создать узел типа данных, основанного на пользовательском классе.
+* \param[in] identifier идентификатор пользовательского класса.
+* \return Указатель на созданный узел типа данных.
+*/
+struct TypeNode * createTypeFromClass(char * identifier)
+{
+    struct TypeNode * node = (struct TypeNode *)malloc(sizeof(struct TypeNode));
+    node->id = ID++;
+    node->type = _CLS;
+    node->complexType = NULL;
+    node->ident = identifier;
+    return node;
+}
+
+/*! Создать узел типа данных, основанного на массиве.
+* \param[in] typ Тип данных, применяющегося к шаблогизированному массиву.
+* \return Указатель на созданный узел типа данных.
+*/
+struct TypeNode * createTypeFromArray(struct TypeNode * typ)
+{
+    struct TypeNode * node = (struct TypeNode *)malloc(sizeof(struct TypeNode));
+    node->id = ID++;
+    node->type = _ARRAY;
+    node->complexType = typ;
+    node->ident = NULL;
     return node;
 }

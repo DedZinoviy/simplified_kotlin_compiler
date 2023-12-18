@@ -1,5 +1,6 @@
 #pragma once
 #include "stringBuffer.h"
+#include "modifier_head.h"
 
 /*------------------------------------ Expression -------------------------------------*/
 
@@ -121,7 +122,13 @@ enum ExpressionType
     _DISJUNCTION,
 
     /// Конъюнкция ("И").
-    _CONJUNCTION
+    _CONJUNCTION,
+
+    /// Создание массива.
+    _ARRAY_CREATION,
+
+    /// Доступ к члену массива.
+    _ARRAY_ACCESS
 };
 
 /*! \brief Структура узла Expression. */
@@ -213,9 +220,13 @@ enum StatementType
     _MULTI_VAL,
 
     /// Множественное объявление переменной VAR.
-    _MULTI_VAR
+    _MULTI_VAR,
+
+    /// Возврат из функции.
+    _RETURN
 };
 
+struct TypeNode;
 struct StatementListNode;
 struct VarDeclarationListNode;
 
@@ -232,7 +243,7 @@ struct StatementNode
     char * varValId;
 
     /// Тип переменной для выражения объявления переменной с явным указанием типа.
-    char * varValType;
+    struct TypeNode * varValType;
 
     /// Ссылка на Expression, которое используется при созании Statement.
     struct ExpressionNode * expression;
@@ -251,6 +262,9 @@ struct StatementNode
 
     /// Указатель на список переменных.
     struct VarDeclarationListNode  * varDeclList;
+
+    /// Временное хранилище модификаторов.
+    struct ModifierHead * _tempHead;
 };
 
 
@@ -284,7 +298,7 @@ struct VarDeclarationNode
     char * identifier;
 
     /// Тип переменной.
-    char * type;
+    struct TypeNode * type;
 
     /// Указатель на следующий узел объявления переменной в списке.
     struct VarDeclarationNode * next;
@@ -319,7 +333,8 @@ enum ModifierType
     _INTERNAL,
     _PROTECTED,
     _OPEN,
-    _OVERRIDE
+    _OVERRIDE,
+    _FINAL
 };
 
 /*! \brief Узел единичного модификатора. */
@@ -369,10 +384,13 @@ struct FunctionNode
     struct VarDeclarationListNode * params;
     
     /// Возвращаемой значение функции.
-    char * returnValue;
+    struct TypeNode * returnValue;
 
     /// Тело функции.
     struct StatementListNode * body;
+
+    /// Временное хранилище модификаторов.
+    struct ModifierHead * _tempHead;
 };
 
 
@@ -510,6 +528,9 @@ struct ClassNode
 
     /// Указатель на выражение - родительский класс.
     struct ExpressionNode * base;
+
+    /// Временное хранилище модификаторов.
+    struct ModifierHead * _tempHead;
 };
 
 
@@ -580,4 +601,34 @@ struct KotlinFileNode
 
     /// Указатель на список элементов Kotlin, из которых состоит файл Kotlin.
     struct KotlinFileElementListNode * elemList;
+};
+
+
+
+/*------------------------------------ Type -------------------------------------*/
+
+/// Тип узла типа.
+enum TypeType
+{
+    /// Шаблонизированный массив.
+    _ARRAY,
+
+    /// Пользовательский класс.
+    _CLS
+};
+
+/*! \brief Структура, описывающая узел типа. */
+struct TypeNode
+{
+    /// Идентификатор узла.
+    int id;
+
+    /// Тип узла типа - пользовательский класс или класс массива.
+    enum TypeType type;
+
+    /// Идентификатор пользовательского типа.
+    char * ident;
+
+    /// Указатель на структуру сложного типа - шаблонизированного массива.
+    struct TypeNode * complexType;
 };
