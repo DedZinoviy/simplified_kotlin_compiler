@@ -338,6 +338,7 @@ struct ExpressionNode* createFunctionCallExpressionNode(char * idStr, struct Exp
     node->left = NULL;
     node->right = NULL;
     node->next = NULL;
+    node->fromLit = _FROM_NONE;
     return node;
 }
 

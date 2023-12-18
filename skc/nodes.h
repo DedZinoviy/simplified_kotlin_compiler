@@ -131,6 +131,17 @@ enum ExpressionType
     _ARRAY_ACCESS
 };
 
+/// Перечисление, указывающее на основании какого литерала произошло создание объекта.
+enum BaseLiteral
+{
+    _FROM_NONE,
+    _FROM_INT,
+    _FROM_DOUBLE,
+    _FROM_BOOLEAN,
+    _FROM_CHAR,
+    _FROM_STRING
+};
+
 /*! \brief Структура узла Expression. */
 struct ExpressionNode
 {
@@ -168,7 +179,10 @@ struct ExpressionNode
     struct ExpressionNode * next;
 
     /// Указатель на список Expression (параметры при вызове функций и методов).
-    struct ExpressionListNode * params;  
+    struct ExpressionListNode * params;
+
+    /// Флаг, указывающий, что данный узел получился в результате преобразования литерала.
+    enum BaseLiteral fromLit;
 };
 
 

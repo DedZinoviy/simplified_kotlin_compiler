@@ -42,6 +42,31 @@ static void _replaceLiteralsToObjectsInFunction(struct FunctionNode * func);
 */
 static void _replaceLiteralsToObjectsInClass(struct ClassNode * clas);
 
+/*! [PRIVATE] Заменить узлы непосредственных литаралов на комбинацию из создания объекта и доступа к полю _value этого класса в Primary constructor.
+* \param[in,out] constr изменяемый узел Primaru COnstructor.
+*/
+static void _replaceLiteralsToObjectsInPrimaryConstructor(struct PrimaryConstructorNode * constr);
+
+/*! [PRIVATE] Заменить узлы непосредственных литаралов на комбинацию из создания объекта и доступа к полю _value этого класса в Param List.
+* \param[in,out] paramList изменяемый узел Class Param List.
+*/
+static void _replaceLiteralsToObjectsInClassParamList(struct ClassParamListNode * paramList);
+
+/*! [PRIVATE] Заменить узлы непосредственных литаралов на комбинацию из создания объекта и доступа к полю _value этого класса в Class Param.
+* \param[in,out] classParam изменяемый узел ClassParam.
+*/
+static void _replaceLiteralsToObjectsInClassParam(struct ClassParamNode * classParam);
+
+/*! [PRIVATE] Заменить узлы непосредственных литаралов на комбинацию из создания объекта и доступа к полю _value этого класса в Class Member List.
+* \param[in,out] memberList изменяемый узел Class Member List.
+*/
+static void _replaceLiteralsToObjectsInClassMemberList(struct ClassMemberListNode * memberList);
+
+/*! [PRIVATE] Заменить узлы непосредственных литаралов на комбинацию из создания объекта и доступа к полю _value этого класса в Class Member.
+* \param[in,out] member изменяемый узел Class Member.
+*/
+static void _replaceLiteralsToObjectsInClassMember(struct ClassMemberNode * member);
+
 /*! Заменить узлы непосредственных литералов на комбинацию из создания объекта и доступа к полю _value этого класса.
 * \param[in,out] root дерево программы - указатель на узел KotlinFile.
 */
@@ -52,16 +77,97 @@ void replaceLiteralsToObjects(struct KotlinFileNode * root)
 
 static void _replaceLiteralsToObjectsInExpression(struct ExpressionNode * expression)
 {
+    if ((expression->type == _FUNC_CALL || expression->type == _METHOD_ACCESS) && expression->params != NULL) _replaceLiteralsToObjectsInExpressionList(expression->params);
 
+    if (expression->left != NULL) _replaceLiteralsToObjectsInExpression(expression->left);
+    if (expression->right != NULL) _replaceLiteralsToObjectsInExpression(expression->right);
+
+    if (expression->type == _INT_LIT)
+    {
+        expression->type = _FUNC_CALL;
+        expression->identifierString = "Int";
+        expression->fromLit = _FROM_INT;
+        expression->params = NULL;
+    }
+    else if (expression->type == _DOUBLE_LIT) 
+    {
+        expression->type = _FUNC_CALL;
+        expression->identifierString = "Double";
+        expression->fromLit = _FROM_DOUBLE;
+        expression->params = NULL;
+    }
+    else if (expression->type == _BOOLEAN_LIT) 
+    {
+        expression->type = _FUNC_CALL;
+        expression->identifierString = "Boolean";
+        expression->fromLit = _FROM_BOOLEAN;
+        expression->params = NULL;
+    }
+    else if (expression->type == _CHAR_LIT) 
+    {
+        expression->type = _FUNC_CALL;
+        expression->identifierString = "Char";
+        expression->fromLit = _FROM_CHAR;
+        expression->params = NULL;
+    }
+    else if (expression->type == _STRING_LIT) 
+    {
+        expression->type = _FUNC_CALL;
+        expression->identifierString = "String";
+        expression->fromLit = _FROM_STRING;
+        expression->params = NULL;
+    }
+
+    if (expression->next != NULL) _replaceLiteralsToObjectsInExpression(expression->next);
 }
 
 static void _replaceLiteralsToObjectsInExpressionList(struct ExpressionListNode * expressionList)
 {
-
+    if (expressionList->first != NULL)
+    {
+        _replaceLiteralsToObjectsInExpression(expressionList->first);
+    }
 }
 
 static void _replaceLiteralsToObjectsInStatement(struct StatementNode * statement)
 {
+    switch (statement->type)
+    {
+        case _EXPRESSION:
+            _replaceLiteralsToObjectsInExpression(statement->expression);
+            break;
+        case _WHILE:
+            if (statement->condition != NULL) _replaceLiteralsToObjectsInExpression(statement->condition);
+            if (statement->singleBody != NULL) _replaceLiteralsToObjectsInStatement(statement->singleBody);
+            if (statement->complexBody != NULL) _replaceLiteralsToObjectsInStatementList(statement->complexBody);
+            break;
+        case _DOWHILE:
+            if (statement->condition != NULL) _replaceLiteralsToObjectsInExpression(statement->condition);
+            if (statement->singleBody != NULL) _replaceLiteralsToObjectsInStatement(statement->singleBody);
+            if (statement->complexBody != NULL) _replaceLiteralsToObjectsInStatementList(statement->complexBody);
+            break;
+        case _FOR:
+            if (statement->condition != NULL) _replaceLiteralsToObjectsInExpression(statement->condition);
+            if (statement->singleBody != NULL) _replaceLiteralsToObjectsInStatement(statement->singleBody);
+            if (statement->complexBody != NULL) _replaceLiteralsToObjectsInStatementList(statement->complexBody);
+            break;
+        case _RETURN:
+            if (statement->expression != NULL) _replaceLiteralsToObjectsInExpression(statement->expression);
+            break;
+        case _VAL:
+            if (statement->expression != NULL) _replaceLiteralsToObjectsInExpression(statement->expression);
+            break;
+        case _VAR:
+            if (statement->expression != NULL) _replaceLiteralsToObjectsInExpression(statement->expression);
+            break;
+        case _MULTI_VAL:
+            if (statement->expression != NULL) _replaceLiteralsToObjectsInExpression(statement->expression);
+            break;
+        case _MULTI_VAR:
+            if (statement->expression != NULL) _replaceLiteralsToObjectsInExpression(statement->expression);
+            break;
+        default: break;
+    }
     if (statement->next != NULL) // Заменить литералы на объекты, если есть следующий Statement.
     {
         _replaceLiteralsToObjectsInStatement(statement->next);
@@ -115,7 +221,46 @@ static void _replaceLiteralsToObjectsInFunction(struct FunctionNode * func)
 
 static void _replaceLiteralsToObjectsInClass(struct ClassNode * clas)
 {
+    if (clas->constr != NULL) {_replaceLiteralsToObjectsInPrimaryConstructor(clas->constr);}
+    if (clas->base != NULL) {_replaceLiteralsToObjectsInExpression(clas->base);}
+    if (clas->members != NULL) {_replaceLiteralsToObjectsInClassMemberList(clas->members);}
+}
 
+static void _replaceLiteralsToObjectsInPrimaryConstructor(struct PrimaryConstructorNode * constr)
+{
+    if(constr->params != NULL) _replaceLiteralsToObjectsInClassParamList(constr->params);
+}
+
+static void _replaceLiteralsToObjectsInClassParamList(struct ClassParamListNode * paramList)
+{
+    if (paramList->first != NULL) _replaceLiteralsToObjectsInClassParam(paramList->first);
+}
+
+static void _replaceLiteralsToObjectsInClassParam(struct ClassParamNode * classParam)
+{
+    if (classParam->expr != NULL) _replaceLiteralsToObjectsInExpression(classParam->expr);
+    if (classParam->next != NULL) _replaceLiteralsToObjectsInClassParam(classParam->next);
+}
+
+static void _replaceLiteralsToObjectsInClassMemberList(struct ClassMemberListNode * memberList)
+{
+    if (memberList->first != NULL) _replaceLiteralsToObjectsInClassMember(memberList->first);
+}
+
+static void _replaceLiteralsToObjectsInClassMember(struct ClassMemberNode * member)
+{
+    switch (member->type)
+    {
+    case _METHOD:
+        _replaceLiteralsToObjectsInFunction(member->method);
+        break;
+    case _FIELD:
+        _replaceLiteralsToObjectsInStatement(member->stmt);
+        break;
+    default:
+        break;
+    }
+    if (member->next != NULL) _replaceLiteralsToObjectsInClassMember(member->next);
 }
 
 

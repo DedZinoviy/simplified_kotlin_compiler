@@ -210,6 +210,36 @@ char * generateDotFromExpression(struct ExpressionNode * node)
     case _FUNC_CALL:
         res = concat(res, (char*)"[label=\"invoke <name=");
         res = concat(res, node->identifierString);
+        if (node->fromLit != _FROM_NONE)
+        {
+            res = concat(res, (char*)"> java_plain = ");
+            switch (node->fromLit)
+            {
+                case _FROM_INT:
+                    res = concat(res, itoa(node->intValue, idStr, 10));
+                    break;
+                case _FROM_DOUBLE:
+                    double d = node->doubleValue;
+                    char dstr[20];
+                    sprintf(dstr, "%f", d);
+                    res = concat(res, dstr);
+                    break;
+                case _FROM_STRING:
+                    res = concat(res, getSafeCString(node->stringValue->buffer));
+                    break;
+                case _FROM_BOOLEAN:
+                    if (node->boolValue == 1) res = concat(res, (char*)"true");
+                    else res = concat(res, (char*)"false");
+                    break;
+                case _FROM_CHAR:
+                    char tmp[2];
+                    tmp[1] = 0;
+                    if (node->charValue != 0) tmp[0] = node->charValue;
+                    else tmp[0] = 32;
+                    res = concat(res, tmp);
+                    break;
+            }
+        }
         res = concat(res, (char*)">\"];\n");
         if(node->params != NULL)
         {
