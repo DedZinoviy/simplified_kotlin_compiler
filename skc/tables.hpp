@@ -1,4 +1,5 @@
 #pragma once
+#include <map>
 
 enum Constant
 {
@@ -21,6 +22,8 @@ struct TableItem
     int secRef; 
 };
 
+/* ----------------------------------- Class Table ----------------------------------- */
+
 /*! \brief Элемент таблицы класса. */
 struct ClassTableElement
 {
@@ -36,6 +39,26 @@ struct ClassTableElement
     // Ссылка на константу родительского класса.
     int superClass;
 };
+
+/*! \brief Структура, описывающая таблицу классов. */
+struct ClassTable
+{
+    /// Укащатель на контейнер элементов таблицы.
+    std::map<char*, ClassTableElement *> * items;
+};
+
+/*! Создать пустую таблицу классов.
+* \return Указатель на пустую таблицу классов.
+*/
+struct ClassTable * createClassTable();
+
+/*! Добавить элемент таблицы классов в таблицу классов.
+* \param[in,out] table таблица, в которую происходит добавление.
+* \param[in] classname имя добавляемого класса. 
+* \param[in] elem Добавляемый элемент класса.
+* \return Измененная таблица классов с добавленным значением.
+*/
+struct ClassTable * addClassToTable(struct ClassTable * table, char * classname, struct ClassTableElement * elem);
 
 /*! \brief Элемент таблицы полей класса. */
 struct FieldTableElement
