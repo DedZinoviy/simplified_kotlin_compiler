@@ -7,7 +7,9 @@
 */
 struct ClassTable * createClassTable()
 {
-    return NULL;
+    struct ClassTable * table = (struct ClassTable *)malloc(sizeof(struct ClassTable));
+    table->items = new std::map<char*, struct ClassTableElement*>();
+    return table;
 }
 
 /*! Добавить элемент таблицы классов в таблицу классов.
