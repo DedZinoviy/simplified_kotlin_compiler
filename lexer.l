@@ -2,6 +2,7 @@
     #include "parser_tab.h"
     #include "parsing_tree.h"
     #include "print_functions.h"
+    #include "modifier_head.h"
     extern int yyparse();
 %}
 %option noyywrap
@@ -11,11 +12,14 @@
 %s INTERPOLATION
 %s INBRACE
 %s INBRACKET
+%s FUNCTION
+%s FUNC_BODY
 %x END_OF_LINE_COMMENT
 %x MULTILINE_COMMENT
 %x STRING
 %x MULTILINE_STRING
 %x CHAR
+%x MODIFIER
 %x OVER
 
 DIGIT [0-9]
@@ -57,7 +61,12 @@ DIGIT [0-9]
     int needsTokens = 0;
 
     char tempIdent[1024];
-    // Блок ключевых слов.
+
+    struct ModifierHead head = {0,0,0,0,0,0,0};
+    
+    int line = 1;
+    
+    int multilineBegin;
 %}
 
 %%
@@ -65,8 +74,6 @@ DIGIT [0-9]
 %{
     char bufferString[20480]; // Массив символов - буфер для строковых выражений.
     struct stringBuffer buff = {"", 0}; // Дополнительный буффер для строк.
-    int line = 1;
-    int multilineBegin;
 %}
 
 %{
@@ -101,15 +108,219 @@ DIGIT [0-9]
     }
 %}
 
+<FUNC_BODY>public {printf("ERROR: Modifiers is incompatible with local variables.\n"); return -1;}
+<FUNC_BODY>private {printf("ERROR: Modifiers is incompatible with local variables.\n"); return -1;}
+<FUNC_BODY>internal {printf("ERROR: Modifiers is incompatible with local variables.\n"); return -1;}
+<FUNC_BODY>protected {printf("ERROR: Modifiers is incompatible with local variables.\n"); return -1;}
+<FUNC_BODY>open {printf("ERROR: Modifiers is incompatible with local variables.\n"); return -1;}
+<FUNC_BODY>override {printf("ERROR: Modifiers is incompatible with local variables.\n"); return -1;}
+<FUNC_BODY>final {printf("ERROR: Modifiers is incompatible with local variables.\n"); return -1;}
+
+<MODIFIER>public {
+    if (head.isPublic == 0)
+    {
+        if((head.isInternal != 0) || (head.isProtected != 0) || (head.isPrivate != 0))
+        {
+            printf("ERROR: Incompatible visibility modifiers in line %d.\n", line);
+            BEGIN(INITIAL);
+            return -1;    
+        }
+        else
+        {
+            printHandler((char*)"PUBLIC_KEY_WORD", yytext);
+            head.isPublic = 1;
+        }
+    }
+    else
+    {
+        printf("ERROR: Repeated \"public\" modifier in line %d.\n", line);
+        BEGIN(INITIAL);
+        return -1;
+    }
+}
+<MODIFIER>internal {
+    if (head.isInternal == 0)
+    {
+        if((head.isPublic != 0) || (head.isProtected != 0) || (head.isPrivate != 0))
+        {
+            printf("ERROR: Incompatible visibility modifiers in line %d.\n", line);
+            BEGIN(INITIAL);
+            return -1;    
+        }
+        else
+        {
+            printHandler((char*)"INTERNAL_KEY_WORD", yytext);
+            head.isInternal = 1;
+        }
+    }
+    else
+    {
+        printf("ERROR: Repeated \"internal\" modifier in line %d.\n", line);
+        BEGIN(INITIAL);
+        return -1;
+    }
+}
+<MODIFIER>protected {
+    if (head.isProtected == 0)
+    {
+        if((head.isPublic != 0) || (head.isInternal != 0) || (head.isPrivate != 0))
+        {
+            printf("ERROR: Incompatible visibility modifiers in line %d.\n", line);
+            BEGIN(INITIAL);
+            return -1;    
+        }
+        else
+        {
+            printHandler((char*)"PROTECTED_KEY_WORD", yytext);
+            head.isProtected = 1;
+        }
+    }
+    else
+    {
+        printf("ERROR: Repeated \"protected\" modifier in line %d.\n", line);
+        BEGIN(INITIAL);
+        return -1;
+    }
+}
+<MODIFIER>private {
+    if (head.isPrivate == 0)
+    {
+        if((head.isPublic != 0) || (head.isInternal != 0) || (head.isProtected != 0))
+        {
+            printf("ERROR: Incompatible visibility modifiers in line %d.\n", line);
+            BEGIN(INITIAL);
+            return -1;    
+        }
+        else
+        {
+            printHandler((char*)"PRIVATE_KEY_WORD", yytext);
+            head.isPrivate = 1;
+        }
+    }
+    else
+    {
+        printf("ERROR: Repeated \"private\" modifier in line %d.\n", line);
+        BEGIN(INITIAL);
+        return -1;
+    }
+}
+<MODIFIER>open {
+    if (head.isOpen == 0)
+    {
+        if((head.isFinal != 0))
+        {
+            printf("ERROR: Incompatible modifiers \"open\" and \"final\" in line %d.\n", line);
+            BEGIN(INITIAL);
+            return -1;    
+        }
+        else
+        {
+            printHandler((char*)"OPEN_KEY_WORD", yytext);
+            head.isOpen = 1;
+        }
+    }
+    else
+    {
+        printf("ERROR: Repeated \"open\" modifier in line %d.\n", line);
+        BEGIN(INITIAL);
+        return -1;
+    }
+}
+<MODIFIER>final {
+    if (head.isFinal == 0)
+    {
+        if((head.isOpen != 0))
+        {
+            printf("ERROR: Incompatible modifiers \"open\" and \"final\" in line %d.\n", line);
+            BEGIN(INITIAL);
+            return -1;    
+        }
+        else
+        {
+            head.isFinal = 1;
+            printHandler((char*)"FINAL_KEY_WORD", yytext);
+        }
+    }
+    else
+    {
+        printf("ERROR: Repeated \"final\" modifier in line %d.\n", line);
+        BEGIN(INITIAL);
+        return -1;
+    }
+}
+<MODIFIER>override {
+    if (head.isOverride == 0)
+    {
+        printHandler((char*)"OVERRIDE_KEY_WORD", yytext);
+        head.isOverride = 1;
+    }
+    else
+    {
+        printf("ERROR: Repeated \"override\" modifier in line %d.\n", line);
+        BEGIN(INITIAL);
+        return -1;
+    }
+}
+
+<MODIFIER>fun {
+    struct ModifierHead * copy = copyModifierHead(&head);
+    yylval.modHead = copy;
+    clearModifierHead(&head);
+    yy_pop_state();
+    yy_push_state(FUNCTION);
+    printHandler((char*)"FUN_KEY_WORD", yytext);
+    return FUNC;
+}
+<MODIFIER>class {
+    struct ModifierHead * copy = copyModifierHead(&head);
+    yylval.modHead = copy;
+    clearModifierHead(&head);
+    yy_pop_state();
+    printHandler((char*)"CLASS_KEY_WORD", yytext);
+    return CLASS;
+}
+<MODIFIER>constructor {
+    struct ModifierHead * copy = copyModifierHead(&head);
+    yylval.modHead = copy;
+    clearModifierHead(&head);
+    yy_pop_state();
+    printHandler((char*)"CONSTUCTOR_KEY_WORD", yytext);
+    return CONSTRUCTOR;
+}
+<MODIFIER>val {
+    struct ModifierHead * copy = copyModifierHead(&head);
+    yylval.modHead = copy;
+    clearModifierHead(&head);
+    yy_pop_state();
+    printHandler((char*)"VAL_KEYWORD", yytext);
+    return VAL;
+}
+<MODIFIER>var {
+    struct ModifierHead * copy = copyModifierHead(&head);
+    yylval.modHead = copy;
+    clearModifierHead(&head);
+    yy_pop_state();
+    printHandler((char*)"VAR_KEYWORD", yytext);
+    return VAR;
+}
+
 as {printHandler((char*)"AS_KEY_WORD", yytext);}
 as\? {printHandler((char * )"AS?_KEY_WORD", yytext);}
+Array {
+    printHandler((char * )"ARRAY_KEY_WORD", yytext);
+    return ARRAY;
+}
 break {printHandler((char*)"BREAK_KEY_WORD", yytext);}
 class {
     printHandler((char*)"CLASS_KEY_WORD", yytext);
+    struct ModifierHead * copy = copyModifierHead(&head);
+    yylval.modHead = copy;
     return CLASS;
 }
 constructor {
     printHandler((char*)"CONSTRUCTOR_KEY_WORD", yytext);
+    struct ModifierHead * copy = copyModifierHead(&head);
+    yylval.modHead = copy;
     return CONSTRUCTOR;
 }
 continue {printHandler((char*)"CONTINUE_KEY_WORD", yytext);}
@@ -124,6 +335,9 @@ for {
 }
 fun {
     printHandler((char*)"FUN_KEY_WORD", yytext);
+    struct ModifierHead * copy = copyModifierHead(&head);
+    yylval.modHead = copy;
+    yy_push_state(FUNCTION);
     return FUNC;
 }
 if {printHandler((char*)"IF_KEY_WORD", yytext);}
@@ -134,31 +348,56 @@ in {
 \!in {printHandler((char*)"!IN_KEY_WORD", yytext);}
 interface {printHandler((char*)"INTERFACE_KEY_WORD", yytext);}
 internal {
+    multilineBegin = line;
     printHandler((char*)"INTERNAL_KEY_WORD", yytext);
-    return INTERNAL;
+    head.isInternal = 1;
+    yy_push_state(MODIFIER);
 }
 is {printHandler((char*)"IS_KEY_WORD", yytext);}
 \!is {printHandler((char*)"!IS_KEY_WORD", yytext);}
 null {printHandler((char*)"NULL_KEY_WORD", yytext);}
 object {printHandler((char*)"OBJECT_KEY_WORD", yytext);}
+final {
+    multilineBegin = line;
+    printHandler((char*)"FINAL_KEY_WORD", yytext);
+    head.isFinal = 1;
+    yy_push_state(MODIFIER);
+}
+override {
+    multilineBegin = line;
+    printHandler((char*)"OVERRIDE_KEY_WORD", yytext);
+    head.isOverride = 1;
+    yy_push_state(MODIFIER);
+}
 open {
+    multilineBegin = line;
     printHandler((char*)"OPEN_KEY_WORD", yytext);
-    return OPEN;
+    head.isOpen = 1;
+    yy_push_state(MODIFIER);
 }
 private {
+    multilineBegin = line;
     printHandler((char*)"PRIVATE_KEY_WORD", yytext);
-    return PRIVATE;
+    head.isPrivate = 1;
+    yy_push_state(MODIFIER);
 }
 protected {
+    multilineBegin = line;
     printHandler((char*)"PROTECTED_KEY_WORD", yytext);
-    return PROTECTED;
+    head.isProtected = 1;
+    yy_push_state(MODIFIER);
 }
 public {
+    multilineBegin = line;
     printHandler((char*)"PUBLIC_KEY_WORD", yytext);
-    return PUBLIC;
+    head.isPublic = 1;
+    yy_push_state(MODIFIER);
 }
 package {printHandler((char*)"PACKAGE_KEY_WORD", yytext);}
-return {printHandler((char*)"RETURN_KEY_WORD", yytext);}
+return {
+    printHandler((char*)"RETURN_KEY_WORD", yytext);
+    return RETURN;
+}
 super {
     printHandler((char*)"SUPER_KEY_WORD", yytext);
     return SUPER;
@@ -172,10 +411,14 @@ try {printHandler((char*)"TRY_KEY_WORD", yytext);}
 typealias {printHandler((char*)"TYPEALIAS_KEY_WORD", yytext);}
 val {
     printHandler((char*)"VAL_KEY_WORD", yytext);
+    struct ModifierHead * copy = copyModifierHead(&head);
+    yylval.modHead = copy;
     return VAL;
 }
 var {
     printHandler((char*)"VAR_KEY_WORD", yytext);
+    struct ModifierHead * copy = copyModifierHead(&head);
+    yylval.modHead = copy;
     return VAR;
 }
 when {printHandler((char*)"WHEN_KEY_WORD", yytext);}
@@ -222,6 +465,11 @@ return ENDL; }
 \/ {
     printHandler((char*)"DIV_OPERATOR", yytext);
     return '/';
+}
+<FUNCTION>\= {
+    printHandler((char*)"ASSIGNMENT_OPERATOR", yytext);
+    yy_pop_state();
+    return '=';
 }
 \= {
     printHandler((char*)"ASSIGNMENT_OPERATOR", yytext);
@@ -276,8 +524,13 @@ return ENDL; }
     return MOD_ASSIGNMENT;
 }
 
-<INITIAL>\{ {
+<INITIAL>"{" {
     printHandler((char*)"LEFT_BRACE", yytext);
+    return '{';
+}
+<FUNCTION>"{" {
+    printHandler((char*)"LEFT_BRACE", yytext);
+    yy_push_state(FUNC_BODY);
     return '{';
 }
 <INITIAL>\} {
@@ -285,8 +538,14 @@ return ENDL; }
     hasClosingBrace = 1;
     return ';';
 }
-\[ {printHandler((char*)"LEFT_SQUARE_BRACKET", yytext);}
-\] {printHandler((char*)"RIGHT_SQUARE_BRACKET", yytext);}
+\[ {
+    printHandler((char*)"LEFT_SQUARE_BRACKET", yytext);
+    return '[';
+}
+\] {
+    printHandler((char*)"RIGHT_SQUARE_BRACKET", yytext);
+    return ']';
+}
 \( {
     printHandler((char*)"LEFT_ROUND_BRACKET", yytext);
     yy_push_state(INBRACKET);
@@ -358,6 +617,12 @@ return ENDL; }
     return '{';
 }
 
+<FUNC_BODY>"{" {
+    printHandler((char*)"LEFT_BRACE", yytext);
+    yy_push_state(INBRACE);
+    return '{';
+}
+
 <INBRACE>"}" {
     printHandler((char*)"RIGHT_BRACE", yytext);
     hasClosingBrace = 1;
@@ -380,14 +645,31 @@ return ENDL; }
     return ')';
 }
 
+<FUNC_BODY>"}" {
+    printHandler((char*)"RIGHT_BRACE", yytext);
+    hasClosingBrace = 1;
+    yy_pop_state();
+    if (YYSTATE == FUNCTION)
+    {
+        yy_pop_state();
+    }
+    return ';';
+}
+
 <INBRACE><<EOF>> {
-    printf("ERROR: expecting \"{\"\n");
+    printf("ERROR: expecting \"}\".\n");
     BEGIN(INITIAL);
     return -1;
 }
 
 <INTERPOLATION><<EOF>> {
-    printf("ERROR: expecting \"{\"\n");
+    printf("ERROR: expecting \"}\".\n");
+    BEGIN(INITIAL);
+    return -1;
+}
+
+<FUNC_BODY><<EOF>> {
+    printf("ERROR: expecting \"}\".\n");
     BEGIN(INITIAL);
     return -1;
 }
@@ -688,6 +970,10 @@ return ENDL; }
     line = line + 1;
 }
 
+<MODIFIER>[\r\n] {
+    line = line + 1;
+}
+
 [\r\n] {
     line = line + 1;
     return ENDL;
@@ -697,6 +983,12 @@ return ENDL; }
     bufferString[0] = 0;
     strcat(bufferString, yytext);
     printf("%s - UNRECOGNIZED TOKEN.\n", bufferString);
+    return -1;
+}
+
+<MODIFIER><<EOF>> {
+    BEGIN(OVER);
+    printf("ERROR: Exprecting top level declaration in line %d.\n", multilineBegin);
     return -1;
 }
 

@@ -122,3 +122,9 @@ char * generateDotFromClassParamList(struct ClassParamListNode * node);
 * \return DOT-строка с дочерними узлами.
 */
 char * generateDotFromClassParam(struct ClassParamNode * node);
+
+/*! Сгенерировать DOT-строку для узла типа данных.
+* \param[in] node Узел типа данных.
+* \return DOT-строка с дочерними узлами.
+*/
+char * generateDotFromType(struct TypeNode * node);
