@@ -24,6 +24,10 @@ struct TableItem
 
 /* ----------------------------------- Class Table ----------------------------------- */
 
+struct FieldTable;
+
+struct MethodTable;
+
 /*! \brief Элемент таблицы класса. */
 struct ClassTableElement
 {
@@ -38,6 +42,12 @@ struct ClassTableElement
 
     // Ссылка на константу родительского класса.
     int superClass;
+
+    /// Указатель на таблицу методов класса.
+    struct MethodTable * methods;
+
+    /// Указатель на таблицу полей класса.
+    struct FieldTable * fields;
 };
 
 /*! \brief Структура, описывающая таблицу классов. */
@@ -68,4 +78,22 @@ struct FieldTableElement
 
     /// Ссылка на константу с декриптором поля.
     int descriptor;
+};
+
+/*! \brief Таблица полей класса. */
+struct FieldTable
+{
+
+};
+
+/*! \brief Элемент таблицы методов класса. */
+struct MethodTableElement
+{
+
+};
+
+/*! \brief Таблица методов класса. */
+struct MethodTable
+{
+
 };
