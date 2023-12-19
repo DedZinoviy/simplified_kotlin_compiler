@@ -2317,3 +2317,8 @@ void yyerror(char const * s)
 {
        printf("%s\n", s);
 }
+
+void setFile(const char * path) {
+    extern FILE* yyin;
+    yyin = fopen(path, "r");
+}

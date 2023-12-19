@@ -212,6 +212,8 @@ char * generateDotFromExpression(struct ExpressionNode * node)
         res = concat(res, node->identifierString);
         if (node->fromLit != _FROM_NONE)
         {
+            double d;
+            char tmp[2];
             res = concat(res, (char*)"> java_plain = ");
             switch (node->fromLit)
             {
@@ -219,7 +221,7 @@ char * generateDotFromExpression(struct ExpressionNode * node)
                     res = concat(res, itoa(node->intValue, idStr, 10));
                     break;
                 case _FROM_DOUBLE:
-                    double d = node->doubleValue;
+                    d = node->doubleValue;
                     char dstr[20];
                     sprintf(dstr, "%f", d);
                     res = concat(res, dstr);
@@ -232,7 +234,6 @@ char * generateDotFromExpression(struct ExpressionNode * node)
                     else res = concat(res, (char*)"false");
                     break;
                 case _FROM_CHAR:
-                    char tmp[2];
                     tmp[1] = 0;
                     if (node->charValue != 0) tmp[0] = node->charValue;
                     else tmp[0] = 32;

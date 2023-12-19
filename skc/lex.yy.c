@@ -777,8 +777,6 @@ char *yytext;
 
     int hasCloseBracket = 0;
 
-    int needsTokens = 0;
-
     char tempIdent[1024];
 
     struct ModifierHead head = {0,0,0,0,0,0,0};

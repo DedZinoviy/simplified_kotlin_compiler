@@ -2,6 +2,10 @@
 #include "stringBuffer.h"
 #include "modifier_head.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 /*------------------------------------ Expression -------------------------------------*/
 
 /*! \brief Перечисление типов Expression. */
@@ -646,3 +650,7 @@ struct TypeNode
     /// Указатель на структуру сложного типа - шаблонизированного массива.
     struct TypeNode * complexType;
 };
+
+#ifdef __cplusplus
+};
+#endif

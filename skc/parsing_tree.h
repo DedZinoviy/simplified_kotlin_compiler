@@ -1,6 +1,10 @@
 #pragma once
 #include "nodes.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 /// Ссылка на корневой узел программы.
 struct KotlinFileNode * root;
 
@@ -717,3 +721,7 @@ struct TypeNode * createTypeFromClass(char * identifier);
 * \return Указатель на созданный узел типа данных.
 */
 struct TypeNode * createTypeFromArray(struct TypeNode * typ);
+
+#ifdef __cplusplus
+};
+#endif

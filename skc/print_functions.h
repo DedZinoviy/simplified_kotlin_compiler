@@ -1,6 +1,8 @@
 #pragma once
 #include "nodes.h"
-
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 /*! Сгегнерировать строку в DOT-формате для дальнейшей визуализации для узла Expression.
 * \param[in] node Визуализироваемый узел.
@@ -128,3 +130,7 @@ char * generateDotFromClassParam(struct ClassParamNode * node);
 * \return DOT-строка с дочерними узлами.
 */
 char * generateDotFromType(struct TypeNode * node);
+
+#ifdef __cplusplus
+};
+#endif

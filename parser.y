@@ -5,6 +5,16 @@
        extern int yylex(void);
 %}
 
+// FOR OLD BISON VERSIONS DELETE THIS PART AND WRITE CODE IN THIS BLOCK MANUALY IN _tab.h
+%code provides {
+       #ifdef __cplusplus {
+       void setFile(const char * path);
+       #endif
+       #ifdef __cplusplus
+       };
+       #endif
+}
+
 %union {
        int intLit;
        char charLit;
@@ -367,4 +377,10 @@ EndlList: ENDL
 void yyerror(char const * s)
 {
        printf("%s\n", s);
+}
+
+void setFile(const char * path)
+{
+       extern FILE * yyin;
+       yyin = fopen(path, "r");
 }
