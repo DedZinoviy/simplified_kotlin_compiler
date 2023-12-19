@@ -1,5 +1,8 @@
 #pragma once
 #include <map>
+#include <utility>
+#include <string>
+#include "nodes.h"
 
 enum Constant
 {
@@ -21,6 +24,13 @@ struct TableItem
     int firstRef;
     int secRef; 
 };
+
+/*! Построить таблицу классов для заданного файла Котлин.
+* \param[in] root Корневой узел файла Котлин.
+* \param[in] fileName Имя файла Котлин.
+* \return созданная таблица классов.
+*/  
+struct ClassTable * buildClassTable(struct KotlinFileNode * root, const char * fileName);
 
 /* ----------------------------------- Class Table ----------------------------------- */
 
@@ -50,17 +60,22 @@ struct ClassTableElement
     struct FieldTable * fields;
 };
 
+/*! Создать пустой элемент таблицы классов.
+* \return пустой элемент таблицы классов.
+*/
+struct ClassTableElement * createEmptyClassTableElement();
+
 /*! \brief Структура, описывающая таблицу классов. */
 struct ClassTable
 {
     /// Укащатель на контейнер элементов таблицы.
-    std::map<char*, ClassTableElement *> * items;
+    std::map<std::string, ClassTableElement *> * items;
 };
 
 /*! Создать пустую таблицу классов.
 * \return Указатель на пустую таблицу классов.
 */
-struct ClassTable * createClassTable();
+struct ClassTable * createEmptyClassTable();
 
 /*! Добавить элемент таблицы классов в таблицу классов.
 * \param[in,out] table таблица, в которую происходит добавление.
