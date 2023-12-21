@@ -279,10 +279,122 @@ void replaceModifyingAssignments(struct KotlinFileNode * root)
 
 /* ------------------------- void checkModifierLists(struct KotlinFileNode * root) ------------------------- */
 
+/*! [PRIVATE] Проверить модификаторы доступа в KotlinFileElementList.
+* \param[in,out] elemList изменяемый узел KotlinFileElementList.
+*/
+static void _checkModifierListsInKotlinFileElementList(struct KotlinFileElementListNode * elemList);
+
+/*! [PRIVATE] Заполнить перечень модификаторов класса.
+* \param[in, out] head заполняемый перечень модификаторов класса.
+* \param[in] modList список модификаторов класса, по которому осуществляется заполнение.
+*/
+static void _fillModifierTableForClass(struct ModifierHead * head, struct ModifierListNode * modList);
+
+/*! [PRIVATE] Добавить отметку о наличии модификатора в списке в перечень модификаторов.
+* \param[in,out] head изменяемый перечень модификаторов.
+* \param[in] mod узел обозреваемого модификатора.
+*/
+static void _addModifierTableForClass(struct ModifierHead * head, struct ModifierNode * mod);
+
+/*! [PRIVATE] Проверить модификаторы доступа в KotlinFileElement.
+* \param[in,out] elem изменяемый узел KotlinFileElement.
+*/
+static void _checkModifierListsInKotlinFileElement(struct KotlinFileElementNode * elem);
+
+static void _checkModifierListsInKotlinFileElementList(struct KotlinFileElementListNode * elemList)
+{
+    if(elemList->first != NULL) // Проверить список модификаторов у первого элемента списка, если список не пустой.
+    {
+        _checkModifierListsInKotlinFileElement(elemList->first);
+    }
+}
+
+static void _fillModifierTableForClass(struct ModifierHead * head, struct ModifierListNode * modList)
+{
+    if (modList->first != NULL)
+    {
+        _addModifierTableForClass(head, modList->first);
+    }
+}
+
+static void _addModifierTableForClass(struct ModifierHead * head, struct ModifierNode * mod)
+{
+    switch (mod->type)
+    {
+        case _PUBLIC:
+            if (head->isPublic != 0) return; // Сообщить об ошибке, если уже имеется такой модификатор.
+            else 
+            {
+                if (head->isInternal != 0 || head->isPrivate != 0) return; // Сообщить об ошибке, если имеются взаимоисключающие присваивания.
+                else head->isPublic = 1;
+            }
+            break;
+        case _PRIVATE:
+            if (head->isPrivate != 0) return; // Сообщить об ошибке, если уже имеется такой модификатор.
+            else 
+            {
+                if (head->isInternal != 0 || head->isPublic != 0) return; // Сообщить об ошибке, если имеются взаимоисключающие присваивания.
+                else head->isPrivate = 1;
+            }
+            break;
+        case _PROTECTED:
+            return; // Сообщить об ошибке в связи с неприменимостью модификатора.
+            break;
+        case _INTERNAL:
+            if (head->isInternal != 0) return; // Сообщить об ошибке, если уже имеется такой модификатор.
+            else 
+            {
+                if (head->isPrivate != 0 || head->isPublic != 0) return; // Сообщить об ошибке, если имеются взаимоисключающие присваивания.
+                else head->isInternal = 1;
+            }
+            break;
+        case _OPEN:
+            break;
+        case _OVERRIDE:
+            return; // Сообщить об ошибке в связи с неприменимостью модификатора.
+            break;
+        case _FINAL:
+            break;
+    }
+    if (mod->next != NULL)
+    {
+        _checkModifierInClass(head, mod->next);
+    }
+}
+
+static void _checkModifierListsInKotlinFileElement(struct KotlinFileElementNode * elem)
+{
+    if (elem->type == _CLASS) // Если элемент является классом...
+    {
+        // Создать список модификаторов, если таковой отсутствует.
+        if (elem->modifiers == NULL)
+        {
+            elem->modifiers = createModifierListNode(createPublicModifierNode());
+        }
+        // Заполнить список модфикаторов, если отсутствует какой-либо из модификаторов.
+    }
+    else if (elem->type == _FUNCTION) // Иначе если элемент является функцией...
+    {
+        // Создать список модификаторов, если таковой отсутствует.
+        if (elem->modifiers == NULL)
+        {
+            elem->modifiers = createModifierListNode(createPublicModifierNode());
+        }
+        // Заполнить список модфикаторов, если отсутствует какой-либо из модификаторов.
+    }
+    if (elem->next != NULL) // Проверить модификаторы доступа у следующего элемента, если таковой имеется.
+    {
+        _checkModifierListsInKotlinFileElement(elem->next);
+    }
+}
+
 /*! Проверить списки модификаторов на наличие взаимоиключающих модификаторов. Проверить применяемые модификаторы и сущности на совместимость.
 * \param[in,out] root дерево программы - указатель на узел KotlinFile.
 */
 void checkModifierLists(struct KotlinFileNode * root)
 {
-
+    if (root->elemList != NULL)
+    {
+        _checkModifierListsInKotlinFileElementList(root->elemList);
+    }
 }
