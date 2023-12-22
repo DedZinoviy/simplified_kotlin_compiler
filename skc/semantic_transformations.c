@@ -281,48 +281,54 @@ void replaceModifyingAssignments(struct KotlinFileNode * root)
 
 /*! [PRIVATE] Проверить модификаторы доступа в KotlinFileElementList.
 * \param[in,out] elemList изменяемый узел KotlinFileElementList.
+* \return Возможная семантическая ошибка, связанная с модификаторами; NULL, если таковая отсуствует.
 */
-static void _checkModifierListsInKotlinFileElementList(struct KotlinFileElementListNode * elemList);
+static struct SemanticError * _checkModifierListsInKotlinFileElementList(struct KotlinFileElementListNode * elemList);
 
 /*! [PRIVATE] Заполнить перечень модификаторов класса.
 * \param[in, out] head заполняемый перечень модификаторов класса.
 * \param[in] modList список модификаторов класса, по которому осуществляется заполнение.
+* \return Возможная семантическая ошибка, связанная с модификаторами; NULL, если таковая отсуствует.
 */
-static void _fillModifierTableForClass(struct ModifierHead * head, struct ModifierListNode * modList);
+static struct SemanticError * _fillModifierTableForClass(struct ModifierHead * head, struct ModifierListNode * modList);
 
 /*! [PRIVATE] Добавить отметку о наличии модификатора в списке в перечень модификаторов.
 * \param[in,out] head изменяемый перечень модификаторов.
 * \param[in] mod узел обозреваемого модификатора.
+* \return Возможная семантическая ошибка, связанная с модификаторами; NULL, если таковая отсуствует.
 */
-static void _addModifierTableForClass(struct ModifierHead * head, struct ModifierNode * mod);
+static struct SemanticError * _addModifierTableForClass(struct ModifierHead * head, struct ModifierNode * mod);
 
 /*! [PRIVATE] Проверить модификаторы доступа в KotlinFileElement.
 * \param[in,out] elem изменяемый узел KotlinFileElement.
+* \return Возможная семантическая ошибка, связанная с модификаторами; NULL, если таковая отсуствует.
 */
-static void _checkModifierListsInKotlinFileElement(struct KotlinFileElementNode * elem);
+static struct SemanticError * _checkModifierListsInKotlinFileElement(struct KotlinFileElementNode * elem);
 
-static void _checkModifierListsInKotlinFileElementList(struct KotlinFileElementListNode * elemList)
+static struct SemanticError * _checkModifierListsInKotlinFileElementList(struct KotlinFileElementListNode * elemList)
 {
     if(elemList->first != NULL) // Проверить список модификаторов у первого элемента списка, если список не пустой.
     {
-        _checkModifierListsInKotlinFileElement(elemList->first);
+        return _checkModifierListsInKotlinFileElement(elemList->first);
     }
 }
 
-static void _fillModifierTableForClass(struct ModifierHead * head, struct ModifierListNode * modList)
+static struct SemanticError * _fillModifierTableForClass(struct ModifierHead * head, struct ModifierListNode * modList)
 {
     if (modList->first != NULL)
     {
         _addModifierTableForClass(head, modList->first);
     }
+    return NULL;
 }
 
-static void _addModifierTableForClass(struct ModifierHead * head, struct ModifierNode * mod)
+static struct SemanticError * _addModifierTableForClass(struct ModifierHead * head, struct ModifierNode * mod)
 {
+    struct SemanticError * err = NULL; // Считать, что изначально ошибка не обнаружена.
     switch (mod->type)
     {
         case _PUBLIC:
-            if (head->isPublic != 0) return; // Сообщить об ошибке, если уже имеется такой модификатор.
+            if (head->isPublic != 0) return createSemanticError(2, "The Public modifier has already been applied"); // Сообщить об ошибке, если уже имеется такой модификатор.
             else 
             {
                 if (head->isInternal != 0 || head->isPrivate != 0) return; // Сообщить об ошибке, если имеются взаимоисключающие присваивания.
@@ -330,7 +336,7 @@ static void _addModifierTableForClass(struct ModifierHead * head, struct Modifie
             }
             break;
         case _PRIVATE:
-            if (head->isPrivate != 0) return; // Сообщить об ошибке, если уже имеется такой модификатор.
+            if (head->isPrivate != 0) return createSemanticError(2, "The Private modifier has already been applied"); // Сообщить об ошибке, если уже имеется такой модификатор.
             else 
             {
                 if (head->isInternal != 0 || head->isPublic != 0) return; // Сообщить об ошибке, если имеются взаимоисключающие присваивания.
@@ -338,10 +344,10 @@ static void _addModifierTableForClass(struct ModifierHead * head, struct Modifie
             }
             break;
         case _PROTECTED:
-            return; // Сообщить об ошибке в связи с неприменимостью модификатора.
+            return createSemanticError(2, "The Protected modifier cannot be applied to a class."); // Сообщить об ошибке в связи с неприменимостью модификатора.
             break;
         case _INTERNAL:
-            if (head->isInternal != 0) return; // Сообщить об ошибке, если уже имеется такой модификатор.
+            if (head->isInternal != 0) return createSemanticError(2, "The Internal modifier has already been applied"); // Сообщить об ошибке, если уже имеется такой модификатор.
             else 
             {
                 if (head->isPrivate != 0 || head->isPublic != 0) return; // Сообщить об ошибке, если имеются взаимоисключающие модификаторы.
@@ -349,7 +355,7 @@ static void _addModifierTableForClass(struct ModifierHead * head, struct Modifie
             }
             break;
         case _OPEN:
-            if (head->isOpen != 0) return; // Сообщить об ошибке, если уже имеется такой модификатор.
+            if (head->isOpen != 0) return createSemanticError(2, "The Open modifier has already been applied"); // Сообщить об ошибке, если уже имеется такой модификатор.
             else
             {
                 if (head->isFinal != 0) return; // Сообщить об ошибке, если имеются взаимоиключающие модификаторы.
@@ -357,7 +363,7 @@ static void _addModifierTableForClass(struct ModifierHead * head, struct Modifie
             }
             break;
         case _OVERRIDE:
-            return; // Сообщить об ошибке в связи с неприменимостью модификатора.
+            return createSemanticError(2, "The Override modifier cannot be applied to a class."); // Сообщить об ошибке в связи с неприменимостью модификатора.
             break;
         case _FINAL:
             if (head->isFinal != 0) return; // Сообщить об ошибке, если уже имеется такой модификатор.
@@ -370,11 +376,12 @@ static void _addModifierTableForClass(struct ModifierHead * head, struct Modifie
     }
     if (mod->next != NULL)
     {
-        _checkModifierInClass(head, mod->next);
+        err = _addModifierTableForClass(head, mod->next);
     }
+    return err;
 }
 
-static void _checkModifierListsInKotlinFileElement(struct KotlinFileElementNode * elem)
+static struct SemanticError * _checkModifierListsInKotlinFileElement(struct KotlinFileElementNode * elem)
 {
     if (elem->type == _CLASS) // Если элемент является классом...
     {
@@ -389,6 +396,7 @@ static void _checkModifierListsInKotlinFileElement(struct KotlinFileElementNode 
             elem->modifiers = addModifierToList(elem->modifiers, createPublicModifierNode());
             elem->modifiers = addModifierToList(elem->modifiers, createFinalModifierNode());
         }
+        struct ModifierHead * head = createEmptyModifierHead();
         // Заполнить список модфикаторов, если отсутствует какой-либо из модификаторов.
     }
     else if (elem->type == _FUNCTION) // Иначе если элемент является функцией...
@@ -408,15 +416,18 @@ static void _checkModifierListsInKotlinFileElement(struct KotlinFileElementNode 
     {
         _checkModifierListsInKotlinFileElement(elem->next);
     }
+
+    return NULL;
 }
 
 /*! Проверить списки модификаторов на наличие взаимоиключающих модификаторов. Проверить применяемые модификаторы и сущности на совместимость.
 * \param[in,out] root дерево программы - указатель на узел KotlinFile.
 */
-void checkModifierLists(struct KotlinFileNode * root)
+struct SemanticError * checkModifierLists(struct KotlinFileNode * root)
 {
     if (root->elemList != NULL)
     {
-        _checkModifierListsInKotlinFileElementList(root->elemList);
+        return _checkModifierListsInKotlinFileElementList(root->elemList);
     }
+    return NULL;
 }

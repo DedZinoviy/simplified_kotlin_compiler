@@ -1,5 +1,10 @@
 #pragma once
 #include "parsing_tree.h"
+#include "semantic_errors.h"
+
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 /*! Заменить узлы непосредственных литералов на комбинацию из создания объекта и доступа к полю _value этого класса.
 * \param[in,out] root дерево программы - указатель на узел KotlinFile.
@@ -12,6 +17,11 @@ void replaceLiteralsToObjects(struct KotlinFileNode * root);
 void replaceModifyingAssignments(struct KotlinFileNode * root);
 
 /*! Проверить списки модификаторов на наличие взаимоиключающих модификаторов. Проверить применяемые модификаторы и сущности на совместимость.
-* * \param[in,out] root дерево программы - указатель на узел KotlinFile.
+* \param[in,out] root дерево программы - указатель на узел KotlinFile.
+* \return Возможная семантическая ошибка, связанная с модификаторами; NULL, если таковая отсуствует.
 */
-void checkModifierLists(struct KotlinFileNode * root);
+struct SemanticError * checkModifierLists(struct KotlinFileNode * root);
+
+#ifdef __cplusplus
+};
+#endif
