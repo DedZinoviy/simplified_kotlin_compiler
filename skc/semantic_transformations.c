@@ -292,12 +292,26 @@ static struct SemanticError * _checkModifierListsInKotlinFileElementList(struct 
 */
 static struct SemanticError * _fillModifierTableForClass(struct ModifierHead * head, struct ModifierListNode * modList);
 
-/*! [PRIVATE] Добавить отметку о наличии модификатора в списке в перечень модификаторов.
+/*! [PRIVATE] Добавить отметку о наличии модификатора в списке модификаторов класса в перечень модификаторов.
 * \param[in,out] head изменяемый перечень модификаторов.
 * \param[in] mod узел обозреваемого модификатора.
 * \return Возможная семантическая ошибка, связанная с модификаторами; NULL, если таковая отсуствует.
 */
 static struct SemanticError * _addModifierTableForClass(struct ModifierHead * head, struct ModifierNode * mod);
+
+/*! [PRIVATE] Заполнить перечень модификаторов функции.
+* \param[in, out] head заполняемый перечень модификаторов класса.
+* \param[in] modList список модификаторов класса, по которому осуществляется заполнение.
+* \return Возможная семантическая ошибка, связанная с модификаторами; NULL, если таковая отсуствует.
+*/
+static struct SemanticError * _fillModifierTableForFunction(struct ModifierHead * head, struct ModifierListNode * modList);
+
+/*! [PRIVATE] Добавить отметку о наличии модификатора в списке модификаторов функции в перечень модификаторов.
+* \param[in,out] head изменяемый перечень модификаторов.
+* \param[in] mod узел обозреваемого модификатора.
+* \return Возможная семантическая ошибка, связанная с модификаторами; NULL, если таковая отсуствует.
+*/
+static struct SemanticError * _addModifierTableForFunction(struct ModifierHead * head, struct ModifierNode * mod);
 
 /*! [PRIVATE] Проверить модификаторы доступа в KotlinFileElement.
 * \param[in,out] elem изменяемый узел KotlinFileElement.
@@ -331,7 +345,7 @@ static struct SemanticError * _addModifierTableForClass(struct ModifierHead * he
             if (head->isPublic != 0) return createSemanticError(2, "The Public modifier has already been applied"); // Сообщить об ошибке, если уже имеется такой модификатор.
             else 
             {
-                if (head->isInternal != 0 || head->isPrivate != 0) return createSemanticError(2, "The Incompatible visibility modifiers in class."); // Сообщить об ошибке, если имеются взаимоисключающие присваивания.
+                if (head->isInternal != 0 || head->isPrivate != 0) return createSemanticError(2, "The Incompatible visibility modifiers in class."); // Сообщить об ошибке, если имеются взаимоисключающие модификаторы.
                 else head->isPublic = 1;
             }
             break;
@@ -339,7 +353,7 @@ static struct SemanticError * _addModifierTableForClass(struct ModifierHead * he
             if (head->isPrivate != 0) return createSemanticError(2, "The Private modifier has already been applied"); // Сообщить об ошибке, если уже имеется такой модификатор.
             else 
             {
-                if (head->isInternal != 0 || head->isPublic != 0) return createSemanticError(2, "The Incompatible visibility modifiers in class."); // Сообщить об ошибке, если имеются взаимоисключающие присваивания.
+                if (head->isInternal != 0 || head->isPublic != 0) return createSemanticError(2, "The Incompatible visibility modifiers in class."); // Сообщить об ошибке, если имеются взаимоисключающие модификаторы.
                 else head->isPrivate = 1;
             }
             break;
@@ -377,6 +391,64 @@ static struct SemanticError * _addModifierTableForClass(struct ModifierHead * he
     if (mod->next != NULL)
     {
         err = _addModifierTableForClass(head, mod->next);
+    }
+    return err;
+}
+
+static struct SemanticError * _fillModifierTableForFunction(struct ModifierHead * head, struct ModifierListNode * modList)
+{
+    if (modList->first != NULL)
+    {
+        return _addModifierTableForFunction(head, modList->first);
+    }
+    return NULL;
+}
+
+static struct SemanticError * _addModifierTableForFunction(struct ModifierHead * head, struct ModifierNode * mod)
+{
+    struct SemanticError * err = NULL;
+    switch (mod->type)
+    {
+        case _PUBLIC:
+            if (head->isPublic != 0) return createSemanticError(2, "The Public modifier has already been applied"); // Сообщить об ошибке, если уже имеется такой модификатор.
+            else
+            {
+                if (head->isInternal != 0 || head->isPrivate != 0) return createSemanticError(2, "The Incompatible visibility modifiers in function."); // Сообщить об ошибке, если имеются взаимоисключающие модификаторы.
+                else head->isPublic = 1;
+            }
+            break;
+        case _PRIVATE:
+            if (head->isPrivate != 0) return createSemanticError(2, "The Private modifier has already been applied"); // Сообщить об ошибке, если уже имеется такой модификатор.
+            else
+            {
+                if (head->isInternal != 0 || head->isPublic != 0) return createSemanticError(2, "The Incompatible visibility modifiers in function."); // Сообщить об ошибке, если имеются взаимоисключающие модификаторы.
+                else head->isPrivate = 1;
+            }
+            break;
+        case _PROTECTED:
+            return createSemanticError(2, "Modifier Protected is not applicable to top level functions."); // Сообщить об ошибке в связи с неприменимостью модификатора.
+            break;
+        case _INTERNAL:
+            if (head->isInternal != 0) return createSemanticError(2, "The Internal modifier has already been applied"); // Сообщить об ошибке, если уже имеется такой модификатор.
+            else
+            {
+                if (head->isPublic != 0 || head->isPrivate != 0) return createSemanticError(2, "The Incompatible visibility modifiers in function."); // Сообщить об ошибке, если имеются взаимоисключающие модификаторы.
+                else head->isInternal = 1;
+            }
+            break;
+        case _OPEN:
+            return createSemanticError(2, "Modifier Open is not applicable to top level functions."); // Сообщить об ошибке в связи с неприменимостью модификатора.
+            break;
+        case _OVERRIDE:
+            return createSemanticError(2, "Modifier Override is not applicable to top level functions."); // Сообщить об ошибке в связи с неприменимостью модификатора.
+            break;
+        case _FINAL:
+            return createSemanticError(2, "Modifier Final is not applicable to top level functions."); // Сообщить об ошибке в связи с неприменимостью модификатора.
+            break;
+    }
+    if (mod->next != NULL) // Проверить следующий модификатор функции, если таковой имеется.
+    {
+        err = _addModifierTableForFunction(head, mod->next);
     }
     return err;
 }
@@ -421,11 +493,21 @@ static struct SemanticError * _checkModifierListsInKotlinFileElement(struct Kotl
         {
             elem->modifiers = createModifierListNode(createPublicModifierNode());
         }
-        if (elem->modifiers->first == NULL)
+        else if (elem->modifiers->first == NULL) // Заполнить список модификаторов, если он пустой.
         {
             elem->modifiers = addModifierToList(elem->modifiers, createPublicModifierNode());
         }
-        // Заполнить список модфикаторов, если отсутствует какой-либо из модификаторов.
+        else // Иначе.
+        {
+            struct ModifierHead * head = createEmptyModifierHead();
+            err = _fillModifierTableForFunction(head, elem->modifiers);
+            if (err != NULL) return err; // Сообщить об ошибке, если она возникла во время проверки (заполнения перечня).
+            // Заполнить список модификаторов, если отсутствует какой-либо из модификаторов.
+            if (head->isPrivate == 0 && head->isPublic == 0 && head->isInternal == 0)
+            {
+                elem->modifiers = addModifierToList(elem->modifiers, createPublicModifierNode());
+            }
+        }
     }
     if (elem->next != NULL) // Проверить модификаторы доступа у следующего элемента, если таковой имеется.
     {
