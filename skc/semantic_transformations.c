@@ -344,16 +344,28 @@ static void _addModifierTableForClass(struct ModifierHead * head, struct Modifie
             if (head->isInternal != 0) return; // Сообщить об ошибке, если уже имеется такой модификатор.
             else 
             {
-                if (head->isPrivate != 0 || head->isPublic != 0) return; // Сообщить об ошибке, если имеются взаимоисключающие присваивания.
+                if (head->isPrivate != 0 || head->isPublic != 0) return; // Сообщить об ошибке, если имеются взаимоисключающие модификаторы.
                 else head->isInternal = 1;
             }
             break;
         case _OPEN:
+            if (head->isOpen != 0) return; // Сообщить об ошибке, если уже имеется такой модификатор.
+            else
+            {
+                if (head->isFinal != 0) return; // Сообщить об ошибке, если имеются взаимоиключающие модификаторы.
+                else head->isOpen = 1; 
+            }
             break;
         case _OVERRIDE:
             return; // Сообщить об ошибке в связи с неприменимостью модификатора.
             break;
         case _FINAL:
+            if (head->isFinal != 0) return; // Сообщить об ошибке, если уже имеется такой модификатор.
+            else
+            {
+                if (head->isOpen != 0) return; // Сообщить об ошибке, если имеются взаимоиключающие модификаторы.
+                else head->isFinal = 1; 
+            }
             break;
     }
     if (mod->next != NULL)
@@ -370,6 +382,12 @@ static void _checkModifierListsInKotlinFileElement(struct KotlinFileElementNode 
         if (elem->modifiers == NULL)
         {
             elem->modifiers = createModifierListNode(createPublicModifierNode());
+            elem->modifiers = addModifierToList(elem->modifiers, createFinalModifierNode());
+        }
+        if (elem->modifiers->first == NULL)
+        {
+            elem->modifiers = addModifierToList(elem->modifiers, createPublicModifierNode());
+            elem->modifiers = addModifierToList(elem->modifiers, createFinalModifierNode());
         }
         // Заполнить список модфикаторов, если отсутствует какой-либо из модификаторов.
     }
@@ -379,6 +397,10 @@ static void _checkModifierListsInKotlinFileElement(struct KotlinFileElementNode 
         if (elem->modifiers == NULL)
         {
             elem->modifiers = createModifierListNode(createPublicModifierNode());
+        }
+        if (elem->modifiers->first == NULL)
+        {
+            elem->modifiers = addModifierToList(elem->modifiers, createPublicModifierNode());
         }
         // Заполнить список модфикаторов, если отсутствует какой-либо из модификаторов.
     }
