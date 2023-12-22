@@ -1,0 +1,3 @@
+0 : normally executed
+1 : something has gone wrong
+2 : incompatible modifier
