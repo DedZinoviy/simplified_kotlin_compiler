@@ -300,8 +300,8 @@ static struct SemanticError * _fillModifierTableForClass(struct ModifierHead * h
 static struct SemanticError * _addModifierTableForClass(struct ModifierHead * head, struct ModifierNode * mod);
 
 /*! [PRIVATE] Заполнить перечень модификаторов функции.
-* \param[in, out] head заполняемый перечень модификаторов класса.
-* \param[in] modList список модификаторов класса, по которому осуществляется заполнение.
+* \param[in, out] head заполняемый перечень модификаторов функции.
+* \param[in] modList список модификаторов функции, по которому осуществляется заполнение.
 * \return Возможная семантическая ошибка, связанная с модификаторами; NULL, если таковая отсуствует.
 */
 static struct SemanticError * _fillModifierTableForFunction(struct ModifierHead * head, struct ModifierListNode * modList);
@@ -318,6 +318,32 @@ static struct SemanticError * _addModifierTableForFunction(struct ModifierHead *
 * \return Возможная семантическая ошибка, связанная с модификаторами; NULL, если таковая отсуствует.
 */
 static struct SemanticError * _checkModifierListsInKotlinFileElement(struct KotlinFileElementNode * elem);
+
+/*! [PRIVATE] Проверить модификаторы доступа в классе Kotlin.
+* \param[in,out] elem изменяемый узел класса Kotlin.
+* \return Возможная семантическая ошибка, связанная с модификаторами; NULL, если таковая отсуствует.
+*/
+static struct SemanticError * _checkModifierListInClass(struct ClassNode * cls);
+
+/*! [PRIVATE] Проверить модификаторы доступа в узле первичного коструктора.
+* \param[in,out] elem изменяемый узел первичного конструктора.
+* \return Возможная семантическая ошибка, связанная с модификаторами; NULL, если таковая отсуствует.
+*/
+static struct SementicError * _checkModifierListInPrimaryConstructor(struct PrimaryConstructorNode * constr);
+
+/*! [PRIVATE] Заполнить перечень модификаторов метода.
+* \param[in, out] head заполняемый перечень модификаторов метода.
+* \param[in] modList список модификаторов метода, по которому осуществляется заполнение.
+* \return Возможная семантическая ошибка, связанная с модификаторами; NULL, если таковая отсуствует.
+*/
+static struct SemanticError * _fillModifierTableForMethod(struct ModifierHead * head, struct ModifierListNode * modList);
+
+/*! [PRIVATE] Добавить отметку о наличии модификатора в списке модификаторов метода в перечень модификаторов.
+* \param[in,out] head изменяемый перечень модификаторов.
+* \param[in] mod узел обозреваемого модификатора.
+* \return Возможная семантическая ошибка, связанная с модификаторами; NULL, если таковая отсуствует.
+*/
+static struct SemanticError * _addModifierTableForMethod(struct ModifierHead * head, struct ModifierNode * mod);
 
 static struct SemanticError * _checkModifierListsInKotlinFileElementList(struct KotlinFileElementListNode * elemList)
 {
@@ -453,6 +479,21 @@ static struct SemanticError * _addModifierTableForFunction(struct ModifierHead *
     return err;
 }
 
+static struct SemanticError * _fillModifierTableForMethod(struct ModifierHead * head, struct ModifierListNode * modList)
+{
+    struct SemanticError * err = NULL;
+    if (modList->first != NULL)
+    {
+        err = _addModifierTableForMethod(head, modList->first);
+    }
+    return err;
+}
+
+static struct SemanticError * _addModifierTableForMethod(struct ModifierHead * head, struct ModifierNode * mod)
+{
+
+}
+
 static struct SemanticError * _checkModifierListsInKotlinFileElement(struct KotlinFileElementNode * elem)
 {
     struct SemanticError * err = NULL; // Считать, что изначально ошибка модификаторов не обнаружена.
@@ -515,6 +556,21 @@ static struct SemanticError * _checkModifierListsInKotlinFileElement(struct Kotl
     }
 
     return err;
+}
+
+static struct SemanticError * _checkModifierListInClass(struct ClassNode * cls)
+{
+    struct SemanticError * err = NULL; // Считать, что изначально ошибка отстуствует.
+    if (cls->constr != NULL) // Проверить на ошибки модификаторов первичный конструктор, если таковой имеется.
+    {
+        err = _checkModifierListInPrimaryConstructor(cls->constr);
+    }
+    return err;
+}
+
+static struct SementicError * _checkModifierListInPrimaryConstructor(struct PrimaryConstructorNode * constr)
+{
+    
 }
 
 /*! Проверить списки модификаторов на наличие взаимоиключающих модификаторов. Проверить применяемые модификаторы и сущности на совместимость.
