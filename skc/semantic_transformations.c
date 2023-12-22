@@ -317,7 +317,7 @@ static struct SemanticError * _fillModifierTableForClass(struct ModifierHead * h
 {
     if (modList->first != NULL)
     {
-        _addModifierTableForClass(head, modList->first);
+        return _addModifierTableForClass(head, modList->first);
     }
     return NULL;
 }
@@ -383,6 +383,7 @@ static struct SemanticError * _addModifierTableForClass(struct ModifierHead * he
 
 static struct SemanticError * _checkModifierListsInKotlinFileElement(struct KotlinFileElementNode * elem)
 {
+    struct SemanticError * err = NULL; // Считать, что изначально ошибка модификаторов не обнаружена.
     if (elem->type == _CLASS) // Если элемент является классом...
     {
         // Создать список модификаторов, если таковой отсутствует.
@@ -397,6 +398,8 @@ static struct SemanticError * _checkModifierListsInKotlinFileElement(struct Kotl
             elem->modifiers = addModifierToList(elem->modifiers, createFinalModifierNode());
         }
         struct ModifierHead * head = createEmptyModifierHead();
+        err = _fillModifierTableForClass(head, elem->modifiers); // Заполнить перечень модификаторов.
+        if (err != NULL) return err; // Сообщить об ошибке, если она возникла во время проверки.
         // Заполнить список модфикаторов, если отсутствует какой-либо из модификаторов.
     }
     else if (elem->type == _FUNCTION) // Иначе если элемент является функцией...
@@ -414,10 +417,10 @@ static struct SemanticError * _checkModifierListsInKotlinFileElement(struct Kotl
     }
     if (elem->next != NULL) // Проверить модификаторы доступа у следующего элемента, если таковой имеется.
     {
-        _checkModifierListsInKotlinFileElement(elem->next);
+        err = _checkModifierListsInKotlinFileElement(elem->next);
     }
 
-    return NULL;
+    return err;
 }
 
 /*! Проверить списки модификаторов на наличие взаимоиключающих модификаторов. Проверить применяемые модификаторы и сущности на совместимость.
