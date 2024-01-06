@@ -659,11 +659,12 @@ static struct SemanticError * _checkModifierListsInKotlinFileElement(struct Kotl
             {
                 elem->modifiers = addModifierToList(elem->modifiers, createFinalModifierNode());
             }
-            if (head->isInternal == 0 && head->isPublic == 0 && head->isPrivate)
+            if (head->isInternal == 0 && head->isPublic == 0 && head->isPrivate == 0)
             {
                 elem->modifiers = addModifierToList(elem->modifiers, createPublicModifierNode());
             }
         }
+        err = _checkModifierListInClass(elem->clas);
     }
     else if (elem->type == _FUNCTION) // Иначе если элемент является функцией...
     {
@@ -708,7 +709,28 @@ static struct SemanticError * _checkModifierListInClass(struct ClassNode * cls)
 
 static struct SementicError * _checkModifierListInPrimaryConstructor(struct PrimaryConstructorNode * constr)
 {
-    
+    struct SemanticError * err = NULL; // Считать, что изначально ошибка модификаторов не обнаружена.
+    if (constr->mods == NULL)
+    {
+        constr->mods = createModifierListNode(createPublicModifierNode());
+    }
+    else if (constr->mods->first == NULL) // Заполнить список модификаторов, если он пустой.
+    {
+        constr->mods = addModifierToList(constr->mods, createPublicModifierNode());
+    }
+    else // Иначе.
+    {
+        struct ModifierHead * head = createEmptyModifierHead();
+        err = _fillModifierTableForClass(head, constr->mods); // Заполнить перечень модификаторов.
+        if (err != NULL) return err; // Сообщить об ошибке, если она возникла во время проверки (заполнения перечня).
+         
+        // Заполнить список модфикаторов, если отсутствует какой-либо из модификаторов.
+        if (head->isInternal == 0 && head->isPublic == 0 && head->isPrivate == 0 && head->isProtected == 0)
+        {
+            constr->mods = addModifierToList(constr->mods, createPublicModifierNode());
+        }
+    }
+    return err;
 }
 
 /*! Проверить списки модификаторов на наличие взаимоиключающих модификаторов. Проверить применяемые модификаторы и сущности на совместимость.
