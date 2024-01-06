@@ -580,7 +580,56 @@ static struct SemanticError * _fillModifierTableForPrimaryConstructor(struct Mod
 
 static struct SemanticError * _addModifierTableForPrimaryConstructor(struct ModifierHead * head, struct ModifierNode * mod)
 {
-
+    struct SemanticError * err = NULL; // Считать, что изначально ошибка не обнаружена...
+    switch (mod->type)
+    {
+        case _PRIVATE:
+            if (head->isPrivate != 0) return createSemanticError(2, "The Private modifier has already been applied"); // Сообщить об ошибке, если уже имеется такой модификатор.
+            else
+            {
+                if (head->isProtected != 0 || head->isPublic != 0 || head->isInternal != 0) return createSemanticError(2, "The Incompatible visibility modifiers in primary constructor."); // Сообщить об ошибке, если имеются взаимоисключающие модификаторы.
+                else head->isPrivate = 1;
+            }
+            break;
+        case _PUBLIC:
+            if (head->isPublic != 0) return createSemanticError(2, "The Public modifier has already been applied"); // Сообщить об ошибке, если уже имеется такой модификатор.
+            else
+            {
+                if (head->isProtected != 0 || head->isPrivate != 0 || head->isInternal != 0) return createSemanticError(2, "The Incompatible visibility modifiers in primary contructor."); // Сообщить об ошибке, если имеются взаимоисключающие модификаторы.
+                else head->isPublic = 1;
+            }
+            break;
+        case _PROTECTED:
+            if (head->isProtected != 0) return createSemanticError(2, "The Protected modifier has already been applied"); // Сообщить об ошибке, если уже имеется такой модификатор.
+            else
+            {
+                if (head->isPublic != 0 || head->isPrivate != 0 || head->isInternal != 0) return createSemanticError(2, "The Incompatible visibility modifiers in primary contructor."); // Сообщить об ошибке, если имеются взаимоисключающие модификаторы.
+                else head->isProtected = 1;
+            }
+            break;
+        case _INTERNAL:
+            if (head->isInternal != 0) return createSemanticError(2, "The Internal modifier has already been applied"); // Сообщить об ошибке, если уже имеется такой модификатор.
+            else
+            {
+                if (head->isProtected != 0 || head->isPrivate != 0 || head->isPublic != 0) return createSemanticError(2, "The Incompatible visibility modifiers in primary constructor."); // Сообщить об ошибке, если имеются взаимоисключающие модификаторы.
+                else head->isInternal = 1;
+            }
+            break;
+        case _OPEN:
+            return createSemanticError(2, "Modifier Open is not applicable to primary constructors."); // Сообщить об ошибке в связи с неприменимостью модификатора.
+            break;
+        case _FINAL:
+            return createSemanticError(2, "Modifier Final is not applicable to primary constructors."); // Сообщить об ошибке в связи с неприменимостью модификатора.
+            break;
+        case _OVERRIDE:
+            return createSemanticError(2, "Modifier Override is not applicable to primary constructors."); // Сообщить об ошибке в связи с неприменимостью модификатора.
+            break;
+    }
+    if (mod->next != NULL) // Проверить следующий модификатор, если таковой имеется.
+    {
+        err = _addModifierTableForPrimaryConstructor(head, mod->next);
+    }
+    return err;
 }
 
 static struct SemanticError * _checkModifierListsInKotlinFileElement(struct KotlinFileElementNode * elem)
