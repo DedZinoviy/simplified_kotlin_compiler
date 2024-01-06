@@ -77,3 +77,13 @@ struct ClassTable * addClassToTable(struct ClassTable * table, char * classname,
 {
     return NULL;
 }
+
+bool FuncParam::operator==(class FuncParam & other) const 
+{
+    return false;
+}
+
+bool Type::isReplacable(class Type & other) const
+{
+    return false;
+}

@@ -2,6 +2,7 @@
 #include <map>
 #include <utility>
 #include <string>
+#include <vector>
 #include "nodes.h"
 
 enum Constant
@@ -107,8 +108,33 @@ struct MethodTableElement
 
 };
 
+/*! \brief Класс параметра функции. */
+class FuncParam
+{
+    public:
+        /*! Перегруженный оператор сравнения для 
+        */
+        bool operator == (class FuncParam & other) const;
+};
+
+/*! \brief Класс типа. */
+class Type
+{
+    public:
+        /// Тип узла типа - пользовательский класс или массив. 
+        enum TypeType typ;
+
+        /// Указатель на класс - тип данных.
+        class ClassTableElement * cls;
+
+        /// \brief Проверить, может ли заменить тип, переданный как аргумент метода текущий тип. 
+        /// \param other Проверяемый тип
+        /// \return  Возможность замены.
+        bool isReplacable(class Type & other) const;
+};
+
 /*! \brief Таблица методов класса. */
 struct MethodTable
 {
-
+    std::map<std::string, std::map<std::vector<class FuncParam>, struct MethodTableElement *>> methods;
 };

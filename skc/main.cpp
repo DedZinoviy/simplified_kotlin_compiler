@@ -72,5 +72,36 @@ if (argc < 2)
     
     }
 
+    replaceLiteralsToObjects(root);
+
+    struct SemanticError * err = checkModifierLists(root);
+
+    if (err != NULL)
+    {
+        printf("%s\n", err->errMessage);
+        return err->code;
+    }
+
+    struct ClassTable * classTable = buildClassTable(root, argv[argc - 1]); // Найти все классы в программе.
+
+    // Аттрибутировать (проверить) наследование.
+
+    // Вывод дерева после семантического анализа.
+    if (needsDotCon || needsDotFile)
+    {
+        char* res = generateDotFromKotlinFile(root);
+        if (needsDotFile)
+        {
+            FILE* f = fopen("result_sem.gv", "w");
+            fprintf(f, "%s", res);
+            fclose(f);
+        }
+        if (needsDotCon)
+        {
+            printf("%s\n", res);
+        }
+
+    }
+
 	return 0;
 }
