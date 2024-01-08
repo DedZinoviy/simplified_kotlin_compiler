@@ -169,8 +169,43 @@ bool Type::isReplacable(class Type & other) const
 
 
 /* --------------------------- Таблица констант ---------------------------------- */
+
 ConstantTable::ConstantTable()
 {
 
 }
 
+int ConstantTable::findOrAddConstant(enum ConstantType type, char * utf8string)
+{
+    // Найти константу в списке констант.
+    // Создать новую константу, если константа не найдена.
+    // Вернуть результат.
+    return 0;
+}
+
+int ConstantTable::findConstant(enum ConstantType type, char * utf8string)
+{
+    auto iterator = this->constants.cbegin();
+    while(iterator != this->constants.cend()) // Пока не конец таблицы...
+    {
+        switch (iterator->second->cnst)
+        {
+            case Utf8:
+                break;
+            case Class:
+                break;
+            case MethodRef:
+                break;
+            case NameAndType:
+                break;
+            case Integer:
+                break;
+            case Double:
+                break;
+            case FieldRef:
+                break;
+        }
+        iterator++; // Перейти к следующему элементу.
+    }
+    return 0;
+}

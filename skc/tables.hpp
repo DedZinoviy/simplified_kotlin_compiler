@@ -6,6 +6,8 @@
 #include "nodes.h"
 #include "semantic_errors.h"
 
+/* ----------------------------------- Constatnt Table ----------------------------------- */
+
 /*! Тип константы в таблице констант. */
 enum ConstantType
 {
@@ -31,14 +33,31 @@ class ConstantTableItem
         int secRef;  // Ссылка на вторую константу.
 };
 
+/*! Таблица констант. */
 class ConstantTable
 {
     public:
         int maxId; // Текущее максимальное значение номера констант в таблице констант.
         std::map<int, class ConstantTableItem *> constants; // Словарь - таблица констант.
         ConstantTable();
+
+        /*! Найти константу в таблице констант или добавить ее в таблицу, если отсутствуюет. 
+        * \param[in] type Тип константы.
+        * \param[in] utf8string строка константы UTF-8.
+        * \return номер константы в таблице констант, если таковая имеется; номер добавленной константы, если таковой не было.
+        */
+        int findOrAddConstant(enum ConstantType type, char * utf8string);
+    
+    private:
+        
+        /*! Найти константу в таблице констант.
+        * \param[in] type тип константы.
+        */
+        int findConstant(enum ConstantType type, char * utf8string);
     
 };
+
+/* ----------------------------------- Class Table ----------------------------------- */
 
 /*! Построить таблицу классов для заданного файла Котлин.
 * \param[in] root Корневой узел файла Котлин.
@@ -53,8 +72,6 @@ struct SemanticError * buildClassTable(struct KotlinFileNode * root, const char 
 * \return Возможная семантическая ошибка; NULL, если отутствует.
 */
 struct SemanticError * setInheritance(struct KotlinFileNode * root);
-
-/* ----------------------------------- Class Table ----------------------------------- */
 
 struct FieldTable;
 
