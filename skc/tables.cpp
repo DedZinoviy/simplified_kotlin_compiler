@@ -183,29 +183,36 @@ int ConstantTable::findOrAddConstant(enum ConstantType type, char * utf8string)
     return 0;
 }
 
-int ConstantTable::findConstant(enum ConstantType type, char * utf8string)
+int ConstantTable::findConstant(enum ConstantType type, char * utf8string, int firstRef = NULL, int secondRef = NULL)
 {
     auto iterator = this->constants.cbegin();
     while(iterator != this->constants.cend()) // Пока не конец таблицы...
     {
-        switch (iterator->second->cnst)
+        if (type == iterator->second->cnst) // Если тип константы совпадает с рассматриваемым типом...
         {
-            case Utf8:
-                break;
-            case Class:
-                break;
-            case MethodRef:
-                break;
-            case NameAndType:
-                break;
-            case Integer:
-                break;
-            case Double:
-                break;
-            case FieldRef:
-                break;
+            switch (iterator->second->cnst)
+            {
+                case Utf8: // В случае, если контанта - Utf8...
+                    if (std::string(utf8string) == std::string(iterator->second->string)) // Вернуть номер константы, если совпадают значения строк-констант Utf-8
+                        return iterator->first;
+                    break;
+                case Class: // В случае, если константа - класс...
+                    if (iterator->second->firstRef == firstRef) // Вернуть номер константы, если совпадают значения номеров констант-ссылок.
+                        return iterator->first;
+                    break;
+                case MethodRef:
+                    break;
+                case NameAndType:
+                    break;
+                case Integer:
+                    break;
+                case Double:
+                    break;
+                case FieldRef:
+                    break;
+            }
         }
         iterator++; // Перейти к следующему элементу.
     }
-    return 0;
+    return -1;
 }

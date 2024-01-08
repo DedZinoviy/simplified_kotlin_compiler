@@ -52,8 +52,11 @@ class ConstantTable
         
         /*! Найти константу в таблице констант.
         * \param[in] type тип константы.
+        * \param[in] firstRef номер константы первой ссылки.
+        * \param[in] secondRef номер константы второй ссылки.
+        * \return номер найденной константы; -1, если константа не найдена.
         */
-        int findConstant(enum ConstantType type, char * utf8string);
+        int findConstant(enum ConstantType type, char * utf8string, int firstRef = NULL, int secondRef = NULL);
     
 };
 
