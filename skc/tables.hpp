@@ -4,6 +4,7 @@
 #include <string>
 #include <vector>
 #include "nodes.h"
+#include "semantic_errors.h"
 
 enum Constant
 {
@@ -33,6 +34,12 @@ struct TableItem
 */  
 struct ClassTable * buildClassTable(struct KotlinFileNode * root, const char * fileName);
 
+/*! Установить наследование для классов.
+* \param[in] root Указатель на корневой узед дерева программы.
+* \return Возможная семантическая ошибка; NULL, если отутствует.
+*/
+struct SemanticError * setInheritance(struct KotlinFileNode * root);
+
 /* ----------------------------------- Class Table ----------------------------------- */
 
 struct FieldTable;
@@ -43,7 +50,10 @@ struct MethodTable;
 struct ClassTableElement
 {
     // Ссылка на константу с именем класса - номер константы.
-    int name; 
+    int name;
+
+    /// Флаг, показывающий открыт ли класс для наследования.
+    int isOpen;
 
     // Ссылка на константу с именем родительского класса - номер константы.
     int superName; 
