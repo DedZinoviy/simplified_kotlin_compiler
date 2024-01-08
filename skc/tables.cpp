@@ -183,7 +183,7 @@ int ConstantTable::findOrAddConstant(enum ConstantType type, char * utf8string)
     return 0;
 }
 
-int ConstantTable::findConstant(enum ConstantType type, char * utf8string, int firstRef = NULL, int secondRef = NULL)
+int ConstantTable::findConstant(enum ConstantType type, char * utf8string, int firstRef, int secondRef)
 {
     auto iterator = this->constants.cbegin();
     while(iterator != this->constants.cend()) // Пока не конец таблицы...
