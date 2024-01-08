@@ -101,22 +101,24 @@ static bool _isOpenClass(struct KotlinFileElementNode * cls)
 /*! Построить таблицу классов для заданного файла Котлин.
 * \param[in] root Корневой узел файла Котлин.
 * \param[in] fileName Имя файла Котлин.
-* \return созданная таблица классов.
+* \param[in,out] emptyTable Собираемая таблица классов; в случае ошибки построения вернется NULL.
+* \return Возможная ошибка построения.
 */  
-struct ClassTable * buildClassTable(struct KotlinFileNode* root, const char* fileName)
+struct SemanticError * buildClassTable(struct KotlinFileNode * root, const char * fileName, struct ClassTable * emptyTable)
 {
+    struct SemanticError * err = NULL; 
     struct ClassTable* classes = createEmptyClassTable();
     if (root->elemList->first != NULL)
     {
-        struct SemanticError * err = _addClassToClassTable(root->elemList->first, classes);
+        err = _addClassToClassTable(root->elemList->first, classes);
         if (err != NULL)
         {
-            printf("%s\n", err->errMessage);
-            return NULL;
-        }
+            emptyTable = NULL;
+        } 
+        else emptyTable = classes;
     }
 
-    return classes;
+    return err;
 }
 
 
@@ -147,17 +149,6 @@ struct ClassTable * createEmptyClassTable()
     struct ClassTable * table = (struct ClassTable *)malloc(sizeof(struct ClassTable));
     table->items = new std::map<std::string, struct ClassTableElement*>();
     return table;
-}
-
-/*! Добавить элемент таблицы классов в таблицу классов.
-* \param[in,out] table таблица, в которую происходит добавление.
-* \param[in] classname имя добавляемого класса. 
-* \param[in] elem Добавляемый элемент класса.
-* \return Измененная таблица классов с добавленным значением.
-*/
-struct ClassTable * addClassToTable(struct ClassTable * table, char * classname, struct ClassTableElement * elem)
-{
-    return NULL;
 }
 
 bool FuncParam::operator==(class FuncParam & other) const 

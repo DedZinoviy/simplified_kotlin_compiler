@@ -82,7 +82,13 @@ if (argc < 2)
         return err->code;
     }
 
-    struct ClassTable * classTable = buildClassTable(root, argv[argc - 1]); // Найти все классы в программе.
+    struct ClassTable * classTable = NULL;
+    err = buildClassTable(root, argv[argc - 1], classTable); // Найти все классы в программе.
+    if (err != NULL)
+    {
+        printf("%s\n", err->errMessage);
+        return err->code;
+    }
 
     // Аттрибутировать (проверить) наследование.
 

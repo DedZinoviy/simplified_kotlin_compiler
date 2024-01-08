@@ -30,9 +30,10 @@ struct TableItem
 /*! Построить таблицу классов для заданного файла Котлин.
 * \param[in] root Корневой узел файла Котлин.
 * \param[in] fileName Имя файла Котлин.
-* \return созданная таблица классов.
+* \param[in,out] emptyTable Собираемая таблица классов; в случае ошибки построения вернется NULL.
+* \return Возможная ошибка построения.
 */  
-struct ClassTable * buildClassTable(struct KotlinFileNode * root, const char * fileName);
+struct SemanticError * buildClassTable(struct KotlinFileNode * root, const char * fileName, struct ClassTable * emptyTable);
 
 /*! Установить наследование для классов.
 * \param[in] root Указатель на корневой узед дерева программы.
@@ -87,14 +88,6 @@ struct ClassTable
 * \return Указатель на пустую таблицу классов.
 */
 struct ClassTable * createEmptyClassTable();
-
-/*! Добавить элемент таблицы классов в таблицу классов.
-* \param[in,out] table таблица, в которую происходит добавление.
-* \param[in] classname имя добавляемого класса. 
-* \param[in] elem Добавляемый элемент класса.
-* \return Измененная таблица классов с добавленным значением.
-*/
-struct ClassTable * addClassToTable(struct ClassTable * table, char * classname, struct ClassTableElement * elem);
 
 /*! \brief Элемент таблицы полей класса. */
 struct FieldTableElement
