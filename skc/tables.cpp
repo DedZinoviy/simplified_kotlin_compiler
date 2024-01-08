@@ -30,8 +30,6 @@ static struct SemanticError * _addClassToClassTable(struct KotlinFileElementNode
             if (classTable->items->find(fileElem->clas->identifier) != classTable->items->end()){
                 std::string msg = "There is already a class with the specified identifier: ";
                 msg += fileElem->clas->identifier;
-                //std::cout << msg;
-                //printf("%s\n", msg.c_str());
                 return createSemanticError(4, msg.c_str());
             }
             struct ClassTableElement * elem = createEmptyClassTableElement();
