@@ -44,6 +44,11 @@ static struct SemanticError * _addClassToClassTable(struct KotlinFileElementNode
     return err;
 }
 
+static struct SemanticError * _setInheritanceForClass(struct KotlinFileElementNode * cls)
+{
+    return NULL;
+}
+
 struct SemanticError * setInheritance(struct KotlinFileNode * root)
 {
     return NULL;

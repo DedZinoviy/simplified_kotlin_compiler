@@ -6,7 +6,8 @@
 #include "nodes.h"
 #include "semantic_errors.h"
 
-enum Constant
+/*! Тип константы в таблице констант. */
+enum ConstantType
 {
     Utf8,
     Class,
@@ -17,14 +18,24 @@ enum Constant
     FieldRef
 };
 
-struct TableItem
+/*! Элемент таблицы констант. */
+class ConstantTableItem
 {
-    int id;
-    enum Constant cnst;
-    struct TableItem *  next;
-    char * string;
-    int firstRef;
-    int secRef; 
+    public: 
+        int id; // Номер константы.
+        enum ConstantType cnst; // Тип константы.
+        char * string; // Строка для Utf-8 констант.
+        int Integer; // Целое число для целочисленной константы.
+        double Double; // Число с плавающий точкой.
+        int firstRef; // Сслыка на первую константу.
+        int secRef;  // Ссылка на вторую константу.
+};
+
+class ConstantTable
+{
+    public:
+        int maxId; // Текущее максимальное значение номера констант в таблице констант.
+        std::map<int, class ConstantTableItem *> constants; // Словарь - таблица констант.
 };
 
 /*! Построить таблицу классов для заданного файла Котлин.
