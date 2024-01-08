@@ -1,4 +1,7 @@
 #pragma once
+#ifdef __cplusplus
+extern "C" {
+#endif
 #include <stdlib.h>
 
 /*! \brief Структура, определяющая применяемые модификаторы к элементу. */
@@ -35,3 +38,8 @@ struct ModifierHead * copyModifierHead(struct ModifierHead * head);
 * \return результат проверки: 1 = если все поля равны 0, 0 - если нет.
 */
 int isZeroHead(struct ModifierHead * head);
+
+#ifdef __cplusplus
+};
+#endif
+

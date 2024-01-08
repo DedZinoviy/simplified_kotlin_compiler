@@ -1,4 +1,5 @@
 #include "tables.hpp"
+#include <iostream>
 
 /* --------------------------------- Построение таблицы классов. ------------------------------------ */
 
@@ -18,23 +19,31 @@ static void _fillModifierTableForClass(struct ModifierHead * head, struct Modifi
 * \param[in] fileElem рассматриваемый элемент файла Kotlin.
 * \param[in, out] classTable обновляемая таблица.
 */
-static void _addClassToClassTable(struct KotlinFileElementNode * fileElem, struct ClassTable * classTable)
+static struct SemanticError * _addClassToClassTable(struct KotlinFileElementNode * fileElem, struct ClassTable * classTable)
 {
+    struct SemanticError * err = NULL;
     if (fileElem != NULL)
     {
         if (fileElem->type == _CLASS)
         {
             char * className = fileElem->clas->identifier;
-            //if (classTable->items->find())
+            if (classTable->items->find(fileElem->clas->identifier) != classTable->items->end()){
+                std::string msg = "There is already a class with the specified identifier: ";
+                msg += fileElem->clas->identifier;
+                //std::cout << msg;
+                //printf("%s\n", msg.c_str());
+                return createSemanticError(4, msg.c_str());
+            }
             struct ClassTableElement * elem = createEmptyClassTableElement();
             if (_isOpenClass(fileElem)) elem->isOpen = 1;
             classTable->items->insert(std::pair<std::string, struct ClassTableElement *>(fileElem->clas->identifier, elem));
         }
         if (fileElem->next != NULL)
         {
-            _addClassToClassTable(fileElem->next, classTable);
+            return _addClassToClassTable(fileElem->next, classTable);
         }
     }
+    return err;
 }
 
 struct SemanticError * setInheritance(struct KotlinFileNode * root)
@@ -101,7 +110,12 @@ struct ClassTable * buildClassTable(struct KotlinFileNode* root, const char* fil
     struct ClassTable* classes = createEmptyClassTable();
     if (root->elemList->first != NULL)
     {
-        _addClassToClassTable(root->elemList->first, classes);
+        struct SemanticError * err = _addClassToClassTable(root->elemList->first, classes);
+        if (err != NULL)
+        {
+            printf("%s\n", err->errMessage);
+            return NULL;
+        }
     }
 
     return classes;

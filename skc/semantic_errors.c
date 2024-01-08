@@ -9,6 +9,7 @@ struct SemanticError * createSemanticError(int code, const char * msg)
 {
     struct SemanticError * err = (struct SemanticError *)malloc(sizeof(struct SemanticError));
     err->code = code;
-    err->errMessage = msg;
+    err->errMessage = (char*) malloc (strlen(msg) * 1 + 1);
+    strcpy(err->errMessage, msg);
     return err;
 }
