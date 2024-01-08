@@ -134,15 +134,16 @@ struct SemanticError * buildClassTable(struct KotlinFileNode * root, const char 
 /*! Создать пустой элемент таблицы классов.
 * \return пустой элемент таблицы классов.
 */
-struct ClassTableElement * createEmptyClassTableElement()
+class ClassTableElement * createEmptyClassTableElement()
 {
-    struct ClassTableElement * tableElem = (struct ClassTableElement *)malloc(sizeof(struct ClassTableElement));
+    class ClassTableElement * tableElem = (class ClassTableElement *)malloc(sizeof(class ClassTableElement));
     tableElem->fields = NULL;
     tableElem->methods = NULL;
     tableElem->name = -1;
     tableElem->isOpen = 0;
     tableElem->superClass = -1;
     tableElem->superName = -1;
+    tableElem->constants = new ConstantTable();
     return tableElem;
 }
 
@@ -165,3 +166,11 @@ bool Type::isReplacable(class Type & other) const
 {
     return false;
 }
+
+
+/* --------------------------- Таблица констант ---------------------------------- */
+ConstantTable::ConstantTable()
+{
+
+}
+

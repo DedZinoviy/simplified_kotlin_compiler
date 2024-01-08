@@ -36,6 +36,8 @@ class ConstantTable
     public:
         int maxId; // Текущее максимальное значение номера констант в таблице констант.
         std::map<int, class ConstantTableItem *> constants; // Словарь - таблица констант.
+        ConstantTable();
+    
 };
 
 /*! Построить таблицу классов для заданного файла Котлин.
@@ -59,8 +61,9 @@ struct FieldTable;
 struct MethodTable;
 
 /*! \brief Элемент таблицы класса. */
-struct ClassTableElement
+class ClassTableElement
 {
+    public: 
     // Ссылка на константу с именем класса - номер константы.
     int name;
 
@@ -81,18 +84,21 @@ struct ClassTableElement
 
     /// Указатель на таблицу полей класса.
     struct FieldTable * fields;
+
+    /// Указатель на таблицу констант класса.
+    class ConstantTable * constants;
 };
 
 /*! Создать пустой элемент таблицы классов.
 * \return пустой элемент таблицы классов.
 */
-struct ClassTableElement * createEmptyClassTableElement();
+class ClassTableElement * createEmptyClassTableElement();
 
 /*! \brief Структура, описывающая таблицу классов. */
 struct ClassTable
 {
     /// Укащатель на контейнер элементов таблицы.
-    std::map<std::string, ClassTableElement *> * items;
+    std::map<std::string, class ClassTableElement *> * items;
 };
 
 /*! Создать пустую таблицу классов.
