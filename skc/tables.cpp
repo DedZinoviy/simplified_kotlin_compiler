@@ -183,7 +183,7 @@ int ConstantTable::findOrAddConstant(enum ConstantType type, char * utf8string)
     return 0;
 }
 
-int ConstantTable::findConstant(enum ConstantType type, char * utf8string, int firstRef, int secondRef)
+int ConstantTable::findConstant(enum ConstantType type, char * utf8string, int firstRef, int secondRef, int intVal, double dVal)
 {
     auto iterator = this->constants.cbegin();
     while(iterator != this->constants.cend()) // Пока не конец таблицы...
@@ -200,15 +200,25 @@ int ConstantTable::findConstant(enum ConstantType type, char * utf8string, int f
                     if (iterator->second->firstRef == firstRef) // Вернуть номер константы, если совпадают значения номеров констант-ссылок.
                         return iterator->first;
                     break;
-                case MethodRef:
+                case MethodRef: // В случае, если константа - ссылка на метод...
+                    if (iterator->second->firstRef == firstRef && iterator->second->secRef == secondRef) // Вернуть номер константы, если совпадают значения номеров констант-ссылок.
+                        return iterator->first;
                     break;
-                case NameAndType:
+                case NameAndType: // В случае, если константа - имя и класс...
+                    if (iterator->second->firstRef == firstRef && iterator->second->secRef == secondRef) // Вернуть номер константы, если совпадают значения номеров констант-ссылок.
+                        return iterator->first;
                     break;
-                case Integer:
+                case Integer: // В случае, если константа - литерал integer...
+                    if (iterator->second->Integer == intVal) // Вернуть номер константы, если совпадают значения номеров констант-ссылок.
+                        return iterator->first;
                     break;
-                case Double:
+                case Double: // В случае, если константа - литерал double...
+                    if (iterator->second->Double == dVal) // Вернуть номер константы, если совпадают значения номеров констант-ссылок.
+                        return iterator->first;
                     break;
-                case FieldRef:
+                case FieldRef: // В случае, если константа - ссылка на поле...
+                    if (iterator->second->firstRef == firstRef && iterator->second->secRef == secondRef)  // Вернуть номер константы, если совпадают значения номеров констант-ссылок.
+                        return iterator->first;
                     break;
             }
         }

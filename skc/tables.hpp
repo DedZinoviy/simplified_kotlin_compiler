@@ -54,9 +54,11 @@ class ConstantTable
         * \param[in] type тип константы.
         * \param[in] firstRef номер константы первой ссылки.
         * \param[in] secondRef номер константы второй ссылки.
+        * \param[in] intVal Переменная для целочисленных значений.
+        * \param[in] dVal Переменная для дробных значений с плавающей точкой.
         * \return номер найденной константы; -1, если константа не найдена.
         */
-        int findConstant(enum ConstantType type, char * utf8string, int firstRef = NULL, int secondRef = NULL);
+        int findConstant(enum ConstantType type, char * utf8string, int firstRef = NULL, int secondRef = NULL, int intVal = NULL, double dVal = NULL);
     
 };
 
