@@ -31,6 +31,17 @@ class ConstantTableItem
         double Double; // Число с плавающий точкой.
         int firstRef; // Сслыка на первую константу.
         int secRef;  // Ссылка на вторую константу.
+        
+        /*! Конструктор.
+        * \param[in] type тип константы.
+        * \param[in] id номер константы в таблице констант.
+        * \param[in] utf8 строка-utf8.
+        * \param[in] intVal целочисленное значение для цеочисленных констант.
+        * \param[in] dVal значение числас плавающей точкой для дробных констант.
+        * \param[in] fRef ссылка на первую контанту - номер в таблице констант.
+        * \param[in] secondRef ссылка на вторую контанту - номер в таблице констант.
+        */
+        ConstantTableItem(enum ConstantType type, int id, char * utf8 = NULL, int intVal = NULL, double dVal = NULL, int fRef = NULL, int secondRef = NULL);
 };
 
 /*! Таблица констант. */
@@ -46,19 +57,19 @@ class ConstantTable
         * \param[in] utf8string строка константы UTF-8.
         * \return номер константы в таблице констант, если таковая имеется; номер добавленной константы, если таковой не было.
         */
-        int findOrAddConstant(enum ConstantType type, char * utf8string);
+        int findOrAddConstant(enum ConstantType type, char * utf8string = NULL, int intVal = NULL, double dVal = NULL, int fRef = NULL, int sRef = NULL);
     
     private:
         
         /*! Найти константу в таблице констант.
         * \param[in] type тип константы.
-        * \param[in] firstRef номер константы первой ссылки.
+        * \param[in] fRef номер константы первой ссылки.
         * \param[in] secondRef номер константы второй ссылки.
         * \param[in] intVal Переменная для целочисленных значений.
         * \param[in] dVal Переменная для дробных значений с плавающей точкой.
         * \return номер найденной константы; -1, если константа не найдена.
         */
-        int findConstant(enum ConstantType type, char * utf8string, int firstRef = NULL, int secondRef = NULL, int intVal = NULL, double dVal = NULL);
+        int findConstant(enum ConstantType type, char * utf8string, int fRef = NULL, int secondRef = NULL, int intVal = NULL, double dVal = NULL);
     
 };
 

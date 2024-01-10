@@ -175,15 +175,24 @@ ConstantTable::ConstantTable()
 
 }
 
-int ConstantTable::findOrAddConstant(enum ConstantType type, char * utf8string)
+int ConstantTable::findOrAddConstant(enum ConstantType type, char * utf8string, int intVal, double dVal, int fRef, int sRef)
 {
-    // Найти константу в списке констант.
-    // Создать новую константу, если константа не найдена.
+    int constant = findConstant(type, utf8string, fRef, sRef, intVal, dVal); // Найти константу в списке констант.
+    if (constant == -1) // Создать новую константу, если константа не найдена.
+    {
+        if (type == ConstantType::Utf8) constants[constant] = new ConstantTableItem(type, constant, utf8string);
+        else if (type == ConstantType::Class) constants[constant] = new ConstantTableItem(type, constant, NULL, NULL, NULL, fRef);
+        else if (type == ConstantType::Integer) constants[constant] = new ConstantTableItem(type, constant, NULL, intVal);
+        else if (type == ConstantType::Double) constants[constant] = new ConstantTableItem(type, constant, NULL, NULL, dVal);
+        else if (type == ConstantType::NameAndType) constants[constant] = new ConstantTableItem(type, constant, NULL, NULL, NULL,fRef, sRef);
+        else if (type == ConstantType::FieldRef) constants[constant] = new ConstantTableItem(type, constant, NULL, NULL, NULL,fRef, sRef);
+        else if (type == ConstantType::MethodRef) constants[constant] = new ConstantTableItem(type, constant, NULL, NULL, NULL,fRef, sRef);
+    }
     // Вернуть результат.
-    return 0;
+    return constant;
 }
 
-int ConstantTable::findConstant(enum ConstantType type, char * utf8string, int firstRef, int secondRef, int intVal, double dVal)
+int ConstantTable::findConstant(enum ConstantType type, char * utf8string, int fRef, int secondRef, int intVal, double dVal)
 {
     auto iterator = this->constants.cbegin();
     while(iterator != this->constants.cend()) // Пока не конец таблицы...
@@ -197,15 +206,15 @@ int ConstantTable::findConstant(enum ConstantType type, char * utf8string, int f
                         return iterator->first;
                     break;
                 case Class: // В случае, если константа - класс...
-                    if (iterator->second->firstRef == firstRef) // Вернуть номер константы, если совпадают значения номеров констант-ссылок.
+                    if (iterator->second->firstRef == fRef) // Вернуть номер константы, если совпадают значения номеров констант-ссылок.
                         return iterator->first;
                     break;
                 case MethodRef: // В случае, если константа - ссылка на метод...
-                    if (iterator->second->firstRef == firstRef && iterator->second->secRef == secondRef) // Вернуть номер константы, если совпадают значения номеров констант-ссылок.
+                    if (iterator->second->firstRef == fRef && iterator->second->secRef == secondRef) // Вернуть номер константы, если совпадают значения номеров констант-ссылок.
                         return iterator->first;
                     break;
                 case NameAndType: // В случае, если константа - имя и класс...
-                    if (iterator->second->firstRef == firstRef && iterator->second->secRef == secondRef) // Вернуть номер константы, если совпадают значения номеров констант-ссылок.
+                    if (iterator->second->firstRef == fRef && iterator->second->secRef == secondRef) // Вернуть номер константы, если совпадают значения номеров констант-ссылок.
                         return iterator->first;
                     break;
                 case Integer: // В случае, если константа - литерал integer...
@@ -217,7 +226,7 @@ int ConstantTable::findConstant(enum ConstantType type, char * utf8string, int f
                         return iterator->first;
                     break;
                 case FieldRef: // В случае, если константа - ссылка на поле...
-                    if (iterator->second->firstRef == firstRef && iterator->second->secRef == secondRef)  // Вернуть номер константы, если совпадают значения номеров констант-ссылок.
+                    if (iterator->second->firstRef == fRef && iterator->second->secRef == secondRef)  // Вернуть номер константы, если совпадают значения номеров констант-ссылок.
                         return iterator->first;
                     break;
             }
@@ -225,4 +234,19 @@ int ConstantTable::findConstant(enum ConstantType type, char * utf8string, int f
         iterator++; // Перейти к следующему элементу.
     }
     return -1;
+}
+
+/* --------------------------- Элемент таблицы констант --------------------------- */
+
+ConstantTableItem:: ConstantTableItem(enum ConstantType type, int id, char * utf8, int intVal, double dVal, int fRef, int secondRef)
+{
+    this->id = id;
+    this->cnst = type;
+    if (type == ConstantType::Utf8) this->string = utf8;
+    if (type == ConstantType::Integer) this->Integer = intVal;
+    if (type == ConstantType::Double) this->Double = dVal;
+    if (type == ConstantType::Class) this->firstRef = fRef;
+    if (type == ConstantType::NameAndType) { this->firstRef = fRef; this->secRef = secondRef; }
+    if (type == ConstantType::FieldRef) { this->firstRef = fRef; this->secRef = secondRef; }
+    if (type == ConstantType::MethodRef) { this->firstRef = fRef; this->secRef = secondRef; }
 }
