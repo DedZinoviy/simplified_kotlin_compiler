@@ -34,7 +34,13 @@ static struct SemanticError * _addClassToClassTable(struct KotlinFileElementNode
             }
             struct ClassTableElement * elem = createEmptyClassTableElement();
             if (_isOpenClass(fileElem)) elem->isOpen = 1;
-            classTable->items->insert(std::pair<std::string, struct ClassTableElement *>(fileElem->clas->identifier, elem));
+
+            int utf8 = elem->constants->findOrAddConstant(ConstantType::Utf8, fileElem->clas->identifier);
+            int cls = elem->constants->findOrAddConstant(ConstantType::Class, NULL, NULL, NULL, utf8);
+            elem->name = utf8;
+            elem->thisClass = cls;
+            //classTable->items[fileElem->clas->identifier] = elem;
+            classTable->items->insert(std::pair<std::string, class ClassTableElement *>(fileElem->clas->identifier, elem));
         }
         if (fileElem->next != NULL)
         {
@@ -153,7 +159,7 @@ class ClassTableElement * createEmptyClassTableElement()
 struct ClassTable * createEmptyClassTable()
 {
     struct ClassTable * table = (struct ClassTable *)malloc(sizeof(struct ClassTable));
-    table->items = new std::map<std::string, struct ClassTableElement*>();
+    table->items = new std::map<std::string, class ClassTableElement*>();
     return table;
 }
 
@@ -180,6 +186,7 @@ int ConstantTable::findOrAddConstant(enum ConstantType type, char * utf8string, 
     int constant = findConstant(type, utf8string, fRef, sRef, intVal, dVal); // Найти константу в списке констант.
     if (constant == -1) // Создать новую константу, если константа не найдена.
     {
+        constant = maxId++;
         if (type == ConstantType::Utf8) constants[constant] = new ConstantTableItem(type, constant, utf8string);
         else if (type == ConstantType::Class) constants[constant] = new ConstantTableItem(type, constant, NULL, NULL, NULL, fRef);
         else if (type == ConstantType::Integer) constants[constant] = new ConstantTableItem(type, constant, NULL, intVal);
