@@ -257,3 +257,24 @@ ConstantTableItem:: ConstantTableItem(enum ConstantType type, int id, char * utf
     if (type == ConstantType::FieldRef) { this->firstRef = fRef; this->secRef = secondRef; }
     if (type == ConstantType::MethodRef) { this->firstRef = fRef; this->secRef = secondRef; }
 }
+
+
+
+/* --------------------------- Элемент таблицы полей --------------------------- */
+
+FieldTableElement::FieldTableElement(int nm, int dsc, struct ModifierHead * mods)
+{
+    this->name = name;
+    this->descriptor = dsc;
+    this->modifiers = mods;
+}
+
+
+
+/* --------------------------- Таблица полей --------------------------- */
+
+static void fillFieldsTableForClass()
+{
+    
+}
+

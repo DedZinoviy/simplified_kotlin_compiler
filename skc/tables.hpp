@@ -89,7 +89,7 @@ struct SemanticError * buildClassTable(struct KotlinFileNode * root, const char 
 */
 struct SemanticError * setInheritance(struct KotlinFileNode * root);
 
-struct FieldTable;
+class FieldTable;
 
 struct MethodTable;
 
@@ -116,7 +116,7 @@ class ClassTableElement
     struct MethodTable * methods;
 
     /// Указатель на таблицу полей класса.
-    struct FieldTable * fields;
+    class FieldTable * fields;
 
     /// Указатель на таблицу констант класса.
     class ConstantTable * constants;
@@ -140,19 +140,26 @@ struct ClassTable
 struct ClassTable * createEmptyClassTable();
 
 /*! \brief Элемент таблицы полей класса. */
-struct FieldTableElement
+class FieldTableElement
 {
-    /// Ссылка на константу с именем поля.
-    int name;
+    public:
+        /// Ссылка на константу с именем поля.
+        int name;
 
-    /// Ссылка на константу с декриптором поля.
-    int descriptor;
+        /// Ссылка на константу с декриптором поля.
+        int descriptor;
+
+        /// Список модификаторов поля.
+        struct ModifierHead * modifiers;
+
+        FieldTableElement(int nm, int dsc, struct ModifierHead * mods);
 };
 
 /*! \brief Таблица полей класса. */
-struct FieldTable
+class FieldTable
 {
-
+    /// Указатель на контейнер элементов таблицы.
+    std::map<std::string, class FieldTableElement*> * fields;
 };
 
 /*! \brief Элемент таблицы методов класса. */
