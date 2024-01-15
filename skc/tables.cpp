@@ -269,12 +269,50 @@ FieldTableElement::FieldTableElement(int nm, int dsc, struct ModifierHead * mods
     this->modifiers = mods;
 }
 
-
+static struct SemanticError * _addFieldFromClassParam(class FieldTable * table, struct ClassParamNode * param)
+{
+    struct SemanticError * err = NULL;
+    if (param->valVar != NULL)
+    {
+        //int fieldName = findOrAddConstant();
+        char * fieldName = param->valVar->varValId; // Получить идентификатор переменной-поля.
+        if (table->fields->find(fieldName) != table->fields->end()){
+            std::string msg = "There is already a field with the specified identifier: ";
+            msg += fieldName;
+            return createSemanticError(4, msg.c_str());
+        }
+        //table->fields->insert(std::pair());
+    }
+    if (param->next != NULL)
+    {
+        err = _addFieldFromClassParam(table, param->next);
+    }
+    return err;
+}
 
 /* --------------------------- Таблица полей --------------------------- */
 
-static void fillFieldsTableForClass()
+static void _fillFieldsTableForClass(struct ClassNode * clas)
 {
-    
+    class FieldTable * table = new FieldTable();
+    // Проверить поля, находящиеся в первичном конструкторе.
+    if (clas->constr != NULL)
+    {
+        if (clas->constr->params != NULL)
+        {
+            if (clas->constr->params->first != NULL)
+            {
+                _addFieldFromClassParam(table, clas->constr->params->first);
+            }
+        }
+    }
+    // Проверить поля, находящиеся в теле класса.
+    if (clas->members != NULL)
+    {
+        if (clas->members->first != NULL)
+        {
+
+        }
+    }
 }
 

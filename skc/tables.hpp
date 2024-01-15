@@ -158,8 +158,9 @@ class FieldTableElement
 /*! \brief Таблица полей класса. */
 class FieldTable
 {
-    /// Указатель на контейнер элементов таблицы.
-    std::map<std::string, class FieldTableElement*> * fields;
+    public:
+        /// Указатель на контейнер элементов таблицы.
+        std::map<std::string, class FieldTableElement*> * fields;
 };
 
 /*! \brief Элемент таблицы методов класса. */
