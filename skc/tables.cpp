@@ -17,9 +17,8 @@ static void _fillModifierTableForClass(struct ModifierHead * head, struct Modifi
 
 /*! [PRIVATE] Добавить класс в таблицу классов при его наличии.
 * \param[in] fileElem рассматриваемый элемент файла Kotlin.
-* \param[in, out] classTable обновляемая таблица.
 */
-static struct SemanticError * _addClassToClassTable(struct KotlinFileElementNode * fileElem, struct ClassTable * classTable)
+static struct SemanticError * _addClassToClassTable(struct KotlinFileElementNode * fileElem)
 {
     struct SemanticError * err = NULL;
     if (fileElem != NULL)
@@ -27,7 +26,7 @@ static struct SemanticError * _addClassToClassTable(struct KotlinFileElementNode
         if (fileElem->type == _CLASS)
         {
             char * className = fileElem->clas->identifier;
-            if (classTable->items->find(fileElem->clas->identifier) != classTable->items->end()){
+            if (ClassTable::items.find(fileElem->clas->identifier) != ClassTable::items.end()){
                 std::string msg = "There is already a class with the specified identifier: ";
                 msg += fileElem->clas->identifier;
                 return createSemanticError(4, msg.c_str());
@@ -40,11 +39,11 @@ static struct SemanticError * _addClassToClassTable(struct KotlinFileElementNode
             elem->name = utf8;
             elem->thisClass = cls;
             //classTable->items[fileElem->clas->identifier] = elem;
-            classTable->items->insert(std::pair<std::string, class ClassTableElement *>(fileElem->clas->identifier, elem));
+            ClassTable::items.insert(std::pair<std::string, class ClassTableElement *>(fileElem->clas->identifier, elem));
         }
         if (fileElem->next != NULL)
         {
-            return _addClassToClassTable(fileElem->next, classTable);
+            return _addClassToClassTable(fileElem->next);
         }
     }
     return err;
@@ -112,21 +111,14 @@ static bool _isOpenClass(struct KotlinFileElementNode * cls)
 /*! Построить таблицу классов для заданного файла Котлин.
 * \param[in] root Корневой узел файла Котлин.
 * \param[in] fileName Имя файла Котлин.
-* \param[in,out] emptyTable Собираемая таблица классов; в случае ошибки построения вернется NULL.
 * \return Возможная ошибка построения.
 */  
-struct SemanticError * buildClassTable(struct KotlinFileNode * root, const char * fileName, struct ClassTable * emptyTable)
+struct SemanticError * buildClassTable(struct KotlinFileNode * root, const char * fileName)
 {
     struct SemanticError * err = NULL; 
-    struct ClassTable* classes = createEmptyClassTable();
     if (root->elemList->first != NULL)
     {
-        err = _addClassToClassTable(root->elemList->first, classes);
-        if (err != NULL)
-        {
-            emptyTable = NULL;
-        } 
-        else emptyTable = classes;
+        err = _addClassToClassTable(root->elemList->first);
     }
 
     return err;
@@ -153,13 +145,26 @@ class ClassTableElement * createEmptyClassTableElement()
     return tableElem;
 }
 
+bool ClassTableElement:: isHaveSuperClass(std::string super)
+{
+    if (this->superName == NULL) return false;
+    else
+    {
+        char * sName = this->constants->constants[this->superName]->string; // Получить имя спупер класса.
+        if (sName == super) // Считать, что класс имеет рассматриваемые суперкласс, если имена совпадают.
+            return true;
+        //else return ;
+    }
+    return false;
+}
+
 /*! Создать пустую таблицу классов.
 * \return Указатель на пустую таблицу классов.
 */
-struct ClassTable * createEmptyClassTable()
+class ClassTable * createEmptyClassTable()
 {
-    struct ClassTable * table = (struct ClassTable *)malloc(sizeof(struct ClassTable));
-    table->items = new std::map<std::string, class ClassTableElement*>();
+    class ClassTable * table = (class ClassTable *)malloc(sizeof(class ClassTable));
+    ///table->items = new std::map<std::string, class ClassTableElement*>();
     return table;
 }
 
@@ -170,6 +175,13 @@ bool FuncParam::operator==(class FuncParam & other) const
 
 bool Type::isReplacable(class Type & other) const
 {
+    if (this->typ != other.typ) // Сообщить о невозможности приведения между массивом и простым типом.
+        return false;
+    if (this->typ == _CLS && other.typ == _CLS) // Сравнить типы, если оба типа это классы.
+    {
+        if (this->className == other.className) // Сообщить о равенстве типов, если это классы с одинаковым названием.
+            return true;
+    }
     return false;
 }
 

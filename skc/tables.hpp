@@ -78,10 +78,9 @@ class ConstantTable
 /*! Построить таблицу классов для заданного файла Котлин.
 * \param[in] root Корневой узел файла Котлин.
 * \param[in] fileName Имя файла Котлин.
-* \param[in,out] emptyTable Собираемая таблица классов; в случае ошибки построения вернется NULL.
 * \return Возможная ошибка построения.
 */  
-struct SemanticError * buildClassTable(struct KotlinFileNode * root, const char * fileName, struct ClassTable * emptyTable);
+struct SemanticError * buildClassTable(struct KotlinFileNode * root, const char * fileName);
 
 /*! Установить наследование для классов.
 * \param[in] root Указатель на корневой узед дерева программы.
@@ -120,6 +119,11 @@ class ClassTableElement
 
     /// Указатель на таблицу констант класса.
     class ConstantTable * constants;
+
+    /// \brief Проверить, является ли класс с указанным именем суперклассом для текущего.
+    /// \param[in] superName имя потенциального суперкласса.
+    /// \return true - если является, false - если нет.
+    bool isHaveSuperClass(std::string superName);
 };
 
 /*! Создать пустой элемент таблицы классов.
@@ -128,16 +132,13 @@ class ClassTableElement
 class ClassTableElement * createEmptyClassTableElement();
 
 /*! \brief Структура, описывающая таблицу классов. */
-struct ClassTable
+class ClassTable
 {
+    public:
     /// Укащатель на контейнер элементов таблицы.
-    std::map<std::string, class ClassTableElement *> * items;
-};
+    static std::map<std::string, class ClassTableElement *> items;
 
-/*! Создать пустую таблицу классов.
-* \return Указатель на пустую таблицу классов.
-*/
-struct ClassTable * createEmptyClassTable();
+};
 
 /*! \brief Элемент таблицы полей класса. */
 class FieldTableElement
@@ -187,6 +188,12 @@ class Type
 
         /// Указатель на класс - тип данных.
         class ClassTableElement * cls;
+
+        /// Имя класса.
+        std::string className;
+
+        /// Размер массива.
+        int arraySize;
 
         /// \brief Проверить, может ли заменить тип, переданный как аргумент метода текущий тип. 
         /// \param other Проверяемый тип
