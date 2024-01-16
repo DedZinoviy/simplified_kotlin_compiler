@@ -165,9 +165,29 @@ class FieldTable
 };
 
 /*! \brief Элемент таблицы методов класса. */
-struct MethodTableElement
+class MethodTableElement
 {
+    public:
+        /// Ссылка на номер константы с именем метода в таблице констант.
+        int methodName = NULL;
 
+        /// Ссылка на номер константы с дескриптором в таблице констант.
+        int descriptor = NULL;
+
+        /// Строковое название метода.
+        std::string strName;
+
+        /// Строковый дескриптор метода.
+        std::string strDesc;
+
+        /// Указатель на начало реализации (тела) метода
+        struct StatementListNode * start = NULL;
+
+        /// Тип возвращаемого значения.
+        class Type* retType = NULL;
+
+        /// Вектор параметров метода.
+        std::vector<class FuncParam*> params;
 };
 
 /*! \brief Класс параметра функции. */

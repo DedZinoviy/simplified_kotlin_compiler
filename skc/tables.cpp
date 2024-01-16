@@ -153,7 +153,7 @@ bool ClassTableElement:: isHaveSuperClass(std::string super)
         char * sName = this->constants->constants[this->superName]->string; // Получить имя спупер класса.
         if (sName == super) // Считать, что класс имеет рассматриваемые суперкласс, если имена совпадают.
             return true;
-        //else return ;
+        else return ClassTable::items[sName]->isHaveSuperClass(super); // Иначе проверить наличие требуемого родителя у суперкласа.
     }
     return false;
 }
@@ -181,6 +181,23 @@ bool Type::isReplacable(class Type & other) const
     {
         if (this->className == other.className) // Сообщить о равенстве типов, если это классы с одинаковым названием.
             return true;
+        else // Иначе...
+        {
+            class ClassTableElement * thisClass = ClassTable::items[this->className];
+            class ClassTableElement * otherClass = ClassTable::items[other.className];
+            return thisClass->isHaveSuperClass(other.className);
+        }
+    }
+    else if (this->typ == _ARRAY && other.typ == _ARRAY) // Проверить типы классов, образующих массив.
+    {
+        if (this->className == other.className) // Сообщить о равенстве типов, если это классы с одинаковым названием.
+            return true;
+        else // Иначе...
+        {
+            class ClassTableElement * thisClass = ClassTable::items[this->className];
+            class ClassTableElement * otherClass = ClassTable::items[other.className];
+            return thisClass->isHaveSuperClass(other.className);
+        }
     }
     return false;
 }
