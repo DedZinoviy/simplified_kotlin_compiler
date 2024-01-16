@@ -187,16 +187,24 @@ class MethodTableElement
         class Type* retType = NULL;
 
         /// Вектор параметров метода.
-        std::vector<class FuncParam*> params;
+        std::vector<class FuncParam> params;
 };
 
 /*! \brief Класс параметра функции. */
 class FuncParam
 {
     public:
+
+        /// Имя параметра.
+        std::string name;
+
+        /// тип параметра.
+        class Type * typ;
         /*! Перегруженный оператор сравнения для 
         */
         bool operator == (class FuncParam & other) const;
+
+        FuncParam(std::string n, class Type * t);
 };
 
 /*! \brief Класс типа. */
@@ -219,6 +227,10 @@ class Type
         /// \param other Проверяемый тип
         /// \return  Возможность замены.
         bool isReplacable(class Type & other) const;
+
+        Type();
+
+        Type(struct TypeNode * type);
 };
 
 /*! \brief Таблица методов класса. */

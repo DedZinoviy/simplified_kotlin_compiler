@@ -321,7 +321,7 @@ static struct SemanticError * _addFieldFromClassParam(class FieldTable * table, 
 
 /* --------------------------- Таблица полей --------------------------- */
 
-static void _fillFieldsTableForClass(struct ClassNode * clas)
+static FieldTable * _fillFieldsTableForClass(struct ClassNode * clas)
 {
     class FieldTable * table = new FieldTable();
     // Проверить поля, находящиеся в первичном конструкторе.
@@ -343,5 +343,94 @@ static void _fillFieldsTableForClass(struct ClassNode * clas)
 
         }
     }
+    return table;
 }
 
+
+
+/* ------------------------------ Таблица методов ------------------------------*/
+
+static void _addMethodForClass(class MethodTable* table, struct ClassMemberNode* member )
+{
+    if (member->type == ClassMemberType::_METHOD) // Если рассматриваемый член класса является методом.
+    {
+        // Получить идентификатор метода.
+        std::string ident = member->method->identifier;
+
+        // Получить возвращаемое значение метода.
+        class Type *  retVal = new Type(member->method->returnValue);
+
+        // Получить набор параметров метода.
+        std::vector<FuncParam> vec;
+        if (member->method->params != NULL)
+        {
+            struct VarDeclarationNode * par;
+            if (member->method->params->first != NULL)
+                par = member->method->params->first;
+
+            while (par != NULL)
+            {
+                vec.push_back(FuncParam(par->identifier, new Type(par->type)));
+                par = par->next; // Перейти к следующему элементу.
+            }
+            
+        }
+
+        // Получить дескриптор метода.
+        // Создать элемент в таблице методов, если таковго метода еще не существует.
+        if (table->methods.find(ident) != table->methods.cend())
+        {
+            if (table->methods.find(ident)->second.find(vec) != table->methods.find(ident)->second.cend()) // Сообщить об ошибке, если такой метод существует.
+            {
+                // TODO сообщение об ошибке.
+            }
+            else // Иначе
+            {
+                table->methods.find(ident)->second[vec] = new MethodTableElement(); // Добавить новый элемент в таблицу методов.
+            }
+        }
+        else
+        {
+            table->methods[ident] = std::map<std::vector<FuncParam>, MethodTableElement *>();
+            table->methods.find(ident)->second[vec] = new MethodTableElement(); // Добавить новый элемент в таблицу методов.
+        }
+        // Создать запись в таблице констант класса.
+    }
+}
+
+static MethodTable * _fillMethodTableForClass(struct ClassNode * clas)
+{
+    class MethodTable * table = new MethodTable();
+    if (clas->members != NULL)
+    {
+        if (clas->members->first != NULL)
+        {
+
+        }
+    }
+    return table;
+}
+
+FuncParam::FuncParam(std::string n, class Type * t)
+{
+    this->name = n;
+    this->typ = t;
+}
+
+Type::Type()
+{
+
+}
+
+Type::Type(struct TypeNode * type)
+{
+    this->typ = type->type;
+    if (this->typ == TypeType::_ARRAY)
+    {
+        this->className = type->complexType->ident;
+    }
+    else if (this->typ == TypeType::_CLS)
+    {
+        this->className = type->ident;
+    }   
+}
