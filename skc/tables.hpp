@@ -8,6 +8,10 @@
 
 /* ----------------------------------- Constatnt Table ----------------------------------- */
 
+class ClassTable;
+
+class ClassTableElement;
+
 /*! Тип константы в таблице констант. */
 enum ConstantType
 {
@@ -90,7 +94,7 @@ struct SemanticError * setInheritance(struct KotlinFileNode * root);
 
 class FieldTable;
 
-struct MethodTable;
+class MethodTable;
 
 /*! \brief Элемент таблицы класса. */
 class ClassTableElement
@@ -112,7 +116,7 @@ class ClassTableElement
     int superClass;
 
     /// Указатель на таблицу методов класса.
-    struct MethodTable * methods;
+    class MethodTable * methods;
 
     /// Указатель на таблицу полей класса.
     class FieldTable * fields;
@@ -188,6 +192,8 @@ class MethodTableElement
 
         /// Вектор параметров метода.
         std::vector<class FuncParam> params;
+
+        MethodTableElement(int nameCnst, int descCnst, std::string nam, std::string dsc, struct StatementListNode * strt, class Type * ret, std::vector<class FuncParam> pars);
 };
 
 /*! \brief Класс параметра функции. */
@@ -203,6 +209,9 @@ class FuncParam
         /*! Перегруженный оператор сравнения для 
         */
         bool operator == (class FuncParam & other) const;
+
+        bool operator < (class FuncParam & other) const;
+        
 
         FuncParam(std::string n, class Type * t);
 };
@@ -234,7 +243,8 @@ class Type
 };
 
 /*! \brief Таблица методов класса. */
-struct MethodTable
+class MethodTable
 {
-    std::map<std::string, std::map<std::vector<class FuncParam>, struct MethodTableElement *>> methods;
+public:
+    std::map<std::string, std::map<std::string, class MethodTableElement *>> methods;
 };
