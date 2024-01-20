@@ -168,6 +168,8 @@ class FieldTable
         std::map<std::string, class FieldTableElement*> * fields;
 };
 
+class LocalVariableTable;
+
 /*! \brief Элемент таблицы методов класса. */
 class MethodTableElement
 {
@@ -192,6 +194,9 @@ class MethodTableElement
 
         /// Вектор параметров метода.
         std::vector<class FuncParam> params;
+
+        /// Ссылка на таблицу локальных переменных.
+        class LocalVariableTable * varTable = NULL;
 
         MethodTableElement(int nameCnst, int descCnst, std::string nam, std::string dsc, struct StatementListNode * strt, class Type * ret, std::vector<class FuncParam> pars);
 };
@@ -247,4 +252,26 @@ class MethodTable
 {
 public:
     std::map<std::string, std::map<std::string, class MethodTableElement *>> methods;
+};
+
+class LocalVariableElement
+{
+    public:
+        std::string name; // Имя локальной переменной.
+        int id; // Идентификатор локальной переменной.
+        class Type * typ; // Тип локальной переменной.
+        int isConst; // Флаг, показывающий, является ли переменная изменяемой.
+
+        LocalVariableElement(std::string nam, int ident, class Type * t, int isCnst);
+
+};
+
+
+class LocalVariableTable
+{
+    public:
+        int maxId = 0;
+        std::map<std::string, class LocalVariableElement*> items;
+
+        int findOrAddLocalVar(std::string name, class Type * typ, int isCnst);
 };

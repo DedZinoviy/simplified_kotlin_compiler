@@ -5,6 +5,8 @@
 
 std::map<std::string, class ClassTableElement*> ClassTable::items = std::map<std::string, class ClassTableElement*>();
 
+static MethodTable * _fillMethodTableForClass(struct ClassNode * clas, class ClassTableElement* elem);
+
 /*! Проверить, является ли класс открытым для наследования.
 * \param[in] Узел класса.
 * \return результат проверки: true = если открыт, false - если нет.
@@ -35,13 +37,15 @@ static struct SemanticError * _addClassToClassTable(struct KotlinFileElementNode
             }
             class ClassTableElement * elem = createEmptyClassTableElement();
             if (_isOpenClass(fileElem)) elem->isOpen = 1;
+            elem->methods = new MethodTable();
 
             int utf8 = elem->constants->findOrAddConstant(ConstantType::Utf8, fileElem->clas->identifier);
             int cls = elem->constants->findOrAddConstant(ConstantType::Class, NULL, NULL, NULL, utf8);
             elem->name = utf8;
             elem->thisClass = cls;
-            //classTable->items[fileElem->clas->identifier] = elem;
             ClassTable::items.insert(std::pair<std::string, class ClassTableElement *>(fileElem->clas->identifier, elem));
+            _fillMethodTableForClass(fileElem->clas, ClassTable::items[fileElem->clas->identifier]);
+
         }
         if (fileElem->next != NULL)
         {
@@ -382,7 +386,7 @@ static struct SemanticError * _addMethodForClass(class ClassTableElement *cls, c
         std::vector<FuncParam> vec;
         if (member->method->params != NULL)
         {
-            struct VarDeclarationNode * par;
+            struct VarDeclarationNode * par = NULL;
             if (member->method->params->first != NULL)
                 par = member->method->params->first;
 
@@ -419,9 +423,9 @@ static struct SemanticError * _addMethodForClass(class ClassTableElement *cls, c
                 
         desc += retVal->className;
         desc += ";";
-
+        
         // Создать элемент в таблице методов, если таковго метода еще не существует.
-        if (table->methods.find(ident) != table->methods.cend())
+        if (table->methods.count(ident) != 0)
         {
             if (table->methods.find(ident)->second.find(descKey) != table->methods.find(ident)->second.cend()) // Сообщить об ошибке, если такой метод существует.
             {
@@ -435,8 +439,6 @@ static struct SemanticError * _addMethodForClass(class ClassTableElement *cls, c
                 // Создать запись в таблице констант класса.
                 int nam = cls->constants->findOrAddConstant(ConstantType::Utf8, (char*)ident.c_str()); // Добавить или получить номер константы названия метода.
                 int dsc = cls->constants->findOrAddConstant(ConstantType::Utf8, (char*)desc.c_str()); // Добавить или получить номер константы дескриптора метода.
-                int nat = cls->constants->findOrAddConstant(ConstantType::NameAndType, NULL, NULL,NULL, nam, dsc); // Добавить или получить константу NameAndType.
-                int mref = cls->constants->findOrAddConstant(ConstantType::MethodRef, NULL, NULL,NULL, nat); // Добавить или получить константу MethodRef.
                 
                 table->methods.find(ident)->second[descKey] = new MethodTableElement(nam, dsc, ident, desc, member->method->body, retVal, vec); // Добавить новый элемент в таблицу методов.
             }
@@ -446,13 +448,16 @@ static struct SemanticError * _addMethodForClass(class ClassTableElement *cls, c
             // Создать запись в таблице констант класса.
             int nam = cls->constants->findOrAddConstant(ConstantType::Utf8, (char*)ident.c_str()); // Добавить или получить номер константы названия метода.
             int dsc = cls->constants->findOrAddConstant(ConstantType::Utf8, (char*)desc.c_str()); // Добавить или получить номер константы дескриптора метода.
-            int nat = cls->constants->findOrAddConstant(ConstantType::NameAndType, NULL, NULL,NULL, nam, dsc); // Добавить или получить константу NameAndType.
-            int mref = cls->constants->findOrAddConstant(ConstantType::MethodRef, NULL, NULL,NULL, nat); // Добавить или получить константу MethodRef.
 
             table->methods[ident] = std::map<std::string, MethodTableElement *>();
             table->methods.find(ident)->second[descKey] = new MethodTableElement(nam, dsc, ident, desc, member->method->body, retVal, vec); // Добавить новый элемент в таблицу методов.*/
         }
         
+        // Заполнить таблицу локальных переменных.
+        for (int i = 0; i < vec.size(); i++)
+        {
+            table->methods.find(ident)->second[descKey]->varTable->findOrAddLocalVar(vec[i].name, vec[i].typ, 1);
+        }
     }
     if (member->next != NULL)
     {
@@ -461,14 +466,14 @@ static struct SemanticError * _addMethodForClass(class ClassTableElement *cls, c
     return err; 
 }
 
-static MethodTable * _fillMethodTableForClass(struct ClassNode * clas)
+static MethodTable * _fillMethodTableForClass(struct ClassNode * clas, class ClassTableElement* elem)
 {
     class MethodTable * table = new MethodTable();
     if (clas->members != NULL)
     {
         if (clas->members->first != NULL)
         {
-
+            _addMethodForClass(elem, elem->methods, clas->members->first);
         }
     }
     return table;
@@ -507,4 +512,34 @@ MethodTableElement::MethodTableElement(int nameCnst, int descCnst, std::string n
     this->start = strt;
     this->retType = ret;
     this->params = pars;
+    this->varTable= new LocalVariableTable();
+}
+
+
+
+/* ---------------------------- Таблица локальных переменных -----------------------------*/
+
+LocalVariableElement::LocalVariableElement(std::string nam, int ident, class Type * t, int isCnst)
+{
+    this->id = ident;
+    this->name = nam;
+    this->typ = t;
+    this->isConst = isCnst;
+}
+
+int LocalVariableTable::findOrAddLocalVar(std::string name, class Type * typ, int isCnst)
+{
+    if (items.find(name) == items.cend()) // Если переменная с указанным именем не найдена.
+    {
+        items[name] = new LocalVariableElement(name, maxId++, typ, isCnst);
+    }
+    else 
+    {
+        return items[name]->id;
+    }
+}
+
+static void fillLocalVarsTable()
+{
+
 }

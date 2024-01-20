@@ -82,8 +82,8 @@ if (argc < 2)
         return err->code;
     }
 
-    struct ClassTable * classTable = NULL;
-    err = buildClassTable(root, argv[argc - 1], classTable); // Найти все классы в программе.
+    class ClassTable * classTable = NULL;
+    err = buildClassTable(root, argv[argc - 1]); // Найти все классы в программе.
     if (err != NULL)
     {
         printf("%s\n", err->errMessage);
