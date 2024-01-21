@@ -653,7 +653,116 @@ static SemanticError * _fillClassParamtable(class ClassTableElement * clsElem, s
     return err;
 }
 
-static SemanticError * _fillFunctionTable(class ClassTableElement * mainClass)
-{
+ FunctionTableElement::FunctionTableElement(int nameCnst, int descCnst, std::string nam, std::string dsc, struct StatementListNode * strt, class Type * ret, std::vector<class FuncParam> pars)
+ {
+    this->methodName = nameCnst;
+    this->descriptor = descCnst;
+    this->strName = nam;
+    this->strDesc = dsc;
+    this->start = strt;
+    this->retType = ret;
+    this->params = pars;
+    this->varTable= new LocalVariableTable();
+ }
 
+static SemanticError * _fillFunctionTable(class ClassTableElement * mainClass, struct KotlinFileElementNode * fileElem)
+{
+    struct SemanticError * err = NULL;
+
+    struct KotlinFileElementNode * curElem = fileElem;
+    while (curElem != NULL) // Пока остались элементы файла котлин...
+    {
+        if(curElem->type == KotlinFileElementType::_FUNCTION) // Если рассматриваемый элемент является функцией.
+        {
+        std::string ident = fileElem->func->identifier;
+
+        // Получить возвращаемое значение метода.
+        class Type *  retVal = new Type(fileElem->func->returnValue);
+
+        // Получить набор параметров метода.
+        std::vector<FuncParam> vec;
+        if (fileElem->func->params != NULL)
+        {
+            struct VarDeclarationNode * par = NULL;
+            if (fileElem->func->params->first != NULL)
+                par = fileElem->func->params->first;
+
+            while (par != NULL)
+            {
+                vec.push_back(FuncParam(par->identifier, new Type(par->type)));
+                par = par->next; // Перейти к следующему элементу.
+            }
+            
+        }
+
+        // Получить дескриптор метода.
+        std::string desc = "("; 
+        for (int i = 0; i < (int)vec.size(); i++)
+        {
+            if (vec[i].typ->typ == TypeType::_CLS)
+                desc += "L";
+
+            else if (vec[i].typ->typ == TypeType::_ARRAY)
+                desc += "[L";
+
+            desc += vec[i].typ->className;
+            desc += ";";
+        }
+        desc += ")";
+
+        std::string descKey = desc;
+
+        if (retVal->typ == TypeType::_CLS)
+            desc += "L";
+
+        else if (retVal->typ == TypeType::_ARRAY)
+            desc += "[L";
+                
+        desc += retVal->className;
+        desc += ";";
+        
+        // Создать элемент в таблице методов, если таковго метода еще не существует.
+        if (mainClass->methods->methods.count(ident) != 0)
+        {
+            if (mainClass->methods->methods.find(ident)->second.find(descKey) != mainClass->methods->methods.find(ident)->second.cend()) // Сообщить об ошибке, если такой метод существует.
+            {
+                // TODO сообщение об ошибке.
+                std::string msg = "There is already a method with the specified identifier: ";
+                msg += ident;
+                return createSemanticError(4, msg.c_str());
+            }
+            else // Иначе
+            {   
+                // Создать запись в таблице констант класса.
+                int nam = mainClass->constants->findOrAddConstant(ConstantType::Utf8, (char*)ident.c_str()); // Добавить или получить номер константы названия метода.
+                int dsc = mainClass->constants->findOrAddConstant(ConstantType::Utf8, (char*)desc.c_str()); // Добавить или получить номер константы дескриптора метода.
+                
+                mainClass->methods->methods.find(ident)->second[descKey] = new MethodTableElement(nam, dsc, ident, desc, curElem->func->body, retVal, vec); // Добавить новый элемент в таблицу методов.
+                FunctionTable::items.find(ident)->second[descKey] = new FunctionTableElement(nam, dsc, ident, desc, curElem->func->body, retVal, vec);
+            }
+        }
+        else
+        {
+            // Создать запись в таблице констант класса.
+            int nam = mainClass->constants->findOrAddConstant(ConstantType::Utf8, (char*)ident.c_str()); // Добавить или получить номер константы названия метода.
+            int dsc = mainClass->constants->findOrAddConstant(ConstantType::Utf8, (char*)desc.c_str()); // Добавить или получить номер константы дескриптора метода.
+
+            mainClass->methods->methods[ident] = std::map<std::string, MethodTableElement *>();
+            mainClass->methods->methods.find(ident)->second[descKey] = new MethodTableElement(nam, dsc, ident, desc, curElem->func->body, retVal, vec); // Добавить новый элемент в таблицу методов.*/
+            FunctionTable::items[ident] = std::map<std::string, class FunctionTableElement*>();
+            FunctionTable::items.find(ident)->second[descKey] = new FunctionTableElement(nam, dsc, ident, desc, curElem->func->body, retVal, vec);
+        }
+
+        // Заполнить таблицу локальных переменных.
+        for (int i = 0; i < vec.size(); i++)
+        {
+            FunctionTable::items.find(ident)->second[descKey]->varTable->findOrAddLocalVar(vec[i].name, vec[i].typ, 1);
+            mainClass->methods->methods.find(ident)->second[descKey]->varTable->findOrAddLocalVar(vec[i].name, vec[i].typ, 1);
+        }
+        }
+
+
+        curElem = curElem->next; // Перейти к следующему элементу.
+    }
+    return err;
 }

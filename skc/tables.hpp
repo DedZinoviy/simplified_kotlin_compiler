@@ -334,10 +334,12 @@ class FunctionTableElement
 
         /// Ссылка на таблицу локальных переменных.
         class LocalVariableTable * varTable = NULL;
+
+        FunctionTableElement(int nameCnst, int descCnst, std::string nam, std::string dsc, struct StatementListNode * strt, class Type * ret, std::vector<class FuncParam> pars);
 };
 
 class FunctionTable
 {
     public:
-    static std::map<std::string, class FunctionTableElement *> items;
+    static std::map<std::string, std::map<std::string, class FunctionTableElement *>> items;
 };
