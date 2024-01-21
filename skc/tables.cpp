@@ -17,7 +17,7 @@ static bool _isOpenClass(struct KotlinFileElementNode * cls);
 * \param[in] Таблциа модификаторов класса.
 * \param[in] узел модификатора.
 */
-static void _fillModifierTableForClass(struct ModifierHead * head, struct ModifierNode * node);
+static void _fillModifierTable(struct ModifierHead * head, struct ModifierNode * node);
 
 /*! [PRIVATE] Добавить класс в таблицу классов при его наличии.
 * \param[in] fileElem рассматриваемый элемент файла Kotlin.
@@ -37,7 +37,7 @@ static struct SemanticError * _addClassToClassTable(struct KotlinFileElementNode
             }
             class ClassTableElement * elem = createEmptyClassTableElement();
             if (_isOpenClass(fileElem)) elem->isOpen = 1;
-            elem->methods = new MethodTable();
+            elem->clsName = fileElem->clas->identifier;
 
             int utf8 = elem->constants->findOrAddConstant(ConstantType::Utf8, fileElem->clas->identifier);
             int cls = elem->constants->findOrAddConstant(ConstantType::Class, NULL, NULL, NULL, utf8);
@@ -65,7 +65,7 @@ struct SemanticError * setInheritance(struct KotlinFileNode * root)
     return NULL;
 }
 
-static void _fillModifierTableForClass(struct ModifierHead * head, struct ModifierNode * node)
+static void _fillModifierTable(struct ModifierHead * head, struct ModifierNode * node)
 {
     switch (node->type)
     {
@@ -81,6 +81,10 @@ static void _fillModifierTableForClass(struct ModifierHead * head, struct Modifi
             head->isInternal = 1;
             break;
 
+        case _PROTECTED :
+            head->isProtected = 1;
+            break;
+
         case _OPEN:
             head->isOpen = 1;
             break;
@@ -88,10 +92,13 @@ static void _fillModifierTableForClass(struct ModifierHead * head, struct Modifi
         case _FINAL:
             head->isFinal = 1;
             break;
+        case _OVERRIDE:
+            head->isOverride = 1;
+            break;
     }
     if (node->next != NULL)
     {
-        _fillModifierTableForClass(head, node->next);
+        _fillModifierTable(head, node->next);
     }
 }
 
@@ -104,7 +111,7 @@ static bool _isOpenClass(struct KotlinFileElementNode * cls)
         {
             if (cls->modifiers->first != NULL)
             {
-                _fillModifierTableForClass(head, cls->modifiers->first);
+                _fillModifierTable(head, cls->modifiers->first);
                 if (head->isOpen == 1 && head->isFinal == 0)
                 {
                     return true;
@@ -121,7 +128,30 @@ static bool _isOpenClass(struct KotlinFileElementNode * cls)
 */  
 struct SemanticError * buildClassTable(struct KotlinFileNode * root, const char * fileName)
 {
-    struct SemanticError * err = NULL; 
+    struct SemanticError * err = NULL;
+    
+    // Получить имя класса для свободных функций.
+    std::string path = fileName;
+    size_t sep = path.find_last_of("\\/");
+    if (sep != std::string::npos)
+        path = path.substr(sep + 1, path.size() - sep - 1);
+    sep = path.find_last_of(".");
+    if (sep != std::string::npos)
+        path[sep + 1] = std::toupper(path[sep + 1]);
+    path[0] = std::toupper(path[0]);
+    path.erase(sep, 1);
+
+    // Создать класс для свбодных функций.
+    class ClassTableElement * elem = createEmptyClassTableElement();
+    elem->clsName = path;
+    int utf8 = elem->constants->findOrAddConstant(ConstantType::Utf8, (char*)path.c_str());
+    int cls = elem->constants->findOrAddConstant(ConstantType::Class, NULL, NULL, NULL, utf8);
+    elem->name = utf8;
+    elem->thisClass = cls;
+
+    ClassTable::items[path] = elem;
+
+
     if (root->elemList->first != NULL)
     {
         err = _addClassToClassTable(root->elemList->first);
@@ -141,13 +171,14 @@ struct SemanticError * buildClassTable(struct KotlinFileNode * root, const char 
 class ClassTableElement * createEmptyClassTableElement()
 {
     class ClassTableElement * tableElem = (class ClassTableElement *)malloc(sizeof(class ClassTableElement));
-    tableElem->fields = NULL;
-    tableElem->methods = NULL;
+    tableElem->fields = new FieldTable();
+    tableElem->methods = new MethodTable();
     tableElem->name = -1;
     tableElem->isOpen = 0;
     tableElem->superClass = -1;
     tableElem->superName = -1;
     tableElem->constants = new ConstantTable();
+    tableElem->params = new ClassParamTable();
     return tableElem;
 }
 
@@ -312,30 +343,46 @@ ConstantTableItem:: ConstantTableItem(enum ConstantType type, int id, char * utf
 
 /* --------------------------- Элемент таблицы полей --------------------------- */
 
-FieldTableElement::FieldTableElement(int nm, int dsc, struct ModifierHead * mods)
+FieldTableElement::FieldTableElement(int nm, int dsc, std::string strNm, std::string strDsc, struct ModifierHead * mods, int isCnst)
 {
     this->name = name;
     this->descriptor = dsc;
     this->modifiers = mods;
+    this->isConst = isCnst;
+    this->strName = strNm;
+    this->stdDesc = strDsc;
 }
 
-static struct SemanticError * _addFieldFromClassParam(class FieldTable * table, struct ClassParamNode * param)
+static struct SemanticError * _addFieldFromClassBody(class ClassTableElement *cls, class FieldTable* table, struct ClassMemberNode * member)
 {
     struct SemanticError * err = NULL;
-    if (param->valVar != NULL)
+    if (member->type == ClassMemberType::_FIELD) // Если указанный член является полем класса.
     {
-        //int fieldName = findOrAddConstant();
-        char * fieldName = param->valVar->varValId; // Получить идентификатор переменной-поля.
-        if (table->fields->find(fieldName) != table->fields->end()){
-            std::string msg = "There is already a field with the specified identifier: ";
-            msg += fieldName;
+        std::string name = member->stmt->varValId; // Идентификатор переменной.
+        if (table->fields.count(name) > 0) // Проверить таблицу полей на наличие такого поля.
+        {
+            std::string msg = "There is already a field in class ";
+            msg += cls->clsName;
+            msg += " with the specified identifier: ";
+            msg += name;
             return createSemanticError(4, msg.c_str());
         }
-        //table->fields->insert(std::pair());
+        else
+        {
+            Type * typ = NULL;
+            if (member->stmt->varValType != NULL) // Присвоить тип поля, если таковой явно указан.
+            {
+                typ = new Type(member->stmt->varValType);
+            }
+            else // Иначе.
+            {
+                
+            }
+        }
     }
-    if (param->next != NULL)
+    if (member->next != NULL)
     {
-        err = _addFieldFromClassParam(table, param->next);
+        err = _addFieldFromClassBody(cls, table, member);
     }
     return err;
 }
@@ -345,17 +392,7 @@ static struct SemanticError * _addFieldFromClassParam(class FieldTable * table, 
 static FieldTable * _fillFieldsTableForClass(struct ClassNode * clas)
 {
     class FieldTable * table = new FieldTable();
-    // Проверить поля, находящиеся в первичном конструкторе.
-    if (clas->constr != NULL)
-    {
-        if (clas->constr->params != NULL)
-        {
-            if (clas->constr->params->first != NULL)
-            {
-                _addFieldFromClassParam(table, clas->constr->params->first);
-            }
-        }
-    }
+
     // Проверить поля, находящиеся в теле класса.
     if (clas->members != NULL)
     {
@@ -453,6 +490,12 @@ static struct SemanticError * _addMethodForClass(class ClassTableElement *cls, c
             table->methods.find(ident)->second[descKey] = new MethodTableElement(nam, dsc, ident, desc, member->method->body, retVal, vec); // Добавить новый элемент в таблицу методов.*/
         }
         
+        Type * ths = new Type();
+        ths->cls = cls;
+        ths->className = cls->clsName;
+        ths->typ = TypeType::_CLS;
+        table->methods.find(ident)->second[descKey]->varTable->findOrAddLocalVar("this", ths, 1);
+
         // Заполнить таблицу локальных переменных.
         for (int i = 0; i < vec.size(); i++)
         {
@@ -540,6 +583,77 @@ int LocalVariableTable::findOrAddLocalVar(std::string name, class Type * typ, in
 }
 
 static void fillLocalVarsTable()
+{
+
+}
+
+ClassParamElement::ClassParamElement(std::string n, class Type * t, int isProp)
+{
+    this->name = n;
+    this->typ = t;
+    this->isProperty = isProp;
+}
+
+static SemanticError * _fillClassParamtable(class ClassTableElement * clsElem, struct ClassNode* clsNode)
+{
+    struct SemanticError * err = NULL;
+    if (clsNode->constr != NULL) // Если у класса есть первичный конструктор.
+    {
+        if (clsNode->constr->params != NULL) // Если у конструктора есть параметры класса.
+        {
+            struct ClassParamNode * par = NULL;
+            par = clsNode->constr->params->first;
+            while (par != NULL) // Пока имеются параметры класса...
+            {
+                std::string name;
+                Type * typ = NULL;
+                int isPr = 0;
+                if (par->varDecl != NULL)
+                {
+                    name = par->varDecl->identifier;
+                    typ = new Type(par->varDecl->type);
+                }
+                else if (par->valVar != NULL)
+                {
+                    name = par->valVar->varValId;
+                    typ = new Type(par->valVar->varValType);
+                    isPr = 1;
+                }
+                if (clsElem->params->items.count(name) != 0) // Если уже содержится параметр с идентификатором.
+                {
+                    std::string msg = "There is already a method with the specified identifier: ";
+                    msg += name;
+                    return createSemanticError(4, msg.c_str());
+                }
+                else
+                {
+                    clsElem->params->items[name] = new ClassParamElement(name, typ, isPr);
+                    if (isPr == 1) // Добавить поле в таблицу полей.
+                    {
+                        std::string desc = "";
+                        if (typ->typ == TypeType::_ARRAY)
+                        {
+                            desc += "[";
+                        }
+                        desc += "L";
+                        desc += typ->className;
+                        int isCnst = 0;
+                        int nameUtf8 = clsElem->constants->findOrAddConstant(ConstantType::Utf8, (char*)name.c_str());
+                        int descUtf8 = clsElem->constants->findOrAddConstant(ConstantType::Utf8, (char*)desc.c_str());
+                        struct ModifierHead * head = createEmptyModifierHead();
+                        if (par->mods != NULL) if (par->mods->first != NULL) _fillModifierTable(head, par->mods->first);
+                        if (par->valVar->type == StatementType::_VAL) isCnst = 1; 
+                        clsElem->fields->fields[name] = new FieldTableElement(nameUtf8, descUtf8, name, desc, head, isCnst);
+                    }
+                }
+                par = par->next; // Перейти к следующему параметру.
+            }
+        }
+    }
+    return err;
+}
+
+static SemanticError * _fillFunctionTable(class ClassTableElement * mainClass)
 {
 
 }

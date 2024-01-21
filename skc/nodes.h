@@ -477,7 +477,7 @@ struct ClassParamNode
     int id;
 
     /// Указатель на узел списка модификаторов параметра. 
-    struct ModifierNode * mods;
+    struct ModifierListNode * mods;
 
     /// Указатель на узел Объявления переменной.
     struct VarDeclarationNode * varDecl;

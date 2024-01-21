@@ -96,6 +96,8 @@ class FieldTable;
 
 class MethodTable;
 
+class ClassParamTable;
+
 /*! \brief Элемент таблицы класса. */
 class ClassTableElement
 {
@@ -123,6 +125,12 @@ class ClassTableElement
 
     /// Указатель на таблицу констант класса.
     class ConstantTable * constants;
+
+    /// Указатель на таблицу параметров класса.
+    class ClassParamTable * params;
+
+    /// Строка - имя класса.
+    std::string clsName;
 
     /// \brief Проверить, является ли класс с указанным именем суперклассом для текущего.
     /// \param[in] superName имя потенциального суперкласса.
@@ -154,10 +162,17 @@ class FieldTableElement
         /// Ссылка на константу с декриптором поля.
         int descriptor;
 
+        std::string strName;
+
+        std::string stdDesc;
+
         /// Список модификаторов поля.
         struct ModifierHead * modifiers;
 
-        FieldTableElement(int nm, int dsc, struct ModifierHead * mods);
+        /// Является ли указанное поле изменяемым.
+        int isConst;
+
+        FieldTableElement(int nm, int dsc, std::string strNm, std::string strDsc, struct ModifierHead * mods, int isCnst);
 };
 
 /*! \brief Таблица полей класса. */
@@ -165,7 +180,7 @@ class FieldTable
 {
     public:
         /// Указатель на контейнер элементов таблицы.
-        std::map<std::string, class FieldTableElement*> * fields;
+        std::map<std::string, class FieldTableElement*> fields;
 };
 
 class LocalVariableTable;
@@ -274,4 +289,55 @@ class LocalVariableTable
         std::map<std::string, class LocalVariableElement*> items;
 
         int findOrAddLocalVar(std::string name, class Type * typ, int isCnst);
+};
+
+class ClassParamElement
+{
+    public:
+    std::string name;
+    class Type * typ = NULL;
+    int isProperty;
+
+    ClassParamElement(std::string n, class Type * t, int isProp);
+};
+
+class ClassParamTable
+{
+    public:
+    std::map<std::string, class ClassParamElement *> items;
+};
+
+
+class FunctionTableElement
+{
+        public:
+        /// Ссылка на номер константы с именем метода в таблице констант.
+        int methodName = NULL;
+
+        /// Ссылка на номер константы с дескриптором в таблице констант.
+        int descriptor = NULL;
+
+        /// Строковое название метода.
+        std::string strName;
+
+        /// Строковый дескриптор метода.
+        std::string strDesc;
+
+        /// Указатель на начало реализации (тела) метода
+        struct StatementListNode * start = NULL;
+
+        /// Тип возвращаемого значения.
+        class Type* retType = NULL;
+
+        /// Вектор параметров метода.
+        std::vector<class FuncParam> params;
+
+        /// Ссылка на таблицу локальных переменных.
+        class LocalVariableTable * varTable = NULL;
+};
+
+class FunctionTable
+{
+    public:
+    static std::map<std::string, class FunctionTableElement *> items;
 };
