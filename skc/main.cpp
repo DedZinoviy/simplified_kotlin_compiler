@@ -2,7 +2,8 @@
 #include "print_functions.h"
 #include "semantic_transformations.h"
 #include "iohandler.h"
-#include "tables.hpp"
+#include "stdlib.hpp"
+
 extern "C" int yyparse();
 
 int main (int argc, char * argv[])
@@ -81,6 +82,8 @@ if (argc < 2)
         printf("%s\n", err->errMessage);
         return err->code;
     }
+
+    initStdClasses();
 
     class ClassTable * classTable = NULL;
     err = buildClassTable(root, argv[argc - 1]); // Найти все классы в программе.
