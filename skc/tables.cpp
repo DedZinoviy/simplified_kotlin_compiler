@@ -7,7 +7,7 @@ std::map<std::string, class ClassTableElement*> ClassTable::items = std::map<std
 std::map<std::string, std::map<std::string, class FunctionTableElement*>> FunctionTable::items = std::map<std::string, std::map<std::string, class FunctionTableElement*>>();
 
 
-static MethodTable * _fillMethodTableForClass(struct ClassNode * clas, class ClassTableElement* elem);
+static struct SemanticError * _fillMethodTableForClass(struct ClassNode * clas, class ClassTableElement* elem);
 
 static SemanticError * _fillFunctionTable(class ClassTableElement * mainClass, struct KotlinFileElementNode * fileElem);
 
@@ -22,6 +22,8 @@ static bool _isOpenClass(struct KotlinFileElementNode * cls);
 * \param[in] узел модификатора.
 */
 static void _fillModifierTable(struct ModifierHead * head, struct ModifierNode * node);
+
+static SemanticError * _addConstructor(class ClassTableElement * classElem, struct ClassNode * classNode);
 
 /*! [PRIVATE] Добавить класс в таблицу классов при его наличии.
 * \param[in] fileElem рассматриваемый элемент файла Kotlin.
@@ -54,7 +56,8 @@ static struct SemanticError * _addClassToClassTable(struct KotlinFileElementNode
             elem->name = utf8;
             elem->thisClass = cls;
             ClassTable::items.insert(std::pair<std::string, class ClassTableElement *>(fileElem->clas->identifier, elem));
-            _fillMethodTableForClass(fileElem->clas, ClassTable::items[fileElem->clas->identifier]);
+            err = _addConstructor(ClassTable::items[fileElem->clas->identifier], fileElem->clas);
+            err = _fillMethodTableForClass(fileElem->clas, ClassTable::items[fileElem->clas->identifier]);
 
         }
         if (fileElem->next != NULL)
@@ -535,17 +538,17 @@ static struct SemanticError * _addMethodForClass(class ClassTableElement *cls, c
     return err; 
 }
 
-static MethodTable * _fillMethodTableForClass(struct ClassNode * clas, class ClassTableElement* elem)
+static SemanticError * _fillMethodTableForClass(struct ClassNode * clas, class ClassTableElement* elem)
 {
-    class MethodTable * table = new MethodTable();
+    struct SemanticError * err = NULL;
     if (clas->members != NULL)
     {
         if (clas->members->first != NULL)
         {
-            _addMethodForClass(elem, elem->methods, clas->members->first);
+            err =  _addMethodForClass(elem, elem->methods, clas->members->first);
         }
     }
-    return table;
+    return err;
 }
 
 FuncParam::FuncParam(std::string n, class Type * t)
@@ -792,5 +795,93 @@ static SemanticError * _fillFunctionTable(class ClassTableElement * mainClass, s
         //printf("Iter : %d\n", curElem);
         curElem = curElem->next; // Перейти к следующему элементу.
     }
+    return err;
+}
+
+static SemanticError * _addConstructor(class ClassTableElement * classElem, struct ClassNode * classNode)
+{
+    struct SemanticError * err = NULL;
+    std::string methName = "<init>"; // Создать имя конструктора для класса.
+    std::string descr = "(";
+
+    Type * retVal = new Type();
+    retVal->typ = TypeType::_CLS;
+    retVal->className = classElem->clsName;
+    // Получить набор параметров метода.
+    std::vector<FuncParam> vec;
+    if (classNode->constr != NULL)
+    {
+        
+        if (classNode->constr->params != NULL)
+        {
+
+            // Для каждого параметра класса...
+            struct ClassParamNode * par = NULL;
+            if (classNode->constr->params->first != NULL)
+                par = classNode->constr->params->first;
+
+            while (par != NULL)
+            {
+                std::string ident;
+                Type * typ = NULL;
+                if (par->valVar != NULL)
+                {
+                    ident = par->valVar->varValId;
+                    typ = new Type(par->valVar->varValType);
+                }
+                else if (par->varDecl != NULL)
+                {
+                    ident = par->varDecl->identifier;
+                    typ = new Type(par->varDecl->type);
+                }
+                vec.push_back(FuncParam(ident, typ));
+                par = par->next; // Перейти к следующему элементу.
+            }
+        }
+        for (int i = 0; i < (int)vec.size(); i++)
+        {
+            if (vec[i].typ->typ == TypeType::_CLS)
+                descr += "L";
+
+            else if (vec[i].typ->typ == TypeType::_ARRAY)
+                descr += "[L";
+
+            descr += vec[i].typ->className;
+            descr += ";";
+        }
+    }
+    descr += ")";
+    std::string descKey = descr;
+    descr += "V";
+    
+    if (classElem->methods->methods.count(methName) != 0)
+    {
+        if (classElem->methods->methods.find(methName)->second.find(descKey) != classElem->methods->methods.find(methName)->second.cend()) // Сообщить об ошибке, если такой метод существует.
+        {
+            // TODO сообщение об ошибке.
+            std::string msg = "There is already a contructor with the specified params.";
+            
+            return createSemanticError(4, msg.c_str());
+        }
+        else // Иначе
+        {   
+            // Создать запись в таблице констант класса.
+            int nam = classElem->constants->findOrAddConstant(ConstantType::Utf8, (char*)methName.c_str()); // Добавить или получить номер константы названия метода.
+            int dsc = classElem->constants->findOrAddConstant(ConstantType::Utf8, (char*)descr.c_str()); // Добавить или получить номер константы дескриптора метода.
+                    
+            classElem->methods->methods.find(methName)->second[descKey] = new MethodTableElement(nam, dsc, methName, descr, /*curElem->func->body*/NULL, retVal, vec); // Добавить новый элемент в таблицу методов.
+        }
+    }
+    else
+    {
+        // Создать запись в таблице констант класса.
+        int nam = classElem->constants->findOrAddConstant(ConstantType::Utf8, (char*)methName.c_str()); // Добавить или получить номер константы названия метода.
+        int dsc = classElem->constants->findOrAddConstant(ConstantType::Utf8, (char*)descr.c_str()); // Добавить или получить номер константы дескриптора метода.
+
+        classElem->methods->methods[methName] = std::map<std::string, MethodTableElement *>();
+        classElem->methods->methods.find(methName)->second[descKey] = new MethodTableElement(nam, dsc, methName, descr, /*curElem->func->body*/NULL, retVal, vec); // Добавить новый элемент в таблицу методов.*/
+    }    
+
+
     return err;
 }

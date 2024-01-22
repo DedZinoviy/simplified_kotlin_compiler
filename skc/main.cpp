@@ -91,7 +91,17 @@ if (argc < 2)
     }
 
     for(std::map<std::string, std::map<std::string, FunctionTableElement*>>::iterator it = FunctionTable::items.begin(); it != FunctionTable::items.end(); ++it) {
-        printf("FUnctions : %s\n", it->first.c_str());
+        printf("Function : %s\n", it->first.c_str());
+    }
+
+    for(std::map<std::string, ClassTableElement*>::iterator it = ClassTable::items.begin(); it != ClassTable::items.end(); ++it) {
+        printf("Class : %s\n", it->first.c_str());
+            for(std::map<std::string, std::map<std::string, MethodTableElement*>>::iterator iter = it->second->methods->methods.begin(); iter != it->second->methods->methods.end(); ++iter) {
+                printf("\tMethod : %s\n", iter->first.c_str());
+                for(std::map<std::string, MethodTableElement*>::iterator iterat = iter->second.begin(); iterat != iter->second.end(); ++iterat) {
+                    printf("\t\tDescriptor : %s\n", iterat->first.c_str());
+                }
+            }
     }
 
     printf("Classes count : %d\n", ClassTable::items.size());
