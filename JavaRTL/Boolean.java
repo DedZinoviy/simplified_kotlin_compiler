@@ -7,4 +7,11 @@ public class Boolean {
     public Boolean(boolean val){
         this._value = val;
     }
+
+    public Boolean(int val) {
+        if (val == 0)
+            this._value = false;
+        else 
+            this._value = true;
+    }
 }
