@@ -15,6 +15,46 @@ public class Int extends Any{
         return this;
     }
 
+    /** Операция сложения Int.
+     * @param other Второе слагаемое.
+     * @return  Результат сложения.
+     */
+    public Int plus(Int other) {
+        return new Int(this._value + other._value);
+    }
+
+    /** Операция вычитания Int.
+     * @param other Вычитаемое.
+     * @return  Результат вычитания.
+     */
+    public Int minus(Int other) {
+        return new Int(this._value - other._value);
+    }
+
+    /** Операция умножения Int.
+     * @param other Второй множитель.
+     * @return результат умножения.
+     */
+    public Int times(Int other) {
+        return new Int(this._value * other._value);
+    }
+
+    /** Операция деления Int.
+     * @param other делитель.
+     * @return Частное от деления.
+     */
+    public Int div(Int other) {
+        return new Int(this._value / other._value);
+    }
+
+    /** Операция получения остатка от деления
+     * @param other делитель.
+     * @return Остаток от деления.
+     */
+    public Int rem(Int other) {
+        return new Int(this._value % other._value);
+    }
+
     public Double toDouble() {
         return new Double((double) this._value);
     }

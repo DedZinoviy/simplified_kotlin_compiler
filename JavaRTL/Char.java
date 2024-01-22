@@ -3,7 +3,7 @@ package JavaRTL;
 /**
  * Класс, представляющий символьную константу.
  */
-public class Char {
+public class Char extends Any{
 
     public char _value;
 
