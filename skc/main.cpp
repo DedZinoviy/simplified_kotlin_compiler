@@ -90,6 +90,14 @@ if (argc < 2)
         return err->code;
     }
 
+    for(std::map<std::string, std::map<std::string, FunctionTableElement*>>::iterator it = FunctionTable::items.begin(); it != FunctionTable::items.end(); ++it) {
+        printf("FUnctions : %s\n", it->first.c_str());
+    }
+
+    printf("Classes count : %d\n", ClassTable::items.size());
+    printf("Functions count : %d\n", FunctionTable::items.size());
+
+
     // Аттрибутировать (проверить) наследование.
 
     // Вывод дерева после семантического анализа.

@@ -136,6 +136,8 @@ class ClassTableElement
     /// \param[in] superName имя потенциального суперкласса.
     /// \return true - если является, false - если нет.
     bool isHaveSuperClass(std::string superName);
+
+    ClassTableElement();
 };
 
 /*! Создать пустой элемент таблицы классов.
