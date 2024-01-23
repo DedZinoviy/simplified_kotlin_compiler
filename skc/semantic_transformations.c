@@ -744,3 +744,129 @@ struct SemanticError * checkModifierLists(struct KotlinFileNode * root)
     }
     return NULL;
 }
+
+
+
+
+/* ------------------------------ Замна операторов (псевдо-перегрузка) ---------------------------------- */
+
+static void _replaceOperatorsInKotlinFileElement(struct KotlinFileElementNode* elem);
+
+static void _replaceOperatorsInFunction(struct FunctionNode * func);
+
+static void _replaceOperatorsInStatement(struct StatementNode * stmt);
+
+static void _replaceOperatorsInExpression(struct ExpressionNode * expr);
+
+void replaceOperators(struct KotlinFileNode * root)
+{
+    if (root != NULL)
+        if (root->elemList != NULL)
+            if (root->elemList->first != NULL)
+                _replaceOperatorsInKotlinFileElement(root->elemList->first);
+}
+
+static void _replaceOperatorsInKotlinFileElement(struct KotlinFileElementNode* elem)
+{
+    if (elem->type == _FUNCTION) _replaceOperatorsInFunction(elem->func);
+
+    if (elem->next != NULL) _replaceOperatorsInKotlinFileElement(elem->next);
+}
+
+static void _replaceOperatorsInFunction(struct FunctionNode * func) 
+{
+    if (func->body != NULL)
+        if (func->body->first != NULL)
+            _replaceOperatorsInStatement(func->body->first);
+}
+
+static void _replaceOperatorsInStatement(struct StatementNode * stmt)
+{
+    switch (stmt->type)
+    {
+        case _EXPRESSION:
+            _replaceOperatorsInExpression(stmt->expression);
+            break;
+        case _WHILE:
+            if (stmt->condition != NULL) _replaceOperatorsInExpression(stmt->condition);
+            if (stmt->singleBody != NULL) _replaceOperatorsInStatement(stmt->singleBody);
+            if (stmt->complexBody != NULL) if (stmt->complexBody->first != NULL) _replaceOperatorsInStatement(stmt->complexBody->first);
+            break;
+        case _DOWHILE:
+            if (stmt->condition != NULL) _replaceOperatorsInExpression(stmt->condition);
+            if (stmt->singleBody != NULL) _replaceOperatorsInStatement(stmt->singleBody);
+            if (stmt->complexBody != NULL) if (stmt->complexBody->first != NULL) _replaceOperatorsInStatement(stmt->complexBody->first);
+            break;
+        case _VAL:
+            if (stmt->expression != NULL) _replaceOperatorsInExpression(stmt->expression);
+            break;
+        case _VAR:
+            if (stmt->expression != NULL) _replaceOperatorsInExpression(stmt->expression);
+            break;
+        case _MULTI_VAR:
+            if (stmt->expression != NULL) _replaceOperatorsInExpression(stmt->expression);
+            break;
+        case _MULTI_VAL:
+            if (stmt->expression != NULL) _replaceOperatorsInExpression(stmt->expression);
+            break;
+    }
+    if (stmt->next != NULL)
+        _replaceOperatorsInStatement(stmt->next);
+}
+
+static void _replaceOperatorsInExpression(struct ExpressionNode * expr)
+{
+    if (expr->type == _PLUS)
+    {
+        expr->type = _METHOD_ACCESS;
+        expr->identifierString = "plus";
+        expr->params = createExpressionListNode(expr->right);
+        expr->right = NULL;
+    }
+    else if (expr->type == _MINUS)
+    {
+        expr->type = _METHOD_ACCESS;
+        expr->identifierString = "minus";
+        expr->params = createExpressionListNode(expr->right);
+        expr->right = NULL;
+    }
+    else if (expr->type == _MUL)
+    {
+        expr->type = _METHOD_ACCESS;
+        expr->identifierString = "times";
+        expr->params = createExpressionListNode(expr->right);
+        expr->right = NULL;
+    }
+    else if (expr->type == _DIV)
+    {
+        expr->type = _METHOD_ACCESS;
+        expr->identifierString = "div";
+        expr->params = createExpressionListNode(expr->right);
+        expr->right = NULL;
+    }
+
+    else if (expr->type == _EQUAL)
+    {
+        expr->type = _METHOD_ACCESS;
+        expr->identifierString = "equals";
+        expr->params = createExpressionListNode(expr->right);
+        expr->right = NULL;
+    }
+
+    else if (expr->type == _NOT_EQUAL)
+    {
+        expr->type = _METHOD_ACCESS;
+        expr->identifierString = "notEquals";
+        expr->params = createExpressionListNode(expr->right);
+        expr->right = NULL;
+    }
+
+    if (expr->left != NULL)
+        _replaceOperatorsInExpression(expr->left);
+        
+    if (expr->right != NULL)
+        _replaceOperatorsInExpression(expr->right);
+    
+    if (expr->params != NULL) if (expr->params->first != NULL) _replaceOperatorsInExpression(expr->params->first);
+    if (expr->next != NULL) _replaceOperatorsInExpression(expr->next);
+}

@@ -16,6 +16,8 @@ void replaceLiteralsToObjects(struct KotlinFileNode * root);
 */
 void replaceModifyingAssignments(struct KotlinFileNode * root);
 
+void replaceOperators(struct KotlinFileNode * root);
+
 /*! Проверить списки модификаторов на наличие взаимоиключающих модификаторов. Проверить применяемые модификаторы и сущности на совместимость.
 * \param[in,out] root дерево программы - указатель на узел KotlinFile.
 * \return Возможная семантическая ошибка, связанная с модификаторами; NULL, если таковая отсуствует.
