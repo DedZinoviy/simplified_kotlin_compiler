@@ -3,6 +3,7 @@
 #include "semantic_transformations.h"
 #include "iohandler.h"
 #include "stdlib.hpp"
+#include "attributing.hpp"
 
 extern "C" int yyparse();
 
@@ -73,7 +74,10 @@ if (argc < 2)
     
     }
 
+    replaceRTLTypes(root);
     replaceLiteralsToObjects(root);
+    
+    replaceOperators(root);
 
     struct SemanticError * err = checkModifierLists(root);
 
