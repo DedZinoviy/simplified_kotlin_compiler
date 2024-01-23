@@ -55,6 +55,30 @@ public class Int extends Any{
         return new Int(this._value % other._value);
     }
 
+    public Boolean equals(Int other) {
+        return new Boolean(this._value == other._value);
+    }
+
+    public Boolean notEquals(Int other) {
+        return new Boolean(this._value != other._value);
+    }
+
+    public Boolean greater(Int other) {
+        return new Boolean(this._value > other._value);
+    }
+
+    public Boolean less(Int other) {
+        return new Boolean(this._value < other._value);
+    }
+
+    public Boolean greaterEquals(Int other) {
+        return new Boolean(this._value >= other._value);
+    }
+
+    public Boolean lessEquals(Int other) {
+        return new Boolean(this._value <= other._value);
+    }
+
     public Double toDouble() {
         return new Double((double) this._value);
     }

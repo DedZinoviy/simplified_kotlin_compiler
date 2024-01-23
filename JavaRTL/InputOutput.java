@@ -6,36 +6,44 @@ import java.io.InputStreamReader;
 
 public class InputOutput {
 
-    public static void println(Int i) {
+    public static JavaRTL.Unit println(Int i) {
         System.out.println(i._value);
+        return new Unit();
     }
 
-    public static void println(Char c) {
+    public static JavaRTL.Unit println(Char c) {
         System.out.println(c._value);
+        return new Unit();
     }
 
-    public static void println(JavaRTL.String s) {
+    public static JavaRTL.Unit println(JavaRTL.String s) {
         System.out.println(s._value);
+        return new Unit();
     }
 
-    public static void println(JavaRTL.Boolean b) {
+    public static JavaRTL.Unit println(JavaRTL.Boolean b) {
         System.out.println(b._value);
+        return new Unit();
     }
 
-    public static void print(Int i) {
+    public static JavaRTL.Unit print(Int i) {
         System.out.print(i._value);
+        return new Unit();
     }
 
-    public static void print(Char c) {
+    public static JavaRTL.Unit print(Char c) {
         System.out.print(c._value);
+        return new Unit();
     }
 
-    public static void print(JavaRTL.String s) {
+    public static JavaRTL.Unit print(JavaRTL.String s) {
         System.out.print(s._value);
+        return new Unit();
     }
 
-    public static void print(JavaRTL.Boolean b) {
+    public static JavaRTL.Unit print(JavaRTL.Boolean b) {
         System.out.print(b._value);
+        return new Unit();
     }
 
     public static JavaRTL.String readLine(){
