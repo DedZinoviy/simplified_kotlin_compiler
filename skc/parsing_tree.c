@@ -796,6 +796,8 @@ struct StatementNode * createStatementFromExpression(struct ExpressionNode * exp
     stmt->condition = NULL;
     stmt->singleBody = NULL;
     stmt->complexBody = NULL;
+    stmt->varValId = NULL;
+    stmt->varValType = NULL;
     stmt->id = ID++;
     stmt->next = NULL;
     stmt->varDeclList = NULL;
@@ -815,6 +817,8 @@ struct StatementNode * createStatementFromWhileWithSingleBody(struct ExpressionN
     statement->singleBody = stmt;
     statement->complexBody = NULL;
     statement->expression = NULL;
+    stmt->varValId = NULL;
+    stmt->varValType = NULL;
     statement->id = ID++;
     statement->next = NULL;
     stmt->varDeclList = NULL;
@@ -834,6 +838,8 @@ struct StatementNode * createStatementFromWhileWithComplexBody(struct Expression
     statement->singleBody = NULL;
     statement->complexBody = stmtList;
     statement->expression = NULL;
+    statement->varValId = NULL;
+    statement->varValType = NULL;
     statement->id = ID++;
     statement->next = NULL;
     statement->varDeclList = NULL;
@@ -853,6 +859,8 @@ struct StatementNode * createStatementFromDoWhileWithSingleBody(struct Expressio
     statement->singleBody = stmt;
     statement->complexBody = NULL;
     statement->expression = NULL;
+    stmt->varValId = NULL;
+    stmt->varValType = NULL;
     statement->id = ID++;
     statement->next = NULL;
     stmt->varDeclList = NULL;
@@ -872,6 +880,8 @@ struct StatementNode * createStatementFromDoWhileWithComplexBody(struct Expressi
     statement->singleBody = NULL;
     statement->complexBody = stmtList;
     statement->expression = NULL;
+    statement->varValId = NULL;
+    statement->varValType = NULL;
     statement->id = ID++;
     statement->next = NULL;
     statement->varDeclList = NULL;
@@ -890,6 +900,8 @@ struct StatementNode * createEmptyStatement()
     node->condition = NULL;
     node->complexBody = NULL;
     node->singleBody = NULL;
+    node->varValId = NULL;
+    node->varValType = NULL;
     node->next= NULL;
     node->varDeclList = NULL;
     return node;
@@ -1041,6 +1053,8 @@ struct StatementNode * createForStatementWithSingleBody(struct VarDeclarationLis
     node->condition = cond;
     node->singleBody = stmt;
     node->complexBody = NULL;
+    stmt->varValId = NULL;
+    stmt->varValType = NULL;
     node->varDeclList = list;
     return node;
 }

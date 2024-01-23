@@ -7,7 +7,7 @@ extern "C" {
 #endif
 
 /*------------------------------------ Expression -------------------------------------*/
-
+struct TypeNode;
 /*! \brief Перечисление типов Expression. */
 enum ExpressionType
 {
@@ -247,7 +247,6 @@ enum StatementType
     _RETURN
 };
 
-struct TypeNode;
 struct StatementListNode;
 struct VarDeclarationListNode;
 
