@@ -169,6 +169,7 @@ struct SemanticError * buildClassTable(struct KotlinFileNode * root, const char 
     if (root->elemList->first != NULL)
     { 
         err = _fillFunctionTable(ClassTable::items[path], root->elemList->first);
+        if (err != NULL) return err; 
     }
 
     if (root->elemList->first != NULL)
@@ -785,11 +786,12 @@ static SemanticError * _fillFunctionTable(class ClassTableElement * mainClass, s
             // Создать элемент в таблице методов, если таковго метода еще не существует.
             if (mainClass->methods->methods.count(ident) != 0)
             {
-                if (mainClass->methods->methods.find(ident)->second.find(descKey) != mainClass->methods->methods.find(ident)->second.cend()) // Сообщить об ошибке, если такой метод существует.
+                if (mainClass->methods->methods[ident].count(descKey) != 0) // Сообщить об ошибке, если такой метод существует.
                 {
                     // TODO сообщение об ошибке.
-                    std::string msg = "There is already a Function with the specified identifier: ";
+                    std::string msg = "There is already a Function with the specified identifier and signature: ";
                     msg += ident;
+                    msg += descKey;
                     return createSemanticError(4, msg.c_str());
                 }
                 else // Иначе
