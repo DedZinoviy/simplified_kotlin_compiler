@@ -195,10 +195,10 @@ ClassTableElement::ClassTableElement()
 {
     this->fields = new FieldTable();
     this->methods = new MethodTable();
-    this->name = -1;
+    this->name = NULL;
     this->isOpen = 0;
-    this->superClass = -1;
-    this->superName = -1;
+    this->superClass = NULL;
+    this->superName = NULL;
     this->constants = new ConstantTable();
     this->params = new ClassParamTable();
 }
@@ -221,7 +221,7 @@ class ClassTableElement * createEmptyClassTableElement()
 
 bool ClassTableElement:: isHaveSuperClass(std::string super)
 {
-    if (this->superName == NULL) return false;
+    if (this->superName == NULL) {  return false;}
     else
     {
         char * sName = this->constants->constants[this->superName]->string; // Получить имя спупер класса.
@@ -274,7 +274,7 @@ bool Type::isReplacable(class Type & other) const
         {
             class ClassTableElement * thisClass = ClassTable::items[this->className];
             class ClassTableElement * otherClass = ClassTable::items[other.className];
-            return thisClass->isHaveSuperClass(other.className);
+            if (thisClass != NULL) return thisClass->isHaveSuperClass(other.className);
         }
     }
     else if (this->typ == _ARRAY && other.typ == _ARRAY) // Проверить типы классов, образующих массив.
@@ -285,7 +285,7 @@ bool Type::isReplacable(class Type & other) const
         {
             class ClassTableElement * thisClass = ClassTable::items[this->className];
             class ClassTableElement * otherClass = ClassTable::items[other.className];
-            return thisClass->isHaveSuperClass(other.className);
+            if (thisClass != NULL) { return thisClass->isHaveSuperClass(other.className);}
         }
     }
     return false;
@@ -825,7 +825,6 @@ static SemanticError * _fillFunctionTable(class ClassTableElement * mainClass, s
             }
         }
 
-        //printf("Iter : %d\n", curElem);
         curElem = curElem->next; // Перейти к следующему элементу.
     }
     return err;
@@ -948,8 +947,32 @@ struct SemanticError * attributingAndFillingLocals(class MethodTableElement * me
                     int isInit = 0;
                     if (curStmt->type == StatementType::_VAL) isCnst = 1; // Является ли переменная константой.
                     if (curStmt->expression != NULL) isInit = 1; // Явялется ли переменная инициализированной.
+                    if (curStmt->expression != NULL)
+                    {
+                        if (curStmt->expression->type == ExpressionType::_ASSIGNMENT)
+                        {
+                            std::string msg = "Assignments are not allowed in this context.";
+                            return createSemanticError(13, msg.c_str());
+                        }
+                        err = attributeExpression(curStmt->expression, meth);
+                        if (err != NULL) return err;
+                    }
                     if (curStmt->varValType != NULL) // Если у переменной уже имеется тип.
                     {
+                        if (isInit)
+                        { 
+                            Type left = Type(curStmt->varValType);
+                            Type right = Type(curStmt->expression->typ);
+                            if (!left.isReplacable(right))
+                            {
+                                std::string msg = "Type mismatch in assignment : ";
+                                msg += left.className;
+                                msg += " and ";
+                                msg += right.className;
+                                return createSemanticError(15, msg.c_str());    
+                            }
+                        }
+
                         meth->varTable->items[curStmt->varValId] = new LocalVariableElement(curStmt->varValId, meth->varTable->maxId++, new Type(curStmt->varValType), isCnst, isInit);
                     }
                     else // Иначе...
@@ -993,7 +1016,6 @@ struct SemanticError * attributeExpression(struct ExpressionNode * expression, c
         }
         if (expression->right != NULL)
         {
-            printf("%d\n", expression->right->typ);
             if (expression->right->type == ExpressionType::_ASSIGNMENT)
             {
                 std::string msg = "Assignments are not allowed in this context.";
