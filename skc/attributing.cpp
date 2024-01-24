@@ -70,41 +70,102 @@ void replaceRTLTypes(struct KotlinFileNode * root)
 }
 
 
-void attributeBaseTypes(struct ExpressionNode * expr);
+void attributeBaseTypes(struct KotlinFileNode * root);
 
 struct SemanticError * attributeExpressions(struct ExpressionNode * expr)
 {
     struct SemanticError * err = NULL;
-    if (expr->fromLit != _FROM_NONE) attributeBaseTypes(expr);
-    else {
+    //if (expr->fromLit != _FROM_NONE) attributeBaseTypes(expr);
+    //else {
 
-    }
+    //}
     return err;
 }
 
-void attributeBaseTypes(struct ExpressionNode * expr)
+void attributeBaseTypesInExpression(struct ExpressionNode * expr)
 {
     if (expr->fromLit == BaseLiteral::_FROM_INT) {
         expr->typ = (struct TypeNode *)malloc(sizeof(struct TypeNode));
         expr->typ->type = TypeType::_CLS;
+        expr->typ->complexType = NULL;
         expr->typ->ident = (char*)"JavaRTL/Int";
     }
     
     else if (expr->fromLit == BaseLiteral::_FROM_CHAR) {
         expr->typ = (struct TypeNode *)malloc(sizeof(struct TypeNode));
         expr->typ->type = TypeType::_CLS;
+        expr->typ->complexType = NULL;
         expr->typ->ident = (char*)"JavaRTL/Char";
     }
 
     else if (expr->fromLit == BaseLiteral::_FROM_STRING) {
         expr->typ = (struct TypeNode *)malloc(sizeof(struct TypeNode));
         expr->typ->type = TypeType::_CLS;
+        expr->typ->complexType = NULL;
         expr->typ->ident = (char*)"JavaRTL/String";
     }
 
     else if (expr->fromLit == BaseLiteral::_FROM_BOOLEAN) {
         expr->typ = (struct TypeNode *)malloc(sizeof(struct TypeNode));
         expr->typ->type = TypeType::_CLS;
+        expr->typ->complexType = NULL;
         expr->typ->ident = (char*)"JavaRTL/Boolean";
     }
+    if (expr->left != NULL) attributeBaseTypesInExpression(expr->left);
+    if (expr->right != NULL) attributeBaseTypesInExpression(expr->right);
+    if (expr->params != NULL)
+    {
+        struct ExpressionNode * param = expr->params->first;
+        while (param != NULL) { 
+            attributeBaseTypesInExpression(param);
+            param = param->next;
+        }
+    }
+}
+
+void attributeBaseTypesInStatements(struct StatementNode * stmt)
+{
+    if (stmt->condition != NULL) attributeBaseTypesInExpression(stmt->condition);
+    if (stmt->expression != NULL) attributeBaseTypesInExpression(stmt->expression);
+    if (stmt->singleBody != NULL) attributeBaseTypesInStatements(stmt->singleBody); 
+    if (stmt->complexBody != NULL) 
+    {
+        struct StatementNode * st = stmt->complexBody->first;
+        while(st != NULL)
+        {
+            attributeBaseTypesInStatements(st);
+            st = st->next;
+        }
+    }
+    if (stmt->next != NULL) attributeBaseTypesInStatements(stmt->next);
+}
+
+
+void attributeBaseTypes(struct KotlinFileNode * root)
+{
+    if (root->elemList != NULL)
+    {
+        struct KotlinFileElementNode * elem = root->elemList->first;
+        while(elem != NULL)
+        {
+            if (elem->type == _FUNCTION)
+            {
+                if (elem->func->body != NULL)
+                {
+                    struct StatementNode * st = elem->func->body->first;
+                    while(st != NULL)
+                    {
+                        attributeBaseTypesInStatements(st);
+                        st = st->next;
+                    }
+                }
+            }
+            elem = elem->next;
+        }
+    }
+}
+
+void attributeTree(struct KotlinFileNode * root)
+{
+    attributeBaseTypes(root);
 }

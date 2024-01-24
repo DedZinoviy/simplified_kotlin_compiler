@@ -109,7 +109,7 @@ class ClassTableElement
     int isOpen;
 
     // Ссылка на константу с именем родительского класса - номер константы.
-    int superName; 
+    int superName = NULL; 
 
     // Ссылка на константу текущего класса.
     int thisClass;
@@ -259,6 +259,8 @@ class Type
         /// \return  Возможность замены.
         bool isReplacable(class Type & other) const;
 
+        struct TypeNode * toTypeNode();
+
         Type();
 
         Type(struct TypeNode * type);
@@ -278,8 +280,9 @@ class LocalVariableElement
         int id; // Идентификатор локальной переменной.
         class Type * typ; // Тип локальной переменной.
         int isConst; // Флаг, показывающий, является ли переменная изменяемой.
+        int isInit; // Флаг, показывающий, инициализрована переменная.
 
-        LocalVariableElement(std::string nam, int ident, class Type * t, int isCnst);
+        LocalVariableElement(std::string nam, int ident, class Type * t, int isCnst, int isInitial = 0);
 
 };
 
@@ -290,7 +293,7 @@ class LocalVariableTable
         int maxId = 0;
         std::map<std::string, class LocalVariableElement*> items;
 
-        int findOrAddLocalVar(std::string name, class Type * typ, int isCnst);
+        int findOrAddLocalVar(std::string name, class Type * typ, int isCnst, int isInit);
 };
 
 class ClassParamElement

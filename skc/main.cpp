@@ -76,8 +76,9 @@ if (argc < 2)
 
     replaceRTLTypes(root);
     replaceLiteralsToObjects(root);
-    
     replaceOperators(root);
+
+    attributeBaseTypes(root);
 
     struct SemanticError * err = checkModifierLists(root);
 

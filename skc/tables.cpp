@@ -8,7 +8,7 @@ std::map<std::string, std::map<std::string, class FunctionTableElement*>> Functi
 
 
 static struct SemanticError * _fillMethodTableForClass(struct ClassNode * clas, class ClassTableElement* elem);
-
+struct SemanticError * attributingAndFillingLocals(class MethodTableElement * meth);
 static SemanticError * _fillFunctionTable(class ClassTableElement * mainClass, struct KotlinFileElementNode * fileElem);
 
 /*! Проверить, является ли класс открытым для наследования.
@@ -175,7 +175,14 @@ struct SemanticError * buildClassTable(struct KotlinFileNode * root, const char 
     {
         err = _addClassToClassTable(root->elemList->first);
     }
-
+    for (auto it = ClassTable::items[path]->methods->methods.begin(); it != ClassTable::items[path]->methods->methods.end(); ++it)
+    {
+        for (auto iter = it->second.begin(); iter != it->second.end(); ++iter)
+        {
+            err = attributingAndFillingLocals(iter->second);
+            if (err != NULL) return err; 
+        }
+    }
     return err;
 }
 
@@ -523,12 +530,12 @@ static struct SemanticError * _addMethodForClass(class ClassTableElement *cls, c
         ths->cls = cls;
         ths->className = cls->clsName;
         ths->typ = TypeType::_CLS;
-        table->methods.find(ident)->second[descKey]->varTable->findOrAddLocalVar("this", ths, 1);
+        table->methods.find(ident)->second[descKey]->varTable->findOrAddLocalVar("this", ths, 1, 1);
 
         // Заполнить таблицу локальных переменных.
         for (int i = 0; i < vec.size(); i++)
         {
-            table->methods.find(ident)->second[descKey]->varTable->findOrAddLocalVar(vec[i].name, vec[i].typ, 1);
+            table->methods.find(ident)->second[descKey]->varTable->findOrAddLocalVar(vec[i].name, vec[i].typ, 1, 1);
         }
     }
     if (member->next != NULL)
@@ -575,6 +582,28 @@ Type::Type(struct TypeNode * type)
     }   
 }
 
+struct TypeNode * Type::toTypeNode()
+{
+    struct TypeNode * t = (struct TypeNode *)malloc(sizeof(struct TypeNode));
+    if (this->typ == TypeType::_CLS)
+    {
+        t->type = TypeType::_CLS;
+        t->id = 0;
+        t->ident = (char*)this->className.c_str();
+        t->complexType = NULL;
+    }
+    else if (this->typ == TypeType::_ARRAY)
+    {
+        t->type = TypeType::_ARRAY;
+        t->id = 0;
+        t->complexType = (struct TypeNode *)malloc(sizeof(struct TypeNode));
+        t->complexType->id = 0;
+        t->complexType->ident = (char*)this->className.c_str();
+        t->complexType->type = TypeType::_CLS;
+    }
+    return t;
+}
+
 MethodTableElement::MethodTableElement(int nameCnst, int descCnst, std::string nam, std::string dsc, struct StatementListNode * strt, class Type * ret, std::vector<class FuncParam> pars)
 {
     this->methodName = nameCnst;
@@ -591,19 +620,21 @@ MethodTableElement::MethodTableElement(int nameCnst, int descCnst, std::string n
 
 /* ---------------------------- Таблица локальных переменных -----------------------------*/
 
-LocalVariableElement::LocalVariableElement(std::string nam, int ident, class Type * t, int isCnst)
+LocalVariableElement::LocalVariableElement(std::string nam, int ident, class Type * t, int isCnst, int isInitial)
 {
     this->id = ident;
     this->name = nam;
     this->typ = t;
     this->isConst = isCnst;
+    this->isInit = isInitial;
 }
 
-int LocalVariableTable::findOrAddLocalVar(std::string name, class Type * typ, int isCnst)
+int LocalVariableTable::findOrAddLocalVar(std::string name, class Type * typ, int isCnst, int isInit)
 {
     if (items.find(name) == items.cend()) // Если переменная с указанным именем не найдена.
     {
-        items[name] = new LocalVariableElement(name, maxId++, typ, isCnst);
+        items[name] = new LocalVariableElement(name, maxId++, typ, isCnst, isInit);
+        return items[name]->id;
     }
     else 
     {
@@ -757,7 +788,7 @@ static SemanticError * _fillFunctionTable(class ClassTableElement * mainClass, s
                 if (mainClass->methods->methods.find(ident)->second.find(descKey) != mainClass->methods->methods.find(ident)->second.cend()) // Сообщить об ошибке, если такой метод существует.
                 {
                     // TODO сообщение об ошибке.
-                    std::string msg = "There is already a method with the specified identifier: ";
+                    std::string msg = "There is already a Function with the specified identifier: ";
                     msg += ident;
                     return createSemanticError(4, msg.c_str());
                 }
@@ -787,8 +818,8 @@ static SemanticError * _fillFunctionTable(class ClassTableElement * mainClass, s
             // Заполнить таблицу локальных переменных.
             for (int i = 0; i < vec.size(); i++)
             {
-                FunctionTable::items.find(ident)->second[descKey]->varTable->findOrAddLocalVar(vec[i].name, vec[i].typ, 1);
-                mainClass->methods->methods.find(ident)->second[descKey]->varTable->findOrAddLocalVar(vec[i].name, vec[i].typ, 1);
+                FunctionTable::items.find(ident)->second[descKey]->varTable->findOrAddLocalVar(vec[i].name, vec[i].typ, 1,1);
+                mainClass->methods->methods.find(ident)->second[descKey]->varTable->findOrAddLocalVar(vec[i].name, vec[i].typ, 1,1);
             }
         }
 
@@ -883,5 +914,292 @@ static SemanticError * _addConstructor(class ClassTableElement * classElem, stru
     }    
 
 
+    return err;
+}
+struct SemanticError * attributeExpression(struct ExpressionNode * expression, class MethodTableElement * mElem);
+struct SemanticError * attributingAndFillingLocals(class MethodTableElement * meth)
+{
+    struct SemanticError * err = NULL;
+    if (meth->start != NULL)
+    {
+        struct StatementNode * curStmt = meth->start->first;
+        while (curStmt != NULL) // Пока в теле функции есть Statment...
+        {
+            if (curStmt->type == StatementType::_EXPRESSION)
+            {
+                err = attributeExpression(curStmt->expression, meth);
+                if (err != NULL) return err;
+            }
+            if (curStmt->type == StatementType::_VAL || curStmt->type == StatementType::_VAR)
+            {
+                // Попытаться найти переменную с указанным именем.
+                if (meth->varTable->items.count(curStmt->varValId) != 0) // Если в таблице уже имеется такая переменная...
+                {
+                    // Сообщить об ошибке.
+                    std::string msg = "There is already a local var with the identifier: ";
+                    msg += curStmt->varValId;
+                    return createSemanticError(4, msg.c_str());
+                }
+                else // Иначе...
+                {
+                    int isCnst = 0;
+                    int isInit = 0;
+                    if (curStmt->type == StatementType::_VAL) isCnst = 1; // Является ли переменная константой.
+                    if (curStmt->expression != NULL) isInit = 1; // Явялется ли переменная инициализированной.
+                    if (curStmt->varValType != NULL) // Если у переменной уже имеется тип.
+                    {
+                        meth->varTable->items[curStmt->varValId] = new LocalVariableElement(curStmt->varValId, meth->varTable->maxId++, new Type(curStmt->varValType), isCnst, isInit);
+                    }
+                    else // Иначе...
+                    {
+                        // Сообщить об ошибке - отсуствии в текущей версии компилятора.
+                        std::string msg = "Autotypes are not supported in this version.";
+                        return createSemanticError(10, msg.c_str());
+                        /*
+                        if (isInit == 1) // Если переменная инициализируется...
+                        {
+                            if (curStmt->expression->typ != NULL) meth->varTable->items[curStmt->varValId] = new LocalVariableElement(curStmt->varValId, func->varTable->maxId++, new Type(curStmt->expression->typ), isCnst, isInit);
+                        }*/
+                    }
+                } 
+            }
+
+            curStmt = curStmt->next; // Перейти к следующему Statement.
+        }
+    }
+    return err;
+}
+
+struct SemanticError * attributeExpression(struct ExpressionNode * expression, class MethodTableElement * mElem)
+{
+    struct SemanticError * err = NULL;
+    // Если у переменной отсутствует тип...
+    if (expression->typ == NULL)
+    {
+        struct TypeNode * leftType = NULL;
+        struct TypeNode * rightType = NULL;
+        if (expression->left != NULL)
+        {
+            if (expression->left->type == ExpressionType::_ASSIGNMENT)
+            {
+                std::string msg = "Assignments are not allowed in this context.";
+                return createSemanticError(13, msg.c_str());
+            }
+            if (expression->left->typ == NULL) err = attributeExpression(expression->left, mElem);
+            if (err != NULL) return err;
+            leftType = expression->left->typ;
+        }
+        if (expression->right != NULL)
+        {
+            printf("%d\n", expression->right->typ);
+            if (expression->right->type == ExpressionType::_ASSIGNMENT)
+            {
+                std::string msg = "Assignments are not allowed in this context.";
+                return createSemanticError(13, msg.c_str());
+            }
+            if (expression->right->typ == NULL) err = attributeExpression(expression->right, mElem);
+            if (err != NULL) return err;
+            rightType = expression->right->typ;
+        }
+
+        // Определить типы параметров у вызовов функций или методов.
+        if (expression->type == ExpressionType::_FUNC_CALL || expression->type == ExpressionType::_METHOD_ACCESS)
+        {
+            std::string id = expression->identifierString; // Получить идентификатор функции или метода.
+            struct ExpressionListNode * params = expression->params;
+            struct ExpressionNode * curExpr = params->first;
+            while(curExpr != NULL) // Пока есть параметры...
+            {
+                err = attributeExpression(curExpr, mElem);
+                if (err != NULL) return err;
+                curExpr = curExpr->next; // Перейти к следующему параметру.
+            }
+
+            // Сформировать дескриптор набора параметров.
+            std::string desc = "(";
+            curExpr = params->first;
+            while(curExpr != NULL) // Пока есть параметры...
+            {
+                Type * typ = new Type(curExpr->typ);
+                if (curExpr->typ->type == TypeType::_CLS) desc += "L";
+                if (curExpr->typ->type == TypeType::_ARRAY) desc += "[L";
+                desc += typ->className;
+                desc += ";";
+                curExpr = curExpr->next; // Перейти к следующему параметру.
+            }
+            desc += ")";
+            if (expression->type == ExpressionType::_FUNC_CALL)
+            {
+                if (FunctionTable::items.count(id) == 0)
+                {
+                    std::string msg = "Function declaration is missing : ";
+                    msg += id;
+                    return createSemanticError(7, msg.c_str());
+                }
+                else 
+                {
+                    if (FunctionTable::items[id].count(desc) == 0)
+                    {
+                        std::string msg = "Function candidate is missing : ";
+                        msg += id;
+                        msg += desc;
+                        return createSemanticError(8, msg.c_str());
+                    }
+                    else
+                    {
+                        expression->typ = FunctionTable::items[id][desc]->retType->toTypeNode();
+                    }
+                }
+            }
+            else if (expression->type == ExpressionType::_METHOD_ACCESS)
+            {
+                std::string clsType = (new Type(leftType))->className;
+                if (ClassTable::items.count(clsType) == 0)
+                {
+                    std::string msg = "Class declaration is missing : ";
+                    msg += clsType;
+                    return createSemanticError(6, msg.c_str());
+                }
+                else
+                {
+                    if (ClassTable::items[clsType]->methods->methods.count(id) == 0)
+                    {
+                        std::string msg = "Method declaration is missing : ";
+                        msg += id;
+                        msg += " in class ";
+                        msg += clsType;
+                        return createSemanticError(7, msg.c_str());
+                    }
+                    else
+                    {
+                        if (ClassTable::items[clsType]->methods->methods[id].count(desc) == 0)
+                        {
+                            std::string msg = "Method candidate is missing : ";
+                            msg += id;
+                            msg += desc;
+                            msg += " in class ";
+                            msg += clsType;
+                            return createSemanticError(8, msg.c_str());
+                        }
+                        else
+                        {
+                            expression->typ = ClassTable::items[clsType]->methods->methods[id][desc]->retType->toTypeNode();
+                        }   
+                    }
+                }
+            }
+        }
+        // Определить тип при создании массива.
+        else if (expression->type == ExpressionType::_ARRAY_CREATION) 
+        {
+            if (expression->right->type == ExpressionType::_ARRAY_CREATION) // Сообщить об ошибке при попытке создания многомерного массива.
+            {
+                std::string msg = "Multidimensional arrays are not supported in this version.";
+                return createSemanticError(10, msg.c_str());
+            }
+            else
+            {
+                struct TypeNode * node = (struct TypeNode *)malloc(sizeof(struct TypeNode));
+                node->type = _ARRAY;
+                node->complexType = rightType;
+                node->ident = NULL;
+                expression->typ = node;
+            }
+        }
+
+        else if (expression->type == ExpressionType::_ARRAY_ACCESS)
+        {
+            if (leftType->type != TypeType::_ARRAY)
+            {
+                std::string msg = "Addressing to a non-container object.";
+                return createSemanticError(11, msg.c_str());
+            }
+            if (rightType->type == TypeType::_CLS)
+            {
+                if (std::string(rightType->ident) != "JavaRTL/Int")
+                {
+                    std::string msg = "Incorrect key to an array element.";
+                    return createSemanticError(12, msg.c_str());
+                }
+                else
+                {
+                    Type * arrayType = new Type(leftType->complexType);
+                    expression->typ = arrayType->toTypeNode();
+                }
+            }
+            else
+            {
+                std::string msg = "Incorrect key to an array element.";
+                return createSemanticError(12, msg.c_str());
+            }
+        }
+
+        // Определить тип для идентификатора.
+        else if (expression->type == ExpressionType::_IDENTIFIER)
+        {
+            // Сообщить об ошибке, если в таблице отсуствует такая переменная.
+            if (mElem->varTable->items.count(expression->identifierString) == 0)
+            {
+                std::string msg = "Using an undeclared variable: ";
+                msg += expression->identifierString;
+                return createSemanticError(9, msg.c_str());
+            }
+            else
+            {
+                expression->typ = mElem->varTable->items[expression->identifierString]->typ->toTypeNode();
+            }
+        }
+        else if (expression->type == ExpressionType::_BRACKETS)
+        {
+            expression->typ = leftType;
+        }
+        else if (expression->type == ExpressionType::_ASSIGNMENT)
+        {
+            if (expression->left->type == ExpressionType::_ARRAY_ACCESS || expression->left->type == ExpressionType::_IDENTIFIER)
+            {
+                if (expression->left->type == ExpressionType::_IDENTIFIER)
+                {
+                    // Проверить, является ли переменная константой.
+                    if (mElem->varTable->items[expression->left->identifierString]->isConst != 0)
+                    {
+                        if (mElem->varTable->items[expression->left->identifierString]->isInit != 0)
+                        {
+                            std::string msg = "Val can not be reassignment : ";
+                            msg += expression->left->identifierString;
+                            msg += " in function ";
+                            msg += mElem->strName;
+                            return createSemanticError(15, msg.c_str());   
+                        }
+                    }
+                    // Проверить, инициализирована ли переменная, если константа.
+                }
+                
+                // Проверить типы слева и справа от присваивания.
+                Type left = Type(expression->left->typ);
+                Type right = Type(expression->right->typ);
+                if (!left.isReplacable(right))
+                {
+                    std::string msg = "Type mismatch in assignment : ";
+                    msg += left.className;
+                    msg += " and ";
+                    msg += right.className;
+                    return createSemanticError(15, msg.c_str());    
+                }
+                else 
+                {
+                    struct TypeNode * node = (struct TypeNode *)malloc(sizeof(struct TypeNode));
+                    node->type = _CLS;
+                    node->complexType = NULL;
+                    node->ident = (char*)std::string("JavaRTL/Unit").c_str();
+                    expression->typ = node;
+                }
+            }
+            else
+            {
+                std::string msg = "Assignments are not allowed in this context (not a variable).";
+                return createSemanticError(13, msg.c_str());
+            }
+        }
+    }
     return err;
 }
