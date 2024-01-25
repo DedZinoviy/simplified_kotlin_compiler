@@ -21,7 +21,8 @@ enum ConstantType
     NameAndType,
     Integer,
     Double,
-    FieldRef
+    FieldRef,
+    String
 };
 
 /*! Элемент таблицы констант. */

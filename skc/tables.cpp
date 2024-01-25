@@ -165,6 +165,11 @@ struct SemanticError * buildClassTable(struct KotlinFileNode * root, const char 
     elem->name = utf8;
     elem->thisClass = cls;
 
+    int parent = elem->constants->findOrAddConstant(ConstantType::Utf8, (char*)"java/lang/Object");
+    int parentCls = elem->constants->findOrAddConstant(ConstantType::Class, NULL, NULL, NULL, parent);
+    elem->superName = parent;
+    elem->superClass = parentCls;
+
     ClassTable::items[path] = elem;
     if (root->elemList->first != NULL)
     { 
@@ -312,6 +317,7 @@ int ConstantTable::findOrAddConstant(enum ConstantType type, char * utf8string, 
         else if (type == ConstantType::NameAndType) constants[constant] = new ConstantTableItem(type, constant, NULL, NULL, NULL,fRef, sRef);
         else if (type == ConstantType::FieldRef) constants[constant] = new ConstantTableItem(type, constant, NULL, NULL, NULL,fRef, sRef);
         else if (type == ConstantType::MethodRef) constants[constant] = new ConstantTableItem(type, constant, NULL, NULL, NULL,fRef, sRef);
+        else if (type == ConstantType::String) constants[constant] = new ConstantTableItem(type, constant, NULL, NULL, NULL,fRef);
     }
     // Вернуть результат.
     return constant;
@@ -332,6 +338,10 @@ int ConstantTable::findConstant(enum ConstantType type, char * utf8string, int f
                     break;
                 case Class: // В случае, если константа - класс...
                     if (iterator->second->firstRef == fRef) // Вернуть номер константы, если совпадают значения номеров констант-ссылок.
+                        return iterator->first;
+                    break;
+                case String:
+                    if (iterator->second->firstRef == fRef)
                         return iterator->first;
                     break;
                 case MethodRef: // В случае, если константа - ссылка на метод...
@@ -1226,4 +1236,187 @@ struct SemanticError * attributeExpression(struct ExpressionNode * expression, c
         }
     }
     return err;
+}
+
+void fillMethodRefs(class ClassTableElement * cls);
+void fillLiterals(class ClassTableElement * cls);
+void fillConstantTableForClass(class ClassTableElement * cls)
+{
+    cls->constants->findOrAddConstant(ConstantType::Utf8, (char*)"Code");
+    fillMethodRefs(cls);
+
+}
+
+void fillMethodRefsInExpression(struct ExpressionNode * expression, class ClassTableElement * cls)
+{
+        if (expression->left != NULL)
+        {
+            fillMethodRefsInExpression(expression->left, cls);
+        }
+        if (expression->right != NULL)
+        {
+            fillMethodRefsInExpression(expression->right, cls);
+        }
+        if (expression->type == ExpressionType::_FUNC_CALL || expression->type == ExpressionType::_METHOD_ACCESS)
+        {
+            std::string id = expression->identifierString; // Получить идентификатор функции или метода.
+            struct ExpressionListNode * params = expression->params;
+            struct ExpressionNode * curExpr = params->first;
+            while(curExpr != NULL) // Пока есть параметры...
+            {
+                fillMethodRefsInExpression(curExpr, cls);
+                curExpr = curExpr->next; // Перейти к следующему параметру.
+            }
+
+            // Сформировать дескриптор набора параметров.
+            std::string desc = "(";
+            curExpr = params->first;
+            while(curExpr != NULL) // Пока есть параметры...
+            {
+                Type * typ = new Type(curExpr->typ);
+                if (curExpr->typ->type == TypeType::_CLS) desc += "L";
+                if (curExpr->typ->type == TypeType::_ARRAY) desc += "[L";
+                desc += typ->className;
+                desc += ";";
+                curExpr = curExpr->next; // Перейти к следующему параметру.
+            }
+            desc += ")";
+            if (expression->type == ExpressionType::_FUNC_CALL && expression->fromLit == BaseLiteral::_FROM_NONE)
+            {
+                Type * ret = FunctionTable::items[id][desc]->retType;
+                if (ret->typ == TypeType::_ARRAY) desc += "[";
+                desc += ret->className;
+                desc += ";";
+                int nam = cls->constants->findOrAddConstant(ConstantType::Utf8, (char*)id.c_str());
+                int dsc = cls->constants->findOrAddConstant(ConstantType::Utf8, (char*)desc.c_str());
+                int NaT = cls->constants->findOrAddConstant(ConstantType::NameAndType, NULL, NULL, NULL,nam, dsc);
+                if (id == "print" || id == "println" || id == "readLine")
+                {
+                    int ioN = cls->constants->findOrAddConstant(ConstantType::Utf8,(char*)"JavaRTL/InputOutput");
+                    int ioCl = cls->constants->findOrAddConstant(ConstantType::Class,NULL,NULL,NULL,ioN);
+                    int mRef = cls->constants->findOrAddConstant(ConstantType::MethodRef, NULL, NULL, NULL, ioCl, NaT);
+                }
+                else
+                    int mRef = cls->constants->findOrAddConstant(ConstantType::MethodRef, NULL, NULL, NULL, cls->thisClass, NaT);
+
+            }
+            else if (expression->type == ExpressionType::_METHOD_ACCESS)
+            {
+                // Получить ссылку на константу класса, в котором находится метод.
+                struct ExpressionNode * obj = expression->left;
+                std::string className = obj->typ->ident;
+                int clsNameConst = cls->constants->findOrAddConstant(ConstantType::Utf8, (char*)className.c_str());
+                int clsConst = cls->constants->findOrAddConstant(ConstantType::Class, NULL, NULL, NULL, clsNameConst);
+                Type * ret = ClassTable::items[className]->methods->methods[id][desc]->retType;
+                if (ret->typ == TypeType::_ARRAY) desc += "[";
+                desc += ret->className;
+                desc += ";";
+                int nam = cls->constants->findOrAddConstant(ConstantType::Utf8, (char*)id.c_str());
+                int dsc = cls->constants->findOrAddConstant(ConstantType::Utf8, (char*)desc.c_str());
+                int NaT = cls->constants->findOrAddConstant(ConstantType::NameAndType, NULL, NULL, NULL,nam, dsc);
+                int mRef = cls->constants->findOrAddConstant(ConstantType::MethodRef, NULL, NULL, NULL, clsConst, NaT);
+            }
+        }
+}
+
+void fillMethodRefsInStatement(struct StatementNode * stmt, class ClassTableElement * cls)
+{
+    if (stmt->type == StatementType::_EXPRESSION)
+    {
+        fillMethodRefsInExpression(stmt->expression, cls);
+    }
+    else if (stmt->type == StatementType::_VAL || stmt->type == StatementType::_VAR)
+    {
+        if (stmt->expression != NULL) fillMethodRefsInExpression(stmt->expression, cls);
+    }
+    else if (stmt->type == StatementType::_DOWHILE || stmt->type == StatementType::_WHILE)
+    {
+        fillMethodRefsInExpression(stmt->condition, cls);
+        if (stmt->singleBody != NULL) fillMethodRefsInStatement(stmt->singleBody, cls);
+        if (stmt->complexBody != NULL) fillMethodRefsInStatement(stmt->complexBody->first, cls);
+    }
+    if (stmt->next != NULL) fillMethodRefsInStatement(stmt->next, cls);
+}
+
+void fillMethodRefs(class ClassTableElement * cls)
+{
+    for(auto it = cls->methods->methods.begin(); it != cls->methods->methods.end(); ++it)
+    {
+        for (auto iter = it->second.begin(); iter != it->second.end(); ++iter)
+        {
+            struct StatementNode * curStmt = iter->second->start->first;
+            fillMethodRefsInStatement(curStmt, cls);
+        }
+    }
+}
+
+void fillLiteralsInExpression(struct ExpressionNode * expression, class ClassTableElement * cls)
+{
+    if (expression->fromLit == BaseLiteral::_FROM_BOOLEAN)
+    {
+        std::string clsName = "JavaRTL/Boolean";
+        std::string methodName = "<init>";
+        std::string desc = "(I)V";
+        int clsNameConst = cls->constants->findOrAddConstant(ConstantType::Utf8, (char*)clsName.c_str());
+        int clsConst = cls->constants->findOrAddConstant(ConstantType::Class, NULL, NULL, NULL, clsNameConst);
+        int methodNameConst = cls->constants->findOrAddConstant(ConstantType::Utf8, (char*)methodName.c_str());
+        int descConst = cls->constants->findOrAddConstant(ConstantType::Utf8, (char*)desc.c_str());
+        int NaT = cls->constants->findOrAddConstant(ConstantType::NameAndType, NULL, NULL, NULL, methodNameConst, descConst);
+        int mRef = cls->constants->findOrAddConstant(ConstantType::MethodRef, NULL, NULL, NULL, clsConst, NaT);
+    }
+    else if (expression->fromLit == BaseLiteral::_FROM_CHAR)
+    {
+        std::string clsName = "JavaRTL/Char";
+        std::string methodName = "<init>";
+        std::string desc = "(C)V";
+        int clsNameConst = cls->constants->findOrAddConstant(ConstantType::Utf8, (char*)clsName.c_str());
+        int clsConst = cls->constants->findOrAddConstant(ConstantType::Class, NULL, NULL, NULL, clsNameConst);
+        int methodNameConst = cls->constants->findOrAddConstant(ConstantType::Utf8, (char*)methodName.c_str());
+        int descConst = cls->constants->findOrAddConstant(ConstantType::Utf8, (char*)desc.c_str());
+        int NaT = cls->constants->findOrAddConstant(ConstantType::NameAndType, NULL, NULL, NULL, methodNameConst, descConst);
+        int mRef = cls->constants->findOrAddConstant(ConstantType::MethodRef, NULL, NULL, NULL, clsConst, NaT);
+    }
+    else if (expression->fromLit == BaseLiteral::_FROM_STRING)
+    {
+        int str = cls->constants->findOrAddConstant(ConstantType::Utf8, getSafeCString(expression->stringValue));
+        int strConst = cls->constants->findOrAddConstant(ConstantType::String, NULL, NULL, NULL, str);
+        std::string clsName = "JavaRTL/String";
+        std::string methodName = "<init>";
+        std::string desc = "(java/lang/String;)V";
+        int clsNameConst = cls->constants->findOrAddConstant(ConstantType::Utf8, (char*)clsName.c_str());
+        int clsConst = cls->constants->findOrAddConstant(ConstantType::Class, NULL, NULL, NULL, clsNameConst);
+        int methodNameConst = cls->constants->findOrAddConstant(ConstantType::Utf8, (char*)methodName.c_str());
+        int descConst = cls->constants->findOrAddConstant(ConstantType::Utf8, (char*)desc.c_str());
+        int NaT = cls->constants->findOrAddConstant(ConstantType::NameAndType, NULL, NULL, NULL, methodNameConst, descConst);
+        int mRef = cls->constants->findOrAddConstant(ConstantType::MethodRef, NULL, NULL, NULL, clsConst, NaT);
+    }
+    else if (expression->fromLit == BaseLiteral::_FROM_INT)
+    {
+        std::string clsName = "JavaRTL/Int";
+        std::string methodName = "<init>";
+        std::string desc = "(I)V";
+        int clsNameConst = cls->constants->findOrAddConstant(ConstantType::Utf8, (char*)clsName.c_str());
+        int clsConst = cls->constants->findOrAddConstant(ConstantType::Class, NULL, NULL, NULL, clsNameConst);
+        int methodNameConst = cls->constants->findOrAddConstant(ConstantType::Utf8, (char*)methodName.c_str());
+        int descConst = cls->constants->findOrAddConstant(ConstantType::Utf8, (char*)desc.c_str());
+        int NaT = cls->constants->findOrAddConstant(ConstantType::NameAndType, NULL, NULL, NULL, methodNameConst, descConst);
+        int mRef = cls->constants->findOrAddConstant(ConstantType::MethodRef, NULL, NULL, NULL, clsConst, NaT);
+    }
+}
+
+void fillLiteralsInStatement(struct StatementNode * stmt, struct ClassTableElement * cls)
+{
+
+}
+
+void fillLiterals(class ClassTableElement * cls)
+{
+    for(auto it = cls->methods->methods.begin(); it != cls->methods->methods.end(); ++it)
+    {
+        for (auto iter = it->second.begin(); iter != it->second.end(); ++iter)
+        {
+            struct StatementNode * curStmt = iter->second->start->first;
+            fillMethodRefsInStatement(curStmt, cls);
+        }
+    }
 }
