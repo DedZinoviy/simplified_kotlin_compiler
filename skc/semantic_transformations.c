@@ -860,6 +860,62 @@ static void _replaceOperatorsInExpression(struct ExpressionNode * expr)
         expr->params = createExpressionListNode(expr->right);
         expr->right = NULL;
     }
+    
+    else if (expr->type == _LESS)
+    {
+        expr->type = _METHOD_ACCESS;
+        expr->identifierString = "less";
+        expr->params = createExpressionListNode(expr->right);
+        expr->right = NULL;
+    }
+    
+    else if (expr->type == _GREAT)
+    {
+        expr->type = _METHOD_ACCESS;
+        expr->identifierString = "greater";
+        expr->params = createExpressionListNode(expr->right);
+        expr->right = NULL;
+    }
+
+    else if (expr->type == _GREAT_EQUAL)
+    {
+        expr->type = _METHOD_ACCESS;
+        expr->identifierString = "greaterEquals";
+        expr->params = createExpressionListNode(expr->right);
+        expr->right = NULL;
+    }
+    
+    else if (expr->type == _LESS_EQUAL)
+    {
+        expr->type = _METHOD_ACCESS;
+        expr->identifierString = "lessEquals";
+        expr->params = createExpressionListNode(expr->right);
+        expr->right = NULL;
+    }
+
+    else if (expr->type == _NOT)
+    {
+        expr->type = _METHOD_ACCESS;
+        expr->identifierString = "not";
+        expr->params = createExpressionListNode(expr->right);
+        expr->right = NULL;
+    }
+
+    else if (expr->type == _CONJUNCTION)
+    {
+        expr->type = _METHOD_ACCESS;
+        expr->identifierString = "and";
+        expr->params = createExpressionListNode(expr->right);
+        expr->right = NULL;
+    }
+
+    else if (expr->type == _DISJUNCTION)
+    {
+        expr->type = _METHOD_ACCESS;
+        expr->identifierString = "or";
+        expr->params = createExpressionListNode(expr->right);
+        expr->right = NULL;
+    }
 
     if (expr->left != NULL)
         _replaceOperatorsInExpression(expr->left);

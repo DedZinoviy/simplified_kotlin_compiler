@@ -928,21 +928,18 @@ static SemanticError * _addConstructor(class ClassTableElement * classElem, stru
     return err;
 }
 struct SemanticError * attributeExpression(struct ExpressionNode * expression, class MethodTableElement * mElem);
-struct SemanticError * attributingAndFillingLocals(class MethodTableElement * meth)
+
+struct SemanticError * attributingAndFillingLocalsInStatement(class MethodTableElement * meth, struct StatementNode * curStmt)
 {
     struct SemanticError * err = NULL;
-    if (meth->start != NULL)
+
+    if (curStmt->type == StatementType::_EXPRESSION)
     {
-        struct StatementNode * curStmt = meth->start->first;
-        while (curStmt != NULL) // Пока в теле функции есть Statment...
-        {
-            if (curStmt->type == StatementType::_EXPRESSION)
-            {
-                err = attributeExpression(curStmt->expression, meth);
-                if (err != NULL) return err;
-            }
-            if (curStmt->type == StatementType::_VAL || curStmt->type == StatementType::_VAR)
-            {
+        err = attributeExpression(curStmt->expression, meth);
+        if (err != NULL) return err;
+    }
+    if (curStmt->type == StatementType::_VAL || curStmt->type == StatementType::_VAR)
+    {
                 // Попытаться найти переменную с указанным именем.
                 if (meth->varTable->items.count(curStmt->varValId) != 0) // Если в таблице уже имеется такая переменная...
                 {
@@ -997,10 +994,64 @@ struct SemanticError * attributingAndFillingLocals(class MethodTableElement * me
                         }*/
                     }
                 } 
-            }
+    }
 
-            curStmt = curStmt->next; // Перейти к следующему Statement.
+    if (curStmt->type == StatementType::_DOWHILE || curStmt->type == StatementType::_WHILE)
+    {
+        err = attributeExpression(curStmt->condition, meth);
+        if (err != NULL) return err;
+        Type etalon = Type();
+        etalon.className = "JavaRTL/Boolean";
+        etalon.typ = _CLS;
+        Type t = Type(curStmt->condition->typ);
+        if (!etalon.isReplacable(t))
+        {
+            std::string msg = "Only Boolean allowed as condition type.";
+            return createSemanticError(16, msg.c_str());
         }
+        if (curStmt->singleBody != NULL) {
+            err = attributingAndFillingLocalsInStatement(meth, curStmt->singleBody);
+            if(err != NULL) return err;
+        }
+        if (curStmt->complexBody != NULL) {
+            if (curStmt->complexBody->first != NULL)
+            err = attributingAndFillingLocalsInStatement(meth, curStmt->complexBody->first);
+            if(err != NULL) return err;
+        }
+    }
+
+    if (curStmt->type == StatementType::_RETURN)
+    {
+        Type * ret = meth->retType;
+        Type t;
+        if (curStmt->expression != NULL) t = Type(curStmt->expression->typ);
+        if (curStmt->expression == NULL || !(ret->isReplacable(t)))
+        {
+            std::string msg = "Return type mismatch in function ";
+            msg += meth->strName;
+            msg += meth->strDesc;
+            return createSemanticError(23, msg.c_str());
+        }
+        err = attributeExpression(curStmt->expression, meth);
+        if (err != NULL) return err;
+    }
+
+    if (curStmt->next != NULL)
+    {
+        err = attributingAndFillingLocalsInStatement(meth, curStmt->next);
+    }
+    return err;
+}
+
+struct SemanticError * attributingAndFillingLocals(class MethodTableElement * meth)
+{
+    struct SemanticError * err = NULL;
+    if (meth->start != NULL)
+    {
+        struct StatementNode * curStmt = meth->start->first;
+        if (curStmt != NULL)
+        err = attributingAndFillingLocalsInStatement(meth, curStmt);
+          
     }
     return err;
 }

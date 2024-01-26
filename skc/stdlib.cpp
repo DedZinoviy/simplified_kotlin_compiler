@@ -43,6 +43,41 @@ void initStdClasses()
         retVal->typ = TypeType::_CLS;
         ClassTable::items["JavaRTL/Int"]->methods->methods["div"]["(LJavaRTL/Int;)"] = new MethodTableElement(0,0,"div","(LJavaRTL/Int;)LJavaRTL/Int;", NULL, retVal, std::vector<FuncParam>());
 
+        ClassTable::items["JavaRTL/Int"]->methods->methods["greater"] = std::map<std::string, class MethodTableElement*>();
+        retVal = new Type();
+        retVal->className = "JavaRTL/Boolean";
+        retVal->typ = TypeType::_CLS;
+        ClassTable::items["JavaRTL/Int"]->methods->methods["greater"]["(LJavaRTL/Int;)"] = new MethodTableElement(0,0,"greater","(LJavaRTL/Int;)LJavaRTL/Boolean;", NULL, retVal, std::vector<FuncParam>());
+
+        ClassTable::items["JavaRTL/Int"]->methods->methods["less"] = std::map<std::string, class MethodTableElement*>();
+        retVal = new Type();
+        retVal->className = "JavaRTL/Boolean";
+        retVal->typ = TypeType::_CLS;
+        ClassTable::items["JavaRTL/Int"]->methods->methods["less"]["(LJavaRTL/Int;)"] = new MethodTableElement(0,0,"less","(LJavaRTL/Int;)LJavaRTL/Boolean;", NULL, retVal, std::vector<FuncParam>());
+
+        ClassTable::items["JavaRTL/Int"]->methods->methods["greaterEquals"] = std::map<std::string, class MethodTableElement*>();
+        retVal = new Type();
+        retVal->className = "JavaRTL/Boolean";
+        retVal->typ = TypeType::_CLS;
+        ClassTable::items["JavaRTL/Int"]->methods->methods["greaterEquals"]["(LJavaRTL/Int;)"] = new MethodTableElement(0,0,"greaterEquals","(LJavaRTL/Int;)LJavaRTL/Boolean;", NULL, retVal, std::vector<FuncParam>());
+
+        ClassTable::items["JavaRTL/Int"]->methods->methods["lessEquals"] = std::map<std::string, class MethodTableElement*>();
+        retVal = new Type();
+        retVal->className = "JavaRTL/Boolean";
+        retVal->typ = TypeType::_CLS;
+        ClassTable::items["JavaRTL/Int"]->methods->methods["lessEquals"]["(LJavaRTL/Int;)"] = new MethodTableElement(0,0,"lessEquals","(LJavaRTL/Int;)LJavaRTL/Boolean;", NULL, retVal, std::vector<FuncParam>());
+        
+        ClassTable::items["JavaRTL/Int"]->methods->methods["equals"] = std::map<std::string, class MethodTableElement*>();
+        retVal = new Type();
+        retVal->className = "JavaRTL/Boolean";
+        retVal->typ = TypeType::_CLS;
+        ClassTable::items["JavaRTL/Int"]->methods->methods["equals"]["(LJavaRTL/Int;)"] = new MethodTableElement(0,0,"equals","(LJavaRTL/Int;)LJavaRTL/Boolean;", NULL, retVal, std::vector<FuncParam>());
+
+        ClassTable::items["JavaRTL/Int"]->methods->methods["notEquals"] = std::map<std::string, class MethodTableElement*>();
+        retVal = new Type();
+        retVal->className = "JavaRTL/Boolean";
+        retVal->typ = TypeType::_CLS;
+        ClassTable::items["JavaRTL/Int"]->methods->methods["notEquals"]["(LJavaRTL/Int;)"] = new MethodTableElement(0,0,"notEquals","(LJavaRTL/Int;)LJavaRTL/Boolean;", NULL, retVal, std::vector<FuncParam>());
 
 
     /* ----- Инициализация класса Char ------ */
@@ -59,6 +94,43 @@ void initStdClasses()
     ClassTable::items["JavaRTL/Boolean"] = new ClassTableElement();
     ClassTable::items["JavaRTL/Boolean"]->clsName = "JavaRTL/Boolean";
     ClassTable::items["JavaRTL/Boolean"]->isOpen = 0;
+        
+        /* ---------- Добавление конструктора ---------- */
+        ClassTable::items["JavaRTL/Boolean"]->methods->methods["<init>"] = std::map<std::string, class MethodTableElement*>();
+        retVal = new Type();
+        retVal->className = ClassTable::items["JavaRTL/Boolean"]->clsName;
+        retVal->typ = TypeType::_CLS;
+        ClassTable::items["JavaRTL/Boolean"]->methods->methods["<init>"]["(I)"] = new MethodTableElement(0,0,"<init>","(I)V", NULL, retVal, std::vector<FuncParam>());
+
+        ClassTable::items["JavaRTL/Boolean"]->methods->methods["equals"] = std::map<std::string, class MethodTableElement*>();
+        retVal = new Type();
+        retVal->className = "JavaRTL/Boolean";
+        retVal->typ = TypeType::_CLS;
+        ClassTable::items["JavaRTL/Boolean"]->methods->methods["equals"]["(LJavaRTL/Boolean;)"] = new MethodTableElement(0,0,"equals","(LJavaRTL/Boolean;)LJavaRTL/Boolean;", NULL, retVal, std::vector<FuncParam>());
+
+        ClassTable::items["JavaRTL/Boolean"]->methods->methods["notEquals"] = std::map<std::string, class MethodTableElement*>();
+        retVal = new Type();
+        retVal->className = "JavaRTL/Boolean";
+        retVal->typ = TypeType::_CLS;
+        ClassTable::items["JavaRTL/Boolean"]->methods->methods["notEquals"]["(LJavaRTL/Boolean;)"] = new MethodTableElement(0,0,"notEquals","(LJavaRTL/Boolean;)LJavaRTL/Boolean;", NULL, retVal, std::vector<FuncParam>());
+
+        ClassTable::items["JavaRTL/Boolean"]->methods->methods["not"] = std::map<std::string, class MethodTableElement*>();
+        retVal = new Type();
+        retVal->className = "JavaRTL/Boolean";
+        retVal->typ = TypeType::_CLS;
+        ClassTable::items["JavaRTL/Boolean"]->methods->methods["not"]["()"] = new MethodTableElement(0,0,"not","()LJavaRTL/Boolean;", NULL, retVal, std::vector<FuncParam>());
+
+        ClassTable::items["JavaRTL/Boolean"]->methods->methods["and"] = std::map<std::string, class MethodTableElement*>();
+        retVal = new Type();
+        retVal->className = "JavaRTL/Boolean";
+        retVal->typ = TypeType::_CLS;
+        ClassTable::items["JavaRTL/Boolean"]->methods->methods["and"]["(LJavaRTL/Boolean;)"] = new MethodTableElement(0,0,"and","(LJavaRTL/Boolean;)LJavaRTL/Boolean;", NULL, retVal, std::vector<FuncParam>());
+
+        ClassTable::items["JavaRTL/Boolean"]->methods->methods["or"] = std::map<std::string, class MethodTableElement*>();
+        retVal = new Type();
+        retVal->className = "JavaRTL/Boolean";
+        retVal->typ = TypeType::_CLS;
+        ClassTable::items["JavaRTL/Boolean"]->methods->methods["or"]["(LJavaRTL/Boolean;)"] = new MethodTableElement(0,0,"or","(LJavaRTL/Boolean;)LJavaRTL/Boolean;", NULL, retVal, std::vector<FuncParam>());
 
     /* ----- Инициализация класса Any ------ */
     ClassTable::items["JavaRTL/Any"] = new ClassTableElement();
