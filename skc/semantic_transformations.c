@@ -870,3 +870,60 @@ static void _replaceOperatorsInExpression(struct ExpressionNode * expr)
     if (expr->params != NULL) if (expr->params->first != NULL) _replaceOperatorsInExpression(expr->params->first);
     if (expr->next != NULL) _replaceOperatorsInExpression(expr->next);
 }
+
+
+
+
+struct SemanticError * checkAndAddReturn(struct KotlinFileNode * root)
+{
+    struct SemanticError * err = NULL;
+    if (root->elemList != NULL)
+    {
+        struct KotlinFileElementNode * elem = root->elemList->first; 
+        while(elem != NULL)
+        {
+            if (elem->type == _FUNCTION)
+            {
+                int hasReturn = 0;
+                if (elem->func->returnValue == NULL)
+                {
+                    return createSemanticError(10, (char*)"Expression functions are not supported in this version.");
+                }
+
+                struct StatementNode * curStmt = elem->func->body->first;
+                while (curStmt != NULL)
+                {
+                    if (curStmt->type == _RETURN) 
+                    {
+                        hasReturn = 1;
+                        if(strcmp(elem->func->returnValue->ident, "Unit") == 0)
+                        {
+                            if (curStmt->expression == NULL)
+                            {
+                                curStmt->expression = createFunctionCallExpressionNode("Unit", NULL);
+                                curStmt->expression->fromLit = _FROM_UNIT;
+                            }
+                        }        
+                    }
+                    curStmt = curStmt->next;
+                }
+
+                if (hasReturn == 0)
+                {
+                    if(strcmp(elem->func->returnValue->ident, "Unit") == 0) 
+                    {
+                        struct StatementNode * ret = createReturnStatement(createFunctionCallExpressionNode("Unit", NULL));
+                        ret->expression->fromLit = _FROM_UNIT;
+                        elem->func->body = addStatementToStatementList(elem->func->body, ret);
+                    }
+                    else
+                    {
+                        return createSemanticError(18, concat((char*)"The function does not have a return value:", elem->func->identifier));
+                    }
+                }
+            }
+            elem = elem->next;
+        }
+    }
+    return err;
+}

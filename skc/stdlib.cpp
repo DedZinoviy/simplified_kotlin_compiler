@@ -71,4 +71,49 @@ void initStdClasses()
     ClassTable::items["JavaRTL/Unit"]->isOpen = 0;
 
     /* ----- Инициализация функций ввода-вывода ------ */
+    ClassTable::items["JavaRTL/InputOutput"] = new ClassTableElement();
+    ClassTable::items["JavaRTL/InputOutput"]->clsName = "JavaRTL/InputOutput";
+    ClassTable::items["JavaRTL/InputOutput"]->isOpen = 0;
+        ClassTable::items["JavaRTL/InputOutput"]->methods->methods["println"] = std::map<std::string, class MethodTableElement*>();
+        FunctionTable::items["print"] = std::map<std::string, class FunctionTableElement*>();
+            retVal = new Type();
+            retVal->className = ClassTable::items["JavaRTL/Unit"]->clsName;
+            retVal->typ = TypeType::_CLS;
+                ClassTable::items["JavaRTL/InputOutput"]->methods->methods["print"]["(LJavaRTL/Int;)"] = new MethodTableElement(0,0,"print","(LJavaRTL/Int;)LJavaRTL/Unit;", NULL, retVal, std::vector<FuncParam>());
+                FunctionTable::items["print"]["(LJavaRTL/Int;)"] = new FunctionTableElement(0,0,"print","(LJavaRTL/Int;)LJavaRTL/Unit;", NULL, retVal, std::vector<FuncParam>());
+
+                ClassTable::items["JavaRTL/InputOutput"]->methods->methods["print"]["(LJavaRTL/String;)"] = new MethodTableElement(0,0,"print","(LJavaRTL/String;)JavaRTL/Unit;", NULL, retVal, std::vector<FuncParam>());
+                FunctionTable::items["print"]["(LJavaRTL/String;)"] = new FunctionTableElement(0,0,"print","(LJavaRTL/String;)JavaRTL/Unit;", NULL, retVal, std::vector<FuncParam>());
+
+                ClassTable::items["JavaRTL/InputOutput"]->methods->methods["print"]["(LJavaRTL/Char;)"] = new MethodTableElement(0,0,"print","(LJavaRTL/Char;)JavaRTL/Unit;", NULL, retVal, std::vector<FuncParam>());
+                FunctionTable::items["print"]["(LJavaRTL/Char;)"] = new FunctionTableElement(0,0,"print","(LJavaRTL/Char;)JavaRTL/Unit;", NULL, retVal, std::vector<FuncParam>());
+                
+                ClassTable::items["JavaRTL/InputOutput"]->methods->methods["print"]["(LJavaRTL/Boolean;)"] = new MethodTableElement(0,0,"print","(LJavaRTL/Boolean;)JavaRTL/Unit;", NULL, retVal, std::vector<FuncParam>());
+                FunctionTable::items["print"]["(LJavaRTL/Boolean;)"] = new FunctionTableElement(0,0,"print","(LJavaRTL/Boolean;)JavaRTL/Unit;", NULL, retVal, std::vector<FuncParam>());
+       
+        ClassTable::items["JavaRTL/InputOutput"]->methods->methods["println"] = std::map<std::string, class MethodTableElement*>();
+        FunctionTable::items["println"] = std::map<std::string, class FunctionTableElement*>();
+            retVal = new Type();
+            retVal->className = ClassTable::items["JavaRTL/Unit"]->clsName;
+            retVal->typ = TypeType::_CLS;
+                ClassTable::items["JavaRTL/InputOutput"]->methods->methods["println"]["(LJavaRTL/Int;)"] = new MethodTableElement(0,0,"println","(LJavaRTL/Int;)LJavaRTL/Unit;", NULL, retVal, std::vector<FuncParam>());
+                FunctionTable::items["println"]["(LJavaRTL/Int;)"] = new FunctionTableElement(0,0,"println","(LJavaRTL/Int;)LJavaRTL/Unit;", NULL, retVal, std::vector<FuncParam>());
+
+                ClassTable::items["JavaRTL/InputOutput"]->methods->methods["println"]["(LJavaRTL/String;)"] = new MethodTableElement(0,0,"println","(LJavaRTL/String;)JavaRTL/Unit;", NULL, retVal, std::vector<FuncParam>());
+                FunctionTable::items["println"]["(LJavaRTL/String;)"] = new FunctionTableElement(0,0,"println","(LJavaRTL/String;)JavaRTL/Unit;", NULL, retVal, std::vector<FuncParam>());
+
+                ClassTable::items["JavaRTL/InputOutput"]->methods->methods["println"]["(LJavaRTL/Char;)"] = new MethodTableElement(0,0,"println","(LJavaRTL/Char;)JavaRTL/Unit;", NULL, retVal, std::vector<FuncParam>());
+                FunctionTable::items["println"]["(LJavaRTL/Char;)"] = new FunctionTableElement(0,0,"println","(LJavaRTL/Char;)JavaRTL/Unit;", NULL, retVal, std::vector<FuncParam>());
+                
+                ClassTable::items["JavaRTL/InputOutput"]->methods->methods["println"]["(LJavaRTL/Boolean;)"] = new MethodTableElement(0,0,"println","(LJavaRTL/Boolean;)JavaRTL/Unit;", NULL, retVal, std::vector<FuncParam>());
+                FunctionTable::items["println"]["(LJavaRTL/Boolean;)"] = new FunctionTableElement(0,0,"println","(LJavaRTL/Boolean;)JavaRTL/Unit;", NULL, retVal, std::vector<FuncParam>());
+
+        ClassTable::items["JavaRTL/InputOutput"]->methods->methods["readLine"] = std::map<std::string, class MethodTableElement*>();
+        FunctionTable::items["readLine"] = std::map<std::string, class FunctionTableElement*>();
+            retVal = new Type();
+            retVal->className = ClassTable::items["JavaRTL/String"]->clsName;
+            retVal->typ = TypeType::_CLS;
+                ClassTable::items["JavaRTL/InputOutput"]->methods->methods["readLine"]["()"] = new MethodTableElement(0,0,"readLine","()LJavaRTL/String;", NULL, retVal, std::vector<FuncParam>());
+                FunctionTable::items["readLine"]["()"] = new FunctionTableElement(0,0,"readLine","()LJavaRTL/String;", NULL, retVal, std::vector<FuncParam>());
+
 }

@@ -1,6 +1,7 @@
 #pragma once
 #include "parsing_tree.h"
 #include "semantic_errors.h"
+#include "print_functions.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -23,6 +24,8 @@ void replaceOperators(struct KotlinFileNode * root);
 * \return Возможная семантическая ошибка, связанная с модификаторами; NULL, если таковая отсуствует.
 */
 struct SemanticError * checkModifierLists(struct KotlinFileNode * root);
+
+struct SemanticError * checkAndAddReturn(struct KotlinFileNode * root);
 
 #ifdef __cplusplus
 };

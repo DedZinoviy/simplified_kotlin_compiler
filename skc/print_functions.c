@@ -557,8 +557,6 @@ char * concat(char * firstStr, char * secStr)
     result[0] = 0;
     strcpy(result, firstStr);
     strcat(result, secStr);
-    //printf("len of \"%s\" is %d\n\n\n", firstStr, strlen(firstStr));
-    //printf("len of \"%s\" is %d\n\n\n", secStr, strlen(secStr));
     return result;
 }
 

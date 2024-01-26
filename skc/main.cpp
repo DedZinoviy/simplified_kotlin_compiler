@@ -74,13 +74,20 @@ if (argc < 2)
     
     }
 
+    struct SemanticError * err = NULL;
+    err = checkAndAddReturn(root);
+    if (err != NULL)
+    {
+        printf("%s\n", err->errMessage);
+        return err->code;
+    }
     replaceRTLTypes(root);
     replaceLiteralsToObjects(root);
     replaceOperators(root);
 
     attributeBaseTypes(root);
 
-    struct SemanticError * err = checkModifierLists(root);
+    err = checkModifierLists(root);
 
     if (err != NULL)
     {

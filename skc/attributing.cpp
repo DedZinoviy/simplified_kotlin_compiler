@@ -111,6 +111,12 @@ void attributeBaseTypesInExpression(struct ExpressionNode * expr)
         expr->typ->complexType = NULL;
         expr->typ->ident = (char*)"JavaRTL/Boolean";
     }
+    else if (expr->fromLit == BaseLiteral::_FROM_UNIT) {
+        expr->typ = (struct TypeNode *)malloc(sizeof(struct TypeNode));
+        expr->typ->type = TypeType::_CLS;
+        expr->typ->complexType = NULL;
+        expr->typ->ident = (char*)"JavaRTL/Unit";
+    }
     if (expr->left != NULL) attributeBaseTypesInExpression(expr->left);
     if (expr->right != NULL) attributeBaseTypesInExpression(expr->right);
     if (expr->params != NULL)
