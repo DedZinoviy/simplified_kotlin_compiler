@@ -15,14 +15,14 @@ class ClassTableElement;
 /*! Тип константы в таблице констант. */
 enum ConstantType
 {
-    Utf8,
-    Class,
-    MethodRef,
-    NameAndType,
-    Integer,
-    Double,
-    FieldRef,
-    String
+    Utf8 = 1,
+    Class = 7,
+    MethodRef = 10,
+    NameAndType = 12,
+    Integer = 3,
+    Double = 6,
+    FieldRef = 9,
+    String = 8
 };
 
 /*! Элемент таблицы констант. */
@@ -31,7 +31,7 @@ class ConstantTableItem
     public: 
         int id; // Номер константы.
         enum ConstantType cnst; // Тип константы.
-        char * string; // Строка для Utf-8 констант.
+        std::string string; // Строка для Utf-8 констант.
         int Integer; // Целое число для целочисленной константы.
         double Double; // Число с плавающий точкой.
         int firstRef; // Сслыка на первую константу.
@@ -46,14 +46,14 @@ class ConstantTableItem
         * \param[in] fRef ссылка на первую контанту - номер в таблице констант.
         * \param[in] secondRef ссылка на вторую контанту - номер в таблице констант.
         */
-        ConstantTableItem(enum ConstantType type, int id, char * utf8 = NULL, int intVal = NULL, double dVal = NULL, int fRef = NULL, int secondRef = NULL);
+        ConstantTableItem(enum ConstantType type, int id, std::string utf8 = NULL, int intVal = NULL, double dVal = NULL, int fRef = NULL, int secondRef = NULL);
 };
 
 /*! Таблица констант. */
 class ConstantTable
 {
     public:
-        int maxId; // Текущее максимальное значение номера констант в таблице констант.
+        int maxId = 1; // Текущее максимальное значение номера констант в таблице констант.
         std::map<int, class ConstantTableItem *> constants; // Словарь - таблица констант.
         ConstantTable();
 
@@ -62,7 +62,7 @@ class ConstantTable
         * \param[in] utf8string строка константы UTF-8.
         * \return номер константы в таблице констант, если таковая имеется; номер добавленной константы, если таковой не было.
         */
-        int findOrAddConstant(enum ConstantType type, char * utf8string = NULL, int intVal = NULL, double dVal = NULL, int fRef = NULL, int sRef = NULL);
+        int findOrAddConstant(enum ConstantType type, std::string utf8string = NULL, int intVal = NULL, double dVal = NULL, int fRef = NULL, int sRef = NULL);
     
     private:
         
@@ -74,7 +74,7 @@ class ConstantTable
         * \param[in] dVal Переменная для дробных значений с плавающей точкой.
         * \return номер найденной константы; -1, если константа не найдена.
         */
-        int findConstant(enum ConstantType type, char * utf8string, int fRef = NULL, int secondRef = NULL, int intVal = NULL, double dVal = NULL);
+        int findConstant(enum ConstantType type, std::string utf8string, int fRef = NULL, int secondRef = NULL, int intVal = NULL, double dVal = NULL);
     
 };
 
