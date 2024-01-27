@@ -1,5 +1,8 @@
 #include "generation_handler.hpp"
 
+char FileConstants::magicConstant[4] = { 0xCA, 0xFE, 0xBA, 0xBE };
+char FileConstants::smallVersion[2]= { 0x00, 0x00 };
+char FileConstants::bigVersion[2] = { 0x00, 0x3E };
 std::vector<char> intToByteVector(int num, int arraySize)
 {
 	std::vector<char> res(arraySize);

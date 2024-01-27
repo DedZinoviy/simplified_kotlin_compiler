@@ -1,15 +1,20 @@
 #include <vector>
+class FileConstants {
+public:
+	/* ------------------------- "Магическая константа" ------------------------- */
+	static char magicConstant[4];
 
-/* ------------------------- "Магическая константа" ------------------------- */
-char magicConstant[4] = {0xCA, 0xFE, 0xBA, 0xBE};
+	/* ------------------------- "Малая" версия ------------------------- */
+	static char smallVersion[2];
 
-/* ------------------------- "Малая" версия ------------------------- */
-char smallVersion[2] = {0x00, 0x00};
-
-/* ------------------------- "Большая" версия ------------------------- */
-char bigVersion[2] = { 0x00, 0x3E };
-
+	/* ------------------------- "Большая" версия ------------------------- */
+	static char bigVersion[2];
+};
 /* ------------------------- Команды работы со стеком ------------------------- */
+
+std::vector<char> intToByteVector(int num, int arraySize);
+
+void appendArrayToByteVector(std::vector<char>* data, char array[], int arraySize);
 
 /*! Сгенерировать команду iload.
 * \param[in] num номер константы в таблице констант.
