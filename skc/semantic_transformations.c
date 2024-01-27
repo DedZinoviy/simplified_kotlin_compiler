@@ -860,6 +860,62 @@ static void _replaceOperatorsInExpression(struct ExpressionNode * expr)
         expr->params = createExpressionListNode(expr->right);
         expr->right = NULL;
     }
+    
+    else if (expr->type == _LESS)
+    {
+        expr->type = _METHOD_ACCESS;
+        expr->identifierString = "less";
+        expr->params = createExpressionListNode(expr->right);
+        expr->right = NULL;
+    }
+    
+    else if (expr->type == _GREAT)
+    {
+        expr->type = _METHOD_ACCESS;
+        expr->identifierString = "greater";
+        expr->params = createExpressionListNode(expr->right);
+        expr->right = NULL;
+    }
+
+    else if (expr->type == _GREAT_EQUAL)
+    {
+        expr->type = _METHOD_ACCESS;
+        expr->identifierString = "greaterEquals";
+        expr->params = createExpressionListNode(expr->right);
+        expr->right = NULL;
+    }
+    
+    else if (expr->type == _LESS_EQUAL)
+    {
+        expr->type = _METHOD_ACCESS;
+        expr->identifierString = "lessEquals";
+        expr->params = createExpressionListNode(expr->right);
+        expr->right = NULL;
+    }
+
+    else if (expr->type == _NOT)
+    {
+        expr->type = _METHOD_ACCESS;
+        expr->identifierString = "not";
+        expr->params = createExpressionListNode(expr->right);
+        expr->right = NULL;
+    }
+
+    else if (expr->type == _CONJUNCTION)
+    {
+        expr->type = _METHOD_ACCESS;
+        expr->identifierString = "and";
+        expr->params = createExpressionListNode(expr->right);
+        expr->right = NULL;
+    }
+
+    else if (expr->type == _DISJUNCTION)
+    {
+        expr->type = _METHOD_ACCESS;
+        expr->identifierString = "or";
+        expr->params = createExpressionListNode(expr->right);
+        expr->right = NULL;
+    }
 
     if (expr->left != NULL)
         _replaceOperatorsInExpression(expr->left);
@@ -869,4 +925,61 @@ static void _replaceOperatorsInExpression(struct ExpressionNode * expr)
     
     if (expr->params != NULL) if (expr->params->first != NULL) _replaceOperatorsInExpression(expr->params->first);
     if (expr->next != NULL) _replaceOperatorsInExpression(expr->next);
+}
+
+
+
+
+struct SemanticError * checkAndAddReturn(struct KotlinFileNode * root)
+{
+    struct SemanticError * err = NULL;
+    if (root->elemList != NULL)
+    {
+        struct KotlinFileElementNode * elem = root->elemList->first; 
+        while(elem != NULL)
+        {
+            if (elem->type == _FUNCTION)
+            {
+                int hasReturn = 0;
+                if (elem->func->returnValue == NULL)
+                {
+                    return createSemanticError(10, (char*)"Expression functions are not supported in this version.");
+                }
+
+                struct StatementNode * curStmt = elem->func->body->first;
+                while (curStmt != NULL)
+                {
+                    if (curStmt->type == _RETURN) 
+                    {
+                        hasReturn = 1;
+                        if(strcmp(elem->func->returnValue->ident, "Unit") == 0)
+                        {
+                            if (curStmt->expression == NULL)
+                            {
+                                curStmt->expression = createFunctionCallExpressionNode("Unit", NULL);
+                                curStmt->expression->fromLit = _FROM_UNIT;
+                            }
+                        }        
+                    }
+                    curStmt = curStmt->next;
+                }
+
+                if (hasReturn == 0)
+                {
+                    if(strcmp(elem->func->returnValue->ident, "Unit") == 0) 
+                    {
+                        struct StatementNode * ret = createReturnStatement(createFunctionCallExpressionNode("Unit", NULL));
+                        ret->expression->fromLit = _FROM_UNIT;
+                        elem->func->body = addStatementToStatementList(elem->func->body, ret);
+                    }
+                    else
+                    {
+                        return createSemanticError(18, concat((char*)"The function does not have a return value:", elem->func->identifier));
+                    }
+                }
+            }
+            elem = elem->next;
+        }
+    }
+    return err;
 }

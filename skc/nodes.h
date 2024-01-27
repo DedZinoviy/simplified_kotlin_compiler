@@ -143,7 +143,8 @@ enum BaseLiteral
     _FROM_DOUBLE,
     _FROM_BOOLEAN,
     _FROM_CHAR,
-    _FROM_STRING
+    _FROM_STRING,
+    _FROM_UNIT
 };
 
 /*! \brief Структура узла Expression. */

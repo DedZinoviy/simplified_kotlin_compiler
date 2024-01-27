@@ -4,6 +4,10 @@
 #include <stdio.h>
 #include <string.h>
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 /*! \brief Структура для буффера строки, позволяющая хранить строки с \0. */
 struct stringBuffer
 {
@@ -41,3 +45,7 @@ void clearStringBuffer(struct stringBuffer* buffer);
 * \return Массив char - строка в Си-стиле.
 */
 char * getSafeCString(struct stringBuffer* buffer);
+
+#ifdef __cplusplus
+};
+#endif

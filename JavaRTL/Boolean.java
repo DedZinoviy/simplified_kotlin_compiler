@@ -12,6 +12,10 @@ public class Boolean {
         return new Boolean(this._value == other._value);
     }
 
+    public Boolean notEquals(Boolean other) {
+        return new Boolean(this._value != other._value);
+    }
+
     public Boolean not() {
         return new Boolean(!this._value);
     }

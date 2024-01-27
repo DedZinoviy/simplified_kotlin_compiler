@@ -928,21 +928,18 @@ static SemanticError * _addConstructor(class ClassTableElement * classElem, stru
     return err;
 }
 struct SemanticError * attributeExpression(struct ExpressionNode * expression, class MethodTableElement * mElem);
-struct SemanticError * attributingAndFillingLocals(class MethodTableElement * meth)
+
+struct SemanticError * attributingAndFillingLocalsInStatement(class MethodTableElement * meth, struct StatementNode * curStmt)
 {
     struct SemanticError * err = NULL;
-    if (meth->start != NULL)
+
+    if (curStmt->type == StatementType::_EXPRESSION)
     {
-        struct StatementNode * curStmt = meth->start->first;
-        while (curStmt != NULL) // Пока в теле функции есть Statment...
-        {
-            if (curStmt->type == StatementType::_EXPRESSION)
-            {
-                err = attributeExpression(curStmt->expression, meth);
-                if (err != NULL) return err;
-            }
-            if (curStmt->type == StatementType::_VAL || curStmt->type == StatementType::_VAR)
-            {
+        err = attributeExpression(curStmt->expression, meth);
+        if (err != NULL) return err;
+    }
+    if (curStmt->type == StatementType::_VAL || curStmt->type == StatementType::_VAR)
+    {
                 // Попытаться найти переменную с указанным именем.
                 if (meth->varTable->items.count(curStmt->varValId) != 0) // Если в таблице уже имеется такая переменная...
                 {
@@ -997,10 +994,64 @@ struct SemanticError * attributingAndFillingLocals(class MethodTableElement * me
                         }*/
                     }
                 } 
-            }
+    }
 
-            curStmt = curStmt->next; // Перейти к следующему Statement.
+    if (curStmt->type == StatementType::_DOWHILE || curStmt->type == StatementType::_WHILE)
+    {
+        err = attributeExpression(curStmt->condition, meth);
+        if (err != NULL) return err;
+        Type etalon = Type();
+        etalon.className = "JavaRTL/Boolean";
+        etalon.typ = _CLS;
+        Type t = Type(curStmt->condition->typ);
+        if (!etalon.isReplacable(t))
+        {
+            std::string msg = "Only Boolean allowed as condition type.";
+            return createSemanticError(16, msg.c_str());
         }
+        if (curStmt->singleBody != NULL) {
+            err = attributingAndFillingLocalsInStatement(meth, curStmt->singleBody);
+            if(err != NULL) return err;
+        }
+        if (curStmt->complexBody != NULL) {
+            if (curStmt->complexBody->first != NULL)
+            err = attributingAndFillingLocalsInStatement(meth, curStmt->complexBody->first);
+            if(err != NULL) return err;
+        }
+    }
+
+    if (curStmt->type == StatementType::_RETURN)
+    {
+        Type * ret = meth->retType;
+        Type t;
+        if (curStmt->expression != NULL) t = Type(curStmt->expression->typ);
+        if (curStmt->expression == NULL || !(ret->isReplacable(t)))
+        {
+            std::string msg = "Return type mismatch in function ";
+            msg += meth->strName;
+            msg += meth->strDesc;
+            return createSemanticError(23, msg.c_str());
+        }
+        err = attributeExpression(curStmt->expression, meth);
+        if (err != NULL) return err;
+    }
+
+    if (curStmt->next != NULL)
+    {
+        err = attributingAndFillingLocalsInStatement(meth, curStmt->next);
+    }
+    return err;
+}
+
+struct SemanticError * attributingAndFillingLocals(class MethodTableElement * meth)
+{
+    struct SemanticError * err = NULL;
+    if (meth->start != NULL)
+    {
+        struct StatementNode * curStmt = meth->start->first;
+        if (curStmt != NULL)
+        err = attributingAndFillingLocalsInStatement(meth, curStmt);
+          
     }
     return err;
 }
@@ -1021,7 +1072,7 @@ struct SemanticError * attributeExpression(struct ExpressionNode * expression, c
                 return createSemanticError(13, msg.c_str());
             }
             if (expression->left->typ == NULL) err = attributeExpression(expression->left, mElem);
-            if (err != NULL) return err;
+            if (err != NULL) {if (expression->type != ExpressionType::_ASSIGNMENT) {return err;} else {if (err->code != 17) return err;}}
             leftType = expression->left->typ;
         }
         if (expression->right != NULL)
@@ -1044,6 +1095,11 @@ struct SemanticError * attributeExpression(struct ExpressionNode * expression, c
             struct ExpressionNode * curExpr = params->first;
             while(curExpr != NULL) // Пока есть параметры...
             {
+                if (curExpr->type == ExpressionType::_ASSIGNMENT)
+                {
+                    std::string msg = "Passing parameters by Identifier are not supported in this version.";
+                    return createSemanticError(10, msg.c_str());
+                }
                 err = attributeExpression(curExpr, mElem);
                 if (err != NULL) return err;
                 curExpr = curExpr->next; // Перейти к следующему параметру.
@@ -1066,7 +1122,7 @@ struct SemanticError * attributeExpression(struct ExpressionNode * expression, c
             {
                 if (FunctionTable::items.count(id) == 0)
                 {
-                    std::string msg = "Function declaration is missing : ";
+                    std::string msg = "Function candidate is missing : ";
                     msg += id;
                     return createSemanticError(7, msg.c_str());
                 }
@@ -1174,13 +1230,20 @@ struct SemanticError * attributeExpression(struct ExpressionNode * expression, c
             // Сообщить об ошибке, если в таблице отсуствует такая переменная.
             if (mElem->varTable->items.count(expression->identifierString) == 0)
             {
-                std::string msg = "Using an undeclared variable: ";
+                std::string msg = "Using of an undeclared variable: ";
                 msg += expression->identifierString;
                 return createSemanticError(9, msg.c_str());
             }
             else
             {
                 expression->typ = mElem->varTable->items[expression->identifierString]->typ->toTypeNode();
+                if (mElem->varTable->items[expression->identifierString]->isInit == 0)
+                {
+                    printf("HERE\n");
+                    std::string msg = "Using of an uninitialized variable: ";
+                    msg += expression->identifierString;
+                    return createSemanticError(17, msg.c_str());
+                }
             }
         }
         else if (expression->type == ExpressionType::_BRACKETS)
@@ -1196,7 +1259,7 @@ struct SemanticError * attributeExpression(struct ExpressionNode * expression, c
                     // Проверить, является ли переменная константой.
                     if (mElem->varTable->items[expression->left->identifierString]->isConst != 0)
                     {
-                        if (mElem->varTable->items[expression->left->identifierString]->isInit != 0)
+                        if (mElem->varTable->items[expression->left->identifierString]->isInit != 0)  // Проверить, инициализирована ли переменная, если константа.
                         {
                             std::string msg = "Val can not be reassignment : ";
                             msg += expression->left->identifierString;
@@ -1205,7 +1268,7 @@ struct SemanticError * attributeExpression(struct ExpressionNode * expression, c
                             return createSemanticError(15, msg.c_str());   
                         }
                     }
-                    // Проверить, инициализирована ли переменная, если константа.
+                    mElem->varTable->items[expression->left->identifierString]->isInit = 1;
                 }
                 
                 // Проверить типы слева и справа от присваивания.
