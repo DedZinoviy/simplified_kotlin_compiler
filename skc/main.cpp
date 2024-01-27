@@ -4,6 +4,7 @@
 #include "iohandler.h"
 #include "stdlib.hpp"
 #include "attributing.hpp"
+#include "generation.hpp"
 
 extern "C" int yyparse();
 
@@ -141,6 +142,20 @@ if (argc < 2)
         }
 
     }
+
+    // Получить имя класса для свободных функций.
+    std::string path = argv[argc - 1];
+    size_t sep = path.find_last_of("\\/");
+    if (sep != std::string::npos)
+        path = path.substr(sep + 1, path.size() - sep - 1);
+    sep = path.find_last_of(".");
+    if (sep != std::string::npos)
+        path[sep + 1] = std::toupper(path[sep + 1]);
+    path[0] = std::toupper(path[0]);
+    path.erase(sep, 1);
+
+
+    generateClassFile(path);
 
 	return 0;
 }

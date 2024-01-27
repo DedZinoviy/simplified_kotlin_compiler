@@ -9,12 +9,16 @@ public:
 
 	/* ------------------------- "Большая" версия ------------------------- */
 	static char bigVersion[2];
+
+	static const int stackSize = 1000;
 };
 /* ------------------------- Команды работы со стеком ------------------------- */
 
 std::vector<char> intToByteVector(int num, int arraySize);
 
 void appendArrayToByteVector(std::vector<char>* data, char array[], int arraySize);
+
+std::vector<char> iconstBipushSipush(int num);
 
 /*! Сгенерировать команду iload.
 * \param[in] num номер константы в таблице констант.
@@ -66,3 +70,42 @@ std::vector<char> dup2();
 * \return вектор байт - команда.
 */
 std::vector<char> go_to(int offset);
+
+/*! Сгенерировать команду new.
+* \param[in] constant константа класса объекта.
+* \return вектор байт - команда.
+*/
+std::vector<char> _new(int constant);
+
+/*! Сгенерировать команду invokespecial.
+* \param[in] constant константа ссылки на метод.
+* \return вектор байт - команда.
+*/
+std::vector<char> invokespecial(int constant);
+
+/*! Сгенерировать команду invokeVirtual.
+* \param[in] constant константа ссылки на метод.
+* \return вектор байт - команда.
+*/
+std::vector<char> invokevirtual(int constant);
+
+/*! Сгенерировать команду invokestatic.
+* \param[in] constant константа ссылки на метод.
+* \return вектор байт - команда.
+*/
+std::vector<char> invokestatic(int constant);
+
+/*! Сгенерировать команду ireturn.
+* \return вектор байт - команда.
+*/
+std::vector<char> ireturn();
+
+/*! Сгенерировать команду return.
+* \return вектор байт - команда.
+*/
+std::vector<char> _return();
+
+/*! Сгенерировать команду areturn.
+* \return вектор байт - команда.
+*/
+std::vector<char> areturn();

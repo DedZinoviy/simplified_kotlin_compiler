@@ -21,6 +21,59 @@ void appendArrayToByteVector(std::vector<char>* data, char array[], int arraySiz
 	}
 }
 
+
+
+std::vector<char> iconstBipushSipush(int num)
+{
+	std::vector<char> res;
+
+	// iconst
+	if (num == -1) {
+		res.push_back(0x2); //iconst_m1
+	}
+	else if (num == 0) {
+		res.push_back(0x3); //iconst_0
+	}
+	else if (num == 1) {
+		res.push_back(0x4); //iconst_1
+	}
+	else if (num == 2) {
+		res.push_back(0x5); //iconst_2
+	}
+	else if (num == 3) {
+		res.push_back(0x6); //iconst_3
+	}
+	else if (num == 4) {
+		res.push_back(0x7); //iconst_4
+	}
+	else if (num == 5) {
+		res.push_back(0x8); //iconst_5
+	}
+
+	if (num <= 5 && num >= -1) {
+		return res;
+	}
+
+	if (num >= -128 && num <= 127) {
+		// bipush
+		res.push_back(0x10); //bipush
+		res.push_back(num);
+		return res;
+	}
+
+	if (num >= -32768 && num <= 32767) {
+		// sipush
+		res.push_back(0x11); //sipush
+		std::vector <char> temp = intToByteVector(num, 2);
+		appendArrayToByteVector(&res, temp.data(), temp.size());
+		return res;
+	}
+	else {
+		throw std::exception("Error in iconstBipushSipush: Invalid number");
+	}
+}
+
+
 std::vector<char> iload(int num)
 {
     std::vector<char> res;
@@ -158,5 +211,64 @@ std::vector<char> go_to(int offset)
 	else
 		temp = intToByteVector(offset + 3, 2);
 	appendArrayToByteVector(&res, temp.data(), temp.size());
+	return res;
+}
+
+
+std::vector<char> _new(int constant)
+{
+	std::vector<char> res;
+	res.push_back(0xBB); //new
+	std::vector <char> temp = intToByteVector(constant, 2);
+	appendArrayToByteVector(&res, temp.data(), temp.size());
+	return res;
+}
+
+std::vector<char> invokespecial(int constant)
+{
+	std::vector<char> res;
+	res.push_back(0xB7); //invokespecial
+	std::vector <char> temp = intToByteVector(constant, 2);
+	appendArrayToByteVector(&res, temp.data(), temp.size());
+	return res;
+}
+
+std::vector<char> invokevirtual(int constant)
+{
+	std::vector <char> res;
+	res.push_back(0xB6); //invokevirtual
+	std::vector <char> temp = intToByteVector(constant, 2);
+	appendArrayToByteVector(&res, temp.data(), temp.size());
+	return res;
+}
+
+std::vector<char> invokestatic(int constant)
+{
+	std::vector<char> res;
+	res.push_back(0xB8); //invokestatic
+	std::vector <char> temp = intToByteVector(constant, 2);
+	appendArrayToByteVector(&res, temp.data(), temp.size());
+	return res;
+}
+
+
+std::vector<char> ireturn()
+{
+	std::vector<char> res;
+	res.push_back(0xAC); //ireturn
+	return res;
+}
+
+std::vector<char> areturn()
+{
+	std::vector<char> res;
+	res.push_back(0xB0); //areturn
+	return res;
+}
+
+std::vector<char> _return()
+{
+	std::vector<char> res;
+	res.push_back(0xB1); //return
 	return res;
 }
