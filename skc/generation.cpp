@@ -9,6 +9,7 @@ std::vector<char> generateMethodCode(class MethodTableElement * mElem, class Cla
 std::vector<char> generateCodeForStatement(struct StatementNode* stmt, class ClassTableElement* classElem, class MethodTableElement* mElem);
 std::vector<char> generateCodeForExpressionStatement(struct StatementNode* stmt, class ClassTableElement* cElem, class MethodTableElement* mElem);
 std::vector<char> generateCodeForReturnStatement(struct StatementNode *stmt, class ClassTableElement * cElem, class MethodTableElement * mElem);
+std::vector<char> generateCodeForMethodAccess(struct ExpressionNode * expr, class ClassTableElement * cElem, class MethodTableElement * mElem);
 std::vector<char> generateMain(class ClassTableElement *cls,  MethodTableElement * main);
 void generateClassFile(std::string className)
 {
@@ -277,6 +278,10 @@ std::vector<char> generateCodeForExpression(struct ExpressionNode * expr, class 
 	{
 		return generateCodeForFunctionCall(expr, cElem, mElem);
 	}
+	if (expr->type == _METHOD_ACCESS)
+	{
+		return generateCodeForMethodAccess(expr, cElem, mElem);
+	}
 }
 
 
@@ -448,6 +453,51 @@ std::vector<char> generateCodeForLiteralCreation(struct ExpressionNode * expr, c
 			appendArrayToByteVector(&res, is.data(), is.size());
 		}
 	}
+	return res;
+}
+
+std::vector<char> generateCodeForMethodAccess(struct ExpressionNode * expr, class ClassTableElement * cElem, class MethodTableElement * mElem)
+{
+	std::vector<char> res;
+
+		std::vector<char> obj = generateCodeForExpression(expr->left, cElem, mElem);
+		appendArrayToByteVector(&res, obj.data(), obj.size());
+
+		struct ExpressionNode * cur = NULL;
+		if (expr->params != NULL) cur = expr->params->first;
+		std::string desc = "(";
+		while(cur != NULL)
+		{
+			std::vector<char> p = generateCodeForExpression(cur, cElem, mElem);
+			appendArrayToByteVector(&res, p.data(), p.size());
+			if (cur->typ->type == _ARRAY) desc += "[L";
+			else desc += "L";
+			desc += Type(cur->typ).className;
+			desc += ";";
+			cur = cur->next;
+		}
+		desc += ")";
+		std::string keyDesc = desc;
+
+	std::string clsn = Type(expr->left->typ).className;
+
+	int cn = cElem->constants->findOrAddConstant(Utf8, clsn);
+	int cls = cElem->constants->findOrAddConstant(Class, "",0,0,cn);
+	Type * r = ClassTable::items[clsn]->methods->methods[expr->identifierString][keyDesc]->retType;
+	if (r->typ == _ARRAY)desc += "[";
+	desc += "L";
+	desc += r->className;
+	desc += ";";
+
+	int n = cElem->constants->findOrAddConstant(Utf8, expr->identifierString);
+	int d = cElem->constants->findOrAddConstant(Utf8, desc);
+	int nat = cElem->constants->findOrAddConstant(NameAndType, "", 0,0, n, d);
+	int mref = cElem->constants->findOrAddConstant(MethodRef, "", 0,0, cls, nat);
+
+			
+	std::vector<char> iv = invokevirtual(mref);
+	appendArrayToByteVector(&res, iv.data(), iv.size());
+
 	return res;
 }
 
