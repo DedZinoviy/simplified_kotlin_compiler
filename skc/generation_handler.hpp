@@ -55,3 +55,9 @@ std::vector<char> dup();
 * \return вектор байт - команда.
 */
 std::vector<char> dup2();
+
+/*! Сгенерировать команду goto.
+* \param[in] offset смещение.
+* \return вектор байт - команда.
+*/
+std::vector<char> go_to(int offset);

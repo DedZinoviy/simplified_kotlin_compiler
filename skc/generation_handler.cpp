@@ -144,3 +144,16 @@ std::vector<char> dup2()
 	res.push_back(0x5C); //dup2
 	return res;
 }
+
+std::vector<char> go_to(int offset)
+{
+	std::vector<char> res;
+	res.push_back(0xA7); //goto
+	std::vector <char> temp;
+	if (offset < 0) // Если смещение отрицательно...
+		temp = intToByteVector(offset, 2);
+	else
+		temp = intToByteVector(offset + 3, 2);
+	appendArrayToByteVector(&res, temp.data(), temp.size());
+	return res;
+}
