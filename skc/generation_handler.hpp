@@ -34,3 +34,24 @@ std::vector<char> istore(int num);
 * \return вектор байт - команда.
 */
 std::vector<char> astore(int num);
+
+/*! Сгенерировать команду ldc.
+* \param[in] num номер константы в таблице констант.
+* \return вектор байт - команда.
+*/
+std::vector<char> ldc(int num);
+
+/*! Сгенерировать команду pop.
+* \return вектор байт - команда.
+*/
+std::vector<char> pop();
+
+/*! Сгенерировать команду dup.
+* \return вектор байт - команда.
+*/
+std::vector<char> dup();
+
+/*! Сгенерировать команду dup2.
+* \return вектор байт - команда.
+*/
+std::vector<char> dup2();
