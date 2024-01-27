@@ -169,6 +169,7 @@ struct SemanticError * buildClassTable(struct KotlinFileNode * root, const char 
 
     int parent = elem->constants->findOrAddConstant(ConstantType::Utf8, (char*)"java/lang/Object");
     int parentCls = elem->constants->findOrAddConstant(ConstantType::Class, "", NULL, NULL, parent);
+    elem->constants->findOrAddConstant(ConstantType::Utf8, "Code");
 
     elem->superName = parent;
     elem->superClass = parentCls;
@@ -193,6 +194,25 @@ struct SemanticError * buildClassTable(struct KotlinFileNode * root, const char 
     }
     fillLiterals(elem);
     fillMethodRefs(elem);
+    if (elem->methods->methods.count("main") != 0)
+    {
+        if (elem->methods->methods["main"].count("()") != 0)
+        {
+            std::string mainDesc = "([Ljava/lang/String])V";
+            int n = elem->constants->findOrAddConstant(Utf8, "main");
+            int d = elem->constants->findOrAddConstant(Utf8, "([Ljava/lang/String;)V");
+           
+           
+            n = elem->methods->methods["main"]["()"]->methodName;
+            d = elem->methods->methods["main"]["()"]->descriptor;
+            int nat = elem->constants->findOrAddConstant(NameAndType, "", 0,0,n,d);
+            int cls = elem->thisClass;
+            int mRef = elem->constants->findOrAddConstant(MethodRef, "",0,0,cls,nat);
+           
+           
+            elem->methods->methods["main"][mainDesc] = new MethodTableElement(n ,d,"main", mainDesc, NULL, NULL, std::vector<FuncParam>());
+        }
+    }
     return err;
 }
 
@@ -306,6 +326,7 @@ bool Type::isReplacable(class Type & other) const
 ConstantTable::ConstantTable()
 {
     this->constants = std::map<int, class ConstantTableItem *> ();
+    this->constants[maxId] = new ConstantTableItem(Utf8, maxId, "Code");
 }
 
 int ConstantTable::findOrAddConstant(enum ConstantType type, std::string utf8string, int intVal, double dVal, int fRef, int sRef)
@@ -390,6 +411,7 @@ ConstantTableItem:: ConstantTableItem(enum ConstantType type, int id, std::strin
     else if (type == ConstantType::Integer) this->Integer = intVal;
     else if (type == ConstantType::Double) this->Double = dVal;
     else if (type == ConstantType::Class) this->firstRef = fRef;
+    else if (type == ConstantType::String) this->firstRef = fRef;
     else if (type == ConstantType::NameAndType) { this->firstRef = fRef; this->secRef = secondRef; }
     else if (type == ConstantType::FieldRef) { this->firstRef = fRef; this->secRef = secondRef; }
     else if (type == ConstantType::MethodRef) { this->firstRef = fRef; this->secRef = secondRef; }
@@ -1359,7 +1381,8 @@ void fillMethodRefsInExpression(struct ExpressionNode * expression, class ClassT
             if (expression->type == ExpressionType::_FUNC_CALL && expression->fromLit == BaseLiteral::_FROM_NONE)
             {
                 Type * ret = FunctionTable::items[id][desc]->retType;
-                if (ret->typ == TypeType::_ARRAY) desc += "[";
+                if (ret->typ == TypeType::_ARRAY) desc += "[L";
+                else desc += "L";
                 desc += ret->className;
                 desc += ";";
                 int nam = cls->constants->findOrAddConstant(ConstantType::Utf8, id);
@@ -1384,7 +1407,8 @@ void fillMethodRefsInExpression(struct ExpressionNode * expression, class ClassT
                 int clsNameConst = cls->constants->findOrAddConstant(ConstantType::Utf8, className);
                 int clsConst = cls->constants->findOrAddConstant(ConstantType::Class, "", NULL, NULL, clsNameConst);
                 Type * ret = ClassTable::items[className]->methods->methods[id][desc]->retType;
-                if (ret->typ == TypeType::_ARRAY) desc += "[";
+                if (ret->typ == TypeType::_ARRAY) desc += "[L";
+                else desc += "L";
                 desc += ret->className;
                 desc += ";";
                 int nam = cls->constants->findOrAddConstant(ConstantType::Utf8, id);
@@ -1455,10 +1479,10 @@ void fillLiteralsInExpression(struct ExpressionNode * expression, class ClassTab
     else if (expression->fromLit == BaseLiteral::_FROM_STRING)
     {
         int str = cls->constants->findOrAddConstant(ConstantType::Utf8, getSafeCString(expression->stringValue));
-        int strConst = cls->constants->findOrAddConstant(ConstantType::String, NULL, NULL, NULL, str);
+        int strConst = cls->constants->findOrAddConstant(ConstantType::String, "", NULL, NULL, str);
         std::string clsName = "JavaRTL/String";
         std::string methodName = "<init>";
-        std::string desc = "(java/lang/String;)V";
+        std::string desc = "(Ljava/lang/String;)V";
         int clsNameConst = cls->constants->findOrAddConstant(ConstantType::Utf8, (char*)clsName.c_str());
         int clsConst = cls->constants->findOrAddConstant(ConstantType::Class, "", NULL, NULL, clsNameConst);
         int methodNameConst = cls->constants->findOrAddConstant(ConstantType::Utf8, (char*)methodName.c_str());

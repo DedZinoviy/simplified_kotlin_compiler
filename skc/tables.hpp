@@ -216,6 +216,9 @@ class MethodTableElement
         /// Ссылка на таблицу локальных переменных.
         class LocalVariableTable * varTable = NULL;
 
+        /// Флаг показывающий, является ли указанный метод первым кандидатом.
+        int isFirst = NULL;
+
         MethodTableElement(int nameCnst, int descCnst, std::string nam, std::string dsc, struct StatementListNode * strt, class Type * ret, std::vector<class FuncParam> pars);
 };
 
