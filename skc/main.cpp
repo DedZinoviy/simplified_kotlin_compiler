@@ -88,7 +88,24 @@ if (argc < 2)
 
     attributeBaseTypes(root);
 
+    if (needsDotCon || needsDotFile) 
+    {   
+        char * res = generateDotFromKotlinFile(root);
+        if (needsDotFile)
+        {
+            FILE *f = fopen("result_rep.gv", "w");
+            fprintf(f, "%s", res);
+            fclose(f);
+        }
+        if (needsDotCon)
+        {
+            printf("%s\n", res);
+        }
+    
+    }
+
     err = checkModifierLists(root);
+
 
     if (err != NULL)
     {

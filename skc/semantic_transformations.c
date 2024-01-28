@@ -809,6 +809,11 @@ static void _replaceOperatorsInStatement(struct StatementNode * stmt)
         case _MULTI_VAL:
             if (stmt->expression != NULL) _replaceOperatorsInExpression(stmt->expression);
             break;
+        case _FOR:
+            if (stmt->condition != NULL) _replaceOperatorsInExpression(stmt->condition);
+            if (stmt->singleBody != NULL) _replaceOperatorsInStatement(stmt->singleBody);
+            if (stmt->complexBody != NULL) if (stmt->complexBody->first != NULL) _replaceOperatorsInStatement(stmt->complexBody->first);
+            break;
     }
     if (stmt->next != NULL)
         _replaceOperatorsInStatement(stmt->next);
@@ -816,6 +821,7 @@ static void _replaceOperatorsInStatement(struct StatementNode * stmt)
 
 static void _replaceOperatorsInExpression(struct ExpressionNode * expr)
 {
+    printf("HERE!!!!!!!!!!! : %d\n", expr->id);
     if (expr->type == _PLUS)
     {
         expr->type = _METHOD_ACCESS;
@@ -844,7 +850,27 @@ static void _replaceOperatorsInExpression(struct ExpressionNode * expr)
         expr->params = createExpressionListNode(expr->right);
         expr->right = NULL;
     }
-
+    else if (expr->type == _UNARY_MINUS)
+    {
+        expr->type = _METHOD_ACCESS;
+        expr->identifierString = "uMinus";
+        expr->params = createExpressionListNode(NULL);
+        expr->right = NULL;
+    }
+    else if (expr->type == _UNARY_PLUS)
+    {
+        expr->type = _METHOD_ACCESS;
+        expr->identifierString = "uPlus";
+        expr->params = createExpressionListNode(NULL);
+        expr->right = NULL;
+    }
+    else if (expr->type == _RANGE)
+    {
+        expr->type = _METHOD_ACCESS;
+        expr->identifierString = "rangeTo";
+        expr->params = createExpressionListNode(expr->right);
+        expr->right = NULL;
+    }
     else if (expr->type == _EQUAL)
     {
         expr->type = _METHOD_ACCESS;
@@ -897,6 +923,7 @@ static void _replaceOperatorsInExpression(struct ExpressionNode * expr)
     {
         expr->type = _METHOD_ACCESS;
         expr->identifierString = "not";
+        expr->left = expr->right;
         expr->params = createExpressionListNode(expr->right);
         expr->right = NULL;
     }
@@ -923,7 +950,7 @@ static void _replaceOperatorsInExpression(struct ExpressionNode * expr)
     if (expr->right != NULL)
         _replaceOperatorsInExpression(expr->right);
     
-    if (expr->params != NULL) if (expr->params->first != NULL) _replaceOperatorsInExpression(expr->params->first);
+    if (expr->params != NULL) if (expr->params->first != NULL) { _replaceOperatorsInExpression(expr->params->first);}
     if (expr->next != NULL) _replaceOperatorsInExpression(expr->next);
 }
 

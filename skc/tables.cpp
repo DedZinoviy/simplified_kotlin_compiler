@@ -180,7 +180,7 @@ struct SemanticError * buildClassTable(struct KotlinFileNode * root, const char 
         err = _fillFunctionTable(ClassTable::items[path], root->elemList->first);
         if (err != NULL) return err; 
     }
-
+        
     if (root->elemList->first != NULL)
     {
         err = _addClassToClassTable(root->elemList->first);
@@ -214,7 +214,7 @@ struct SemanticError * buildClassTable(struct KotlinFileNode * root, const char 
             int mRef = elem->constants->findOrAddConstant(MethodRef, "",0,0,cls,nat);
            
            
-            elem->methods->methods["main"][mainDesc] = new MethodTableElement(n ,d,"main", mainDesc, NULL, NULL, std::vector<FuncParam>());
+            ///elem->methods->methods["main"][mainDesc] = new MethodTableElement(n ,d,"main", mainDesc, NULL, NULL, std::vector<FuncParam>());
         }
     }
     return err;
@@ -966,6 +966,7 @@ struct SemanticError * attributeExpression(struct ExpressionNode * expression, c
 
 struct SemanticError * attributingAndFillingLocalsInStatement(class MethodTableElement * meth, struct StatementNode * curStmt)
 {
+    printf("HERE: %d\n", curStmt->id);
     struct SemanticError * err = NULL;
 
     if (curStmt->type == StatementType::_EXPRESSION)
@@ -1071,6 +1072,64 @@ struct SemanticError * attributingAndFillingLocalsInStatement(class MethodTableE
         if (err != NULL) return err;
     }
 
+    if (curStmt->type == StatementType::_FOR)
+    {
+        int varDeclCount = 0;
+        struct VarDeclarationListNode* vList = curStmt->varDeclList;
+        struct VarDeclarationNode* v = NULL;
+        if (vList != NULL) v = curStmt->varDeclList->first;
+        while(v != NULL)
+        {
+            varDeclCount++;
+            v = v->next;
+        }
+        if (varDeclCount > 1) { 
+                std::string msg = "Multivar Loops are not supported in this version.";
+                return createSemanticError(10, msg.c_str());
+        } 
+        err = attributeExpression(curStmt->condition, meth);
+        if (err != NULL) return err;
+        if (curStmt->condition->typ->type != _ARRAY) 
+        {
+            std::string msg = "Only arrays allowed in for loops.";
+            return createSemanticError(27, msg.c_str());
+        }
+        else { 
+            if (curStmt->varDeclList->first->type != NULL)
+            {
+                Type t = Type(curStmt->varDeclList->first->type);
+                Type t2 = Type(curStmt->condition->typ);
+                if (t.className != t2.className)
+                {
+                     std::string msg = "For LOOP Variable type mismatch in function ";
+                    msg += meth->strName;
+                    msg += meth->strDesc;
+                    return createSemanticError(23, msg.c_str());
+                }
+                meth->varTable->findOrAddLocalVar(curStmt->varDeclList->first->identifier, new Type(curStmt->varDeclList->first->type) ,0,1);
+            }
+            else{
+                Type * t = new Type(curStmt->condition->typ);
+                Type * t2= new Type();
+                t2->typ = _CLS;
+                t2->className = t->className;
+                meth->varTable->findOrAddLocalVar(curStmt->varDeclList->first->identifier, t2 ,0,1);
+            }
+            std::string imageVar = "$";
+            imageVar += curStmt->id;
+            meth->varTable->findOrAddLocalVar(imageVar, new Type() ,0,1);
+        }
+        if (curStmt->singleBody != NULL) {
+            err = attributingAndFillingLocalsInStatement(meth, curStmt->singleBody);
+            if(err != NULL) return err;
+        }
+        if (curStmt->complexBody != NULL) {
+            if (curStmt->complexBody->first != NULL)
+            err = attributingAndFillingLocalsInStatement(meth, curStmt->complexBody->first);
+            if(err != NULL) return err;
+        }
+    }
+
     if (curStmt->next != NULL)
     {
         err = attributingAndFillingLocalsInStatement(meth, curStmt->next);
@@ -1129,6 +1188,7 @@ struct SemanticError * attributeExpression(struct ExpressionNode * expression, c
             struct ExpressionListNode * params = expression->params;
             struct ExpressionNode * curExpr = NULL;
             if (params != NULL) curExpr = params->first;
+            
             while(curExpr != NULL) // Пока есть параметры...
             {
                 if (curExpr->type == ExpressionType::_ASSIGNMENT)
@@ -1140,7 +1200,6 @@ struct SemanticError * attributeExpression(struct ExpressionNode * expression, c
                 if (err != NULL) return err;
                 curExpr = curExpr->next; // Перейти к следующему параметру.
             }
-
             
             // Сформировать дескриптор набора параметров.
             std::string desc = "(";
@@ -1148,6 +1207,7 @@ struct SemanticError * attributeExpression(struct ExpressionNode * expression, c
             while(curExpr != NULL) // Пока есть параметры...
             {
                 Type * typ = new Type(curExpr->typ);
+                printf("%s\n",typ->className.c_str());
                 if (curExpr->typ->type == TypeType::_CLS) desc += "L";
                 if (curExpr->typ->type == TypeType::_ARRAY) desc += "[L";
                 desc += typ->className;
@@ -1325,7 +1385,7 @@ struct SemanticError * attributeExpression(struct ExpressionNode * expression, c
                     struct TypeNode * node = (struct TypeNode *)malloc(sizeof(struct TypeNode));
                     node->type = _CLS;
                     node->complexType = NULL;
-                    node->ident = (char*)std::string("JavaRTL/Unit").c_str();
+                    node->ident = (char*)std::string("V").c_str();
                     expression->typ = node;
                 }
             }
@@ -1435,6 +1495,10 @@ void fillMethodRefsInStatement(struct StatementNode * stmt, class ClassTableElem
     {
         fillMethodRefsInExpression(stmt->expression, cls);
     }
+    else if (stmt->type == StatementType::_RETURN)
+    {
+        fillMethodRefsInExpression(stmt->expression, cls);
+    }
     else if (stmt->type == StatementType::_VAL || stmt->type == StatementType::_VAR)
     {
         if (stmt->expression != NULL) fillMethodRefsInExpression(stmt->expression, cls);
@@ -1445,8 +1509,19 @@ void fillMethodRefsInStatement(struct StatementNode * stmt, class ClassTableElem
         if (stmt->singleBody != NULL) fillMethodRefsInStatement(stmt->singleBody, cls);
         if (stmt->complexBody != NULL) fillMethodRefsInStatement(stmt->complexBody->first, cls);
     }
+    else if (stmt->type == StatementType::_FOR) {
+        fillMethodRefsInExpression(stmt->condition, cls);
+        if (stmt->singleBody != NULL)
+        {
+            fillMethodRefsInStatement(stmt->singleBody, cls);
+        }
+        else if (stmt->complexBody != NULL)
+        {
+           if (stmt->complexBody->first != NULL) fillMethodRefsInStatement(stmt->complexBody->first, cls);
+        }
+    }
     if (stmt->next != NULL) fillMethodRefsInStatement(stmt->next, cls);
-}
+} 
 
 void fillMethodRefs(class ClassTableElement * cls)
 {
@@ -1576,6 +1651,18 @@ void fillLiteralsInStatement(struct StatementNode * stmt, struct ClassTableEleme
         if (stmt->expression != NULL) fillLiteralsInExpression(stmt->expression, cls);
     }
     else if (stmt->type == StatementType::_WHILE || stmt->type == StatementType::_DOWHILE) 
+    {
+        fillLiteralsInExpression(stmt->condition, cls);
+        if (stmt->singleBody != NULL)
+        {
+            fillLiteralsInStatement(stmt->singleBody, cls);
+        }
+        else if (stmt->complexBody != NULL)
+        {
+           if (stmt->complexBody->first != NULL) fillLiteralsInStatement(stmt->complexBody->first, cls);
+        }
+    }
+    else if (stmt->type == StatementType::_FOR) 
     {
         fillLiteralsInExpression(stmt->condition, cls);
         if (stmt->singleBody != NULL)

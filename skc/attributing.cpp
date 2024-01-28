@@ -42,18 +42,21 @@ static void _replaceRTLTypesInStatement(struct StatementNode * stmt)
 
 static void _replaceRTLTypesInTypeNode(struct TypeNode * type)
 {
-    if (type->type == TypeType::_CLS)
+    if (type != NULL)
     {
-        if (std::string(type->ident) == "Int") type->ident = (char*)"JavaRTL/Int";
-        else if (std::string(type->ident) == "Char") type->ident = (char*)"JavaRTL/Char";
-        else if (std::string(type->ident) == "String") type->ident = (char*)"JavaRTL/String";
-        else if (std::string(type->ident) == "Boolean") type->ident = (char*)"JavaRTL/Boolean";
-        else if (std::string(type->ident) == "Any") type->ident = (char*)"JavaRTL/Any";
-        else if (std::string(type->ident) == "Unit") type->ident = (char*)"JavaRTL/Unit";
-    }
-    else if (type->type == TypeType::_ARRAY)
-    {
-        _replaceRTLTypesInTypeNode(type->complexType);
+        if (type->type == TypeType::_CLS)
+        {
+            if (std::string(type->ident) == "Int") type->ident = (char*)"JavaRTL/Int";
+            else if (std::string(type->ident) == "Char") type->ident = (char*)"JavaRTL/Char";
+            else if (std::string(type->ident) == "String") type->ident = (char*)"JavaRTL/String";
+            else if (std::string(type->ident) == "Boolean") type->ident = (char*)"JavaRTL/Boolean";
+            else if (std::string(type->ident) == "Any") type->ident = (char*)"JavaRTL/Any";
+            else if (std::string(type->ident) == "Unit") type->ident = (char*)"JavaRTL/Unit";
+        }
+        else if (type->type == TypeType::_ARRAY)
+        {
+            _replaceRTLTypesInTypeNode(type->complexType);
+        }
     }
    
 }

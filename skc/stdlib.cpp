@@ -43,6 +43,25 @@ void initStdClasses()
         retVal->typ = TypeType::_CLS;
         ClassTable::items["JavaRTL/Int"]->methods->methods["div"]["(LJavaRTL/Int;)"] = new MethodTableElement(0,0,"div","(LJavaRTL/Int;)LJavaRTL/Int;", NULL, retVal, std::vector<FuncParam>());
 
+        ClassTable::items["JavaRTL/Int"]->methods->methods["uPlus"] = std::map<std::string, class MethodTableElement*>();
+        retVal = new Type();
+        retVal->className = ClassTable::items["JavaRTL/Int"]->clsName;
+        retVal->typ = TypeType::_CLS;
+        ClassTable::items["JavaRTL/Int"]->methods->methods["uPlus"]["()"] = new MethodTableElement(0,0,"uPlus","()LJavaRTL/Int;", NULL, retVal, std::vector<FuncParam>());
+        
+        ClassTable::items["JavaRTL/Int"]->methods->methods["uMinus"] = std::map<std::string, class MethodTableElement*>();
+        retVal = new Type();
+        retVal->className = ClassTable::items["JavaRTL/Int"]->clsName;
+        retVal->typ = TypeType::_CLS;
+        ClassTable::items["JavaRTL/Int"]->methods->methods["uMinus"]["()"] = new MethodTableElement(0,0,"uMinus","()LJavaRTL/Int;", NULL, retVal, std::vector<FuncParam>());
+
+        ClassTable::items["JavaRTL/Int"]->methods->methods["rangeTo"] = std::map<std::string, class MethodTableElement*>();
+        retVal = new Type();
+        retVal->className = ClassTable::items["JavaRTL/Int"]->clsName;
+        retVal->typ = TypeType::_ARRAY;
+        ClassTable::items["JavaRTL/Int"]->methods->methods["rangeTo"]["(LJavaRTL/Int;)"] = new MethodTableElement(0,0,"rangeTo","(LJavaRTL/Int;)[LJavaRTL/Int;", NULL, retVal, std::vector<FuncParam>());
+
+
         ClassTable::items["JavaRTL/Int"]->methods->methods["greater"] = std::map<std::string, class MethodTableElement*>();
         retVal = new Type();
         retVal->className = "JavaRTL/Boolean";

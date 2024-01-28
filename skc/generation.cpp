@@ -73,17 +73,30 @@ void generateClassFile(std::string className)
 */
 	// Посчитать количество методов.
 	int mCount = 0;
-	mCount = 2;
-	std::vector<char> cd = generateMethodCode(elem->methods->methods["main"]["()"], elem);
-	
-	std::vector<char> m = generateMain(elem, elem->methods->methods["main"]["()"]);
-	appendArrayToByteVector(&cd, m.data(),m.size());
-	/*for (auto i = elem->methods->methods.begin(); i != elem->methods->methods.end(); ++i)
+	std::vector<char> cd;
+	//mCount = 2;
+
+	for (auto i = elem->methods->methods.begin(); i != elem->methods->methods.end(); ++i)
 	{
 		for (auto it = i->second.begin(); it != i->second.end(); ++it)
+		{
 			mCount++;
-	}*/
+			std::vector<char> cd1 = generateMethodCode(it->second, elem);
+			appendArrayToByteVector(&cd, cd1.data(),cd1.size());
+		}
+			
+	}
 
+	if (elem->methods->methods.count("main") != 0)
+	{
+		if (elem->methods->methods["main"].count("()") != 0)
+		{
+			mCount++;
+			std::vector<char> m = generateMain(elem, elem->methods->methods["main"]["()"]);
+			appendArrayToByteVector(&cd, m.data(),m.size());
+		}
+	}
+	
     std::vector<char> methodCount = intToByteVector(mCount, 2);
 
     std::vector<char> attributeCount = intToByteVector(0, 2);
@@ -99,9 +112,92 @@ void generateClassFile(std::string className)
 }
 
 
-std::vector<char> generateForEach(struct StatementNode * forEach)
+std::vector<char> generateForEach(struct StatementNode * forEach, class ClassTableElement * cElem, class MethodTableElement * mElem)
 {
-    return std::vector<char>();
+   std::vector<char> res;
+
+	struct ExpressionNode * condExpr = forEach->condition;
+
+	int trueLocal = //forEach->varDeclList->first->identifier
+	mElem->varTable->items[forEach->varDeclList->first->identifier]->id ;
+
+	std::string lc = "$";
+	lc += forEach->id;
+	int local = mElem->varTable->items[lc]->id; // Переменная для for.
+	auto init = iconstBipushSipush(0);
+	appendArrayToByteVector(&res, init.data(), init.size());
+	auto loc = istore(local);
+	appendArrayToByteVector(&res, loc.data(), loc.size());
+
+
+	std::vector<char> fill;
+
+	auto arr = generateCodeForExpression(condExpr, cElem, mElem); // Загрузка массива.
+	appendArrayToByteVector(&fill, arr.data(), arr.size());
+
+
+	// Инициализация локалки.
+	auto loa = iload(local);
+	appendArrayToByteVector(&fill, loa.data(), loa.size());
+	auto aa = aaload();
+	auto as = astore(trueLocal);
+	appendArrayToByteVector(&fill, aa.data(), aa.size());
+	appendArrayToByteVector(&fill, as.data(), as.size());
+	
+	// Истинное тело.
+	if (forEach->singleBody != NULL)
+	{
+		std::vector<char> tmp  = generateCodeForStatement(forEach->singleBody, cElem, mElem);
+		appendArrayToByteVector(&fill, tmp.data(), tmp.size());
+	}
+	else if (forEach -> complexBody != NULL)
+	{
+		struct StatementNode * cur = forEach->complexBody->first;
+		while(cur != NULL)
+		{
+			std::vector<char> tmp  = generateCodeForStatement(cur, cElem, mElem);
+			appendArrayToByteVector(&fill, tmp.data(), tmp.size());
+			cur = cur -> next;
+		}
+	}
+
+	// Возвращение истинной локалки в массив.
+
+	//auto al = aload(trueLocal);
+
+	// Инкрементация.
+	auto l2 = iload(local);
+	appendArrayToByteVector(&fill, l2.data(), l2.size());
+	auto bi = iconstBipushSipush(1);
+	appendArrayToByteVector(&fill, bi.data(), bi.size());
+	
+	auto inc = iadd();
+	appendArrayToByteVector(&fill, inc.data(), inc.size());
+	auto str = istore(local);
+	appendArrayToByteVector(&fill, str.data(), str.size());
+
+
+	// Проверка.
+	std::vector<char> cond;
+	arr = generateCodeForExpression(condExpr, cElem, mElem); // Загрузка массива.
+	appendArrayToByteVector(&cond, arr.data(), arr.size());
+	auto arl = arraylength();
+	appendArrayToByteVector(&cond, arl.data(), arl.size());
+	auto l5 = iload(local);
+	appendArrayToByteVector(&cond, l5.data(), l5.size());
+
+	int offset = fill.size() + cond.size();
+	offset = -offset;
+
+	auto gt = go_to(fill.size());
+
+	appendArrayToByteVector(&res, gt.data(), gt.size());
+	appendArrayToByteVector(&res, fill.data(), fill.size());
+	appendArrayToByteVector(&res, cond.data(), cond.size());
+	auto if_i = if_icmp(NE, offset);
+	appendArrayToByteVector(&res, if_i.data(), if_i.size());
+
+   return res;
 }
 
 std::vector<char> generateBytesForConstantTableItem(class ConstantTableItem * elem);
@@ -268,6 +364,10 @@ std::vector<char> generateCodeForStatement(struct StatementNode *stmt, class Cla
 	{
 		return generateCodeForValVarStatement(stmt, classElem, mElem);
 	}
+	else if (stmt->type == _FOR)
+	{
+		return generateForEach(stmt, classElem, mElem);
+	}
 	return res;
 }
 
@@ -433,6 +533,10 @@ std::vector<char> generateCodeForExpression(struct ExpressionNode * expr, class 
 	{
 		return generateCodeForArrayAccess(expr,cElem,mElem);
 	}
+	if (expr->type == _BRACKETS)
+	{
+		return generateCodeForArrayAccess(expr->left,cElem,mElem);
+	}
 }
 
 
@@ -508,7 +612,7 @@ std::vector<char> generateCodeForFunctionCall(struct ExpressionNode * expr, clas
 			int n = cElem->constants->findOrAddConstant(Utf8, expr->identifierString);
 			int d = cElem->constants->findOrAddConstant(Utf8, desc);
 			int nat = cElem->constants->findOrAddConstant(NameAndType, "", 0,0,n,d);
-			int mRef = cElem->constants->findOrAddConstant(NameAndType, "", 0,0,cElem->thisClass,nat);
+			int mRef = cElem->constants->findOrAddConstant(MethodRef, "", 0,0,cElem->thisClass,nat);
 			std::vector<char> is = invokestatic(mRef);
 			appendArrayToByteVector(&res, is.data(), is.size());
 		}
@@ -701,7 +805,6 @@ std::vector<char> generateCodeForAssignment(struct ExpressionNode * expr, class 
 	}
 	else if (expr->left->type == _ARRAY_ACCESS)
 	{
-		printf("ASS\n");
 		struct ExpressionNode * left = expr->left;
 		auto arrayL = generateCodeForExpression(left->left, cElem, mElem);
 		appendArrayToByteVector(&res, arrayL.data(), arrayL.size());
@@ -719,7 +822,6 @@ std::vector<char> generateCodeForAssignment(struct ExpressionNode * expr, class 
 		appendArrayToByteVector(&res, right.data(), right.size());
 		std::vector<char> asign = aastore();
 		appendArrayToByteVector(&res, asign.data(), asign.size());
-		printf("HERE\n");
 	}
 	return res;
 }

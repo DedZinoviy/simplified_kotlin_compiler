@@ -19,6 +19,7 @@ struct ExpressionNode* createIDExpression(char* idStr)
     node->next = NULL;
     node->typ = NULL;
     node->id = ID++;
+    node->params = NULL;
     return node;
 }
 
@@ -36,6 +37,7 @@ struct ExpressionNode* createIntLiteralExpressionNode(int value)
     node->next = NULL;
     node->id = ID++;
     node->typ = NULL;
+    node->params = NULL;
     return node;
 }
 
@@ -53,6 +55,7 @@ struct ExpressionNode* createDoubleLiteralExpressionNode(double value)
     node->next = NULL;
     node->typ = NULL;
     node->id = ID++;
+    node->params = NULL;
     return node;
 }
 
@@ -69,6 +72,7 @@ struct ExpressionNode* createTrueLiteralExpressionNode()
     node->next = NULL;
     node->typ = NULL;
     node->id = ID++;
+    node->params = NULL;
     return node;
 }
 
@@ -85,6 +89,7 @@ struct ExpressionNode* createFalseLiteralExpressionNode()
     node->next = NULL;
     node->typ = NULL;
     node->id = ID++;
+    node->params = NULL;
     return node;
 }
 
@@ -102,6 +107,7 @@ struct ExpressionNode* createCharLiteralExpressionNode(char value)
     node->right = NULL;
     node->next = NULL;
     node->typ = NULL;
+    node->params = NULL;
     return node;
 }
 
@@ -119,6 +125,7 @@ struct ExpressionNode* createStringLiteralExpressionNode(struct stringBuffer * v
     node->right = NULL;
     node->next = NULL;
     node->typ = NULL;
+    node->params = NULL;
     return node;
 }
 
@@ -136,6 +143,7 @@ struct ExpressionNode * createDisjExpressionNode(struct ExpressionNode * leftOpe
     node->next = NULL;
     node->typ = NULL;
     node->id = ID++;
+    node->params = NULL;
     return node;
 }
 
@@ -153,6 +161,7 @@ struct ExpressionNode * createConjExpressionNode(struct ExpressionNode * leftOpe
     node->next = NULL;
     node->typ = NULL;
     node->id = ID++;
+    node->params = NULL;
     return node;
 }
 
@@ -170,6 +179,7 @@ struct ExpressionNode * createPlusExpressionNode(struct ExpressionNode * leftOpe
     node->next = NULL;
     node->typ = NULL;
     node->id = ID++;
+    node->params = NULL;
     return node;
 }
 
@@ -187,6 +197,7 @@ struct ExpressionNode * createMinusExpressionNode(struct ExpressionNode * leftOp
     node->next = NULL;
     node->typ = NULL;
     node->id = ID++;
+    node->params = NULL;
     return node;
 }
 
@@ -203,6 +214,7 @@ struct ExpressionNode * createMulExpressionNode(struct ExpressionNode * leftOper
     node->right = rightOperand;
     node->next = NULL;
     node->typ = NULL;
+    node->params = NULL;
     node->id = ID++;
     return node;
 }
@@ -221,6 +233,7 @@ struct ExpressionNode * createDivExpressionNode(struct ExpressionNode * leftOper
     node->next = NULL;
     node->typ = NULL;
     node->id = ID++;
+    node->params = NULL;
     return node;
 }
 
@@ -238,6 +251,7 @@ struct ExpressionNode * createModExpressionNode(struct ExpressionNode * leftOper
     node->next = NULL;
     node->typ = NULL;
     node->id = ID++;
+    node->params = NULL;
     return node;
 }
 
@@ -254,6 +268,7 @@ struct ExpressionNode* createGreatExpressionNode(struct ExpressionNode* leftOper
     node->right = rightOperand;
     node->next = NULL;
     node->typ = NULL;
+    node->params = NULL;
     node->id = ID++;
     return node;
 }
@@ -271,6 +286,7 @@ struct ExpressionNode* createLessExpressionNode(struct ExpressionNode* leftOpera
     node->right = rightOperand;
     node->next = NULL;
     node->typ = NULL;
+    node->params = NULL;
     node->id = ID++;
     return node;
 }
@@ -289,6 +305,7 @@ struct ExpressionNode* createGreatEqualExpressionNode(struct ExpressionNode* lef
     node->next = NULL;
     node->typ = NULL;
     node->id = ID++;
+    node->params = NULL;
     return node;
 }
 
@@ -306,6 +323,7 @@ struct ExpressionNode* createLessEqualExpressionNode(struct ExpressionNode* left
     node->next = NULL;
     node->typ = NULL;
     node->id = ID++;
+    node->params = NULL;
     return node;
 }
 
@@ -321,6 +339,7 @@ struct ExpressionNode* createEqualExpressionNode(struct ExpressionNode* leftOper
     node->left = leftOperand;
     node->right = rightOperand;
     node->next = NULL;
+    node->params = NULL;
     node->typ = NULL;
     node->id = ID++;
     return node;
@@ -338,6 +357,7 @@ struct ExpressionNode* createNotEqualExpressionNode(struct ExpressionNode* leftO
     node->left = leftOperand;
     node->right = rightOperand;
     node->next = NULL;
+    node->params = NULL;
     node->typ = NULL;
     node->id = ID++;
     return node;
