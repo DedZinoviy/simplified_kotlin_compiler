@@ -270,6 +270,9 @@ DIGIT [0-9]
     return FUNC;
 }
 <MODIFIER>class {
+    printf("ERROR: Class Unsupported in this  version.\n");
+    BEGIN(INITIAL);
+    return -1;
     struct ModifierHead * copy = copyModifierHead(&head);
     yylval.modHead = copy;
     clearModifierHead(&head);
@@ -278,6 +281,9 @@ DIGIT [0-9]
     return CLASS;
 }
 <MODIFIER>constructor {
+    printf("ERROR: Constructor Unsupported in this  version.\n");
+    BEGIN(INITIAL);
+    return -1;
     struct ModifierHead * copy = copyModifierHead(&head);
     yylval.modHead = copy;
     clearModifierHead(&head);
@@ -302,26 +308,52 @@ DIGIT [0-9]
     return VAR;
 }
 
-as {printHandler((char*)"AS_KEY_WORD", yytext);}
-as\? {printHandler((char * )"AS?_KEY_WORD", yytext);}
+as {
+    printf("ERROR: AS Unsupported in this  version.\n", line);
+    BEGIN(INITIAL);
+    return -1;
+    printHandler((char*)"AS_KEY_WORD", yytext);
+}
+as\? {
+    printf("ERROR: AS? Unsupported in this  version.\n", line);
+    BEGIN(INITIAL);
+    return -1;
+    printHandler((char * )"AS?_KEY_WORD", yytext);
+}
 Array {
     printHandler((char * )"ARRAY_KEY_WORD", yytext);
     return ARRAY;
 }
-break {printHandler((char*)"BREAK_KEY_WORD", yytext);}
+break {
+    printf("ERROR: Break Unsupported in this  version.\n", line);
+    BEGIN(INITIAL);
+    return -1;
+    printHandler((char*)"BREAK_KEY_WORD", yytext);
+}
 class {
+    printf("ERROR: Class Unsupported in this  version.\n", line);
+    BEGIN(INITIAL);
+    return -1;
     printHandler((char*)"CLASS_KEY_WORD", yytext);
     struct ModifierHead * copy = copyModifierHead(&head);
     yylval.modHead = copy;
     return CLASS;
 }
 constructor {
+    printf("ERROR: Constructor Unsupported in this  version.\n", line);
+    BEGIN(INITIAL);
+    return -1;
     printHandler((char*)"CONSTRUCTOR_KEY_WORD", yytext);
     struct ModifierHead * copy = copyModifierHead(&head);
     yylval.modHead = copy;
     return CONSTRUCTOR;
 }
-continue {printHandler((char*)"CONTINUE_KEY_WORD", yytext);}
+continue {
+    printf("ERROR: Continue Unsupported in this  version.\n", line);
+    BEGIN(INITIAL);
+    return -1;
+    printHandler((char*)"CONTINUE_KEY_WORD", yytext);
+}
 do {
     printHandler((char*)"DO_KEY_WORD", yytext);
     return DO;
@@ -343,18 +375,44 @@ in {
     printHandler((char*)"IN_KEY_WORD", yytext);
     return IN;
 }
-\!in {printHandler((char*)"!IN_KEY_WORD", yytext);}
-interface {printHandler((char*)"INTERFACE_KEY_WORD", yytext);}
+\!in {
+    printf("ERROR: !IN Unsupported in this  version.\n");
+    BEGIN(INITIAL);
+    return -1;
+    printHandler((char*)"!IN_KEY_WORD", yytext);
+}
+interface {
+    printf("ERROR: interface Unsupported in this  version.\n");
+    BEGIN(INITIAL);
+    return -1;
+    printHandler((char*)"INTERFACE_KEY_WORD", yytext);
+}
 internal {
     multilineBegin = line;
     printHandler((char*)"INTERNAL_KEY_WORD", yytext);
     head.isInternal = 1;
     yy_push_state(MODIFIER);
 }
-is {printHandler((char*)"IS_KEY_WORD", yytext);}
-\!is {printHandler((char*)"!IS_KEY_WORD", yytext);}
-null {printHandler((char*)"NULL_KEY_WORD", yytext);}
-object {printHandler((char*)"OBJECT_KEY_WORD", yytext);}
+is {
+    printf("ERROR: Unsupported in this  version : %s.\n", yytext);
+    BEGIN(INITIAL);
+    return -1;
+    printHandler((char*)"IS_KEY_WORD", yytext);}
+\!is {
+    printf("ERROR: Unsupported in this  version : %s.\n", yytext);
+    BEGIN(INITIAL);
+    return -1;
+    printHandler((char*)"!IS_KEY_WORD", yytext);}
+null {
+    printf("ERROR: Unsupported in this  version : %s.\n", yytext);
+    BEGIN(INITIAL);
+    return -1;
+    printHandler((char*)"NULL_KEY_WORD", yytext);}
+object {
+    printf("ERROR: Unsupported in this  version : %s.\n", yytext);
+    BEGIN(INITIAL);
+    return -1;
+    printHandler((char*)"OBJECT_KEY_WORD", yytext);}
 final {
     multilineBegin = line;
     printHandler((char*)"FINAL_KEY_WORD", yytext);
@@ -391,22 +449,45 @@ public {
     head.isPublic = 1;
     yy_push_state(MODIFIER);
 }
-package {printHandler((char*)"PACKAGE_KEY_WORD", yytext);}
+package {
+    printf("ERROR: Unsupported in this  version : %s.\n", yytext);
+    BEGIN(INITIAL);
+    return -1;
+    printHandler((char*)"PACKAGE_KEY_WORD", yytext);}
 return {
     printHandler((char*)"RETURN_KEY_WORD", yytext);
     return RETURN;
 }
 super {
+    printf("ERROR: Unsupported in this  version : %s.\n", yytext);
+    BEGIN(INITIAL);
+    return -1;
     printHandler((char*)"SUPER_KEY_WORD", yytext);
     return SUPER;
 }
 this {
+    
+    printf("ERROR: Unsupported in this  version : %s.\n", yytext);
+    BEGIN(INITIAL);
+    return -1;
     printHandler((char*)"THIS_KEY_WORD", yytext);
     return THIS;
 }
-throw {printHandler((char*)"THROW_KEY_WORD", yytext);}
-try {printHandler((char*)"TRY_KEY_WORD", yytext);}
-typealias {printHandler((char*)"TYPEALIAS_KEY_WORD", yytext);}
+throw {
+    printf("ERROR: Unsupported in this  version : %s.\n", yytext);
+    BEGIN(INITIAL);
+    return -1;
+    printHandler((char*)"THROW_KEY_WORD", yytext);}
+try {
+    printf("ERROR: Unsupported in this  version : %s.\n", yytext);
+    BEGIN(INITIAL);
+    return -1;
+    printHandler((char*)"TRY_KEY_WORD", yytext);}
+typealias {
+    printf("ERROR: Unsupported in this  version : %s.\n", yytext);
+    BEGIN(INITIAL);
+    return -1;
+    printHandler((char*)"TYPEALIAS_KEY_WORD", yytext);}
 val {
     printHandler((char*)"VAL_KEY_WORD", yytext);
     struct ModifierHead * copy = copyModifierHead(&head);
@@ -419,7 +500,11 @@ var {
     yylval.modHead = copy;
     return VAR;
 }
-when {printHandler((char*)"WHEN_KEY_WORD", yytext);}
+when {
+    printf("ERROR: Unsupported in this  version : %s.\n", yytext);
+    BEGIN(INITIAL);
+    return -1;
+    printHandler((char*)"WHEN_KEY_WORD", yytext);}
 while {
     printHandler((char*)"WHILE_KEY_WORD", yytext);
     return WHILE;
@@ -498,26 +583,49 @@ return ENDL; }
     return EQUAL;
 }
 \% {
+    printf("ERROR: Unsupported in this  version : %s.\n", yytext);
+    BEGIN(INITIAL);
+    return -1;
     printHandler((char*)"MOD_OPERATOR", yytext);
     return '%';
 }
 \/\= {
+    
+    printf("ERROR: Unsupported in this  version : %s.\n", yytext);
+    BEGIN(INITIAL);
+    return -1;
     printHandler((char*)"DIV_ASSIGNMENT_OPERATOR", yytext);
     return DIV_ASSIGNMENT;
 }
 \+\= {
+    
+    printf("ERROR: Unsupported in this  version : %s.\n", yytext);
+    BEGIN(INITIAL);
+    return -1;
     printHandler((char*)"PLUS_ASSIGNMENT_OPERATOR", yytext);
     return PLUS_ASSIGNMENT;
 }
 \*\= {
+    
+    printf("ERROR: Unsupported in this  version : %s.\n", yytext);
+    BEGIN(INITIAL);
+    return -1;
     printHandler((char*)"MUL_ASSIGNMENT_OPERATOR", yytext);
     return MUL_ASSIGNMENT;
 }
 \-\= {
+    
+    printf("ERROR: Unsupported in this  version : %s.\n", yytext);
+    BEGIN(INITIAL);
+    return -1;
     printHandler((char*)"MINUS_ASSIGNMENT_OPERATOR", yytext);
     return MINUS_ASSIGNMENT;
 }
 \%\= {
+    
+    printf("ERROR: Unsupported in this  version : %s.\n", yytext);
+    BEGIN(INITIAL);
+    return -1;
     printHandler((char*)"MOD_ASSIGNMENT_OPERATOR", yytext);
     return MOD_ASSIGNMENT;
 }
@@ -572,16 +680,34 @@ return ENDL; }
 }
 
 \+\+ {
+    
+    printf("ERROR: Unsupported in this  version : %s.\n", yytext);
+    BEGIN(INITIAL);
+    return -1;
     printHandler((char*)"INCREMENT_OPERATOR", yytext);
     return INCREMENT;
 }
 \-\- {
+    
+    printf("ERROR: Unsupported in this  version : %s.\n", yytext);
+    BEGIN(INITIAL);
+    return -1;
     printHandler((char*)"DECREMENT_OPERATOR", yytext);
     return DECREMENT;
 }
 
-\=\=\= {printHandler((char*)"REF_EQUAL_OPERATOR", yytext);}
-\!\=\= {printHandler((char*)"REF_NOT_EQUAL_OPERATOR", yytext);}
+\=\=\= {
+    
+    printf("ERROR: Unsupported in this  version : %s.\n", yytext);
+    BEGIN(INITIAL);
+    return -1;
+    printHandler((char*)"REF_EQUAL_OPERATOR", yytext);}
+\!\=\= {
+    
+    printf("ERROR: Unsupported in this  version : %s.\n", yytext);
+    BEGIN(INITIAL);
+    return -1;
+    printHandler((char*)"REF_NOT_EQUAL_OPERATOR", yytext);}
 
 \! {
     printHandler((char*)"NOT_OPERATOR", yytext);
@@ -600,14 +726,42 @@ return ENDL; }
     printHandler((char*)"RANGE_OPERATOR", yytext);
     return RANGE;
 }
-\!\! {printHandler((char*)"NOT_NULL_ASSERTION_OPERATOR", yytext);}
-\?\. {printHandler((char*)"SAFE_CALL_OPERATOR", yytext);}
+\!\! {
+    printf("ERROR: Unsupported in this  version : %s.\n", yytext);
+    BEGIN(INITIAL);
+    return -1;
+    printHandler((char*)"NOT_NULL_ASSERTION_OPERATOR", yytext);}
+\?\. {
+    printf("ERROR: Unsupported in this  version : %s.\n", yytext);
+    BEGIN(INITIAL);
+    return -1;
+    printHandler((char*)"SAFE_CALL_OPERATOR", yytext);}
 
-\?\: {printHandler((char*)"ELVIS_OPERATOR", yytext);}
-\:\: {printHandler((char*)"UNIT_REFERENCE_OPERATOR", yytext);}
-\? {printHandler((char*)"ALLOW_NULL_OPERATOR", yytext);}
-\-\> {printHandler((char*)"LAMBDA_OPERATOR", yytext);}
-\@ {printHandler((char*)"ANNOTATION_OPERATOR", yytext);}
+\?\: 
+    printf("ERROR: Unsupported in this  version : %s.\n", yytext);
+    BEGIN(INITIAL);
+    return -1;{
+    printHandler((char*)"ELVIS_OPERATOR", yytext);}
+\:\: {
+    printf("ERROR: Unsupported in this  version : %s.\n", yytext);
+    BEGIN(INITIAL);
+    return -1;
+    printHandler((char*)"UNIT_REFERENCE_OPERATOR", yytext);}
+\? {
+    printf("ERROR: Unsupported in this  version : %s.\n", yytext);
+    BEGIN(INITIAL);
+    return -1;
+    printHandler((char*)"ALLOW_NULL_OPERATOR", yytext);}
+\-\> {
+    printf("ERROR: Unsupported in this  version : %s.\n", yytext);
+    BEGIN(INITIAL);
+    return -1;
+    printHandler((char*)"LAMBDA_OPERATOR", yytext);}
+\@ {
+    printf("ERROR: Unsupported in this  version : %s.\n", yytext);
+    BEGIN(INITIAL);
+    return -1;
+    printHandler((char*)"ANNOTATION_OPERATOR", yytext);}
 
 <INTERPOLATION>"{" {
     printHandler((char*)"LEFT_BRACE", yytext);
