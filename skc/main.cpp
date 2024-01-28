@@ -154,7 +154,7 @@ if (argc < 2)
     path[0] = std::toupper(path[0]);
     path.erase(sep, 1);
 
-
+    printf("GENERATION STARTED\n");
     generateClassFile(path);
 
 	return 0;

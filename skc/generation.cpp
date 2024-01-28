@@ -10,7 +10,10 @@ std::vector<char> generateCodeForStatement(struct StatementNode* stmt, class Cla
 std::vector<char> generateCodeForExpressionStatement(struct StatementNode* stmt, class ClassTableElement* cElem, class MethodTableElement* mElem);
 std::vector<char> generateCodeForReturnStatement(struct StatementNode *stmt, class ClassTableElement * cElem, class MethodTableElement * mElem);
 std::vector<char> generateCodeForMethodAccess(struct ExpressionNode * expr, class ClassTableElement * cElem, class MethodTableElement * mElem);
+std::vector<char> generateCodeForAssignment(struct ExpressionNode * expr, class ClassTableElement * cElem, class MethodTableElement * mElem);
 std::vector<char> generateCodeForWhileStatement(struct StatementNode * stmt, class ClassTableElement * cElem, class MethodTableElement * mElem);
+std::vector<char> generateCodeForDoWhileStatement(struct StatementNode * stmt, class ClassTableElement * cElem, class MethodTableElement * mElem);
+std::vector<char> generateCodeForValVarStatement(struct StatementNode * stmt, class ClassTableElement * cElem, class MethodTableElement * mElem);
 std::vector<char> generateMain(class ClassTableElement *cls,  MethodTableElement * main);
 void generateClassFile(std::string className)
 {
@@ -257,6 +260,14 @@ std::vector<char> generateCodeForStatement(struct StatementNode *stmt, class Cla
 	{
 		return generateCodeForWhileStatement(stmt, classElem, mElem);
 	}
+	else if (stmt->type == _DOWHILE)
+	{
+		return generateCodeForDoWhileStatement(stmt, classElem, mElem);
+	}
+	else if (stmt->type == _VAL || stmt->type == _VAR)
+	{
+		return generateCodeForValVarStatement(stmt, classElem, mElem);
+	}
 	return res;
 }
 
@@ -329,9 +340,70 @@ std::vector<char> generateCodeForWhileStatement(struct StatementNode * stmt, cla
 	return res;
 }
 
+std::vector<char> generateCodeForDoWhileStatement(struct StatementNode * stmt, class ClassTableElement * cElem, class MethodTableElement * mElem)
+{
+	std::vector<char> res;
+	std::vector<char> bodyCode;
+
+	// Генерация тела цикла.
+	if (stmt->singleBody != NULL)
+	{
+		std::vector<char> tmp  = generateCodeForStatement(stmt->singleBody, cElem, mElem);
+		appendArrayToByteVector(&bodyCode, tmp.data(), tmp.size());
+	}
+	else if (stmt -> complexBody != NULL)
+	{
+		struct StatementNode * cur = stmt->complexBody->first;
+		while(cur != NULL)
+		{
+			std::vector<char> tmp  = generateCodeForStatement(cur, cElem, mElem);
+			appendArrayToByteVector(&bodyCode, tmp.data(), tmp.size());
+			cur = cur -> next;
+		}
+		
+	}
+
+	appendArrayToByteVector(&res, bodyCode.data(), bodyCode.size());
+
+	// Генерация условия.
+	std::vector<char> condition = generateCodeForExpression(stmt->condition, cElem, mElem);
+
+	int cn = cElem->constants->findOrAddConstant(Utf8, "JavaRTL/Boolean");
+	int c =  cElem->constants->findOrAddConstant(Class, "",0,0,cn);
+	int n = cElem->constants->findOrAddConstant(Utf8, "_ivalue");
+	int d = cElem->constants->findOrAddConstant(Utf8, "I");
+	int nat = cElem->constants->findOrAddConstant(NameAndType, "", 0,0,n,d);
+	int fRef = cElem->constants->findOrAddConstant(FieldRef, "", 0,0,c,nat);
+	std::vector<char> gf = getfield(fRef);
+	appendArrayToByteVector(&condition, gf.data(), gf.size());
+
+	appendArrayToByteVector(&res, condition.data(), condition.size());
+
+	// Генерация смещения
+	int offset = bodyCode.size() + condition.size();
+	offset = -offset;
+
+	
+	std::vector<char> ifBytes = if_(NE, offset);
+
+	appendArrayToByteVector(&res, ifBytes.data(), ifBytes.size());
+
+	return res;
+}
+
 std::vector<char> generateCodeForValVarStatement(struct StatementNode * stmt, class ClassTableElement * cElem, class MethodTableElement * mElem)
 {
 	std::vector<char> res;
+
+	if (stmt->expression != NULL)
+	{
+		res = generateCodeForExpression(stmt->expression, cElem, mElem);
+		std::string name = stmt->varValId;
+		int vId = mElem->varTable->items[name]->id;
+		std::vector<char> codeGen = astore(vId);
+		appendArrayToByteVector(&res, codeGen.data(), codeGen.size());
+	}
+
 	return res;
 }
 
@@ -348,6 +420,10 @@ std::vector<char> generateCodeForExpression(struct ExpressionNode * expr, class 
 	if (expr->type == _METHOD_ACCESS)
 	{
 		return generateCodeForMethodAccess(expr, cElem, mElem);
+	}
+	if (expr->type == _ASSIGNMENT)
+	{
+		return generateCodeForAssignment(expr, cElem, mElem);
 	}
 }
 
@@ -413,6 +489,21 @@ std::vector<char> generateCodeForFunctionCall(struct ExpressionNode * expr, clas
 			std::vector<char> io = invokestatic(mRef);
 			appendArrayToByteVector(&res, io.data(), io.size());
 		}
+		else
+		{
+			Type * ret = cElem->methods->methods[expr->identifierString][keyDesc]->retType;
+			std::string retS = ret->className;
+			if (ret->typ == _ARRAY) desc += "[L";
+			else desc += "L";
+			desc += retS;
+			desc += ";";
+			int n = cElem->constants->findOrAddConstant(Utf8, expr->identifierString);
+			int d = cElem->constants->findOrAddConstant(Utf8, desc);
+			int nat = cElem->constants->findOrAddConstant(NameAndType, "", 0,0,n,d);
+			int mRef = cElem->constants->findOrAddConstant(NameAndType, "", 0,0,cElem->thisClass,nat);
+			std::vector<char> is = invokestatic(mRef);
+			appendArrayToByteVector(&res, is.data(), is.size());
+		}
 	}
 	return res;
 }
@@ -450,6 +541,16 @@ std::vector<char> generateCodeForLiteralCreation(struct ExpressionNode * expr, c
 			res = _new(clas);
 			std::vector<char> dp = dup(); // dup
 			appendArrayToByteVector(&res, dp.data(), dp.size());
+
+			std::vector<char> p = iconstBipushSipush(expr->charValue);
+			appendArrayToByteVector(&res, p.data(), p.size());
+		
+			int mn = cElem->constants->findOrAddConstant(Utf8, "<init>"); // invokespecial
+			int md = cElem->constants->findOrAddConstant(Utf8, "(C)V");
+			int nat = cElem->constants->findOrAddConstant(NameAndType, "", 0, 0, mn, md);
+			int mref = cElem->constants->findOrAddConstant(MethodRef, "", 0, 0, clas, nat);
+			std::vector<char> is = invokespecial(mref);
+			appendArrayToByteVector(&res, is.data(), is.size());
 		}
 	}
 	else if (expr->fromLit == _FROM_STRING)
@@ -565,6 +666,25 @@ std::vector<char> generateCodeForMethodAccess(struct ExpressionNode * expr, clas
 	std::vector<char> iv = invokevirtual(mref);
 	appendArrayToByteVector(&res, iv.data(), iv.size());
 
+	return res;
+}
+
+std::vector<char> generateCodeForAssignment(struct ExpressionNode * expr, class ClassTableElement * cElem, class MethodTableElement * mElem)
+{
+	std::vector<char> res;
+	std::vector<char> right = generateCodeForExpression(expr->right, cElem, mElem);
+	appendArrayToByteVector(&res, right.data(), right.size());
+	if (expr->left->type == _IDENTIFIER)
+	{
+		std::string name = expr->left->identifierString;
+		int num = mElem->varTable->items[name]->id;
+		std::vector<char> asign = astore(num);
+		appendArrayToByteVector(&res, asign.data(), asign.size());
+	}
+	/*else if ()
+	{
+
+	}*/
 	return res;
 }
 

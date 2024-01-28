@@ -1123,7 +1123,8 @@ struct SemanticError * attributeExpression(struct ExpressionNode * expression, c
         {
             std::string id = expression->identifierString; // Получить идентификатор функции или метода.
             struct ExpressionListNode * params = expression->params;
-            struct ExpressionNode * curExpr = params->first;
+            struct ExpressionNode * curExpr = NULL;
+            if (params != NULL) curExpr = params->first;
             while(curExpr != NULL) // Пока есть параметры...
             {
                 if (curExpr->type == ExpressionType::_ASSIGNMENT)
@@ -1136,9 +1137,10 @@ struct SemanticError * attributeExpression(struct ExpressionNode * expression, c
                 curExpr = curExpr->next; // Перейти к следующему параметру.
             }
 
+            
             // Сформировать дескриптор набора параметров.
             std::string desc = "(";
-            curExpr = params->first;
+            if (params != NULL) curExpr = params->first;
             while(curExpr != NULL) // Пока есть параметры...
             {
                 Type * typ = new Type(curExpr->typ);
@@ -1168,6 +1170,7 @@ struct SemanticError * attributeExpression(struct ExpressionNode * expression, c
                     }
                     else
                     {
+                        printf("%s\n",expression->identifierString);
                         expression->typ = FunctionTable::items[id][desc]->retType->toTypeNode();
                     }
                 }
@@ -1332,7 +1335,7 @@ struct SemanticError * attributeExpression(struct ExpressionNode * expression, c
 }
 
 void fillMethodRefs(class ClassTableElement * cls);
-void fillLiterals(class ClassTableElement * cls);
+void fillLiterLiterals(class ClassTableElement * cls);
 void fillConstantTableForClass(class ClassTableElement * cls)
 {
     cls->constants->findOrAddConstant(ConstantType::Utf8, "Code");
@@ -1380,6 +1383,8 @@ void fillMethodRefsInExpression(struct ExpressionNode * expression, class ClassT
 
             if (expression->type == ExpressionType::_FUNC_CALL && expression->fromLit == BaseLiteral::_FROM_NONE)
             {
+                
+                printf("%s\n", desc.c_str());
                 Type * ret = FunctionTable::items[id][desc]->retType;
                 if (ret->typ == TypeType::_ARRAY) desc += "[L";
                 else desc += "L";
@@ -1484,6 +1489,7 @@ void fillLiteralsInExpression(struct ExpressionNode * expression, class ClassTab
     }
     else if (expression->fromLit == BaseLiteral::_FROM_STRING)
     {
+        printf("STRING\n");
         int str = cls->constants->findOrAddConstant(ConstantType::Utf8, getSafeCString(expression->stringValue));
         int strConst = cls->constants->findOrAddConstant(ConstantType::String, "", NULL, NULL, str);
         std::string clsName = "JavaRTL/String";
@@ -1554,6 +1560,18 @@ void fillLiteralsInStatement(struct StatementNode * stmt, struct ClassTableEleme
     else if (stmt->type == StatementType::_VAL || stmt->type == StatementType::_VAR)
     {
         if (stmt->expression != NULL) fillLiteralsInExpression(stmt->expression, cls);
+    }
+    else if (stmt->type == StatementType::_WHILE || stmt->type == StatementType::_DOWHILE) 
+    {
+        fillLiteralsInExpression(stmt->condition, cls);
+        if (stmt->singleBody != NULL)
+        {
+            fillLiteralsInStatement(stmt->singleBody, cls);
+        }
+        else if (stmt->complexBody != NULL)
+        {
+           if (stmt->complexBody->first != NULL) fillLiteralsInStatement(stmt->complexBody->first, cls);
+        }
     }
     if(stmt->next!= NULL)
     {   
