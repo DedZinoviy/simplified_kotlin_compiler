@@ -86,4 +86,32 @@ public class Int extends Any{
     public Char toChar() {
         return new Char(this._value);
     }
+
+    public Int uMinus() {
+        return new Int(- this._value);
+    }
+
+    
+    public Int uPlus() {
+        return new Int(this._value);        
+    }
+
+    public Int[] rangeTo(Int other) {
+        int len = other._value - this._value;
+        if (len < 0) {
+            len = len * (-1);
+        }
+        Int[] res = new Int[len];
+        if (other._value >= this._value) {
+            for (int i = 0; i < len; i++) {
+                res[i] = new Int(this._value + i);
+            }
+        }
+        else {
+            for (int i = 0; i < len; i++) {
+                res[i] = new Int(this._value - i);
+            }
+        }
+        return res;
+    }
 }
