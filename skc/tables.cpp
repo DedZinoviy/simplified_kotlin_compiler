@@ -1457,12 +1457,18 @@ void fillLiteralsInExpression(struct ExpressionNode * expression, class ClassTab
         std::string clsName = "JavaRTL/Boolean";
         std::string methodName = "<init>";
         std::string desc = "(I)V";
+        std::string fd = "I";
+        int fdn = cls->constants->findOrAddConstant(Utf8, fd);
+        std::string fn = "_ivalue";
+        int fnn = cls->constants->findOrAddConstant(Utf8, fn);
+        int fnt = cls->constants->findOrAddConstant(NameAndType, "", 0, 0, fnn, fdn);
         int clsNameConst = cls->constants->findOrAddConstant(ConstantType::Utf8, clsName);
         int clsConst = cls->constants->findOrAddConstant(ConstantType::Class, "", NULL, NULL, clsNameConst);
         int methodNameConst = cls->constants->findOrAddConstant(ConstantType::Utf8, methodName);
         int descConst = cls->constants->findOrAddConstant(ConstantType::Utf8, desc);
         int NaT = cls->constants->findOrAddConstant(ConstantType::NameAndType, "", NULL, NULL, methodNameConst, descConst);
         int mRef = cls->constants->findOrAddConstant(ConstantType::MethodRef, "", NULL, NULL, clsConst, NaT);
+        int fRef = cls->constants->findOrAddConstant(ConstantType::FieldRef, "", NULL, NULL, clsConst, fnt);
     }
     else if (expression->fromLit == BaseLiteral::_FROM_CHAR)
     {

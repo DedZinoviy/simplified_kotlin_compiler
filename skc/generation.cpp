@@ -10,6 +10,7 @@ std::vector<char> generateCodeForStatement(struct StatementNode* stmt, class Cla
 std::vector<char> generateCodeForExpressionStatement(struct StatementNode* stmt, class ClassTableElement* cElem, class MethodTableElement* mElem);
 std::vector<char> generateCodeForReturnStatement(struct StatementNode *stmt, class ClassTableElement * cElem, class MethodTableElement * mElem);
 std::vector<char> generateCodeForMethodAccess(struct ExpressionNode * expr, class ClassTableElement * cElem, class MethodTableElement * mElem);
+std::vector<char> generateCodeForWhileStatement(struct StatementNode * stmt, class ClassTableElement * cElem, class MethodTableElement * mElem);
 std::vector<char> generateMain(class ClassTableElement *cls,  MethodTableElement * main);
 void generateClassFile(std::string className)
 {
@@ -241,6 +242,8 @@ std::vector<char> generateMethodCode(class MethodTableElement * mElem, class Cla
 
 std::vector<char> generateCodeForStatement(struct StatementNode *stmt, class ClassTableElement * classElem, class MethodTableElement * mElem)
 {
+	printf("HERE\n");
+	printf("TYPE: %d\n", stmt);
 	std::vector<char> res;
 	if (stmt->type == _EXPRESSION)
 	{
@@ -249,6 +252,10 @@ std::vector<char> generateCodeForStatement(struct StatementNode *stmt, class Cla
 	else if (stmt->type == _RETURN)
 	{
 		return generateCodeForReturnStatement(stmt, classElem, mElem);
+	}
+	else if (stmt->type == _WHILE)
+	{
+		return generateCodeForWhileStatement(stmt, classElem, mElem);
 	}
 	return res;
 }
@@ -265,6 +272,66 @@ std::vector<char> generateCodeForReturnStatement(struct StatementNode *stmt, cla
 	appendArrayToByteVector(&res, b.data(), b.size());
 	std::vector<char> ret = areturn();
 	appendArrayToByteVector(&res, ret.data(), ret.size());
+	return res;
+}
+
+std::vector<char> generateCodeForWhileStatement(struct StatementNode * stmt, class ClassTableElement * cElem, class MethodTableElement * mElem)
+{
+	std::vector<char> res;
+	std::vector<char> bodyCode;
+
+	// Генерация тела цикла.
+	if (stmt->singleBody != NULL)
+	{
+		std::vector<char> tmp  = generateCodeForStatement(stmt->singleBody, cElem, mElem);
+		appendArrayToByteVector(&bodyCode, tmp.data(), tmp.size());
+	}
+	else if (stmt -> complexBody != NULL)
+	{
+		struct StatementNode * cur = stmt->complexBody->first;
+		while(cur != NULL)
+		{
+			std::vector<char> tmp  = generateCodeForStatement(cur, cElem, mElem);
+			appendArrayToByteVector(&bodyCode, tmp.data(), tmp.size());
+			cur = cur -> next;
+		}
+		
+	}
+
+	// Генераия goto.
+
+	std::vector<char> gt = go_to(bodyCode.size());
+
+	appendArrayToByteVector(&res, gt.data(), gt.size());
+	appendArrayToByteVector(&res, bodyCode.data(), bodyCode.size());
+
+	// Генерация условия.
+	std::vector<char> condition = generateCodeForExpression(stmt->condition, cElem, mElem);
+
+	int cn = cElem->constants->findOrAddConstant(Utf8, "JavaRTL/Boolean");
+	int c =  cElem->constants->findOrAddConstant(Class, "",0,0,cn);
+	int n = cElem->constants->findOrAddConstant(Utf8, "_ivalue");
+	int d = cElem->constants->findOrAddConstant(Utf8, "I");
+	int nat = cElem->constants->findOrAddConstant(NameAndType, "", 0,0,n,d);
+	int fRef = cElem->constants->findOrAddConstant(FieldRef, "", 0,0,c,nat);
+	std::vector<char> gf = getfield(fRef);
+	appendArrayToByteVector(&condition, gf.data(), gf.size());
+
+	appendArrayToByteVector(&res, condition.data(), condition.size());
+
+	// Генерация смещения.
+	int offset = bodyCode.size() + condition.size();
+	offset = -offset;
+
+	std::vector<char> ifBytes = if_(NE, offset);
+
+	appendArrayToByteVector(&res, ifBytes.data(), ifBytes.size());
+	return res;
+}
+
+std::vector<char> generateCodeForValVarStatement(struct StatementNode * stmt, class ClassTableElement * cElem, class MethodTableElement * mElem)
+{
+	std::vector<char> res;
 	return res;
 }
 

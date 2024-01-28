@@ -3,9 +3,13 @@ package JavaRTL;
 public class Boolean {
     
     public boolean _value;
+
+    public int _ivalue;
     
     public Boolean(boolean val){
         this._value = val;
+        if (val == true) this._ivalue = 1;
+        else this._ivalue = 0;
     }
 
     public Boolean equals(Boolean other) {
@@ -29,9 +33,13 @@ public class Boolean {
     }
 
     public Boolean(int val) {
-        if (val == 0)
+        if (val == 0) {
             this._value = false;
-        else 
+            this._ivalue = 0;
+        }
+        else { 
             this._value = true;
+            this._ivalue = 1;
+        }
     }
 }

@@ -214,6 +214,112 @@ std::vector<char> go_to(int offset)
 	return res;
 }
 
+std::vector<char> if_icmp(IfCommandType type, int offset)
+{
+	std::vector<char> res;
+	switch (type)
+	{
+	case EQ:
+		res.push_back(0x9F); //if_icmpeq
+		break;
+	case NE:
+		res.push_back(0xA0); //if_icmpne
+		break;
+	case LT:
+		res.push_back(0xA1); //if_icmplt
+		break;
+	case LE:
+		res.push_back(0xA4); //if_icmple
+		break;
+	case GT:
+		res.push_back(0xA3); //if_icmpgt
+		break;
+	case GE:
+		res.push_back(0xA2); //if_icmpge
+		break;
+	default:
+		break;
+	}
+
+	std::vector <char> temp;
+	if (offset < 0)
+		temp = intToByteVector(offset, 2);
+	else
+		temp = intToByteVector(offset + 3, 2);
+	appendArrayToByteVector(&res, temp.data(), temp.size());
+
+	return res;
+}
+
+// ---------- if ----------
+std::vector<char> if_(IfCommandType type, int offset)
+{
+	std::vector<char> res;
+
+	switch (type)
+	{
+	case EQ:
+		res.push_back(0x99); //ifeq
+		break;
+	case NE:
+		res.push_back(0x9A); //ifne
+		break;
+	case LT:
+		res.push_back(0x9B); //iflt
+		break;
+	case LE:
+		res.push_back(0x9E); //ifle
+		break;
+	case GT:
+		res.push_back(0x9D); //ifgt
+		break;
+	case GE:
+		res.push_back(0x9C); //ifge
+		break;
+	default:
+		break;
+	}
+
+	std::vector <char> temp;
+	if (offset < 0)
+		temp = intToByteVector(offset, 2);
+	else
+		temp = intToByteVector(offset + 3, 2);
+	appendArrayToByteVector(&res, temp.data(), temp.size());
+
+	return res;
+}
+
+// ---------- if_acmp ----------
+std::vector<char> if_acmp(IfCommandType type, int offset)
+{
+	std::vector<char> res;
+
+	switch (type)
+	{
+	case EQ:
+		res.push_back(0xA5); //if_acmpeq
+		break;
+	case NE:
+		res.push_back(0xA6); //if_acmpne
+		break;
+	default:
+	{
+		throw std::exception("Error in if_acmp: Invalid type");
+	}
+		break;
+	}
+	std::vector <char> temp;
+	if (offset < 0)
+		temp = intToByteVector(offset, 2);
+	else
+		temp = intToByteVector(offset + 3, 2);
+	appendArrayToByteVector(&res, temp.data(), temp.size());
+
+	return res;
+}
+
+
 
 std::vector<char> _new(int constant)
 {
@@ -270,5 +376,23 @@ std::vector<char> _return()
 {
 	std::vector<char> res;
 	res.push_back(0xB1); //return
+	return res;
+}
+
+std::vector<char> getfield(int constant)
+{
+	std::vector <char> res;
+	res.push_back(0xB4); //getfield
+	std::vector <char> temp = intToByteVector(constant, 2);
+	appendArrayToByteVector(&res, temp.data(), temp.size());
+	return res;
+}
+
+std::vector<char> putfield(int constant)
+{
+	std::vector<char> res;
+	res.push_back(0xB5); //putfield
+	std::vector <char> temp = intToByteVector(constant, 2);
+	appendArrayToByteVector(&res, temp.data(), temp.size());
 	return res;
 }

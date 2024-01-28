@@ -6,4 +6,13 @@ public class String extends Any{
     public String(java.lang.String str){
         this._value = str;
     }
+
+    public Int toInt() {
+        try {
+            int i = Integer.parseInt (this._value.trim ());
+            return new Int(i);
+        } catch (NumberFormatException nfe) {
+            throw new NumberFormatException(nfe.getMessage());
+        }
+    }
 }

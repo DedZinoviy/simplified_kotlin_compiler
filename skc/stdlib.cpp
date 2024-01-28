@@ -89,6 +89,11 @@ void initStdClasses()
     ClassTable::items["JavaRTL/String"] = new ClassTableElement();
     ClassTable::items["JavaRTL/String"]->clsName = "JavaRTL/String";
     ClassTable::items["JavaRTL/String"]->isOpen = 0;
+        ClassTable::items["JavaRTL/String"]->methods->methods["toInt"] = std::map<std::string, class MethodTableElement*>();
+        retVal = new Type();
+        retVal->className = ClassTable::items["JavaRTL/Int"]->clsName;
+        retVal->typ = TypeType::_CLS;
+        ClassTable::items["JavaRTL/String"]->methods->methods["toInt"]["()"] = new MethodTableElement(0,0,"toInt","()LJavaRTL/Int;", NULL, retVal, std::vector<FuncParam>());
 
     /* ----- Инициализация класса Boolean ------ */
     ClassTable::items["JavaRTL/Boolean"] = new ClassTableElement();

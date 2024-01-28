@@ -12,6 +12,16 @@ public:
 
 	static const int stackSize = 1000;
 };
+
+enum IfCommandType {
+	EQ,
+	NE,
+	LT,
+	GT,
+	LE,
+	GE
+};
+
 /* ------------------------- Команды работы со стеком ------------------------- */
 
 std::vector<char> intToByteVector(int num, int arraySize);
@@ -71,11 +81,19 @@ std::vector<char> dup2();
 */
 std::vector<char> go_to(int offset);
 
+std::vector<char> if_acmp(IfCommandType type, int offset);
+std::vector<char> if_icmp(IfCommandType type, int offset);
+std::vector<char> if_(IfCommandType type, int offset);
+
 /*! Сгенерировать команду new.
 * \param[in] constant константа класса объекта.
 * \return вектор байт - команда.
 */
 std::vector<char> _new(int constant);
+
+std::vector<char> getfield(int constant);
+
+std::vector<char> putfield(int constant);
 
 /*! Сгенерировать команду invokespecial.
 * \param[in] constant константа ссылки на метод.
