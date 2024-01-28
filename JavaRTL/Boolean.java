@@ -29,6 +29,7 @@ public class Boolean {
     }
 
     public Boolean and(Boolean other) {
+        if (this._value == false) return new Boolean(false);
         return new Boolean(this._value && other._value);
     }
 
