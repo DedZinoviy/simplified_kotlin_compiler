@@ -396,3 +396,46 @@ std::vector<char> putfield(int constant)
 	appendArrayToByteVector(&res, temp.data(), temp.size());
 	return res;
 }
+
+
+std::vector<char> anewarray(int constant)
+{
+	std::vector<char> res;
+	res.push_back(0xBD); //anewarray
+	std::vector <char> temp = intToByteVector(constant, 2);
+	appendArrayToByteVector(&res, temp.data(), temp.size());
+	return res;
+}
+
+std:: vector<char>arraylength()
+{
+	std::vector<char> res;
+	res.push_back(0xBE); //arraylength
+	return res;
+}
+
+
+// ---------- aastore ----------
+std::vector<char> aastore()
+{
+	std::vector<char> res;
+	res.push_back(0x53); //aastore
+	return res;
+}
+
+// ---------- iadd ----------
+std::vector<char> iadd()
+{
+	std::vector<char> res;
+	res.push_back(0x60); //iadd
+	return res;
+}
+
+// ---------- aaload ----------
+std::vector<char> aaload()
+{
+	std::vector<char> res;
+	res.push_back(0x32); //aaload
+	return res;
+}
+

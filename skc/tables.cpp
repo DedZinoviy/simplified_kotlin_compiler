@@ -7,6 +7,7 @@ std::map<std::string, class ClassTableElement*> ClassTable::items = std::map<std
 std::map<std::string, std::map<std::string, class FunctionTableElement*>> FunctionTable::items = std::map<std::string, std::map<std::string, class FunctionTableElement*>>();
 void fillLiterals(class ClassTableElement * cls);
 void fillMethodRefs(class ClassTableElement * cls);
+void fillFieldConstants(class ClassTableElement * cls);
 
 static struct SemanticError * _fillMethodTableForClass(struct ClassNode * clas, class ClassTableElement* elem);
 struct SemanticError * attributingAndFillingLocals(class MethodTableElement * meth);
@@ -194,6 +195,9 @@ struct SemanticError * buildClassTable(struct KotlinFileNode * root, const char 
     }
     fillLiterals(elem);
     fillMethodRefs(elem);
+
+    fillFieldConstants(elem);
+
     if (elem->methods->methods.count("main") != 0)
     {
         if (elem->methods->methods["main"].count("()") != 0)
@@ -1228,6 +1232,7 @@ struct SemanticError * attributeExpression(struct ExpressionNode * expression, c
                 node->complexType = rightType;
                 node->ident = NULL;
                 expression->typ = node;
+                mElem->varTable->findOrAddLocalVar("$a",new Type(),1,1);
             }
         }
 
@@ -1489,7 +1494,6 @@ void fillLiteralsInExpression(struct ExpressionNode * expression, class ClassTab
     }
     else if (expression->fromLit == BaseLiteral::_FROM_STRING)
     {
-        printf("STRING\n");
         int str = cls->constants->findOrAddConstant(ConstantType::Utf8, getSafeCString(expression->stringValue));
         int strConst = cls->constants->findOrAddConstant(ConstantType::String, "", NULL, NULL, str);
         std::string clsName = "JavaRTL/String";
@@ -1504,6 +1508,15 @@ void fillLiteralsInExpression(struct ExpressionNode * expression, class ClassTab
     }
     else if (expression->fromLit == BaseLiteral::_FROM_INT)
     {
+        if (expression->intValue < -32768 || expression->intValue > 32767)
+        {
+            int ic = cls->constants->findOrAddConstant(Integer, "", expression->intValue);
+        }
+        std::string fd = "I";
+        int fdn = cls->constants->findOrAddConstant(Utf8, fd);
+        std::string fn = "_value";
+        int fnn = cls->constants->findOrAddConstant(Utf8, fn);
+        int fnt = cls->constants->findOrAddConstant(NameAndType, "", 0, 0, fnn, fdn);
         std::string clsName = "JavaRTL/Int";
         std::string methodName = "<init>";
         std::string desc = "(I)V";
@@ -1513,6 +1526,7 @@ void fillLiteralsInExpression(struct ExpressionNode * expression, class ClassTab
         int descConst = cls->constants->findOrAddConstant(ConstantType::Utf8, (char*)desc.c_str());
         int NaT = cls->constants->findOrAddConstant(ConstantType::NameAndType, "", NULL, NULL, methodNameConst, descConst);
         int mRef = cls->constants->findOrAddConstant(ConstantType::MethodRef, "", NULL, NULL, clsConst, NaT);
+        int fieldRef = cls->constants->findOrAddConstant(ConstantType::FieldRef, "", NULL, NULL, clsConst, fnt);
     }
     else if (expression->fromLit == BaseLiteral::_FROM_UNIT)
     {
@@ -1589,4 +1603,34 @@ void fillLiterals(class ClassTableElement * cls)
             fillLiteralsInStatement(curStmt, cls);
         }
     }
+}
+
+void fillFieldConstants(class ClassTableElement * cls)
+{
+    std::string clsName = "JavaRTL/Boolean";
+    std::string methodName = "<init>";
+    std::string desc = "(I)V";
+    std::string fd = "I";
+    int fdn = cls->constants->findOrAddConstant(Utf8, fd);
+    std::string fn = "_ivalue";
+    int fnn = cls->constants->findOrAddConstant(Utf8, fn);
+    int fnt = cls->constants->findOrAddConstant(NameAndType, "", 0, 0, fnn, fdn);
+
+    int cn = cls->constants->findOrAddConstant(Utf8, clsName);
+    int clsConst = cls->constants->findOrAddConstant(Class, "", 0, 0, cn);
+    int fRef = cls->constants->findOrAddConstant(ConstantType::FieldRef, "", NULL, NULL, clsConst, fnt);
+
+
+    clsName = "JavaRTL/Int";
+    methodName = "<init>";
+    desc = "(I)V";
+    fd = "I";
+    fdn = cls->constants->findOrAddConstant(Utf8, fd);
+    fn = "_value";
+    fnn = cls->constants->findOrAddConstant(Utf8, fn);
+    fnt = cls->constants->findOrAddConstant(NameAndType, "", 0, 0, fnn, fdn);
+
+    cn = cls->constants->findOrAddConstant(Utf8, clsName);
+    clsConst = cls->constants->findOrAddConstant(Class, "", 0, 0, cn);
+    fRef = cls->constants->findOrAddConstant(ConstantType::FieldRef, "", NULL, NULL, clsConst, fnt);
 }

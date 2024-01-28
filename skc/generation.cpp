@@ -11,9 +11,11 @@ std::vector<char> generateCodeForExpressionStatement(struct StatementNode* stmt,
 std::vector<char> generateCodeForReturnStatement(struct StatementNode *stmt, class ClassTableElement * cElem, class MethodTableElement * mElem);
 std::vector<char> generateCodeForMethodAccess(struct ExpressionNode * expr, class ClassTableElement * cElem, class MethodTableElement * mElem);
 std::vector<char> generateCodeForAssignment(struct ExpressionNode * expr, class ClassTableElement * cElem, class MethodTableElement * mElem);
+std::vector<char> generateCodeForArrayAccess(struct ExpressionNode * expr, class ClassTableElement * cElem, class MethodTableElement * mElem);
 std::vector<char> generateCodeForWhileStatement(struct StatementNode * stmt, class ClassTableElement * cElem, class MethodTableElement * mElem);
 std::vector<char> generateCodeForDoWhileStatement(struct StatementNode * stmt, class ClassTableElement * cElem, class MethodTableElement * mElem);
 std::vector<char> generateCodeForValVarStatement(struct StatementNode * stmt, class ClassTableElement * cElem, class MethodTableElement * mElem);
+std::vector<char> generateCodeForArrayCreation(struct ExpressionNode * expr, class ClassTableElement * cElem, class MethodTableElement * mElem);
 std::vector<char> generateMain(class ClassTableElement *cls,  MethodTableElement * main);
 void generateClassFile(std::string className)
 {
@@ -46,7 +48,7 @@ void generateClassFile(std::string className)
     std::vector<char> interfaceCount = intToByteVector(0, 2);
     std::vector<char> fieldCount = intToByteVector(0, 2);
 
-	for (auto i = elem->constants->constants.begin(); i != elem->constants->constants.end(); ++i)
+	/*for (auto i = elem->constants->constants.begin(); i != elem->constants->constants.end(); ++i)
 	{
 		if (i->second->cnst == Utf8)
 		{
@@ -68,7 +70,7 @@ void generateClassFile(std::string className)
 			printf("NaT : %d\n", i->second->firstRef, i->second->secRef);
 		}
 	}
-
+*/
 	// Посчитать количество методов.
 	int mCount = 0;
 	mCount = 2;
@@ -245,8 +247,6 @@ std::vector<char> generateMethodCode(class MethodTableElement * mElem, class Cla
 
 std::vector<char> generateCodeForStatement(struct StatementNode *stmt, class ClassTableElement * classElem, class MethodTableElement * mElem)
 {
-	printf("HERE\n");
-	printf("TYPE: %d\n", stmt);
 	std::vector<char> res;
 	if (stmt->type == _EXPRESSION)
 	{
@@ -425,6 +425,14 @@ std::vector<char> generateCodeForExpression(struct ExpressionNode * expr, class 
 	{
 		return generateCodeForAssignment(expr, cElem, mElem);
 	}
+	if (expr->type == _ARRAY_CREATION)
+	{
+		return generateCodeForArrayCreation(expr,cElem,mElem);
+	}
+	if (expr->type == _ARRAY_ACCESS)
+	{
+		return generateCodeForArrayAccess(expr,cElem,mElem);
+	}
 }
 
 
@@ -523,6 +531,15 @@ std::vector<char> generateCodeForLiteralCreation(struct ExpressionNode * expr, c
 			appendArrayToByteVector(&res, dp.data(), dp.size());
 			
 			// Параметры
+			if (expr->intValue < -32768 || expr->intValue > 32767)
+			{
+				int ic = cElem->constants->findOrAddConstant(Integer, "", expr->intValue);
+				std::vector<char> p = ldc(ic);
+				appendArrayToByteVector(&res, p.data(), p.size());
+			} else {
+				std::vector<char> p = iconstBipushSipush(expr->intValue);
+				appendArrayToByteVector(&res, p.data(), p.size());
+			}
 			
 			// invokespecial
 			int mn = cElem->constants->findOrAddConstant(Utf8, "<init>");
@@ -530,6 +547,7 @@ std::vector<char> generateCodeForLiteralCreation(struct ExpressionNode * expr, c
 			int nat = cElem->constants->findOrAddConstant(NameAndType, "", 0, 0, mn, md);
 			int mref = cElem->constants->findOrAddConstant(MethodRef, "", 0, 0, clas, nat);
 			std::vector<char> is = invokespecial(mref);
+			appendArrayToByteVector(&res, is.data(), is.size());
 		}
 	}
 	else if (expr->fromLit == _FROM_CHAR)
@@ -672,19 +690,37 @@ std::vector<char> generateCodeForMethodAccess(struct ExpressionNode * expr, clas
 std::vector<char> generateCodeForAssignment(struct ExpressionNode * expr, class ClassTableElement * cElem, class MethodTableElement * mElem)
 {
 	std::vector<char> res;
-	std::vector<char> right = generateCodeForExpression(expr->right, cElem, mElem);
-	appendArrayToByteVector(&res, right.data(), right.size());
 	if (expr->left->type == _IDENTIFIER)
 	{
+		std::vector<char> right = generateCodeForExpression(expr->right, cElem, mElem);
+		appendArrayToByteVector(&res, right.data(), right.size());
 		std::string name = expr->left->identifierString;
 		int num = mElem->varTable->items[name]->id;
 		std::vector<char> asign = astore(num);
 		appendArrayToByteVector(&res, asign.data(), asign.size());
 	}
-	/*else if ()
+	else if (expr->left->type == _ARRAY_ACCESS)
 	{
-
-	}*/
+		printf("ASS\n");
+		struct ExpressionNode * left = expr->left;
+		auto arrayL = generateCodeForExpression(left->left, cElem, mElem);
+		appendArrayToByteVector(&res, arrayL.data(), arrayL.size());
+		auto arrayR = generateCodeForExpression(left->right, cElem, mElem);
+		appendArrayToByteVector(&res, arrayR.data(), arrayR.size());
+		int cln = cElem->constants->findOrAddConstant(Utf8, "JavaRTL/Int"); 
+		int cl = cElem->constants->findOrAddConstant(Class, "", 0,0,cln);
+		int n = cElem->constants->findOrAddConstant(Utf8, "_value");
+		int d = cElem->constants->findOrAddConstant(Utf8, "I");
+		int nat = cElem->constants->findOrAddConstant(NameAndType, "", 0,0,n,d);
+		int fr = cElem->constants->findOrAddConstant(FieldRef, "", 0,0,cl,nat);
+		std::vector<char> f = getfield(fr);
+		appendArrayToByteVector(&res, f.data(), f.size());
+		std::vector<char> right = generateCodeForExpression(expr->right, cElem, mElem);
+		appendArrayToByteVector(&res, right.data(), right.size());
+		std::vector<char> asign = aastore();
+		appendArrayToByteVector(&res, asign.data(), asign.size());
+		printf("HERE\n");
+	}
 	return res;
 }
 
@@ -757,5 +793,107 @@ std::vector<char> generateMain(class ClassTableElement *cls,  MethodTableElement
 	appendArrayToByteVector(&res, attributesCountBytes.data(), attributesCountBytes.size());
 
 
+	return res;
+}
+
+std::vector<char> generateCodeForArrayCreation(struct ExpressionNode * expr, class ClassTableElement * cElem, class MethodTableElement * mElem)
+{
+	std::vector<char> res;
+
+	// Длина массива.
+
+	struct ExpressionNode * left = expr->left;
+
+	std::vector<char> l = generateCodeForExpression(expr->left, cElem, mElem);
+	appendArrayToByteVector(&res, l.data(), l.size());
+	int cln = cElem->constants->findOrAddConstant(Utf8, "JavaRTL/Int"); 
+	int cl = cElem->constants->findOrAddConstant(Class, "", 0,0,cln);
+	int n = cElem->constants->findOrAddConstant(Utf8, "_value");
+	int d = cElem->constants->findOrAddConstant(Utf8, "I");
+	int nat = cElem->constants->findOrAddConstant(NameAndType, "", 0,0,n,d);
+	int fr = cElem->constants->findOrAddConstant(FieldRef, "", 0,0,cl,nat);
+	std::vector<char> f = getfield(fr);
+	appendArrayToByteVector(&res, f.data(), f.size());
+
+
+	// Тип данных массива.
+
+	int targetClassN = cElem->constants->findOrAddConstant(Utf8, Type(expr->typ).className);
+	int targetClass = cElem->constants->findOrAddConstant(Class, "", 0,0,targetClassN);
+
+	std::vector<char> arr = anewarray(targetClass);
+	appendArrayToByteVector(&res, arr.data(), arr.size());
+
+	// Заполнить массив.
+
+	int local = mElem->varTable->items["$a"]->id; // Переменная для for.
+	auto init = iconstBipushSipush(0);
+	appendArrayToByteVector(&res, init.data(), init.size());
+	auto loc = istore(local);
+	appendArrayToByteVector(&res, loc.data(), loc.size());
+	
+	std::vector<char> fill;
+
+	auto du = dup();
+	appendArrayToByteVector(&fill, du.data(), du.size());
+	auto loa = iload(local);
+	appendArrayToByteVector(&fill, loa.data(), loa.size());
+
+	auto in = generateCodeForExpression(expr->right, cElem, mElem);
+	appendArrayToByteVector(&fill, in.data(), in.size());
+	auto store = aastore();
+	appendArrayToByteVector(&fill, store.data(), store.size());
+	/// Фор не то форыч
+
+	// Инкрементация.
+	auto l2 = iload(local);
+	appendArrayToByteVector(&fill, l2.data(), l2.size());
+	auto bi = iconstBipushSipush(1);
+	appendArrayToByteVector(&fill, bi.data(), bi.size());
+	
+	auto inc = iadd();
+	appendArrayToByteVector(&fill, inc.data(), inc.size());
+	auto str = istore(local);
+	appendArrayToByteVector(&fill, str.data(), str.size());
+	
+	// Условие.
+	
+	auto cond = iload(local);
+	std::vector<char> l4 = generateCodeForExpression(expr->left, cElem, mElem);
+	appendArrayToByteVector(&cond, l4.data(), l4.size());
+	std::vector<char> fl = getfield(fr);
+	appendArrayToByteVector(&cond,fl.data(), fl.size());
+
+	// Смещение.
+	int offset = fill.size() + cond.size();
+	offset = -offset;
+
+	auto gt = go_to(fill.size());
+
+	appendArrayToByteVector(&res, gt.data(), gt.size());
+	appendArrayToByteVector(&res, fill.data(), fill.size());
+	appendArrayToByteVector(&res, cond.data(), cond.size());
+	auto if_i = if_icmp(NE, offset);
+	appendArrayToByteVector(&res, if_i.data(), if_i.size());
+	return res;
+}
+
+std::vector<char> generateCodeForArrayAccess(struct ExpressionNode * expr, class ClassTableElement * cElem, class MethodTableElement * mElem)
+{
+	std::vector<char> res;
+	auto left = generateCodeForExpression(expr->left, cElem, mElem);
+	appendArrayToByteVector(&res, left.data(), left.size());
+	auto right = generateCodeForExpression(expr->right, cElem, mElem);
+	appendArrayToByteVector(&res, right.data(), right.size());
+	int cln = cElem->constants->findOrAddConstant(Utf8, "JavaRTL/Int"); 
+	int cl = cElem->constants->findOrAddConstant(Class, "", 0,0,cln);
+	int n = cElem->constants->findOrAddConstant(Utf8, "_value");
+	int d = cElem->constants->findOrAddConstant(Utf8, "I");
+	int nat = cElem->constants->findOrAddConstant(NameAndType, "", 0,0,n,d);
+	int fr = cElem->constants->findOrAddConstant(FieldRef, "", 0,0,cl,nat);
+	std::vector<char> f = getfield(fr);
+	appendArrayToByteVector(&res, f.data(), f.size());
+	auto ld = aaload();
+	appendArrayToByteVector(&res, ld.data(), ld.size());
 	return res;
 }

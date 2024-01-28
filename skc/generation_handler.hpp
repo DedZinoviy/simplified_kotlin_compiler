@@ -127,3 +127,13 @@ std::vector<char> _return();
 * \return вектор байт - команда.
 */
 std::vector<char> areturn();
+
+std::vector<char> anewarray(int constant);
+
+std::vector<char> arraylength();
+
+std::vector<char> aaload();
+
+std::vector<char> aastore();
+
+std::vector<char> iadd();
