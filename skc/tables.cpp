@@ -966,7 +966,6 @@ struct SemanticError * attributeExpression(struct ExpressionNode * expression, c
 
 struct SemanticError * attributingAndFillingLocalsInStatement(class MethodTableElement * meth, struct StatementNode * curStmt)
 {
-    printf("HERE: %d\n", curStmt->id);
     struct SemanticError * err = NULL;
 
     if (curStmt->type == StatementType::_EXPRESSION)
@@ -1166,7 +1165,7 @@ struct SemanticError * attributeExpression(struct ExpressionNode * expression, c
                 return createSemanticError(13, msg.c_str());
             }
             if (expression->left->typ == NULL) err = attributeExpression(expression->left, mElem);
-            if (err != NULL) {if (expression->type != ExpressionType::_ASSIGNMENT) {return err;} else {if (err->code != 17) return err;}}
+            if (err != NULL) { if (expression->type != ExpressionType::_ASSIGNMENT) { return err; } else { if (err->code != 17) { return err; } else { err = NULL; } } }
             leftType = expression->left->typ;
         }
         if (expression->right != NULL)
@@ -1207,7 +1206,6 @@ struct SemanticError * attributeExpression(struct ExpressionNode * expression, c
             while(curExpr != NULL) // Пока есть параметры...
             {
                 Type * typ = new Type(curExpr->typ);
-                printf("%s\n",typ->className.c_str());
                 if (curExpr->typ->type == TypeType::_CLS) desc += "L";
                 if (curExpr->typ->type == TypeType::_ARRAY) desc += "[L";
                 desc += typ->className;
@@ -1234,7 +1232,6 @@ struct SemanticError * attributeExpression(struct ExpressionNode * expression, c
                     }
                     else
                     {
-                        printf("%s\n",expression->identifierString);
                         expression->typ = FunctionTable::items[id][desc]->retType->toTypeNode();
                     }
                 }
@@ -1448,8 +1445,6 @@ void fillMethodRefsInExpression(struct ExpressionNode * expression, class ClassT
 
             if (expression->type == ExpressionType::_FUNC_CALL && expression->fromLit == BaseLiteral::_FROM_NONE)
             {
-                
-                printf("%s\n", desc.c_str());
                 Type * ret = FunctionTable::items[id][desc]->retType;
                 if (ret->typ == TypeType::_ARRAY) desc += "[L";
                 else desc += "L";

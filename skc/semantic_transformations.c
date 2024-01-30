@@ -821,7 +821,6 @@ static void _replaceOperatorsInStatement(struct StatementNode * stmt)
 
 static void _replaceOperatorsInExpression(struct ExpressionNode * expr)
 {
-    printf("HERE!!!!!!!!!!! : %d\n", expr->id);
     if (expr->type == _PLUS)
     {
         expr->type = _METHOD_ACCESS;
@@ -854,6 +853,7 @@ static void _replaceOperatorsInExpression(struct ExpressionNode * expr)
     {
         expr->type = _METHOD_ACCESS;
         expr->identifierString = "uMinus";
+        expr->left = expr->right;
         expr->params = createExpressionListNode(NULL);
         expr->right = NULL;
     }
@@ -861,6 +861,7 @@ static void _replaceOperatorsInExpression(struct ExpressionNode * expr)
     {
         expr->type = _METHOD_ACCESS;
         expr->identifierString = "uPlus";
+        expr->left = expr->right;
         expr->params = createExpressionListNode(NULL);
         expr->right = NULL;
     }

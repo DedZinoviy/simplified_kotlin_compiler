@@ -754,12 +754,14 @@ std::vector<char> generateCodeForMethodAccess(struct ExpressionNode * expr, clas
 		appendArrayToByteVector(&res, obj.data(), obj.size());
 
 		struct ExpressionNode * cur = NULL;
+
 		if (expr->params != NULL) cur = expr->params->first;
+		std::vector<char> params;
 		std::string desc = "(";
 		while(cur != NULL)
 		{
 			std::vector<char> p = generateCodeForExpression(cur, cElem, mElem);
-			appendArrayToByteVector(&res, p.data(), p.size());
+			appendArrayToByteVector(&params, p.data(), p.size());
 			if (cur->typ->type == _ARRAY) desc += "[L";
 			else desc += "L";
 			desc += Type(cur->typ).className;
@@ -783,10 +785,47 @@ std::vector<char> generateCodeForMethodAccess(struct ExpressionNode * expr, clas
 	int d = cElem->constants->findOrAddConstant(Utf8, desc);
 	int nat = cElem->constants->findOrAddConstant(NameAndType, "", 0,0, n, d);
 	int mref = cElem->constants->findOrAddConstant(MethodRef, "", 0,0, cls, nat);
-
 			
 	std::vector<char> iv = invokevirtual(mref);
-	appendArrayToByteVector(&res, iv.data(), iv.size());
+	appendArrayToByteVector(&params, iv.data(), iv.size());
+
+
+	std::vector<char> condition;	
+	if (std::string(expr->identifierString) == "and"){
+	std::vector<char> du = dup();
+	appendArrayToByteVector(&condition, du.data(), du.size());
+	int cn = cElem->constants->findOrAddConstant(Utf8, "JavaRTL/Boolean");
+	int c =  cElem->constants->findOrAddConstant(Class, "",0,0,cn);
+	int n = cElem->constants->findOrAddConstant(Utf8, "_ivalue");
+	int d = cElem->constants->findOrAddConstant(Utf8, "I");
+	int nat = cElem->constants->findOrAddConstant(NameAndType, "", 0,0,n,d);
+	int fRef = cElem->constants->findOrAddConstant(FieldRef, "", 0,0,c,nat);
+	std::vector<char> gf = getfield(fRef);
+	appendArrayToByteVector(&condition, gf.data(), gf.size());
+	auto ife = if_(EQ, params.size());
+	appendArrayToByteVector(&condition, ife.data(), ife.size());
+	}
+	if (std::string(expr->identifierString) == "or")
+	{
+	std::vector<char> du = dup();
+	appendArrayToByteVector(&condition, du.data(), du.size());
+	int cn = cElem->constants->findOrAddConstant(Utf8, "JavaRTL/Boolean");
+	int c =  cElem->constants->findOrAddConstant(Class, "",0,0,cn);
+	int n = cElem->constants->findOrAddConstant(Utf8, "_ivalue");
+	int d = cElem->constants->findOrAddConstant(Utf8, "I");
+	int nat = cElem->constants->findOrAddConstant(NameAndType, "", 0,0,n,d);
+	int fRef = cElem->constants->findOrAddConstant(FieldRef, "", 0,0,c,nat);
+	std::vector<char> gf = getfield(fRef);
+	appendArrayToByteVector(&condition, gf.data(), gf.size());
+
+	auto one = iconstBipushSipush(1);
+	appendArrayToByteVector(&condition, one.data(), one.size());
+	auto ife = if_icmp(EQ, params.size());
+	appendArrayToByteVector(&condition, ife.data(), ife.size());
+	}
+
+	appendArrayToByteVector(&res, condition.data(), condition.size());
+	appendArrayToByteVector(&res, params.data(), params.size());
 
 	return res;
 }
