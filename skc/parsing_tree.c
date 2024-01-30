@@ -17,7 +17,9 @@ struct ExpressionNode* createIDExpression(char* idStr)
     node->left = NULL;
     node->right = NULL;
     node->next = NULL;
+    node->typ = NULL;
     node->id = ID++;
+    node->params = NULL;
     return node;
 }
 
@@ -34,6 +36,8 @@ struct ExpressionNode* createIntLiteralExpressionNode(int value)
     node->right = NULL;
     node->next = NULL;
     node->id = ID++;
+    node->typ = NULL;
+    node->params = NULL;
     return node;
 }
 
@@ -49,7 +53,9 @@ struct ExpressionNode* createDoubleLiteralExpressionNode(double value)
     node->left = NULL;
     node->right = NULL;
     node->next = NULL;
+    node->typ = NULL;
     node->id = ID++;
+    node->params = NULL;
     return node;
 }
 
@@ -64,7 +70,9 @@ struct ExpressionNode* createTrueLiteralExpressionNode()
     node->left = NULL;
     node->right = NULL;
     node->next = NULL;
+    node->typ = NULL;
     node->id = ID++;
+    node->params = NULL;
     return node;
 }
 
@@ -79,7 +87,9 @@ struct ExpressionNode* createFalseLiteralExpressionNode()
     node->left = NULL;
     node->right = NULL;
     node->next = NULL;
+    node->typ = NULL;
     node->id = ID++;
+    node->params = NULL;
     return node;
 }
 
@@ -96,6 +106,8 @@ struct ExpressionNode* createCharLiteralExpressionNode(char value)
     node->left = NULL;
     node->right = NULL;
     node->next = NULL;
+    node->typ = NULL;
+    node->params = NULL;
     return node;
 }
 
@@ -112,6 +124,8 @@ struct ExpressionNode* createStringLiteralExpressionNode(struct stringBuffer * v
     node->left = NULL;
     node->right = NULL;
     node->next = NULL;
+    node->typ = NULL;
+    node->params = NULL;
     return node;
 }
 
@@ -127,7 +141,9 @@ struct ExpressionNode * createDisjExpressionNode(struct ExpressionNode * leftOpe
     node->left = leftOperand;
     node->right = rightOperand;
     node->next = NULL;
+    node->typ = NULL;
     node->id = ID++;
+    node->params = NULL;
     return node;
 }
 
@@ -143,7 +159,9 @@ struct ExpressionNode * createConjExpressionNode(struct ExpressionNode * leftOpe
     node->left = leftOperand;
     node->right = rightOperand;
     node->next = NULL;
+    node->typ = NULL;
     node->id = ID++;
+    node->params = NULL;
     return node;
 }
 
@@ -159,7 +177,9 @@ struct ExpressionNode * createPlusExpressionNode(struct ExpressionNode * leftOpe
     node->left = leftOperand;
     node->right = rightOperand;
     node->next = NULL;
+    node->typ = NULL;
     node->id = ID++;
+    node->params = NULL;
     return node;
 }
 
@@ -175,7 +195,9 @@ struct ExpressionNode * createMinusExpressionNode(struct ExpressionNode * leftOp
     node->left = leftOperand;
     node->right = rightOperand;
     node->next = NULL;
+    node->typ = NULL;
     node->id = ID++;
+    node->params = NULL;
     return node;
 }
 
@@ -191,6 +213,8 @@ struct ExpressionNode * createMulExpressionNode(struct ExpressionNode * leftOper
     node->left = leftOperand;
     node->right = rightOperand;
     node->next = NULL;
+    node->typ = NULL;
+    node->params = NULL;
     node->id = ID++;
     return node;
 }
@@ -207,7 +231,9 @@ struct ExpressionNode * createDivExpressionNode(struct ExpressionNode * leftOper
     node->left = leftOperand;
     node->right = rightOperand;
     node->next = NULL;
+    node->typ = NULL;
     node->id = ID++;
+    node->params = NULL;
     return node;
 }
 
@@ -223,7 +249,9 @@ struct ExpressionNode * createModExpressionNode(struct ExpressionNode * leftOper
     node->left = leftOperand;
     node->right = rightOperand;
     node->next = NULL;
+    node->typ = NULL;
     node->id = ID++;
+    node->params = NULL;
     return node;
 }
 
@@ -239,6 +267,8 @@ struct ExpressionNode* createGreatExpressionNode(struct ExpressionNode* leftOper
     node->left = leftOperand;
     node->right = rightOperand;
     node->next = NULL;
+    node->typ = NULL;
+    node->params = NULL;
     node->id = ID++;
     return node;
 }
@@ -255,6 +285,8 @@ struct ExpressionNode* createLessExpressionNode(struct ExpressionNode* leftOpera
     node->left = leftOperand;
     node->right = rightOperand;
     node->next = NULL;
+    node->typ = NULL;
+    node->params = NULL;
     node->id = ID++;
     return node;
 }
@@ -271,7 +303,9 @@ struct ExpressionNode* createGreatEqualExpressionNode(struct ExpressionNode* lef
     node->left = leftOperand;
     node->right = rightOperand;
     node->next = NULL;
+    node->typ = NULL;
     node->id = ID++;
+    node->params = NULL;
     return node;
 }
 
@@ -287,7 +321,9 @@ struct ExpressionNode* createLessEqualExpressionNode(struct ExpressionNode* left
     node->left = leftOperand;
     node->right = rightOperand;
     node->next = NULL;
+    node->typ = NULL;
     node->id = ID++;
+    node->params = NULL;
     return node;
 }
 
@@ -303,6 +339,8 @@ struct ExpressionNode* createEqualExpressionNode(struct ExpressionNode* leftOper
     node->left = leftOperand;
     node->right = rightOperand;
     node->next = NULL;
+    node->params = NULL;
+    node->typ = NULL;
     node->id = ID++;
     return node;
 }
@@ -319,6 +357,8 @@ struct ExpressionNode* createNotEqualExpressionNode(struct ExpressionNode* leftO
     node->left = leftOperand;
     node->right = rightOperand;
     node->next = NULL;
+    node->params = NULL;
+    node->typ = NULL;
     node->id = ID++;
     return node;
 }
@@ -338,6 +378,8 @@ struct ExpressionNode* createFunctionCallExpressionNode(char * idStr, struct Exp
     node->left = NULL;
     node->right = NULL;
     node->next = NULL;
+    node->typ = NULL;
+    node->fromLit = _FROM_NONE;
     return node;
 }
 
@@ -356,6 +398,7 @@ struct ExpressionNode* createFieldAccessExpressionNode(struct ExpressionNode * o
     node->next = NULL;
     node->params = NULL;
     node->right = NULL;
+    node->typ = NULL;
     return node;
 }
 
@@ -375,6 +418,7 @@ struct ExpressionNode* createMethodAccessExpressionNode(struct ExpressionNode * 
     node->next = NULL;
     node->params = paramList;
     node->right = NULL;
+    node->typ = NULL;
     return node;
 }
 
@@ -392,6 +436,7 @@ struct ExpressionNode * createAssignmentExpressionNode(struct ExpressionNode * l
     node->next = NULL;
     node->params = NULL;
     node->right = rightOperand;
+    node->typ = NULL;
     return node;
 }
 
@@ -409,6 +454,7 @@ struct ExpressionNode * createPlusAssignmentExpressionNode(struct ExpressionNode
     node->next = NULL;
     node->params = NULL;
     node->right = rightOperand;
+    node->typ = NULL;
     return node;
 }
 
@@ -426,6 +472,7 @@ struct ExpressionNode * createMinusAssignmentExpressionNode(struct ExpressionNod
     node->next = NULL;
     node->params = NULL;
     node->right = rightOperand;
+    node->typ = NULL;
     return node;
 }
 
@@ -443,6 +490,7 @@ struct ExpressionNode * createMulAssignmentExpressionNode(struct ExpressionNode 
     node->next = NULL;
     node->params = NULL;
     node->right = rightOperand;
+    node->typ = NULL;
     return node;
 }
 
@@ -460,6 +508,7 @@ struct ExpressionNode * createDivAssignmentExpressionNode(struct ExpressionNode 
     node->next = NULL;
     node->params = NULL;
     node->right = rightOperand;
+    node->typ = NULL;
     return node;
 }
 
@@ -477,6 +526,7 @@ struct ExpressionNode * createModAssignmentExpressionNode(struct ExpressionNode 
     node->next = NULL;
     node->params = NULL;
     node->right = rightOperand;
+    node->typ = NULL;
     return node;
 }
 
@@ -493,6 +543,7 @@ struct ExpressionNode * createBracketExpressionNode(struct ExpressionNode * inne
     node->next = NULL;
     node->params = NULL;
     node->right = NULL;
+    node->typ = NULL;
     return node;
 }
 
@@ -510,6 +561,7 @@ struct ExpressionNode * createIDExpressionNode(char * ident)
     node->next = NULL;
     node->params = NULL;
     node->right = NULL;
+    node->typ = NULL;
     return node;
 }
 
@@ -525,6 +577,7 @@ struct ExpressionNode * createThisExpressionNode()
     node->next = NULL;
     node->params = NULL;
     node->right = NULL;
+    node->typ = NULL;
     return node;
 }
 
@@ -540,6 +593,7 @@ struct ExpressionNode * createSuperExpressionNode()
     node->next = NULL;
     node->params = NULL;
     node->right = NULL;
+    node->typ = NULL;
     return node;
 }
 
@@ -557,6 +611,7 @@ struct ExpressionNode * createRangeExpressionNode(struct ExpressionNode * leftOp
     node->next = NULL;
     node->params = NULL;
     node->right = rightOperand;
+    node->typ = NULL;
     return node;
 }
 
@@ -573,6 +628,7 @@ struct ExpressionNode * createPrefIncrementExpressionNode(struct ExpressionNode 
     node->next = NULL;
     node->params = NULL;
     node->right = value;
+    node->typ = NULL;
     return node;
 }
 
@@ -589,6 +645,7 @@ struct ExpressionNode * createPrefDecrementExpressionNode(struct ExpressionNode 
     node->next = NULL;
     node->params = NULL;
     node->right = value;
+    node->typ = NULL;
     return node;
 }
 
@@ -605,6 +662,7 @@ struct ExpressionNode * createPostIncrementExpressionNode(struct ExpressionNode 
     node->next = NULL;
     node->params = NULL;
     node->right = NULL;
+    node->typ = NULL;
     return node;
 }
 
@@ -621,6 +679,7 @@ struct ExpressionNode * createPostDecrementExpressionNode(struct ExpressionNode 
     node->next = NULL;
     node->params = NULL;
     node->right = NULL;
+    node->typ = NULL;
     return node;
 }
 
@@ -637,6 +696,7 @@ struct ExpressionNode * createUnaryPlusExpressionNode(struct ExpressionNode * va
     node->next = NULL;
     node->params = NULL;
     node->right = value;
+    node->typ = NULL;
     return node;
 }
 
@@ -653,6 +713,7 @@ struct ExpressionNode * createUnaryMinusExpressionNode(struct ExpressionNode * v
     node->next = NULL;
     node->params = NULL;
     node->right = value;
+    node->typ = NULL;
     return node;
 }
 
@@ -669,6 +730,7 @@ struct ExpressionNode * createNotExpressionNode(struct ExpressionNode * value)
     node->next = NULL;
     node->params = NULL;
     node->right = value;
+    node->typ = NULL;
     return node;
 }
 
@@ -686,6 +748,7 @@ struct ExpressionNode * createArrayCreationExpression(struct ExpressionNode * le
     node->next = NULL;
     node->params = NULL;
     node->right = init;
+    node->typ = NULL;
     return node;
 }
 
@@ -703,6 +766,7 @@ struct ExpressionNode * createArrayElementAccessExpression(struct ExpressionNode
     node->next = NULL;
     node->params = NULL;
     node->right = index;
+    node->typ = NULL;
     return node;
 }
 
@@ -752,6 +816,8 @@ struct StatementNode * createStatementFromExpression(struct ExpressionNode * exp
     stmt->condition = NULL;
     stmt->singleBody = NULL;
     stmt->complexBody = NULL;
+    stmt->varValId = NULL;
+    stmt->varValType = NULL;
     stmt->id = ID++;
     stmt->next = NULL;
     stmt->varDeclList = NULL;
@@ -771,6 +837,8 @@ struct StatementNode * createStatementFromWhileWithSingleBody(struct ExpressionN
     statement->singleBody = stmt;
     statement->complexBody = NULL;
     statement->expression = NULL;
+    stmt->varValId = NULL;
+    stmt->varValType = NULL;
     statement->id = ID++;
     statement->next = NULL;
     stmt->varDeclList = NULL;
@@ -790,6 +858,8 @@ struct StatementNode * createStatementFromWhileWithComplexBody(struct Expression
     statement->singleBody = NULL;
     statement->complexBody = stmtList;
     statement->expression = NULL;
+    statement->varValId = NULL;
+    statement->varValType = NULL;
     statement->id = ID++;
     statement->next = NULL;
     statement->varDeclList = NULL;
@@ -809,6 +879,8 @@ struct StatementNode * createStatementFromDoWhileWithSingleBody(struct Expressio
     statement->singleBody = stmt;
     statement->complexBody = NULL;
     statement->expression = NULL;
+    stmt->varValId = NULL;
+    stmt->varValType = NULL;
     statement->id = ID++;
     statement->next = NULL;
     stmt->varDeclList = NULL;
@@ -828,6 +900,8 @@ struct StatementNode * createStatementFromDoWhileWithComplexBody(struct Expressi
     statement->singleBody = NULL;
     statement->complexBody = stmtList;
     statement->expression = NULL;
+    statement->varValId = NULL;
+    statement->varValType = NULL;
     statement->id = ID++;
     statement->next = NULL;
     statement->varDeclList = NULL;
@@ -846,6 +920,8 @@ struct StatementNode * createEmptyStatement()
     node->condition = NULL;
     node->complexBody = NULL;
     node->singleBody = NULL;
+    node->varValId = NULL;
+    node->varValType = NULL;
     node->next= NULL;
     node->varDeclList = NULL;
     return node;
@@ -997,6 +1073,8 @@ struct StatementNode * createForStatementWithSingleBody(struct VarDeclarationLis
     node->condition = cond;
     node->singleBody = stmt;
     node->complexBody = NULL;
+    stmt->varValId = NULL;
+    stmt->varValType = NULL;
     node->varDeclList = list;
     return node;
 }

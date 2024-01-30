@@ -2,8 +2,12 @@
 #include "stringBuffer.h"
 #include "modifier_head.h"
 
-/*------------------------------------ Expression -------------------------------------*/
+#ifdef __cplusplus
+extern "C" {
+#endif
 
+/*------------------------------------ Expression -------------------------------------*/
+struct TypeNode;
 /*! \brief Перечисление типов Expression. */
 enum ExpressionType
 {
@@ -131,6 +135,18 @@ enum ExpressionType
     _ARRAY_ACCESS
 };
 
+/// Перечисление, указывающее на основании какого литерала произошло создание объекта.
+enum BaseLiteral
+{
+    _FROM_NONE,
+    _FROM_INT,
+    _FROM_DOUBLE,
+    _FROM_BOOLEAN,
+    _FROM_CHAR,
+    _FROM_STRING,
+    _FROM_UNIT
+};
+
 /*! \brief Структура узла Expression. */
 struct ExpressionNode
 {
@@ -168,7 +184,13 @@ struct ExpressionNode
     struct ExpressionNode * next;
 
     /// Указатель на список Expression (параметры при вызове функций и методов).
-    struct ExpressionListNode * params;  
+    struct ExpressionListNode * params;
+
+    /// Флаг, указывающий, что данный узел получился в результате преобразования литерала.
+    enum BaseLiteral fromLit;
+
+    /// Указатель на тип выражения для аттрибутирования.
+    struct TypeNode * typ;
 };
 
 
@@ -226,7 +248,6 @@ enum StatementType
     _RETURN
 };
 
-struct TypeNode;
 struct StatementListNode;
 struct VarDeclarationListNode;
 
@@ -459,7 +480,7 @@ struct ClassParamNode
     int id;
 
     /// Указатель на узел списка модификаторов параметра. 
-    struct ModifierNode * mods;
+    struct ModifierListNode * mods;
 
     /// Указатель на узел Объявления переменной.
     struct VarDeclarationNode * varDecl;
@@ -632,3 +653,7 @@ struct TypeNode
     /// Указатель на структуру сложного типа - шаблонизированного массива.
     struct TypeNode * complexType;
 };
+
+#ifdef __cplusplus
+};
+#endif
