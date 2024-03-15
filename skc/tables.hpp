@@ -290,16 +290,21 @@ class LocalVariableElement
 
 };
 
-
+/*! \brief Таблица локальных переменных. */
 class LocalVariableTable
 {
     public:
+        
+        /// Текущее максимальное значение идентификатора переменной.
         int maxId = 0;
+
+        /// Контейнер элементов.
         std::map<std::string, class LocalVariableElement*> items;
 
         int findOrAddLocalVar(std::string name, class Type * typ, int isCnst, int isInit);
 };
 
+/*! \brief Элемент таблицы параметров класса. */
 class ClassParamElement
 {
     public:
@@ -310,13 +315,15 @@ class ClassParamElement
     ClassParamElement(std::string n, class Type * t, int isProp);
 };
 
+/*! \brief Таблица параметров класса. */
 class ClassParamTable
 {
     public:
+    /// Контейнер элементов.
     std::map<std::string, class ClassParamElement *> items;
 };
 
-
+/*! \brief Элемент таблицы функций. */
 class FunctionTableElement
 {
         public:
@@ -347,8 +354,10 @@ class FunctionTableElement
         FunctionTableElement(int nameCnst, int descCnst, std::string nam, std::string dsc, struct StatementListNode * strt, class Type * ret, std::vector<class FuncParam> pars);
 };
 
+/*! \brief Таблица функций. */
 class FunctionTable
 {
     public:
+    /// Контейнер элементов.
     static std::map<std::string, std::map<std::string, class FunctionTableElement *>> items;
 };
