@@ -34,6 +34,10 @@ struct ExpressionNode* createIntLiteralExpressionNode(int value)
     node->right = NULL;
     node->next = NULL;
     node->id = ID++;
+    node->falseComplexStatement = NULL;
+    node->falseSimpleStatement = NULL;
+    node->trueComplexStatement = NULL;
+    node->trueSimpleStatement = NULL;
     return node;
 }
 
@@ -50,6 +54,10 @@ struct ExpressionNode* createDoubleLiteralExpressionNode(double value)
     node->right = NULL;
     node->next = NULL;
     node->id = ID++;
+    node->falseComplexStatement = NULL;
+    node->falseSimpleStatement = NULL;
+    node->trueComplexStatement = NULL;
+    node->trueSimpleStatement = NULL;
     return node;
 }
 
@@ -65,6 +73,10 @@ struct ExpressionNode* createTrueLiteralExpressionNode()
     node->right = NULL;
     node->next = NULL;
     node->id = ID++;
+    node->falseComplexStatement = NULL;
+    node->falseSimpleStatement = NULL;
+    node->trueComplexStatement = NULL;
+    node->trueSimpleStatement = NULL;
     return node;
 }
 
@@ -80,6 +92,10 @@ struct ExpressionNode* createFalseLiteralExpressionNode()
     node->right = NULL;
     node->next = NULL;
     node->id = ID++;
+    node->falseComplexStatement = NULL;
+    node->falseSimpleStatement = NULL;
+    node->trueComplexStatement = NULL;
+    node->trueSimpleStatement = NULL;
     return node;
 }
 
@@ -96,6 +112,10 @@ struct ExpressionNode* createCharLiteralExpressionNode(char value)
     node->left = NULL;
     node->right = NULL;
     node->next = NULL;
+    node->falseComplexStatement = NULL;
+    node->falseSimpleStatement = NULL;
+    node->trueComplexStatement = NULL;
+    node->trueSimpleStatement = NULL;
     return node;
 }
 
@@ -112,6 +132,10 @@ struct ExpressionNode* createStringLiteralExpressionNode(struct stringBuffer * v
     node->left = NULL;
     node->right = NULL;
     node->next = NULL;
+    node->falseComplexStatement = NULL;
+    node->falseSimpleStatement = NULL;
+    node->trueComplexStatement = NULL;
+    node->trueSimpleStatement = NULL;
     return node;
 }
 
@@ -128,6 +152,10 @@ struct ExpressionNode * createDisjExpressionNode(struct ExpressionNode * leftOpe
     node->right = rightOperand;
     node->next = NULL;
     node->id = ID++;
+    node->falseComplexStatement = NULL;
+    node->falseSimpleStatement = NULL;
+    node->trueComplexStatement = NULL;
+    node->trueSimpleStatement = NULL;
     return node;
 }
 
@@ -144,6 +172,10 @@ struct ExpressionNode * createConjExpressionNode(struct ExpressionNode * leftOpe
     node->right = rightOperand;
     node->next = NULL;
     node->id = ID++;
+    node->falseComplexStatement = NULL;
+    node->falseSimpleStatement = NULL;
+    node->trueComplexStatement = NULL;
+    node->trueSimpleStatement = NULL;
     return node;
 }
 
@@ -160,6 +192,10 @@ struct ExpressionNode * createPlusExpressionNode(struct ExpressionNode * leftOpe
     node->right = rightOperand;
     node->next = NULL;
     node->id = ID++;
+    node->falseComplexStatement = NULL;
+    node->falseSimpleStatement = NULL;
+    node->trueComplexStatement = NULL;
+    node->trueSimpleStatement = NULL;
     return node;
 }
 
@@ -176,6 +212,10 @@ struct ExpressionNode * createMinusExpressionNode(struct ExpressionNode * leftOp
     node->right = rightOperand;
     node->next = NULL;
     node->id = ID++;
+    node->falseComplexStatement = NULL;
+    node->falseSimpleStatement = NULL;
+    node->trueComplexStatement = NULL;
+    node->trueSimpleStatement = NULL;
     return node;
 }
 
@@ -192,6 +232,10 @@ struct ExpressionNode * createMulExpressionNode(struct ExpressionNode * leftOper
     node->right = rightOperand;
     node->next = NULL;
     node->id = ID++;
+    node->falseComplexStatement = NULL;
+    node->falseSimpleStatement = NULL;
+    node->trueComplexStatement = NULL;
+    node->trueSimpleStatement = NULL;
     return node;
 }
 
@@ -208,6 +252,10 @@ struct ExpressionNode * createDivExpressionNode(struct ExpressionNode * leftOper
     node->right = rightOperand;
     node->next = NULL;
     node->id = ID++;
+    node->falseComplexStatement = NULL;
+    node->falseSimpleStatement = NULL;
+    node->trueComplexStatement = NULL;
+    node->trueSimpleStatement = NULL;
     return node;
 }
 
@@ -224,6 +272,10 @@ struct ExpressionNode * createModExpressionNode(struct ExpressionNode * leftOper
     node->right = rightOperand;
     node->next = NULL;
     node->id = ID++;
+    node->falseComplexStatement = NULL;
+    node->falseSimpleStatement = NULL;
+    node->trueComplexStatement = NULL;
+    node->trueSimpleStatement = NULL;
     return node;
 }
 
@@ -240,6 +292,10 @@ struct ExpressionNode* createGreatExpressionNode(struct ExpressionNode* leftOper
     node->right = rightOperand;
     node->next = NULL;
     node->id = ID++;
+    node->falseComplexStatement = NULL;
+    node->falseSimpleStatement = NULL;
+    node->trueComplexStatement = NULL;
+    node->trueSimpleStatement = NULL;
     return node;
 }
 
@@ -256,6 +312,10 @@ struct ExpressionNode* createLessExpressionNode(struct ExpressionNode* leftOpera
     node->right = rightOperand;
     node->next = NULL;
     node->id = ID++;
+    node->falseComplexStatement = NULL;
+    node->falseSimpleStatement = NULL;
+    node->trueComplexStatement = NULL;
+    node->trueSimpleStatement = NULL;
     return node;
 }
 
@@ -272,6 +332,10 @@ struct ExpressionNode* createGreatEqualExpressionNode(struct ExpressionNode* lef
     node->right = rightOperand;
     node->next = NULL;
     node->id = ID++;
+    node->falseComplexStatement = NULL;
+    node->falseSimpleStatement = NULL;
+    node->trueComplexStatement = NULL;
+    node->trueSimpleStatement = NULL;
     return node;
 }
 
@@ -288,6 +352,10 @@ struct ExpressionNode* createLessEqualExpressionNode(struct ExpressionNode* left
     node->right = rightOperand;
     node->next = NULL;
     node->id = ID++;
+    node->falseComplexStatement = NULL;
+    node->falseSimpleStatement = NULL;
+    node->trueComplexStatement = NULL;
+    node->trueSimpleStatement = NULL;
     return node;
 }
 
@@ -304,6 +372,10 @@ struct ExpressionNode* createEqualExpressionNode(struct ExpressionNode* leftOper
     node->right = rightOperand;
     node->next = NULL;
     node->id = ID++;
+    node->falseComplexStatement = NULL;
+    node->falseSimpleStatement = NULL;
+    node->trueComplexStatement = NULL;
+    node->trueSimpleStatement = NULL;
     return node;
 }
 
@@ -320,6 +392,10 @@ struct ExpressionNode* createNotEqualExpressionNode(struct ExpressionNode* leftO
     node->right = rightOperand;
     node->next = NULL;
     node->id = ID++;
+    node->falseComplexStatement = NULL;
+    node->falseSimpleStatement = NULL;
+    node->trueComplexStatement = NULL;
+    node->trueSimpleStatement = NULL;
     return node;
 }
 
@@ -338,6 +414,10 @@ struct ExpressionNode* createFunctionCallExpressionNode(char * idStr, struct Exp
     node->left = NULL;
     node->right = NULL;
     node->next = NULL;
+    node->falseComplexStatement = NULL;
+    node->falseSimpleStatement = NULL;
+    node->trueComplexStatement = NULL;
+    node->trueSimpleStatement = NULL;
     return node;
 }
 
@@ -356,6 +436,10 @@ struct ExpressionNode* createFieldAccessExpressionNode(struct ExpressionNode * o
     node->next = NULL;
     node->params = NULL;
     node->right = NULL;
+    node->falseComplexStatement = NULL;
+    node->falseSimpleStatement = NULL;
+    node->trueComplexStatement = NULL;
+    node->trueSimpleStatement = NULL;
     return node;
 }
 
@@ -375,6 +459,10 @@ struct ExpressionNode* createMethodAccessExpressionNode(struct ExpressionNode * 
     node->next = NULL;
     node->params = paramList;
     node->right = NULL;
+    node->falseComplexStatement = NULL;
+    node->falseSimpleStatement = NULL;
+    node->trueComplexStatement = NULL;
+    node->trueSimpleStatement = NULL;
     return node;
 }
 
@@ -392,6 +480,10 @@ struct ExpressionNode * createAssignmentExpressionNode(struct ExpressionNode * l
     node->next = NULL;
     node->params = NULL;
     node->right = rightOperand;
+    node->falseComplexStatement = NULL;
+    node->falseSimpleStatement = NULL;
+    node->trueComplexStatement = NULL;
+    node->trueSimpleStatement = NULL;
     return node;
 }
 
@@ -409,6 +501,10 @@ struct ExpressionNode * createPlusAssignmentExpressionNode(struct ExpressionNode
     node->next = NULL;
     node->params = NULL;
     node->right = rightOperand;
+    node->falseComplexStatement = NULL;
+    node->falseSimpleStatement = NULL;
+    node->trueComplexStatement = NULL;
+    node->trueSimpleStatement = NULL;
     return node;
 }
 
@@ -426,6 +522,10 @@ struct ExpressionNode * createMinusAssignmentExpressionNode(struct ExpressionNod
     node->next = NULL;
     node->params = NULL;
     node->right = rightOperand;
+    node->falseComplexStatement = NULL;
+    node->falseSimpleStatement = NULL;
+    node->trueComplexStatement = NULL;
+    node->trueSimpleStatement = NULL;
     return node;
 }
 
@@ -443,6 +543,10 @@ struct ExpressionNode * createMulAssignmentExpressionNode(struct ExpressionNode 
     node->next = NULL;
     node->params = NULL;
     node->right = rightOperand;
+    node->falseComplexStatement = NULL;
+    node->falseSimpleStatement = NULL;
+    node->trueComplexStatement = NULL;
+    node->trueSimpleStatement = NULL;
     return node;
 }
 
@@ -460,6 +564,10 @@ struct ExpressionNode * createDivAssignmentExpressionNode(struct ExpressionNode 
     node->next = NULL;
     node->params = NULL;
     node->right = rightOperand;
+    node->falseComplexStatement = NULL;
+    node->falseSimpleStatement = NULL;
+    node->trueComplexStatement = NULL;
+    node->trueSimpleStatement = NULL;
     return node;
 }
 
@@ -477,6 +585,10 @@ struct ExpressionNode * createModAssignmentExpressionNode(struct ExpressionNode 
     node->next = NULL;
     node->params = NULL;
     node->right = rightOperand;
+    node->falseComplexStatement = NULL;
+    node->falseSimpleStatement = NULL;
+    node->trueComplexStatement = NULL;
+    node->trueSimpleStatement = NULL;
     return node;
 }
 
@@ -493,6 +605,10 @@ struct ExpressionNode * createBracketExpressionNode(struct ExpressionNode * inne
     node->next = NULL;
     node->params = NULL;
     node->right = NULL;
+    node->falseComplexStatement = NULL;
+    node->falseSimpleStatement = NULL;
+    node->trueComplexStatement = NULL;
+    node->trueSimpleStatement = NULL;
     return node;
 }
 
@@ -510,6 +626,10 @@ struct ExpressionNode * createIDExpressionNode(char * ident)
     node->next = NULL;
     node->params = NULL;
     node->right = NULL;
+    node->falseComplexStatement = NULL;
+    node->falseSimpleStatement = NULL;
+    node->trueComplexStatement = NULL;
+    node->trueSimpleStatement = NULL;
     return node;
 }
 
@@ -525,6 +645,10 @@ struct ExpressionNode * createThisExpressionNode()
     node->next = NULL;
     node->params = NULL;
     node->right = NULL;
+    node->falseComplexStatement = NULL;
+    node->falseSimpleStatement = NULL;
+    node->trueComplexStatement = NULL;
+    node->trueSimpleStatement = NULL;
     return node;
 }
 
@@ -540,6 +664,10 @@ struct ExpressionNode * createSuperExpressionNode()
     node->next = NULL;
     node->params = NULL;
     node->right = NULL;
+    node->falseComplexStatement = NULL;
+    node->falseSimpleStatement = NULL;
+    node->trueComplexStatement = NULL;
+    node->trueSimpleStatement = NULL;
     return node;
 }
 
@@ -557,6 +685,10 @@ struct ExpressionNode * createRangeExpressionNode(struct ExpressionNode * leftOp
     node->next = NULL;
     node->params = NULL;
     node->right = rightOperand;
+    node->falseComplexStatement = NULL;
+    node->falseSimpleStatement = NULL;
+    node->trueComplexStatement = NULL;
+    node->trueSimpleStatement = NULL;
     return node;
 }
 
@@ -573,6 +705,10 @@ struct ExpressionNode * createPrefIncrementExpressionNode(struct ExpressionNode 
     node->next = NULL;
     node->params = NULL;
     node->right = value;
+    node->falseComplexStatement = NULL;
+    node->falseSimpleStatement = NULL;
+    node->trueComplexStatement = NULL;
+    node->trueSimpleStatement = NULL;
     return node;
 }
 
@@ -589,6 +725,10 @@ struct ExpressionNode * createPrefDecrementExpressionNode(struct ExpressionNode 
     node->next = NULL;
     node->params = NULL;
     node->right = value;
+    node->falseComplexStatement = NULL;
+    node->falseSimpleStatement = NULL;
+    node->trueComplexStatement = NULL;
+    node->trueSimpleStatement = NULL;
     return node;
 }
 
@@ -605,6 +745,10 @@ struct ExpressionNode * createPostIncrementExpressionNode(struct ExpressionNode 
     node->next = NULL;
     node->params = NULL;
     node->right = NULL;
+    node->falseComplexStatement = NULL;
+    node->falseSimpleStatement = NULL;
+    node->trueComplexStatement = NULL;
+    node->trueSimpleStatement = NULL;
     return node;
 }
 
@@ -621,6 +765,10 @@ struct ExpressionNode * createPostDecrementExpressionNode(struct ExpressionNode 
     node->next = NULL;
     node->params = NULL;
     node->right = NULL;
+    node->falseComplexStatement = NULL;
+    node->falseSimpleStatement = NULL;
+    node->trueComplexStatement = NULL;
+    node->trueSimpleStatement = NULL;
     return node;
 }
 
@@ -637,6 +785,10 @@ struct ExpressionNode * createUnaryPlusExpressionNode(struct ExpressionNode * va
     node->next = NULL;
     node->params = NULL;
     node->right = value;
+    node->falseComplexStatement = NULL;
+    node->falseSimpleStatement = NULL;
+    node->trueComplexStatement = NULL;
+    node->trueSimpleStatement = NULL;
     return node;
 }
 
@@ -653,6 +805,10 @@ struct ExpressionNode * createUnaryMinusExpressionNode(struct ExpressionNode * v
     node->next = NULL;
     node->params = NULL;
     node->right = value;
+    node->falseComplexStatement = NULL;
+    node->falseSimpleStatement = NULL;
+    node->trueComplexStatement = NULL;
+    node->trueSimpleStatement = NULL;
     return node;
 }
 
@@ -669,6 +825,10 @@ struct ExpressionNode * createNotExpressionNode(struct ExpressionNode * value)
     node->next = NULL;
     node->params = NULL;
     node->right = value;
+    node->falseComplexStatement = NULL;
+    node->falseSimpleStatement = NULL;
+    node->trueComplexStatement = NULL;
+    node->trueSimpleStatement = NULL;
     return node;
 }
 
@@ -686,6 +846,10 @@ struct ExpressionNode * createArrayCreationExpression(struct ExpressionNode * le
     node->next = NULL;
     node->params = NULL;
     node->right = init;
+    node->falseComplexStatement = NULL;
+    node->falseSimpleStatement = NULL;
+    node->trueComplexStatement = NULL;
+    node->trueSimpleStatement = NULL;
     return node;
 }
 
@@ -703,6 +867,34 @@ struct ExpressionNode * createArrayElementAccessExpression(struct ExpressionNode
     node->next = NULL;
     node->params = NULL;
     node->right = index;
+    node->falseComplexStatement = NULL;
+    node->falseSimpleStatement = NULL;
+    node->trueComplexStatement = NULL;
+    node->trueSimpleStatement = NULL;
+    return node;
+}
+
+/*! Создать узел для условного выражения.
+* \param[in] cond условие выполнения, определяющее какая ветка будет исполняться.
+* \param[in] trueSimpBody указатель на узел для истинной простой ветки условного выражения; NULL если отсуствует.
+* \param[in] falseSimpBody указатель на узел для истинной простой ветки условного выражения; NULL если отсуствует.
+* \param[in] trueCompBody указатель на узел для истинной составной ветки условного выражения; NULL если отсуствует.
+* \param[in] falseCompBody указатель на узел для ложной составной ветки условного выражения; NULL если отсуствует.
+* \return указатель на узел оператора if.
+*/
+struct ExpressionNode * createArrayElementAccessExpression(struct ExpressionNode * cond, struct StatementNode * trueSimpBody, struct StatementNode * falseSimpBody, struct StatementListNode * trueCompBody, struct StatementListNode * falseCompBody)
+{
+    struct ExpressionNode * node = (struct ExpressionNode*)malloc(sizeof(struct ExpressionNode));
+    node->id = ID++;
+    node->type = _IF;
+    node->left = NULL;
+    node->next = NULL;
+    node->params = NULL;
+    node->right = NULL;
+    node->falseComplexStatement = falseCompBody;
+    node->falseSimpleStatement = falseSimpBody;
+    node->trueComplexStatement = trueCompBody;
+    node->trueSimpleStatement = trueSimpBody;
     return node;
 }
 

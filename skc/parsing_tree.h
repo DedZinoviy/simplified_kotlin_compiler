@@ -286,6 +286,16 @@ struct ExpressionNode * createArrayCreationExpression(struct ExpressionNode * le
 */
 struct ExpressionNode * createArrayElementAccessExpression(struct ExpressionNode * arr, struct ExpressionNode * index);
 
+/*! Создать узел для условного выражения.
+* \param[in] cond условие выполнения, определяющее какая ветка будет исполняться.
+* \param[in] trueSimpBody указатель на узел для истинной простой ветки условного выражения.
+* \param[in] falseSimpBody указатель на узел для истинной простой ветки условного выражения.
+* \param[in] trueCompBody указатель на узел для истинной составной ветки условного выражения.
+* \param[in] falseCompBody указатель на узел для ложной составной ветки условного выражения.
+* \return указатель на узел оператора if.
+*/
+struct ExpressionNode * createArrayElementAccessExpression(struct ExpressionNode * cond, struct StatementNode * trueSimpBody, struct StatementNode * falseSimpBody, struct StatementListNode * trueCompBody, struct StatementListNode * falseCompBody);
+
 
 
 /*------------------------------------ ExpressionList -------------------------------------*/

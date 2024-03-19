@@ -3,6 +3,8 @@
 #include "modifier_head.h"
 
 /*------------------------------------ Expression -------------------------------------*/
+struct StatementNode;
+struct StatementListNode;
 
 /*! \brief Перечисление типов Expression. */
 enum ExpressionType
@@ -128,7 +130,10 @@ enum ExpressionType
     _ARRAY_CREATION,
 
     /// Доступ к члену массива.
-    _ARRAY_ACCESS
+    _ARRAY_ACCESS,
+
+    /// Условное выражение.
+    _IF
 };
 
 /*! \brief Структура узла Expression. */
@@ -168,7 +173,19 @@ struct ExpressionNode
     struct ExpressionNode * next;
 
     /// Указатель на список Expression (параметры при вызове функций и методов).
-    struct ExpressionListNode * params;  
+    struct ExpressionListNode * params;
+
+    /// Указатель на простое истинное тело для If. 
+    struct StatementNode * trueSimpleStatement;
+
+    /// Указатель на простое ложное тело для If.
+    struct StatementNode * falseSimpleStatement;
+
+    /// Указатель на составное истинное тело для If. 
+    struct StatementListNode * trueComplexStatement;
+
+    /// Указатель на составное ложное тело для If.
+    struct StatementListNode * falseComplexStatement;
 };
 
 

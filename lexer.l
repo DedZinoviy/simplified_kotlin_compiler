@@ -328,7 +328,10 @@ do {
     printHandler((char*)"DO_KEY_WORD", yytext);
     return DO;
 }
-else {printHandler((char*)"ELSE_KEY_WORD", yytext);}
+else {
+    printHandler((char*)"ELSE_KEY_WORD", yytext);
+    return ELSE;
+}
 for {
     printHandler((char*)"FOR_KEY_WORD", yytext);
     return FOR;
@@ -340,7 +343,10 @@ fun {
     yy_push_state(FUNCTION);
     return FUNC;
 }
-if {printHandler((char*)"IF_KEY_WORD", yytext);}
+if {
+    printHandler((char*)"IF_KEY_WORD", yytext);
+    return IF;
+}
 in {
     printHandler((char*)"IN_KEY_WORD", yytext);
     return IN;
